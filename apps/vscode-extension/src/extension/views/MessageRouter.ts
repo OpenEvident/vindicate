@@ -92,7 +92,7 @@ export class MessageRouter {
         return void vscode.env.openExternal(vscode.Uri.parse("https://vindicate.ai"));
       case "nav:reportProblem":
         return void vscode.env.openExternal(
-          vscode.Uri.parse("https://github.com/VindicateAI/vindicate-mcp/issues")
+          vscode.Uri.parse("https://github.com/OpenEvident/vindicate/issues")
         );
       case "nav:openRecentFolder":
         return void vscode.commands.executeCommand(
