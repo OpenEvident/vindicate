@@ -1,0 +1,54 @@
+{
+  "id": "R02-expected-import-conditional",
+  "description": "Regression guard: spec should not import expected data when schema has no expected block.",
+  "tags": ["regression", "spec-writer"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "catalog",
+        "schema": {
+          "pages": [
+            {
+              "feature": "catalog",
+              "page_class": "CatalogPage",
+              "path": "/catalog",
+              "owned_by": "catalog",
+              "elements": [{ "ref": "title", "tag": "h1", "name": "Catalog" }],
+              "types": [],
+              "steps": [{ "name": "step_navigate", "jsdoc": "Open catalog", "params": [], "actions": [{ "do": "navigate" }] }],
+              "verifies": [{ "name": "verify_loaded", "jsdoc": "Loaded", "params": [], "assertions": [{ "subject": "element", "ref": "title", "matcher": "toBeVisible" }] }]
+            }
+          ],
+          "spec": {
+            "suite": "App - Catalog",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Open catalog",
+                "title": "[AC-1] should open catalog",
+                "body": [
+                  { "fixture": "catalogPage", "call": "step_navigate" },
+                  { "fixture": "catalogPage", "call": "verify_loaded" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["tests/catalog.spec.ts"],
+    "mustNotContain": {
+      "tests/catalog.spec.ts": ["Expected", "expected.json"]
+    },
+    "invariants": ["I1", "I2", "I6", "I9"],
+    "compile": true
+  }
+}

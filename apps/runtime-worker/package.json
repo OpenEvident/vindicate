@@ -1,0 +1,60 @@
+{
+  "name": "@vindicate/runtime-worker",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "description": "Local HTTP execution server for browser automation and project file I/O",
+  "scripts": {
+    "smoke": "tsx --import ./scripts/dev-env.ts scripts/smoke.ts",
+    "demo": "tsx --import ./scripts/dev-env.ts scripts/demo.ts",
+    "dev": "tsx watch --import ./scripts/dev-env.ts src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "build:bundle": "pnpm --filter @vindicate/protocol --filter @vindicate/observability run build && esbuild src/main.ts --bundle --platform=node --target=node22 --format=esm --external:@napi-rs/keyring --external:fsevents --external:chromium-bidi/lib/cjs/bidiMapper/BidiMapper --external:chromium-bidi/lib/cjs/cdp/CdpConnection --banner:js=\"import { createRequire } from 'node:module';import { fileURLToPath } from 'node:url';import { dirname } from 'node:path';const require = createRequire(import.meta.url);const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);\" --outfile=dist/bundle.mjs",
+    "build:prod": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('dist',{recursive:true,force:true});\" && tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "clean": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('dist',{recursive:true,force:true});\""
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/sensible": "^6.0.4",
+    "@napi-rs/keyring": "^1.3.0",
+    "@vindicate/observability": "workspace:*",
+    "@vindicate/protocol": "workspace:*",
+    "@t3-oss/env-core": "^0.13.11",
+    "chromium-bidi": "^16.0.1",
+    "dotenv": "^17.4.2",
+    "fastify": "^5.8.5",
+    "pidusage": "^4.0.1",
+    "pino": "^10.3.1",
+    "playwright-core": "1.60.0",
+    "zod": "^4.4.3"
+  },
+  "optionalDependencies": {
+    "@napi-rs/keyring-darwin-arm64": "^1.3.0",
+    "@napi-rs/keyring-darwin-x64": "^1.3.0",
+    "@napi-rs/keyring-linux-arm64-gnu": "^1.3.0",
+    "@napi-rs/keyring-linux-x64-gnu": "^1.3.0",
+    "@napi-rs/keyring-win32-arm64-msvc": "^1.3.0",
+    "@napi-rs/keyring-win32-x64-msvc": "^1.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@types/node": "^25.7.0",
+    "@vitest/coverage-v8": "^4.1.6",
+    "esbuild": "^0.28.0",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "happy-dom": "^20.9.0",
+    "tsx": "^4.22.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.3",
+    "vitest": "^4.1.6",
+    "vitest-mock-extended": "^4.0.0"
+  }
+}

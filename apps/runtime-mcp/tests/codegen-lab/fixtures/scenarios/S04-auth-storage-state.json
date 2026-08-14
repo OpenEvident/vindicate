@@ -1,0 +1,90 @@
+{
+  "id": "S04-auth-storage-state",
+  "description": "Create flow that emits auth.setup.ts and notice when storage state generation is requested.",
+  "tags": ["practical", "auth"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "auth",
+              "elements": [
+                { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid" },
+                { "ref": "password", "tag": "input", "testid": "password", "testid_attr": "data-testid" },
+                { "ref": "submit", "tag": "button", "role": "button", "name": "Sign in" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open login", "params": [], "actions": [{ "do": "navigate" }] },
+                {
+                  "name": "step_login",
+                  "jsdoc": "Log in user",
+                  "params": [
+                    { "name": "email", "type": "string" },
+                    { "name": "password", "type": "string" }
+                  ],
+                  "actions": [
+                    { "do": "fill", "ref": "email", "param": "email" },
+                    { "do": "fill", "ref": "password", "param": "password" },
+                    { "do": "click", "ref": "submit" }
+                  ]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_loggedIn",
+                  "jsdoc": "User sees dashboard",
+                  "params": [],
+                  "assertions": [{ "subject": "page", "matcher": "toHaveURL", "arg": "'/dashboard'" }]
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "loginEmail": "auth@example.com",
+            "loginPassword": "secret"
+          },
+          "spec": {
+            "suite": "App - Auth",
+            "generates_storage_state": "playwright/.auth/user.json",
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-9",
+                "scenario": "Generate auth state",
+                "title": "[AC-9] should generate storage state",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_navigate" },
+                  {
+                    "fixture": "loginPage",
+                    "call": "step_login",
+                    "args": ["expected.loginEmail", "expected.loginPassword"]
+                  },
+                  { "fixture": "loginPage", "call": "verify_loggedIn" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["auth.setup.ts", "tests/auth.spec.ts"],
+    "mustContain": {
+      "auth.setup.ts": ["import { test as setup } from '@playwright/test';", "import { LoginPage } from '@config/page-loader';", "playwright/.auth/user.json"],
+      "tests/auth.spec.ts": ["App - Auth"]
+    },
+    "invariants": ["I1", "I2", "I6", "I9"],
+    "compile": true
+  }
+}

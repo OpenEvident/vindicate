@@ -1,0 +1,149 @@
+{
+  "name": "vindicate",
+  "version": "0.1.0",
+  "displayName": "Vindicate",
+  "description": "Vindicate — AI-native quality orchestrator for your project",
+  "publisher": "Vindicate",
+  "icon": "resources/vindicate-logo.png",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:vindicate.sidebar",
+    "onView:vindicate.panel",
+    "onCommand:vindicate.openHome",
+    "onCommand:vindicate.showPanel",
+    "onCommand:vindicate.openRecordings",
+    "onCommand:vindicate.statusBarMenu"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "vindicate.openHome",
+        "title": "Vindicate: Open Home"
+      },
+      {
+        "command": "vindicate.showPanel",
+        "title": "Vindicate: Show Panel"
+      },
+      {
+        "command": "vindicate.openRecordings",
+        "title": "Vindicate: Open Recordings"
+      },
+      {
+        "command": "vindicate.statusBarMenu",
+        "title": "Vindicate: Quick Actions"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vindicate",
+          "title": "Vindicate",
+          "icon": "resources/vindicate-logo.png"
+        }
+      ],
+      "panel": [
+        {
+          "id": "vindicate-panel-container",
+          "title": "Prompts & Config",
+          "icon": "resources/vindicate-logo.png"
+        }
+      ]
+    },
+    "views": {
+      "vindicate": [
+        {
+          "type": "webview",
+          "id": "vindicate.sidebar",
+          "name": "Vindicate"
+        }
+      ],
+      "vindicate-panel-container": [
+        {
+          "type": "webview",
+          "id": "vindicate.panel",
+          "name": "Prompts & Config",
+          "retainContextWhenHidden": true
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "vindicate.openHome",
+          "when": "view == vindicate.panel",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Vindicate",
+      "properties": {
+        "vindicate.debugLogging": {
+          "type": "boolean",
+          "default": false,
+          "description": "Write a debug log file to ~/.vindicate/logs/ that captures events from the extension, MCP server, and runtime worker. Share the file with the Vindicate team when reporting issues."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "pnpm --filter @vindicate/runtime-worker run build:bundle && pnpm --filter @vindicate/runtime-mcp run build:bundle && node esbuild.mjs && vite build && node scripts/verify-webview-build.mjs",
+    "build:extension": "node esbuild.mjs",
+    "watch": "concurrently \"pnpm --filter @vindicate/runtime-mcp run watch\" \"node esbuild.mjs --watch\" \"vite build --watch\"",
+    "dev": "pnpm run watch",
+    "typecheck": "tsc -p tsconfig.extension.json --noEmit && tsc -p tsconfig.webview.json --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:e2e": "pnpm run build && vscode-test",
+    "test:coverage": "vitest run --coverage",
+    "verify": "pnpm run typecheck && pnpm run lint && pnpm run test",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "package": "pnpm run build && vsce package --no-dependencies --allow-missing-repository",
+    "package:vsix": "pnpm run package",
+    "verify:bundle": "node scripts/verify-release-bundle.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.7.0",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@types/vscode": "^1.105.0",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitest/coverage-v8": "^4.1.7",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.9.1",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.28.0",
+    "esbuild-register": "^3.6.0",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.4",
+    "vite": "^8.0.14",
+    "vitest": "^4.1.7"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-resizable-panels": "^3.0.6",
+    "zustand": "^5.0.13"
+  }
+}

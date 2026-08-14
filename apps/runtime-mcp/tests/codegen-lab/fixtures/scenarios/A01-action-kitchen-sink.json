@@ -1,0 +1,103 @@
+{
+  "id": "A01-action-kitchen-sink",
+  "description": "Covers every supported action type in generated step methods.",
+  "tags": ["advanced", "actions"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "kitchen",
+        "schema": {
+          "pages": [
+            {
+              "feature": "kitchen",
+              "page_class": "KitchenPage",
+              "path": "/kitchen",
+              "owned_by": "kitchen",
+              "elements": [
+                { "ref": "inputA", "tag": "input", "testid": "input-a", "testid_attr": "data-testid" },
+                { "ref": "buttonA", "tag": "button", "role": "button", "name": "Primary" },
+                { "ref": "checkA", "tag": "input", "testid": "check-a", "testid_attr": "data-testid", "type": "checkbox" },
+                { "ref": "selectA", "tag": "select", "testid": "select-a", "testid_attr": "data-testid" },
+                { "ref": "uploadA", "tag": "input", "testid": "upload-a", "testid_attr": "data-testid", "type": "file" },
+                { "ref": "cardA", "tag": "div", "role": "region", "name": "Main card" },
+                { "ref": "bannerClose", "tag": "button", "testid": "banner-close", "testid_attr": "data-testid" },
+                { "ref": "rangeA", "tag": "input", "testid": "range-a", "testid_attr": "data-testid", "type": "range" },
+                { "ref": "dragSource", "tag": "div", "testid": "drag-source", "testid_attr": "data-testid" },
+                { "ref": "dragTarget", "tag": "div", "testid": "drag-target", "testid_attr": "data-testid" }
+              ],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_allActions",
+                  "jsdoc": "Exercise all supported actions",
+                  "params": [],
+                  "actions": [
+                    { "do": "navigate" },
+                    { "do": "click_if_visible", "ref": "bannerClose" },
+                    { "do": "waitForPageLoad" },
+                    { "do": "waitForURL", "pattern": "/kitchen" },
+                    { "do": "waitForResponse", "urlPattern": "/api/kitchen" },
+                    { "do": "fill", "ref": "inputA", "value": "hello" },
+                    { "do": "fill", "ref": "rangeA", "value": "75" },
+                    { "do": "click", "ref": "buttonA" },
+                    { "do": "hover", "ref": "cardA" },
+                    { "do": "check", "ref": "checkA" },
+                    { "do": "uncheck", "ref": "checkA" },
+                    { "do": "select", "ref": "selectA", "value": "one" },
+                    { "do": "press", "key": "Enter" },
+                    { "do": "upload", "ref": "uploadA", "files": ["support/data/kitchen/sample.pdf"] },
+                    { "do": "dblclick", "ref": "buttonA" },
+                    { "do": "drag", "ref": "dragSource", "toRef": "dragTarget" },
+                    { "do": "drag", "ref": "dragSource", "toRef": "dragTarget", "strategy": "native" },
+                    { "do": "scroll", "ref": "cardA" },
+                    { "do": "accept_dialog" },
+                    { "do": "dismiss_dialog" }
+                  ]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_done",
+                  "jsdoc": "Flow finished",
+                  "params": [],
+                  "assertions": [{ "subject": "element", "ref": "buttonA", "matcher": "toBeVisible" }]
+                }
+              ]
+            }
+          ],
+          "observed_endpoints": ["/api/kitchen"],
+          "spec": {
+            "suite": "App - Kitchen",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-100",
+                "scenario": "All actions",
+                "title": "[AC-100] should emit all actions",
+                "body": [
+                  { "fixture": "kitchenPage", "call": "step_allActions" },
+                  { "fixture": "kitchenPage", "call": "verify_done" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["pages/KitchenPage.ts", "tests/kitchen.spec.ts"],
+    "invariants": ["I1", "I2", "I6", "I9", "I11", "I12"],
+    "compile": true,
+    "golden": true,
+    "goldenFiles": [
+      "pages/KitchenPage.ts",
+      "tests/kitchen.spec.ts"
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "id": "A03-step-verify-params",
+  "description": "Generated methods preserve typed params for steps and verifies.",
+  "tags": ["advanced", "params"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "params",
+        "schema": {
+          "pages": [
+            {
+              "feature": "params",
+              "page_class": "ParamsPage",
+              "path": "/params",
+              "owned_by": "params",
+              "elements": [
+                { "ref": "query", "tag": "input", "testid": "query", "testid_attr": "data-testid" },
+                { "ref": "search", "tag": "button", "role": "button", "name": "Search" }
+              ],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_search",
+                  "jsdoc": "Search by term",
+                  "params": [{ "name": "term", "type": "string" }],
+                  "actions": [
+                    { "do": "fill", "ref": "query", "param": "term" },
+                    { "do": "click", "ref": "search" }
+                  ]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_results",
+                  "jsdoc": "Verify expected count",
+                  "params": [{ "name": "expectedCount", "type": "number" }],
+                  "assertions": [{ "subject": "element", "ref": "search", "matcher": "toBeVisible" }]
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "searchTerm": "orders"
+          },
+          "spec": {
+            "suite": "App - Params",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-70",
+                "scenario": "Params compile",
+                "title": "[AC-70] should expose typed params",
+                "body": [
+                  { "fixture": "paramsPage", "call": "step_search", "args": ["expected.searchTerm"] },
+                  { "fixture": "paramsPage", "call": "verify_results", "args": ["5"] }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["pages/ParamsPage.ts", "tests/params.spec.ts"],
+    "mustContain": {
+      "pages/ParamsPage.ts": [
+        "async step_search(term: string): Promise<this>",
+        "await this.queryInput.fill(term);",
+        "async verify_results(expectedCount: number): Promise<this>"
+      ],
+      "tests/params.spec.ts": ["await paramsPage.step_search(expected.searchTerm);", "await paramsPage.verify_results(5);"]
+    },
+    "invariants": ["I1", "I2", "I6", "I9"],
+    "compile": true
+  }
+}

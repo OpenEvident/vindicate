@@ -1,0 +1,100 @@
+{
+  "graphId": "main",
+  "version": 2,
+  "description": "Day-to-day test automation — the universal loop with path-based entry. understand → ground → design → generate → execute → heal → audit, plus a coverage node (reachable via the gaps path through ground, or entered directly via the coverage path for a read-only AC diff) and escalate as a terminal outcome.",
+  "loop": ["understand", "ground", "design", "generate", "execute", "heal", "audit"],
+  "entryPoints": {
+    "write": "understand",
+    "fix": "heal",
+    "flaky": "heal",
+    "refactor": "design",
+    "gaps": "ground",
+    "coverage": "coverage",
+    "smoke": "execute",
+    "requirements": "requirements"
+  },
+  "nodes": {
+    "understand": {
+      "label": "Understand",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "ground", "when": "requirement drafted (story status: draft); elements not yet captured" }
+      ]
+    },
+    "ground": {
+      "label": "Ground",
+      "terminal": false,
+      "modes": ["ai-explore", "human-record", "source-scan", "recording-ingest", "api-ingest"],
+      "edges": [
+        { "to": "design", "when": "path == write — required elements captured/validated (or ingested from a recording)" },
+        { "to": "generate", "when": "path == fix — the failing element has been re-captured" },
+        { "to": "coverage", "when": "path == gaps — screens mapped against the test inventory" }
+      ]
+    },
+    "design": {
+      "label": "Design",
+      "terminal": false,
+      "modes": ["write-plan", "refactor-plan"],
+      "edges": [
+        { "to": "generate", "when": "the story + test plan were approved by the user" },
+        { "to": "ground", "when": "an approved scenario has no captured locator evidence — capture it, then return to design" }
+      ]
+    },
+    "generate": {
+      "label": "Generate",
+      "terminal": false,
+      "modes": ["create", "add_test_cases", "register_page", "direct-edit", "create_api", "add_api_test_cases", "register_client"],
+      "edges": [
+        { "to": "execute", "when": "files written/edited and `npm run audit` is clean" }
+      ]
+    },
+    "execute": {
+      "label": "Execute",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "audit", "when": "all targeted tests pass" },
+        { "to": "heal", "when": "there are failures that look fixable in-workflow" },
+        { "to": "escalate", "when": "a failure is a genuine app bug — do not edit the tests" }
+      ]
+    },
+    "heal": {
+      "label": "Heal",
+      "terminal": false,
+      "modes": ["failure-triage", "flaky-triage"],
+      "edges": [
+        { "to": "ground", "when": "root cause == locator drift — the element must be re-captured" },
+        { "to": "generate", "when": "root cause == test/spec bug or flakiness (waits/races) — fix via direct edit or codegen" },
+        { "to": "escalate", "when": "root cause == app bug or environment — stop and report" }
+      ]
+    },
+    "coverage": {
+      "label": "Coverage",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "audit", "when": "a gap report was produced and the user wants analysis only" },
+        { "to": "design", "when": "the user chose to fill the gaps now — continue as a write flow" }
+      ]
+    },
+    "audit": {
+      "label": "Audit",
+      "terminal": true,
+      "modes": [],
+      "edges": []
+    },
+    "escalate": {
+      "label": "Escalate",
+      "terminal": true,
+      "modes": [],
+      "edges": []
+    },
+    "requirements": {
+      "label": "Requirements",
+      "terminal": true,
+      "modes": [],
+      "edges": []
+    }
+  }
+}

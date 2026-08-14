@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["tests/**/*.ts"],
+  "exclude": ["tests/codegen-lab/fixtures/**"]
+}

@@ -1,0 +1,218 @@
+{
+  "id": "R04-auth-login-flow-corrected",
+  "description": "Corrected auth login flow: owned_by matches feature, URL args are quoted TS expressions.",
+  "tags": ["regression", "auth", "create", "multi-page"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "auth",
+              "elements": [
+                {
+                  "ref": "email",
+                  "tag": "input",
+                  "testid": "email",
+                  "testid_attr": "e2e",
+                  "name": "E-mail address",
+                  "role": "textbox"
+                },
+                {
+                  "ref": "password",
+                  "tag": "input",
+                  "testid": "password",
+                  "testid_attr": "e2e",
+                  "name": "Password",
+                  "role": "textbox"
+                },
+                {
+                  "ref": "login_btn",
+                  "tag": "button",
+                  "testid": "login",
+                  "testid_attr": "e2e",
+                  "name": "login",
+                  "role": "button"
+                },
+                {
+                  "ref": "login_error",
+                  "tag": "div",
+                  "testid": "login-error",
+                  "testid_attr": "e2e",
+                  "name": "Error",
+                  "role": "alert"
+                }
+              ],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_goto_login",
+                  "jsdoc": "Navigate to the login page",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }, { "do": "waitForPageLoad" }]
+                },
+                {
+                  "name": "step_submit_login",
+                  "jsdoc": "Click the login button",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "login_btn" }]
+                },
+                {
+                  "name": "step_enter_valid_credentials",
+                  "jsdoc": "Fill valid staging credentials",
+                  "params": [
+                    { "name": "email", "type": "string" },
+                    { "name": "password", "type": "string" }
+                  ],
+                  "actions": [
+                    { "do": "fill", "ref": "email", "param": "email" },
+                    { "do": "fill", "ref": "password", "param": "password" }
+                  ]
+                },
+                {
+                  "name": "step_enter_invalid_credentials",
+                  "jsdoc": "Fill invalid credentials for negative test",
+                  "params": [
+                    { "name": "email", "type": "string" },
+                    { "name": "password", "type": "string" }
+                  ],
+                  "actions": [
+                    { "do": "fill", "ref": "email", "param": "email" },
+                    { "do": "fill", "ref": "password", "param": "password" }
+                  ]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_error_displayed",
+                  "jsdoc": "Assert login error alert is visible with expected message",
+                  "params": [],
+                  "assertions": [
+                    {
+                      "subject": "element",
+                      "ref": "login_error",
+                      "waitFor": "visible",
+                      "matcher": "toBeVisible"
+                    },
+                    {
+                      "subject": "element",
+                      "ref": "login_error",
+                      "matcher": "toContainText",
+                      "arg": "expected.loginErrorMessage"
+                    }
+                  ]
+                },
+                {
+                  "name": "verify_stays_on_login_page",
+                  "jsdoc": "Assert user remains on the login page",
+                  "params": [],
+                  "assertions": [{ "subject": "page", "matcher": "toHaveURL", "arg": "'/login'" }]
+                }
+              ]
+            },
+            {
+              "feature": "auth",
+              "page_class": "HomePage",
+              "path": "/",
+              "owned_by": "auth",
+              "elements": [{ "ref": "home_link", "tag": "a", "name": "Home", "role": "link" }],
+              "types": [],
+              "steps": [],
+              "verifies": [
+                {
+                  "name": "verify_authenticated_home",
+                  "jsdoc": "Assert user reached the authenticated home dashboard",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "page", "matcher": "toHaveURL", "arg": "'/'" },
+                    {
+                      "subject": "element",
+                      "ref": "home_link",
+                      "waitFor": "visible",
+                      "matcher": "toBeVisible"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "validEmail": "fihod13423@imfaya.com",
+            "validPassword": "Test@1234",
+            "invalidEmail": "invalid@test.com",
+            "invalidPassword": "wrongpassword123",
+            "loginErrorMessage": "Incorrect username or password."
+          },
+          "spec": {
+            "suite": "Auth Login Flow",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Valid Login",
+                "title": "[AC-1] should log in with valid credentials and reach home",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_goto_login" },
+                  {
+                    "fixture": "loginPage",
+                    "call": "step_enter_valid_credentials",
+                    "args": ["expected.validEmail", "expected.validPassword"]
+                  },
+                  { "fixture": "loginPage", "call": "step_submit_login" },
+                  { "fixture": "homePage", "call": "verify_authenticated_home" }
+                ]
+              },
+              {
+                "ac_id": "AC-2",
+                "scenario": "Invalid Login",
+                "title": "[AC-2] should show error for invalid credentials on login page",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_goto_login" },
+                  {
+                    "fixture": "loginPage",
+                    "call": "step_enter_invalid_credentials",
+                    "args": ["expected.invalidEmail", "expected.invalidPassword"]
+                  },
+                  { "fixture": "loginPage", "call": "step_submit_login" },
+                  { "fixture": "loginPage", "call": "verify_stays_on_login_page" },
+                  { "fixture": "loginPage", "call": "verify_error_displayed" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": [
+      "pages/LoginPage.ts",
+      "pages/HomePage.ts",
+      "tests/auth.spec.ts"
+    ],
+    "filesWrittenIncludes": ["pages/LoginPage.ts", "pages/HomePage.ts"],
+    "mustContain": {
+      "support/config/page.config.ts": ["loginPage: LoginPage", "homePage: HomePage"],
+      "pages/LoginPage.ts": [
+        "async step_enter_valid_credentials(email: string, password: string)",
+        "await this.emailInput.fill(email);",
+        "await this.passwordInput.fill(password);"
+      ],
+      "pages/HomePage.ts": ["toHaveURL('/')", "async verify_authenticated_home("],
+      "tests/auth.spec.ts": [
+        "await loginPage.step_enter_valid_credentials(expected.validEmail, expected.validPassword);"
+      ]
+    },
+    "invariants": ["I1", "I2", "I6", "I9"],
+    "compile": true
+  }
+}

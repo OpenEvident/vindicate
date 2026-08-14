@@ -1,0 +1,47 @@
+{
+  "id": "E08-missing-barrel-anchor",
+  "description": "Create mode fails when page-loader anchor comments are missing.",
+  "tags": ["edge", "anchors"],
+  "project": {
+    "scaffold": "minimal",
+    "prewriteFiles": {
+      "support/config/page-loader.ts": "// scaffold file without anchor comments\n"
+    }
+  },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "edge8",
+        "schema": {
+          "pages": [
+            {
+              "feature": "edge8",
+              "page_class": "EdgePage",
+              "path": "/edge",
+              "owned_by": "edge8",
+              "elements": [{ "ref": "save", "tag": "button", "role": "button", "name": "Save" }],
+              "types": [],
+              "steps": [{ "name": "step_save", "jsdoc": "save", "params": [], "actions": [{ "do": "click", "ref": "save" }] }],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "App - Edge8",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [{ "ac_id": "AC-1", "scenario": "missing anchors", "title": "[AC-1] should fail", "body": [{ "fixture": "edgePage", "call": "step_save" }] }]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": false,
+    "error": {
+      "type": "CodegenStructuralError",
+      "messageIncludes": "Barrel anchor not found"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "E01-ghost-ref-in-step",
+  "description": "Structural check fails when step references a missing element ref.",
+  "tags": ["edge", "structural"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "edge1",
+        "schema": {
+          "pages": [
+            {
+              "feature": "edge1",
+              "page_class": "EdgePage",
+              "path": "/edge",
+              "owned_by": "edge1",
+              "elements": [{ "ref": "present", "tag": "button", "role": "button", "name": "Present" }],
+              "types": [],
+              "steps": [{ "name": "step_clickGhost", "jsdoc": "Click missing ref", "params": [], "actions": [{ "do": "click", "ref": "missing" }] }],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "App - Edge1",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [{ "ac_id": "AC-1", "scenario": "ghost ref", "title": "[AC-1] should fail", "body": [{ "fixture": "edgePage", "call": "step_clickGhost" }] }]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": false,
+    "filesNotExist": ["pages/EdgePage.ts"],
+    "error": {
+      "type": "CodegenStructuralError",
+      "messageIncludes": "uses ref 'missing'"
+    }
+  }
+}

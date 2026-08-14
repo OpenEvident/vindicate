@@ -1,0 +1,71 @@
+{
+  "id": "R01-page-config-comment-no-false-skip",
+  "description": "Regression guard: fixture registration must not be skipped by scaffold example comments.",
+  "tags": ["regression", "page-config"],
+  "project": { "scaffold": "production" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "auth",
+              "elements": [{ "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid" }],
+              "types": [],
+              "steps": [{ "name": "step_login", "jsdoc": "Open login", "params": [], "actions": [{ "do": "navigate" }] }],
+              "verifies": []
+            },
+            {
+              "feature": "auth",
+              "page_class": "HomePage",
+              "path": "/",
+              "owned_by": "auth",
+              "elements": [{ "ref": "dash", "tag": "a", "role": "link", "name": "Dashboard" }],
+              "types": [],
+              "steps": [{ "name": "step_openDashboard", "jsdoc": "Open dashboard", "params": [], "actions": [{ "do": "click", "ref": "dash" }] }],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "App - Auth",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Fixture registration",
+                "title": "[AC-1] should register all fixtures",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_login" },
+                  { "fixture": "homePage", "call": "step_openDashboard" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["support/config/page.config.ts"],
+    "mustContain": {
+      "support/config/page.config.ts": [
+        "import { LoginPage } from './page-loader';",
+        "import { HomePage } from './page-loader';",
+        "loginPage: LoginPage;",
+        "homePage: HomePage;",
+        "loginPage: async ({ page }, use)",
+        "homePage: async ({ page }, use)"
+      ]
+    },
+    "invariants": ["I1", "I2", "I6", "I9"],
+    "compile": true
+  }
+}

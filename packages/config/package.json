@@ -1,0 +1,14 @@
+{
+  "name": "@vindicate/config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "node -e \"console.log('lint placeholder: @vindicate/config')\"",
+    "test": "node -e \"console.log('test placeholder: @vindicate/config')\"",
+    "clean": "node -e \"console.log('clean placeholder: @vindicate/config')\""
+  }
+}

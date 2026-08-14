@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vindicate</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg-subtle: #f7f8fa;
+        --bg-hover: #f0f2f5;
+        --border: #e2e5ea;
+        --border-strong: #c9cdd4;
+        --text: #111318;
+        --text-secondary: #5a6070;
+        --text-muted: #8c95a3;
+        --accent: #5c6ac4;
+        --accent-hover: #4b59b3;
+        --accent-fg: #ffffff;
+        --success: #1a7f4b;
+        --success-bg: #edf7f2;
+        --warning: #b45309;
+        --danger: #c0392b;
+        --danger-bg: #fef2f2;
+        --danger-border: #fecaca;
+        --radius: 8px;
+        --radius-sm: 5px;
+        --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      body {
+        font-family: var(--font);
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0;
+        padding: 8px;
+        color: var(--text);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── Layout ─────────────────────────────── */
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 14px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .panel-logo {
+        width: 18px;
+        height: 18px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='100%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23ff4d2e'/%3E%3Cstop offset='50%25' stop-color='%23f2c061'/%3E%3Cstop offset='100%25' stop-color='%231aa8e5'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0%25' y1='100%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23f2c061'/%3E%3Cstop offset='60%25' stop-color='%23bf6ed1'/%3E%3Cstop offset='100%25' stop-color='%23927edc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='8.5' fill='none' stroke='url(%23g1)' stroke-width='2.2'/%3E%3Cellipse cx='12' cy='12' rx='5.6' ry='4.1' transform='rotate(24 12 12)' fill='none' stroke='url(%23g2)' stroke-width='2.2'/%3E%3C/svg%3E");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 50%;
+        flex-shrink: 0;
+        font-size: 0;
+        line-height: 0;
+      }
+
+      .panel-title {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .panel-phase {
+        margin-left: auto;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2px 9px;
+        text-transform: capitalize;
+      }
+
+      .panel-body {
+        display: block;
+        padding: 18px 14px;
+      }
+
+      /* ── Typography ──────────────────────────── */
+      h2,
+      .panel-section-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 12px;
+        color: var(--text);
+      }
+
+      .panel-subtitle {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin: 0 0 18px;
+      }
+
+      h3 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 6px;
+        color: var(--text);
+      }
+
+      .panel-body p {
+        margin: 0 0 10px;
+        font-size: 12.5px;
+      }
+
+      .panel-body ul {
+        margin: 0 0 10px;
+        padding-left: 18px;
+        font-size: 12.5px;
+      }
+
+      .panel-body li {
+        margin-bottom: 3px;
+      }
+
+      /* ── Phase list ──────────────────────────── */
+      .phase-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        margin-bottom: 18px;
+      }
+
+      .phase-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 10px;
+        border-radius: var(--radius-sm);
+      }
+
+      .phase-row.is-done  { color: var(--success); }
+      .phase-row.is-active { background: #eef0fb; color: var(--accent); font-weight: 500; }
+      .phase-row.is-pending { color: var(--text-muted); }
+
+      .phase-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        flex-shrink: 0;
+        font-weight: 700;
+      }
+
+      .is-done  .phase-icon { background: var(--success-bg); color: var(--success); }
+      .is-active .phase-icon { background: var(--accent); color: #fff; }
+      .is-pending .phase-icon {
+        background: var(--bg-subtle);
+        color: var(--border-strong);
+        border: 1px solid var(--border);
+      }
+
+      .phase-label {
+        font-size: 13px;
+        text-transform: capitalize;
+        flex: 1;
+      }
+
+      .phase-running-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: blink 1.4s infinite;
+      }
+
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.25; }
+      }
+
+      /* ── Form ────────────────────────────────── */
+      .field {
+        margin-bottom: 13px;
+      }
+
+      .field label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 5px;
+      }
+
+      .field input,
+      .field select {
+        width: 100%;
+        font: inherit;
+        font-size: 13px;
+        padding: 7px 10px;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        background: var(--bg);
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.12s, box-shadow 0.12s;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .field select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c95a3'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 28px;
+        cursor: pointer;
+      }
+
+      .field input:focus,
+      .field select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(92,106,196,.14);
+      }
+
+      .field input::placeholder { color: var(--text-muted); }
+
+      /* ── Buttons ─────────────────────────────── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: background 0.12s;
+        width: 100%;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: var(--accent-fg);
+        margin-top: 4px;
+      }
+      .btn-primary:hover { background: var(--accent-hover); }
+
+      .btn-secondary {
+        background: var(--bg-subtle);
+        color: var(--text-secondary);
+        border-color: var(--border-strong);
+        margin-top: 4px;
+      }
+      .btn-secondary:hover { background: var(--bg-hover); }
+
+      .btn-sm {
+        padding: 4px 9px;
+        font-size: 11.5px;
+        width: auto;
+      }
+
+      .btn-danger {
+        background: var(--danger-bg);
+        color: var(--danger);
+        border-color: var(--danger-border);
+      }
+      .btn-danger:hover { background: #fee2e2; }
+
+      .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+      /* ── Running phase pill ─────────────────── */
+      .panel-phase-running {
+        background: #eef0fb;
+        color: var(--accent);
+        border-color: transparent;
+      }
+
+      /* ── Design review box ───────────────────── */
+      .design-box {
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: var(--text);
+        white-space: pre-wrap;
+        word-break: break-word;
+        margin-bottom: 4px;
+      }
+
+      /* ── Done state ─────────────────────────── */
+      .panel-phase-done {
+        background: var(--success-bg);
+        color: var(--success);
+        border-color: transparent;
+      }
+
+      .done-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--success-bg);
+        border: 1px solid #bbf7d0;
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 14px;
+      }
+
+      .done-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--success);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .done-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--success);
+        margin-bottom: 2px;
+      }
+
+      .done-sub {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      /* ── Divider ─────────────────────────────── */
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 16px 0;
+      }
+
+      /* ── Table ───────────────────────────────── */
+      table { width: 100%; border-collapse: collapse; font-size: 12px; }
+      th {
+        text-align: left;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+      tr:last-child td { border-bottom: none; }
+      tr:hover td { background: var(--bg-hover); }
+
+      .data-table {
+        margin-top: 8px;
+      }
+
+      .status-covered { color: var(--success); font-weight: 600; }
+      .status-partial { color: var(--warning); font-weight: 600; }
+      .status-none    { color: var(--danger);  font-weight: 600; }
+
+      /* ── Design approval ───────────────────── */
+      .suite-block {
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        margin-bottom: 10px;
+      }
+
+      .suite-block h3 {
+        margin: 0 0 8px;
+      }
+
+      .suite-actions {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+
+      .suite-actions .btn {
+        width: auto;
+      }
+
+      .case-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 5px 0;
+        font-size: 12.5px;
+        border-top: 1px solid var(--border);
+      }
+
+      .case-row:first-of-type {
+        border-top: none;
+      }
+
+      .panel-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+        margin-top: 6px;
+      }
+
+      /* ── Test run results ────────────────────── */
+      .test-result-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .test-result-row {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+      }
+
+      .test-result-title {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 12.5px;
+      }
+
+      .test-result-row .failure-error {
+        margin-top: 8px;
+      }
+
+      .panel-phase-fail {
+        color: var(--danger);
+      }
+
+      /* ── Test failure detail ─────────────────── */
+      .failure-card {
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-border);
+        border-radius: var(--radius);
+        padding: 11px 13px;
+        margin-bottom: 8px;
+      }
+
+      .failure-card strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 12.5px;
+      }
+
+      .failure-error {
+        font-family: "Menlo", "Consolas", monospace;
+        font-size: 11px;
+        color: var(--danger);
+        background: none;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .retry-badge {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 7px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #fff7ed;
+        color: var(--warning);
+      }
+
+      .panel-header-failure .panel-title {
+        text-transform: none;
+        letter-spacing: normal;
+        font-size: 13px;
+        color: var(--danger);
+      }
+
+      /* ── Badges ──────────────────────────────── */
+      .badge {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-pass    { background: var(--success-bg); color: var(--success); }
+      .badge-fail    { background: var(--danger-bg);  color: var(--danger); }
+      .badge-skip    { background: var(--bg-subtle);  color: var(--text-muted); }
+      .badge-covered { background: var(--success-bg); color: var(--success); }
+      .badge-partial { background: #fff7ed;            color: var(--warning); }
+      .badge-none    { background: var(--bg-subtle);  color: var(--text-muted); }
+
+      /* ── Metric cards ────────────────────────── */
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .metric-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .metric-row .metric-card {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .metric-card {
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px;
+      }
+
+      .metric-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.1;
+      }
+
+      .metric-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

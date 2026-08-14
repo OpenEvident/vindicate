@@ -1,0 +1,112 @@
+{
+  "id": "S01-login-happy-path-create",
+  "description": "Minimal create flow for a login feature.",
+  "tags": ["practical", "create"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "login",
+        "schema": {
+          "pages": [
+            {
+              "feature": "login",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "login",
+              "elements": [
+                { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid", "type": "email" },
+                { "ref": "password", "tag": "input", "testid": "password", "testid_attr": "data-testid", "type": "password" },
+                { "ref": "submit", "tag": "button", "role": "button", "name": "Sign in" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open login page", "params": [], "actions": [{ "do": "navigate" }] },
+                {
+                  "name": "step_signIn",
+                  "jsdoc": "Fill credentials and submit",
+                  "params": [
+                    { "name": "email", "type": "string" },
+                    { "name": "password", "type": "string" }
+                  ],
+                  "actions": [
+                    { "do": "fill", "ref": "email", "param": "email" },
+                    { "do": "fill", "ref": "password", "param": "password" },
+                    { "do": "click", "ref": "submit" }
+                  ]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_loginVisible",
+                  "jsdoc": "Form is visible",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "element", "ref": "email", "matcher": "toBeVisible" },
+                    { "subject": "page", "matcher": "toHaveTitle", "arg": "'Login'" }
+                  ]
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "loginEmail": "qa@example.com",
+            "loginPassword": "pw12345"
+          },
+          "spec": {
+            "suite": "App - Login",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "User signs in",
+                "title": "[AC-1] should sign in",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_navigate" },
+                  {
+                    "fixture": "loginPage",
+                    "call": "step_signIn",
+                    "args": ["expected.loginEmail", "expected.loginPassword"]
+                  },
+                  { "fixture": "loginPage", "call": "verify_loginVisible" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": [
+      "pages/LoginPage.ts",
+      "tests/login.spec.ts",
+      "support/config/page-loader.ts",
+      "support/config/page.config.ts"
+    ],
+    "filesWrittenIncludes": [
+      "pages/LoginPage.ts",
+      "tests/login.spec.ts"
+    ],
+    "mustContain": {
+      "pages/LoginPage.ts": ["// AUTO-GENERATED", "async step_signIn(email: string, password: string)", "async verify_loginVisible(", "locator-helper:"],
+      "support/config/page.config.ts": ["import { LoginPage } from './page-loader';", "loginPage: LoginPage;", "loginPage: async ({ page }, use)"],
+      "tests/login.spec.ts": ["test.describe('App - Login'", "await loginPage.step_signIn(expected.loginEmail, expected.loginPassword);"]
+    },
+    "mustNotContain": {
+      "pages/LoginPage.ts": ["locator('[", "locator('.", "locator('#"]
+    },
+    "invariants": ["I1", "I2", "I3", "I4", "I5", "I6", "I9"],
+    "compile": true,
+    "golden": true,
+    "goldenFiles": [
+      "pages/LoginPage.ts",
+      "tests/login.spec.ts",
+      "support/config/page.config.ts"
+    ]
+  }
+}

@@ -1,0 +1,7922 @@
+@import "tailwindcss";
+
+@theme {
+  --color-vsc-bg: var(--vscode-sideBar-background);
+  --color-vsc-fg: var(--vscode-foreground);
+  --color-vsc-fg-muted: var(--vscode-descriptionForeground);
+  --color-vsc-border: var(--vscode-panel-border);
+  --color-vsc-input-bg: var(--vscode-input-background);
+  --color-vsc-btn-bg: var(--vscode-button-background);
+  --color-vsc-btn-fg: var(--vscode-button-foreground);
+  --color-vsc-btn-hover: var(--vscode-button-hoverBackground);
+  --color-vsc-accent: var(--vscode-focusBorder);
+  --color-vsc-error: var(--vscode-errorForeground);
+  --color-vsc-warn: var(--vscode-editorWarning-foreground);
+  --color-vsc-success: var(--vscode-testing-iconPassed);
+  --color-vindicate-orange: #f97316;
+  --color-vindicate-green: #4ade80;
+  --color-vindicate-red: #f87171;
+
+  --font-sans: var(--vscode-font-family), system-ui, sans-serif;
+  --font-mono: var(--vscode-editor-font-family), Consolas, monospace;
+
+  --text-vsc-sm: var(--vscode-font-size);
+}
+
+@theme {
+  --color-tone-blue: #3b82f6;
+  --color-tone-violet: #8b5cf6;
+  --color-tone-cyan: #06b6d4;
+  --color-tone-amber: #f59e0b;
+  --color-tone-pink: #ec4899;
+  --color-tone-emerald: #10b981;
+  --color-tone-red: #ef4444;
+  --color-vs-bg: var(--vscode-editor-background, #1e1e1e);
+  --color-vs-sidebar: var(--vscode-sideBar-background, #252526);
+  --color-vs-border: var(--vscode-panel-border, rgba(255, 255, 255, 0.1));
+  --color-vs-text: var(--vscode-editor-foreground, #d4d4d4);
+  --color-vs-text-dim: var(--vscode-descriptionForeground, #9da0a6);
+  --color-vs-text-bright: var(--vscode-editor-foreground, #ffffff);
+  --color-vs-accent: var(--vscode-focusBorder, #4a9fd4);
+  --color-vs-hover: var(--vscode-list-hoverBackground, #2a2d2e);
+  --color-vs-input-bg: var(--vscode-input-background, #3c3c3c);
+  --text-ui-sm: 0.6875rem;
+  --text-ui-base: 0.75rem;
+  --text-ui-md: 0.8125rem;
+  --text-ui-lg: 0.875rem;
+  --text-ui-xl: 1.5rem;
+  --text-ui-display: 1.875rem;
+  --animate-pop: pop 0.13s ease-out;
+  --animate-pulse-dot: pulse-dot 1.2s ease-in-out infinite;
+  --animate-shimmer: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+@keyframes shimmer {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
+/* Vindicate Home panel palette (vindicate-vscode-mockup.html) */
+:root {
+  --ord-emerald: #10b981;
+  --ord-amber: #f59e0b;
+  --ord-red: #ef4444;
+  --vs-bg: var(--vscode-editor-background, #1e1e1e);
+  --vs-sidebar: var(--vscode-sideBar-background, #252526);
+  --vs-text: var(--vscode-editor-foreground, #d4d4d4);
+  --vs-text-dim: var(--vscode-descriptionForeground, #9da0a6);
+  --vs-border: var(--vscode-panel-border, rgba(255, 255, 255, 0.1));
+  --vs-accent: var(--vscode-focusBorder, #0e639c);
+  --vs-hover: color-mix(in oklab, var(--vscode-list-hoverBackground, #2a2d2e) 80%, transparent);
+  --vindicate-panel-bg: var(--vscode-editor-background, #1e1e1e);
+  --vindicate-header-bg: color-mix(
+    in oklab,
+    var(--vscode-sideBar-background, #252526) 70%,
+    var(--vscode-editor-background, #1e1e1e) 30%
+  );
+  --vindicate-card-bg: color-mix(
+    in oklab,
+    var(--vscode-editorWidget-background, #252526) 80%,
+    var(--vscode-editor-background, #1e1e1e) 20%
+  );
+  --vindicate-fg: var(--vscode-editor-foreground, #cccccc);
+  --vindicate-fg-muted: var(--vscode-descriptionForeground, #9da0a6);
+  --vindicate-fg-subtle: var(--vscode-disabledForeground, #777);
+  --vindicate-border: var(--vscode-panel-border, rgba(255, 255, 255, 0.1));
+  --vindicate-accent: var(--vscode-focusBorder, #0e639c);
+  --vindicate-accent-hover: var(--vscode-button-hoverBackground, #1177bb);
+  --vindicate-link: var(--vscode-textLink-foreground, #3794ff);
+  --vindicate-status-green: var(--vscode-testing-iconPassed, #4ec9b0);
+  --vindicate-status-red: var(--vscode-testing-iconFailed, #f48771);
+  --vindicate-status-gray: var(--vscode-disabledForeground, #858585);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--vscode-sideBar-background);
+  color: var(--vscode-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  margin: 0;
+  padding: 0;
+}
+
+body[data-surface="editor"],
+#root[data-surface="editor"] {
+  background-color: var(--vindicate-panel-bg);
+  color: var(--vindicate-fg);
+}
+
+/* ── Vindicate panel shell ── */
+.vindicate-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--vindicate-panel-bg);
+  font-family: var(--font-sans);
+}
+
+.vindicate-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  flex-shrink: 0;
+  padding: 0 20px;
+  background: var(--vindicate-header-bg);
+  border-bottom: 1px solid var(--vindicate-border);
+}
+
+.vindicate-header-logo {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+
+.vindicate-user-card {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+
+.vindicate-user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--vindicate-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.vindicate-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.vindicate-user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d4d4d4;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.vindicate-user-email {
+  font-size: 10px;
+  color: #6a6a6a;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.vindicate-user-card--header {
+  max-width: min(240px, 42vw);
+}
+
+.vindicate-profile-avatar-img {
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--vindicate-border) 80%, transparent);
+}
+
+.vindicate-panel-content {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.vindicate-panel-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.vindicate-panel-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.vindicate-panel-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 32px;
+  flex-shrink: 0;
+  padding: 0 16px;
+  background: var(--vindicate-header-bg);
+  border-top: 1px solid var(--vindicate-border);
+}
+
+.vindicate-footer-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--vindicate-status-gray);
+  font-family: var(--font-mono);
+}
+
+.vindicate-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vindicate-status-dot--green {
+  background: var(--vindicate-status-green);
+}
+
+.vindicate-status-dot--red {
+  background: var(--vindicate-status-red);
+}
+
+.vindicate-status-dot--gray {
+  background: var(--vindicate-status-gray);
+}
+
+.vindicate-footer-version {
+  font-size: 10px;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+}
+
+/* ── Sign-in screen ── */
+.vindicate-screen-signin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 24px;
+}
+
+.vindicate-signin-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 12px;
+  filter: brightness(1.1);
+}
+
+.vindicate-signin-tagline {
+  margin-bottom: 28px;
+  max-width: 380px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 28px;
+}
+
+.vindicate-feature-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.vindicate-feature-icon--amber {
+  background: rgba(217, 119, 6, 0.15);
+}
+
+.vindicate-feature-icon--teal {
+  background: rgba(14, 116, 144, 0.15);
+}
+
+.vindicate-feature-icon--green {
+  background: rgba(21, 128, 61, 0.15);
+}
+
+.vindicate-feature-title {
+  margin-bottom: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-feature-desc {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-signin-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.vindicate-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 4px;
+  background: var(--vindicate-accent);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.vindicate-btn-primary:hover:not(:disabled) {
+  background: var(--vindicate-accent-hover);
+}
+
+.vindicate-btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.vindicate-btn-secondary {
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vindicate-fg);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.vindicate-btn-secondary:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.vindicate-btn-copy {
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--vindicate-fg);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.vindicate-btn-copy:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.vindicate-signin-terms {
+  margin-top: 14px;
+  max-width: 380px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-link-button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--vindicate-link);
+  font: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.vindicate-link-button:hover {
+  text-decoration: underline;
+}
+
+.vindicate-signin-error {
+  margin-bottom: 12px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: var(--vscode-errorForeground, #f48771);
+}
+
+.vindicate-gs-signin-error,
+.vindicate-ob-signin-error {
+  margin-top: 8px;
+  margin-bottom: 0;
+  text-align: left;
+  max-width: none;
+}
+
+/* ── Bottom panel (utility) ── */
+.vindicate-utility-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--vindicate-panel-bg);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-utility-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--vindicate-border);
+  background: var(--vindicate-header-bg);
+}
+
+.vindicate-utility-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.vindicate-utility-logo {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+}
+
+.vindicate-utility-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d4d4d4;
+}
+
+.vindicate-utility-status {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.vindicate-utility-status-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-utility-tabs {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--vindicate-border);
+  background: var(--vindicate-header-bg);
+}
+
+.vindicate-utility-tab {
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--vindicate-fg-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.vindicate-utility-tab:hover {
+  color: var(--vindicate-fg);
+}
+
+.vindicate-utility-tab--active {
+  border-bottom-color: var(--vindicate-accent);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-utility-content {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 14px 16px;
+}
+
+.vindicate-utility-section-title {
+  margin-bottom: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-prompt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vindicate-prompt-card {
+  padding: 12px 14px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-prompt-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.vindicate-prompt-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-prompt-badge {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-prompt-badge--onboarding {
+  color: #4fc3f7;
+  background: rgba(14, 99, 156, 0.15);
+}
+
+.vindicate-prompt-badge--maintenance {
+  color: #4ade80;
+  background: rgba(21, 128, 61, 0.12);
+}
+
+.vindicate-prompt-card-desc {
+  margin-bottom: 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-config-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vindicate-config-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 7px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-config-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-config-ok {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4ade80;
+}
+
+.vindicate-config-add {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--vindicate-link);
+  cursor: pointer;
+}
+
+.vindicate-config-add:hover {
+  text-decoration: underline;
+}
+
+.vindicate-config-pending {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-utility-logs {
+  max-width: 360px;
+}
+
+.vindicate-utility-logs-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-utility-logs-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-utility-logs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: flex-start;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid rgba(14, 99, 156, 0.35);
+  border-radius: 6px;
+  background: rgba(14, 99, 156, 0.12);
+  color: #e8f4fc;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.vindicate-utility-logs-btn:hover {
+  border-color: rgba(14, 99, 156, 0.55);
+  background: rgba(14, 99, 156, 0.22);
+  color: #ffffff;
+}
+
+.vindicate-utility-logs-btn:focus-visible {
+  outline: 2px solid var(--vindicate-accent);
+  outline-offset: 2px;
+}
+
+.vindicate-utility-logs-btn:active {
+  background: rgba(14, 99, 156, 0.28);
+}
+
+.vindicate-utility-logs-btn-icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+/* ── Shared screen layouts ── */
+.vindicate-screen-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: min(100%, 480px);
+  padding: 40px 32px;
+}
+
+.vindicate-screen-padded {
+  padding: 28px 24px 24px;
+}
+
+.vindicate-screen-heading-block {
+  margin-bottom: 20px;
+}
+
+.vindicate-screen-heading {
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-screen-sub {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--vindicate-fg-muted);
+}
+
+/* ── Device code screen ── */
+.vindicate-device-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: rgba(14, 99, 156, 0.2);
+  font-size: 22px;
+}
+
+.vindicate-device-title {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  text-align: center;
+}
+
+.vindicate-device-desc {
+  max-width: 280px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--vindicate-fg-muted);
+  text-align: center;
+}
+
+.vindicate-code-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 16px;
+  padding: 16px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-code-value {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #4fc3f7;
+  text-align: center;
+}
+
+.vindicate-copy-chip {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.vindicate-copy-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-device-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.vindicate-waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--vindicate-accent);
+  border-radius: 50%;
+  animation: vindicate-spin 0.8s linear infinite;
+}
+
+.vindicate-btn-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: vindicate-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes vindicate-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vindicate-cancel-link {
+  margin-top: 8px;
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: var(--vindicate-fg-subtle);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.vindicate-cancel-link:hover {
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-timer-urgent {
+  color: var(--vscode-errorForeground, #f48771);
+}
+
+/* ── Tool selection ── */
+.vindicate-tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.vindicate-tool-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s;
+  text-align: left;
+  width: 100%;
+}
+
+.vindicate-tool-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: #222222;
+}
+
+.vindicate-tool-card--selected {
+  border-color: var(--vindicate-accent);
+  background: rgba(14, 99, 156, 0.1);
+}
+
+.vindicate-tool-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  color: #fff;
+  transition: all 0.15s;
+}
+
+.vindicate-tool-card--selected .vindicate-tool-checkbox {
+  border-color: var(--vindicate-accent);
+  background: var(--vindicate-accent);
+}
+
+.vindicate-tool-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 16px;
+  overflow: hidden;
+}
+
+.vindicate-tool-brand-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.vindicate-config-label-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vindicate-config-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.vindicate-config-brand .vindicate-tool-brand-img {
+  width: 18px;
+  height: 18px;
+}
+
+.vindicate-tool-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.vindicate-tool-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-tool-hint {
+  display: block;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-detected-badge {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border: 1px solid rgba(78, 201, 176, 0.2);
+  border-radius: 3px;
+  background: rgba(78, 201, 176, 0.1);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--vindicate-status-green);
+}
+
+.vindicate-not-detected-badge {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-tools-empty {
+  margin-bottom: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-tools-note {
+  margin-bottom: 20px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--vindicate-fg-subtle);
+}
+
+/* ── Open folder ── */
+.vindicate-screen-folder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 24px;
+}
+
+.vindicate-folder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  background: rgba(217, 119, 6, 0.12);
+  font-size: 24px;
+}
+
+.vindicate-folder-welcome {
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  text-align: center;
+}
+
+.vindicate-folder-desc {
+  max-width: 280px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--vindicate-fg-muted);
+  text-align: center;
+}
+
+.vindicate-btn-folder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  margin-bottom: 28px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 4px;
+  background: var(--vindicate-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.vindicate-btn-folder:hover {
+  background: var(--vindicate-accent-hover);
+}
+
+.vindicate-whats-next {
+  width: 100%;
+  max-width: 340px;
+  padding: 14px 16px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-whats-next-title {
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-next-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.vindicate-next-step:last-child {
+  margin-bottom: 0;
+}
+
+.vindicate-next-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border: 1px solid rgba(14, 99, 156, 0.5);
+  border-radius: 50%;
+  background: rgba(14, 99, 156, 0.3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: #4fc3f7;
+}
+
+.vindicate-next-text {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-next-text strong {
+  font-weight: 500;
+  color: var(--vindicate-fg);
+}
+
+/* ── Mode selection ── */
+.vindicate-state-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.vindicate-state-card {
+  position: relative;
+  overflow: hidden;
+  padding: 12px 12px 10px;
+  border: 1px solid var(--vindicate-border);
+  border-top: 3px solid transparent;
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+  cursor: pointer;
+  user-select: none;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.vindicate-state-card:hover:not(:disabled) {
+  background: #222222;
+}
+
+.vindicate-state-card--build {
+  border-top-color: #c2410c;
+}
+
+.vindicate-state-card--fix {
+  border-top-color: #be123c;
+}
+
+.vindicate-state-card--structure {
+  border-top-color: #0e7490;
+}
+
+.vindicate-state-card--bridge {
+  border-top-color: #15803d;
+}
+
+.vindicate-state-card--selected.vindicate-state-card--build {
+  border-color: rgba(194, 65, 12, 0.5);
+  background: rgba(194, 65, 12, 0.07);
+}
+
+.vindicate-state-card--selected.vindicate-state-card--fix {
+  border-color: rgba(190, 18, 60, 0.5);
+  background: rgba(190, 18, 60, 0.07);
+}
+
+.vindicate-state-card--selected.vindicate-state-card--structure {
+  border-color: rgba(14, 116, 144, 0.5);
+  background: rgba(14, 116, 144, 0.07);
+}
+
+.vindicate-state-card--selected.vindicate-state-card--bridge {
+  border-color: rgba(21, 128, 61, 0.5);
+  background: rgba(21, 128, 61, 0.07);
+}
+
+.vindicate-state-card--disabled {
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.vindicate-coming-soon-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-sc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.vindicate-sc-tag {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.vindicate-state-card--build .vindicate-sc-tag {
+  color: #c2410c;
+  background: rgba(194, 65, 12, 0.12);
+}
+
+.vindicate-state-card--fix .vindicate-sc-tag {
+  color: #be123c;
+  background: rgba(190, 18, 60, 0.12);
+}
+
+.vindicate-state-card--structure .vindicate-sc-tag {
+  color: #0e7490;
+  background: rgba(14, 116, 144, 0.12);
+}
+
+.vindicate-state-card--bridge .vindicate-sc-tag {
+  color: #15803d;
+  background: rgba(21, 128, 61, 0.12);
+}
+
+.vindicate-sc-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  color: transparent;
+  transition: all 0.15s;
+}
+
+.vindicate-state-card--selected .vindicate-sc-check {
+  color: currentColor;
+  background: currentColor;
+}
+
+.vindicate-state-card--selected.vindicate-state-card--build .vindicate-sc-check {
+  color: #c2410c;
+}
+
+.vindicate-state-card--selected.vindicate-state-card--fix .vindicate-sc-check {
+  color: #be123c;
+}
+
+.vindicate-state-card--selected.vindicate-state-card--structure .vindicate-sc-check {
+  color: #0e7490;
+}
+
+.vindicate-state-card--selected.vindicate-state-card--bridge .vindicate-sc-check {
+  color: #15803d;
+}
+
+.vindicate-sc-check svg {
+  display: none;
+}
+
+.vindicate-state-card--selected .vindicate-sc-check svg {
+  display: block;
+  color: #fff;
+}
+
+.vindicate-sc-headline {
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-sc-symptoms {
+  margin: 0 0 10px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  list-style: none;
+}
+
+.vindicate-sc-symptoms li {
+  position: relative;
+  padding-left: 12px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #6a6a6a;
+}
+
+.vindicate-sc-symptoms li::before {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  opacity: 0.6;
+  content: "";
+}
+
+.vindicate-state-card--build .vindicate-sc-symptoms li::before {
+  background: #c2410c;
+}
+
+.vindicate-state-card--fix .vindicate-sc-symptoms li::before {
+  background: #be123c;
+}
+
+.vindicate-state-card--structure .vindicate-sc-symptoms li::before {
+  background: #0e7490;
+}
+
+.vindicate-state-card--bridge .vindicate-sc-symptoms li::before {
+  background: #15803d;
+}
+
+.vindicate-sc-footer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.vindicate-sc-footer-label {
+  padding-top: 2px;
+  padding-right: 8px;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-subtle);
+  white-space: nowrap;
+}
+
+.vindicate-sc-footer-text {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #6a6a6a;
+}
+
+/* ── Getting started / build ── */
+.vindicate-screen-build {
+  padding: 24px 20px 28px;
+}
+
+.vindicate-gs-mode-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.vindicate-gs-mode-chip {
+  padding: 3px 9px;
+  border: 1px solid rgba(194, 65, 12, 0.3);
+  border-radius: 3px;
+  background: rgba(194, 65, 12, 0.14);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #fb923c;
+}
+
+.vindicate-gs-mode-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #d4d4d4;
+}
+
+.vindicate-gs-progress-section {
+  margin-bottom: 28px;
+}
+
+.vindicate-gs-progress-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.vindicate-gs-progress-text,
+.vindicate-gs-progress-pct {
+  font-size: 11px;
+  color: #666666;
+}
+
+.vindicate-gs-progress-pct {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #444444;
+}
+
+.vindicate-gs-progress-track {
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vindicate-gs-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--vindicate-accent);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vindicate-gs-predone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(74, 222, 128, 0.1);
+  border-radius: 7px;
+  background: rgba(21, 128, 61, 0.06);
+}
+
+.vindicate-gs-predone-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: 50%;
+  background: rgba(21, 128, 61, 0.25);
+  color: #4ade80;
+}
+
+.vindicate-gs-predone-label {
+  flex: 1;
+  font-size: 12px;
+  color: #555555;
+}
+
+.vindicate-gs-predone-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #4ade80;
+}
+
+/* ── Onboarding complete (post-setup) ── */
+.vindicate-setup-complete {
+  margin: 20px 20px 28px;
+  padding: 18px 20px 16px;
+  border: 1px solid rgba(74, 222, 128, 0.18);
+  border-radius: 10px;
+  background: linear-gradient(165deg, rgba(21, 128, 61, 0.12) 0%, rgba(21, 128, 61, 0.04) 55%, #1a1a1a 100%);
+}
+
+.vindicate-setup-complete-hero {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.vindicate-setup-complete-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  border-radius: 50%;
+  background: rgba(21, 128, 61, 0.28);
+  color: #4ade80;
+}
+
+.vindicate-setup-complete-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.vindicate-setup-complete-copy {
+  min-width: 0;
+}
+
+.vindicate-setup-complete-title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #e5e5e5;
+}
+
+.vindicate-setup-complete-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #888888;
+}
+
+.vindicate-setup-complete-desc strong {
+  font-weight: 600;
+  color: #a3a3a3;
+}
+
+.vindicate-setup-complete-progress {
+  margin-bottom: 16px;
+}
+
+.vindicate-setup-complete-pct {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: #4ade80;
+}
+
+.vindicate-setup-complete-track {
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.vindicate-setup-complete-fill {
+  background: linear-gradient(90deg, #15803d, #4ade80);
+}
+
+.vindicate-setup-complete-checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 520px) {
+  .vindicate-setup-complete-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vindicate-setup-complete-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid rgba(74, 222, 128, 0.1);
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.vindicate-setup-complete-item-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: rgba(21, 128, 61, 0.35);
+  color: #4ade80;
+}
+
+.vindicate-setup-complete-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.vindicate-setup-complete-item-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #d4d4d4;
+}
+
+.vindicate-setup-complete-item-file {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  border-radius: 3px;
+  background: rgba(21, 128, 61, 0.12);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: #4ade80;
+  word-break: break-all;
+}
+
+.vindicate-setup-complete-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  cursor: pointer;
+  transition: color 0.12s;
+}
+
+.vindicate-setup-complete-toggle:hover {
+  color: var(--vindicate-fg);
+}
+
+.vindicate-setup-complete-progress {
+  margin-top: 14px;
+}
+
+.vindicate-gs-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vindicate-gs-step {
+  overflow: hidden;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 7px;
+  background: #1a1a1a;
+  transition: border-color 0.15s;
+}
+
+.vindicate-gs-step--open {
+  border-color: var(--vindicate-accent);
+  background: color-mix(in oklab, var(--vindicate-accent) 4%, transparent);
+}
+
+.vindicate-gs-step--done {
+  border-color: rgba(74, 222, 128, 0.1);
+  background: rgba(21, 128, 61, 0.04);
+}
+
+.vindicate-gs-step-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.vindicate-gs-step-head:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vindicate-gs-step--open .vindicate-gs-step-head {
+  padding-bottom: 12px;
+  background: color-mix(in oklab, var(--vindicate-accent) 7%, transparent);
+}
+
+.vindicate-gs-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.vindicate-gs-step--done .vindicate-gs-num {
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  background: rgba(21, 128, 61, 0.25);
+  color: #4ade80;
+}
+
+.vindicate-gs-step--open .vindicate-gs-num {
+  border: none;
+  background: var(--vindicate-accent);
+  color: #fff;
+}
+
+.vindicate-gs-step--closed .vindicate-gs-num {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+  color: #444444;
+}
+
+.vindicate-gs-step-meta {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.vindicate-gs-title {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c0c0c0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vindicate-gs-step--done .vindicate-gs-title {
+  font-weight: 500;
+  color: #5a5a5a;
+}
+
+.vindicate-gs-step--closed .vindicate-gs-title {
+  color: #666666;
+}
+
+.vindicate-gs-step-right {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.vindicate-gs-badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.vindicate-gs-badge--required {
+  background: color-mix(in oklab, var(--vindicate-accent) 14%, transparent);
+  color: var(--vindicate-accent);
+  border: 1px solid color-mix(in oklab, var(--vindicate-accent) 30%, transparent);
+}
+
+.vindicate-gs-badge--optional {
+  color: #4a4a4a;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.vindicate-gs-done-mark {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #4ade80;
+}
+
+.vindicate-chevron {
+  flex-shrink: 0;
+  color: #3a3a3a;
+  transition:
+    transform 0.2s ease,
+    color 0.15s;
+}
+
+.vindicate-gs-step--open .vindicate-chevron {
+  transform: rotate(180deg);
+  color: #555555;
+}
+
+.vindicate-gs-step-body {
+  display: none;
+  padding: 0 16px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vindicate-gs-step--open .vindicate-gs-step-body {
+  display: block;
+}
+
+.vindicate-gs-desc {
+  margin: 14px 0;
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: #757575;
+}
+
+.vindicate-gs-file {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  font-size: 10.5px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-gs-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.vindicate-gs-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 7px 13px;
+  border: none;
+  border-radius: 4px;
+  background: var(--vindicate-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.vindicate-gs-copy-btn:hover {
+  background: var(--vindicate-accent-hover);
+}
+
+.vindicate-gs-copy-btn--copied {
+  background: #166534;
+  pointer-events: none;
+}
+
+.vindicate-gs-mark-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 11px;
+  color: #454545;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.08);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.vindicate-gs-mark-btn:hover {
+  color: #888888;
+}
+
+.vindicate-gs-watch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  background: color-mix(in oklab, #4ade80 6%, transparent);
+  border: 1px solid color-mix(in oklab, #4ade80 22%, transparent);
+  font-size: 10.5px;
+  color: #a3a3a3;
+}
+
+.vindicate-gs-watch code,
+.vindicate-gs-file code {
+  padding: 2px 7px;
+  border: 1px solid rgba(156, 220, 254, 0.12);
+  border-radius: 4px;
+  background: rgba(156, 220, 254, 0.07);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #9cdcfe;
+}
+
+.vindicate-gs-pulse {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: vindicate-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes vindicate-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Activity bar sidebar ── */
+.vindicate-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px 14px 18px;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.vindicate-sidebar-logo {
+  height: 18px;
+  width: auto;
+  object-fit: contain;
+}
+
+.vindicate-sidebar-brand {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-sidebar-signin {
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.vindicate-service-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-service-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-sidebar-card {
+  padding: 12px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-sidebar-card-label {
+  margin: 0 0 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-sidebar-mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.vindicate-sidebar-folder {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--vindicate-fg-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vindicate-sidebar-progress .vindicate-gs-progress-meta {
+  margin-bottom: 6px;
+}
+
+.vindicate-sidebar-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.vindicate-sidebar-stat {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vindicate-sidebar-stat-value {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-sidebar-stat-label {
+  font-size: 10px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.vindicate-sidebar-actions .vindicate-btn-primary,
+.vindicate-sidebar-actions .vindicate-btn-secondary {
+  height: 32px;
+  font-size: 12px;
+}
+
+.vindicate-sidebar-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+.vindicate-sidebar-empty-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-sidebar-empty-desc {
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--vindicate-fg-muted);
+}
+
+/* ── Project health dashboard ── */
+.vindicate-screen-dashboard {
+  padding: 0 20px 28px;
+}
+
+.vindicate-screen-dashboard .vindicate-ph-divider {
+  height: 1px;
+  margin: 24px 0 24px;
+  background: var(--vindicate-border);
+}
+
+.vindicate-ph-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.vindicate-ph-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #444444;
+}
+
+.vindicate-ph-refresh {
+  border: none;
+  background: none;
+  font-size: 11px;
+  color: var(--vindicate-link);
+  cursor: pointer;
+}
+
+.vindicate-ph-refresh:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.vindicate-ph-refresh:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.vindicate-ph-refresh--cta {
+  margin-top: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.vindicate-ph-refresh--cta:hover:not(:disabled) {
+  text-decoration: none;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vindicate-ph-empty {
+  padding: 16px 0 8px;
+}
+
+.vindicate-ph-empty-title {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-ph-empty-desc {
+  margin: 0 0 14px;
+  max-width: 420px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-ph-empty-desc code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-ph-error {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--vscode-errorForeground, #f48771);
+}
+
+.vindicate-ph-section--refreshing {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.vindicate-ph-score-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 8px;
+  padding: 16px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: #1a1a1a;
+}
+
+.vindicate-ph-ring-wrap {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+}
+
+.vindicate-ph-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.vindicate-ph-score-num {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #f97316;
+}
+
+.vindicate-ph-score-100 {
+  margin-top: 1px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: #3a3a3a;
+}
+
+.vindicate-ph-score-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-ph-score-status {
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #b0b0b0;
+}
+
+.vindicate-ph-score-desc {
+  margin-bottom: 12px;
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: #505050;
+}
+
+.vindicate-ph-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.vindicate-ph-brow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+}
+
+.vindicate-ph-brow-label {
+  width: 58px;
+  flex-shrink: 0;
+  color: #444444;
+}
+
+.vindicate-ph-brow-track {
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.vindicate-ph-brow-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+.vindicate-ph-brow-pct {
+  width: 26px;
+  flex-shrink: 0;
+  text-align: right;
+  font-family: var(--font-mono);
+  color: #3a3a3a;
+}
+
+.vindicate-ph-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.vindicate-ph-metric {
+  position: relative;
+  padding: 12px 13px;
+  border: 1px solid var(--vindicate-border);
+  border-top: 2px solid transparent;
+  border-radius: 7px;
+  background: #1a1a1a;
+}
+
+.vindicate-ph-metric--ok {
+  border-top-color: rgba(74, 222, 128, 0.4);
+}
+
+.vindicate-ph-metric--warn {
+  border-top-color: rgba(249, 115, 22, 0.4);
+}
+
+.vindicate-ph-metric--bad {
+  border-top-color: rgba(248, 113, 113, 0.4);
+}
+
+.vindicate-ph-metric--inactive {
+  border-top-color: rgba(255, 255, 255, 0.08);
+  opacity: 0.92;
+}
+
+.vindicate-ph-metric--inactive .vindicate-ph-metric-value {
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-ph-metric-hint {
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-ph-scanning {
+  padding: 8px 0 16px;
+}
+
+.vindicate-ph-scanning-text {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-ph-needs {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vindicate-ph-needs-title {
+  margin: 0 0 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-ph-needs-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vindicate-ph-need-row {
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.vindicate-ph-need-row:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.vindicate-ph-need-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-ph-need-reason {
+  margin: 0 0 6px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-ph-need-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  font-size: 10px;
+}
+
+.vindicate-ph-need-files code {
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-ph-features--empty {
+  padding-bottom: 8px;
+}
+
+.vindicate-ph-features-empty-msg {
+  margin: 0;
+  padding: 12px 14px 14px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-ph-metric-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.vindicate-ph-metric-label {
+  padding-right: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #4a4a4a;
+}
+
+.vindicate-ph-metric-value {
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #c0c0c0;
+}
+
+.vindicate-ph-metric-sub {
+  font-size: 9.5px;
+  color: #3a3a3a;
+}
+
+.vindicate-ph-test-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.vindicate-ph-stat-num {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.vindicate-ph-stat-label {
+  margin-top: 3px;
+  font-size: 9px;
+  color: #3a3a3a;
+}
+
+.vindicate-ph-stat-div {
+  width: 1px;
+  height: 28px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vindicate-ph-pass {
+  color: #4ade80;
+}
+
+.vindicate-ph-fail {
+  color: #f87171;
+}
+
+.vindicate-ph-features {
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 7px;
+  background: #1a1a1a;
+}
+
+.vindicate-ph-feat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vindicate-ph-feat-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #444444;
+}
+
+.vindicate-ph-feat-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #333333;
+}
+
+.vindicate-ph-feat-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.vindicate-ph-feat-row:last-child {
+  border-bottom: none;
+}
+
+.vindicate-ph-feat-dot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.vindicate-ph-feat-name {
+  flex: 1;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #666666;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vindicate-ph-tags {
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
+}
+
+.vindicate-ph-tag {
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.vindicate-ph-tag--ok {
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  background: rgba(74, 222, 128, 0.08);
+  color: #4ade80;
+}
+
+.vindicate-ph-tag--warn {
+  border: 1px solid rgba(249, 115, 22, 0.15);
+  background: rgba(249, 115, 22, 0.08);
+  color: #f97316;
+}
+
+.vindicate-ph-tag--bad {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  color: #3d3d3d;
+}
+
+.vindicate-ph-stale {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1px solid rgba(202, 138, 4, 0.18);
+  border-radius: 6px;
+  background: rgba(202, 138, 4, 0.05);
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: #555555;
+}
+
+.vindicate-ph-stale strong {
+  font-weight: 600;
+  color: #a16207;
+}
+
+.vindicate-ph-updated {
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-skeleton {
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  animation: vindicate-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 150ms ease-in;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes step-done-flash {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 2px var(--vscode-testing-iconPassed);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 200ms ease-out;
+}
+
+.animate-step-done {
+  animation: step-done-flash 400ms ease-out;
+}
+
+.health-ring-stroke {
+  transition: stroke-dashoffset 600ms ease-out;
+}
+
+.metric-card[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  z-index: 10;
+  margin-top: 2rem;
+  max-width: 12rem;
+  border-radius: 4px;
+  border: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-input-background);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--vscode-descriptionForeground);
+}
+
+.metric-card {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Onboarding redesign (handoff defaults) ---- */
+.vindicate-screen-kicker {
+  margin-bottom: 10px;
+  color: var(--vindicate-fg-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.vindicate-signin-title {
+  margin: 0 0 8px;
+  max-width: 540px;
+  text-align: center;
+  color: var(--vindicate-fg);
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.vindicate-signin-tagline {
+  margin-bottom: 26px;
+  max-width: 420px;
+}
+
+.vindicate-inline-code {
+  margin: 0 4px 0 0;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--vindicate-card-bg) 80%, transparent);
+  padding: 1px 5px;
+  color: var(--vindicate-fg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.vindicate-code-block--large {
+  width: min(500px, 100%);
+  border: 1px solid var(--vindicate-border);
+  border-radius: 12px;
+  background: var(--vindicate-card-bg);
+  padding: 18px;
+}
+
+.vindicate-tool-files {
+  margin-top: 4px;
+  color: var(--vindicate-fg-muted);
+  font-size: 11px;
+}
+
+.vindicate-tool-files .vindicate-inline-code {
+  margin-left: 6px;
+}
+
+.vindicate-mode-roadmap {
+  margin-top: 14px;
+}
+
+.vindicate-mode-roadmap-label {
+  margin-bottom: 8px;
+  color: var(--vindicate-fg-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.vindicate-mode-roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.vindicate-state-card--hero {
+  width: 100%;
+}
+
+.vindicate-state-card--hero .vindicate-coming-soon-badge {
+  margin-left: auto;
+}
+
+.vindicate-sidebar {
+  background: color-mix(in oklab, var(--vscode-sideBar-background, #252526) 82%, #000 18%);
+}
+
+.vindicate-sidebar-callout {
+  margin: 2px 12px 10px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--vindicate-card-bg) 85%, transparent);
+  padding: 10px;
+}
+
+.vindicate-sidebar-callout-title {
+  margin: 0 0 3px;
+  color: var(--vindicate-fg);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vindicate-sidebar-callout-sub {
+  margin: 0;
+  color: var(--vindicate-fg-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.vindicate-sidebar-empty {
+  border: 1px solid var(--vindicate-border);
+  border-radius: 10px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-sidebar-empty-title {
+  color: var(--vindicate-fg);
+}
+
+.vindicate-sidebar-empty-list {
+  margin-top: 12px;
+  border-top: 1px solid var(--vindicate-border);
+  padding-top: 12px;
+}
+
+.vindicate-sidebar-empty-list p {
+  margin: 0 0 6px;
+  color: var(--vindicate-fg-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.vindicate-screen-folder {
+  border: 1px solid var(--vindicate-border);
+  border-radius: 12px;
+  background: var(--vindicate-card-bg);
+  padding: 28px;
+}
+
+.vindicate-whats-next {
+  border-color: var(--vindicate-border);
+  background: color-mix(in oklab, var(--vindicate-card-bg) 70%, transparent);
+}
+
+.vindicate-next-num {
+  color: var(--vindicate-accent);
+}
+
+/* ---- Polish pass: spacing/typography parity ---- */
+.vindicate-screen-padded {
+  padding: 30px 28px 26px;
+}
+
+.vindicate-screen-heading-block {
+  margin-bottom: 22px;
+}
+
+.vindicate-screen-heading {
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+.vindicate-screen-sub {
+  max-width: 620px;
+  font-size: 13px;
+  line-height: 1.58;
+}
+
+.vindicate-signin-title {
+  max-width: 460px;
+  margin-bottom: 10px;
+  font-size: 26px;
+}
+
+.vindicate-feature-list {
+  max-width: 460px;
+  gap: 10px;
+}
+
+.vindicate-feature-card {
+  gap: 14px;
+  padding: 14px;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--vindicate-card-bg) 88%, transparent);
+}
+
+.vindicate-feature-title {
+  margin-bottom: 3px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.vindicate-feature-desc {
+  font-size: 11.5px;
+}
+
+.vindicate-btn-primary,
+.vindicate-btn-secondary {
+  height: 38px;
+  border-radius: 8px;
+}
+
+.vindicate-device-title {
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+.vindicate-device-desc {
+  max-width: 340px;
+  font-size: 13px;
+}
+
+.vindicate-code-block {
+  max-width: 440px;
+  padding: 18px 20px;
+  border-radius: 12px;
+}
+
+.vindicate-code-value {
+  font-size: 30px;
+  letter-spacing: 0.18em;
+}
+
+.vindicate-copy-chip {
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.vindicate-tool-list {
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.vindicate-tool-card {
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 10px;
+}
+
+.vindicate-tool-name {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.vindicate-tool-hint {
+  font-size: 11.5px;
+}
+
+.vindicate-tool-files {
+  margin-top: 6px;
+  font-size: 10.5px;
+}
+
+.vindicate-state-grid {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.vindicate-state-card {
+  padding: 18px;
+  border-radius: 10px;
+  border-top: 1px solid var(--vindicate-border);
+}
+
+.vindicate-state-card--hero {
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.vindicate-state-card--selected.vindicate-state-card--hero {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--vindicate-accent) 80%, transparent);
+}
+
+.vindicate-state-card--hero .vindicate-sc-header {
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.vindicate-state-card--hero .vindicate-coming-soon-badge,
+.vindicate-mode-roadmap-grid .vindicate-coming-soon-badge {
+  position: static;
+  margin: 0 0 0 auto;
+}
+
+.vindicate-mode-roadmap-grid {
+  gap: 12px;
+}
+
+.vindicate-mode-roadmap-grid .vindicate-state-card {
+  padding: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SIDEBAR — complete redesign
+   ═══════════════════════════════════════════════════════ */
+
+/* Shell */
+.vindicate-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  gap: 0;
+  padding: 0;
+  color: var(--vindicate-fg);
+  background: color-mix(in oklab, var(--vscode-sideBar-background, #252526) 82%, #000 18%);
+}
+
+/* Header row */
+.vindicate-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 10px 12px 8px;
+  border-bottom: none;
+}
+
+.vindicate-sidebar-header-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.vindicate-sidebar-header-sub {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  white-space: nowrap;
+}
+
+.vindicate-sidebar-logo {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+.vindicate-sidebar-brand {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+/* ── Overflow (···) menu ── */
+.vindicate-overflow-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.vindicate-sidebar-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  color: var(--vindicate-fg-muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.vindicate-sidebar-icon-btn:hover {
+  color: var(--vindicate-fg);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vindicate-overflow-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 50;
+  min-width: 182px;
+  padding: 4px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vscode-input-background, #2d2d2d);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+.vindicate-overflow-item {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  background: none;
+  border-radius: 5px;
+  color: var(--vindicate-fg);
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.vindicate-overflow-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vindicate-identity-menu-wrap {
+  flex-shrink: 0;
+}
+
+.vindicate-identity-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  color: var(--vindicate-fg-muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.vindicate-identity-menu-btn:hover {
+  color: var(--vindicate-fg);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vindicate-identity-menu-btn--header {
+  width: 26px;
+  height: 26px;
+}
+
+.vindicate-identity-menu-btn--sidebar {
+  width: 22px;
+  height: 22px;
+}
+
+.vindicate-identity-menu-btn--onboarding {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.vindicate-identity-overflow-menu {
+  min-width: 140px;
+}
+
+/* ── Scrollable body ── */
+.vindicate-sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vindicate-sidebar-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.vindicate-sidebar-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+/* ── Reopen button ── */
+.vindicate-sidebar-reopen-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--vindicate-fg);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.vindicate-sidebar-reopen-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.vindicate-sidebar-reopen-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vindicate-sidebar-reopen-logo {
+  height: 13px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.vindicate-sidebar-reopen-arrow {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  flex-shrink: 0;
+}
+
+/* ── Identity card (.vid) ── */
+.vindicate-vid {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--vindicate-border);
+  flex-shrink: 0;
+}
+
+.vindicate-vid--signedout {
+  border-style: dashed;
+}
+
+.vindicate-vid-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--vindicate-accent);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vindicate-vid-avatar--empty {
+  background: transparent;
+  border: 1px dashed var(--vindicate-border);
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-vid-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.vindicate-vid-name {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--vindicate-fg);
+  line-height: 1.2;
+}
+
+.vindicate-vid-email {
+  font-size: 10px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vindicate-vid .vindicate-profile-avatar-img,
+.vindicate-user-card .vindicate-profile-avatar-img,
+.vindicate-ob-identity .vindicate-profile-avatar-img {
+  border-radius: 50%;
+}
+
+.vindicate-ob-identity .vindicate-profile-avatar-img {
+  border-radius: 8px;
+}
+
+/* ── Contextual callout ── */
+.vindicate-callout {
+  padding: 9px 11px;
+  border-radius: 7px;
+  flex-shrink: 0;
+}
+
+.vindicate-callout-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 3px;
+}
+
+.vindicate-callout-title {
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.vindicate-callout-sub {
+  margin: 0;
+  font-size: 10.5px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.45;
+}
+
+.vindicate-callout--neutral {
+  background: rgba(127, 127, 127, 0.06);
+  border: 1px solid var(--vindicate-border);
+}
+
+.vindicate-callout--neutral .vindicate-callout-title { color: var(--vindicate-fg); }
+
+.vindicate-callout--pairing {
+  background: color-mix(in oklab, var(--vindicate-accent) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--vindicate-accent) 35%, transparent);
+}
+
+.vindicate-callout--pairing .vindicate-callout-title { color: var(--vindicate-accent); }
+
+.vindicate-callout--active {
+  background: color-mix(in oklab, var(--vindicate-status-green) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--vindicate-status-green) 25%, transparent);
+}
+
+.vindicate-callout--active .vindicate-callout-title { color: var(--vindicate-status-green); }
+
+.vindicate-callout--watching {
+  background: color-mix(in oklab, #f97316 8%, transparent);
+  border: 1px solid color-mix(in oklab, #f97316 25%, transparent);
+}
+
+.vindicate-callout--watching .vindicate-callout-title { color: #f97316; }
+
+/* Callout dot */
+.vindicate-callout-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vindicate-callout-dot--neutral  { background: var(--vindicate-fg-muted); }
+.vindicate-callout-dot--pairing  { background: var(--vindicate-accent); }
+.vindicate-callout-dot--active   { background: var(--vindicate-status-green); }
+.vindicate-callout-dot--watching { background: #f97316; }
+
+.vindicate-callout-dot--pulse {
+  animation: vindicate-callout-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes vindicate-callout-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* ── Step list ── */
+.vindicate-step-list {
+  flex-shrink: 0;
+}
+
+.vindicate-step-list-heading {
+  margin: 0 0 6px 2px;
+  padding-top: 12px;
+  border-top: 1px solid var(--vindicate-border);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-subtle);
+}
+
+/* Individual step row */
+.vindicate-vstep {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+/* Circle */
+.vindicate-vstep-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--vindicate-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--vindicate-fg-muted);
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Done: emerald green */
+.vindicate-vstep--done .vindicate-vstep-num {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+/* Active: accent blue + glow ring */
+.vindicate-vstep--active .vindicate-vstep-num {
+  background: var(--vindicate-accent, #0e639c);
+  border-color: var(--vindicate-accent, #0e639c);
+  color: #fff;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--vindicate-accent, #0e639c) 24%, transparent);
+}
+
+/* Pending: keep default (border only, dim) */
+
+/* Step text */
+.vindicate-vstep-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-vstep-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--vindicate-fg);
+  line-height: 1.3;
+}
+
+.vindicate-vstep--done .vindicate-vstep-title {
+  color: var(--vindicate-fg-muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.15);
+}
+
+.vindicate-vstep--pending .vindicate-vstep-title {
+  color: var(--vindicate-fg-muted);
+  font-weight: 400;
+}
+
+.vindicate-vstep-sub {
+  font-size: 10px;
+  color: var(--vindicate-fg-subtle);
+  margin-top: 1px;
+  line-height: 1.35;
+}
+
+.vindicate-vstep--pending .vindicate-vstep-sub {
+  opacity: 0.7;
+}
+
+/* ── Context action ── */
+.vindicate-context-action {
+  padding: 4px 0 2px;
+  flex-shrink: 0;
+}
+
+.vindicate-context-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 7px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--vindicate-fg-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  text-decoration: none;
+}
+
+.vindicate-context-action-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--vindicate-border);
+  color: var(--vindicate-fg);
+}
+
+/* ── Status footer (pinned to bottom) ── */
+.vindicate-status-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 7px 12px 10px;
+  border-top: 1px solid var(--vindicate-border);
+  background: color-mix(in oklab, var(--vscode-sideBar-background, #252526) 70%, var(--vindicate-panel-bg) 30%);
+}
+
+.vindicate-service-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-status-footer-spacer {
+  flex: 1;
+}
+
+.vindicate-status-footer-version {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--vindicate-fg-subtle);
+  flex-shrink: 0;
+}
+
+.vindicate-status-dot--pulse {
+  animation: vindicate-callout-pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Dashboard sidebar styles (post-onboarding) ─────────────────────────── */
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot.emerald { background: var(--ord-emerald); }
+.dot.amber { background: var(--ord-amber); }
+.dot.red { background: var(--ord-red); }
+
+.sb-project-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: var(--vs-hover);
+  border: 1px solid var(--vs-border);
+  margin-top: 4px;
+}
+
+.sb-project-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: color-mix(in oklab, var(--vs-accent) 50%, transparent);
+  flex-shrink: 0;
+}
+
+.sb-project-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--vs-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sb-project-meta {
+  margin-top: 1px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--vs-text-dim);
+}
+
+.sb-project-chevron {
+  color: var(--vs-text-dim);
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.sb-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 6px;
+  padding: 0 2px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vs-text-dim);
+}
+
+.sb-health {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 11px;
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--vs-accent) 5%, transparent);
+  border: 1px solid color-mix(in oklab, var(--vs-accent) 22%, transparent);
+}
+
+.sb-health .ring {
+  width: 38px;
+  height: 38px;
+  position: relative;
+  flex-shrink: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sb-health .ring svg {
+  display: block;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sb-health .ring .num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--vs-text);
+  font-feature-settings: "tnum";
+}
+
+.sb-health .title {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--vs-text);
+}
+
+.sb-health .sub {
+  margin-top: 1px;
+  font-size: 10px;
+  color: var(--vs-text-dim);
+}
+
+.sb-metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: 5px;
+}
+
+.sb-metric:hover { background: var(--vs-hover); }
+
+.sb-metric .lbl {
+  font-size: 11px;
+  color: var(--vs-text-dim);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sb-metric .val {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--vs-text);
+  font-feature-settings: "tnum";
+}
+
+.sb-feat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--vs-text);
+}
+
+.sb-feat-row:hover { background: var(--vs-hover); }
+
+.sb-feat-row .name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sb-feat-row .tcount {
+  font-size: 10px;
+  color: var(--vs-text-dim);
+  font-feature-settings: "tnum";
+}
+
+.vbtn {
+  appearance: none;
+  border: 1px solid var(--vs-border);
+  border-radius: 7px;
+  background: rgba(127, 127, 127, 0.025);
+  color: var(--vs-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.vbtn:hover { background: var(--vs-hover); }
+
+.vbtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.vbtn.primary {
+  border-color: color-mix(in oklab, var(--vs-accent) 35%, transparent);
+  background: var(--vs-accent);
+  color: #fff;
+}
+
+.vbtn.full { width: 100%; }
+
+/* ── Dashboard canvas styles ─────────────────────────────────────────────── */
+.dash-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-bottom: 1px solid var(--vs-border);
+  margin-bottom: 18px;
+}
+
+.dash-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--vs-text-dim);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 9px 14px;
+  cursor: pointer;
+  position: relative;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dash-tab:hover { color: var(--vs-text); }
+
+.dash-tab.on {
+  color: var(--vs-text-bright);
+  border-bottom-color: var(--vs-accent);
+}
+
+.dash-tab .count {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, 0.12);
+  color: var(--vs-text-dim);
+}
+
+.health-hero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 22px;
+  border: 1px solid var(--vs-border);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--vs-accent) 6%, transparent), transparent 60%),
+    rgba(127, 127, 127, 0.02);
+}
+
+.health-ring-wrap {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  flex-shrink: 0;
+}
+
+.health-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.health-ring-num {
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--vs-text-bright);
+  font-feature-settings: "tnum";
+}
+
+.health-ring-num .unit {
+  font-size: 14px;
+  color: var(--vs-text-dim);
+  margin-left: 1px;
+}
+
+.health-ring-grade {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vs-text-dim);
+  margin-top: 4px;
+}
+
+.kpi {
+  border: 1px solid var(--vs-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: rgba(127, 127, 127, 0.025);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.kpi-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vs-text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--vs-text-bright);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.kpi-sub {
+  font-size: 11px;
+  color: var(--vs-text-dim);
+  line-height: 1.4;
+}
+
+.kpi-delta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.kpi-delta.up {
+  background: color-mix(in oklab, var(--ord-emerald) 14%, transparent);
+  color: var(--ord-emerald);
+}
+
+.kpi-delta.down {
+  background: color-mix(in oklab, var(--ord-red) 14%, transparent);
+  color: var(--ord-red);
+}
+
+.kpi-delta.flat {
+  background: rgba(127, 127, 127, 0.1);
+  color: var(--vs-text-dim);
+}
+
+.kpi-bar {
+  height: 4px;
+  background: rgba(127, 127, 127, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.kpi-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s;
+}
+
+.kpi-bar.green > span { background: var(--ord-emerald); }
+.kpi-bar.amber > span { background: var(--ord-amber); }
+.kpi-bar.red > span { background: var(--ord-red); }
+
+.spark {
+  height: 26px;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.spark > span {
+  width: 4px;
+  min-width: 4px;
+  background: currentColor;
+  border-radius: 1px;
+  opacity: 0.55;
+}
+
+.spark > span.last { opacity: 1; }
+
+.dash-section-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 12px;
+}
+
+.dash-section-h h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--vs-text-bright);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-section-h h4 .count {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--vs-text-dim);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(127, 127, 127, 0.1);
+}
+
+.feat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.feat-table thead th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vs-text-dim);
+  font-weight: 500;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--vs-border);
+  background: rgba(127, 127, 127, 0.02);
+}
+
+.feat-table tbody td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--vs-border);
+  vertical-align: middle;
+}
+
+.feat-table tbody tr:hover { background: var(--vs-hover); }
+.feat-table tbody tr:last-child td { border-bottom: none; }
+
+.feat-table .feat-name {
+  font-weight: 500;
+  color: var(--vs-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feat-table .feat-name .feat-slug {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--vs-text-dim);
+}
+
+.feat-table .num-cell {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--vs-text);
+  font-feature-settings: "tnum";
+}
+
+.feat-table .pass-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feat-table .pass-bar .bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(127, 127, 127, 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.feat-table .pass-bar .bar > span {
+  display: block;
+  height: 100%;
+}
+
+.run-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, 0.08);
+  color: var(--vs-text);
+}
+
+.run-pill.pass {
+  background: color-mix(in oklab, var(--ord-emerald) 14%, transparent);
+  color: var(--ord-emerald);
+}
+
+.run-pill.fail {
+  background: color-mix(in oklab, var(--ord-red) 14%, transparent);
+  color: var(--ord-red);
+}
+
+.run-pill.skip {
+  background: rgba(127, 127, 127, 0.12);
+  color: var(--vs-text-dim);
+}
+
+.run-pill.flak {
+  background: color-mix(in oklab, var(--ord-amber) 14%, transparent);
+  color: var(--ord-amber);
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--vs-border);
+  background: rgba(127, 127, 127, 0.02);
+}
+
+.alert.warn {
+  background: color-mix(in oklab, var(--ord-amber) 7%, transparent);
+  border-color: color-mix(in oklab, var(--ord-amber) 28%, transparent);
+}
+
+.alert.info {
+  background: color-mix(in oklab, var(--vs-accent) 6%, transparent);
+  border-color: color-mix(in oklab, var(--vs-accent) 28%, transparent);
+}
+
+.alert .title {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--vs-text-bright);
+  line-height: 1.35;
+}
+
+.alert .sub {
+  font-size: 11px;
+  color: var(--vs-text-dim);
+  margin-top: 2px;
+  line-height: 1.45;
+}
+
+/* ── Sign in "create account" text link ── */
+.vindicate-signin-create-account {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+}
+
+/* ── Folder screen max-width ── */
+.vindicate-screen-folder {
+  max-width: 640px;
+  margin: 20px auto 0;
+}
+
+/* ── Device code card (redesign) ── */
+.vindicate-device-card {
+  position: relative;
+  overflow: hidden;
+  width: min(420px, 100%);
+  border-radius: 12px;
+  padding: 20px 20px 16px;
+  border: 1px solid var(--vindicate-border);
+  background: var(--vindicate-card-bg);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Gradient bar pinned to top edge of card */
+.vindicate-grad-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    #ff6b3d 0%,
+    #ec4899 35%,
+    #8b5cf6 65%,
+    #3b82f6 100%
+  );
+}
+
+/* Code + copy button row */
+.vindicate-device-card-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+
+/* Big mono code display */
+.vindicate-device-code-value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--vindicate-fg);
+  line-height: 1;
+}
+
+/* Expiry row: clock + text + shrinking bar */
+.vindicate-device-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vindicate-device-clock {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.vindicate-device-expiry {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: #f59e0b;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.vindicate-device-expiry--urgent {
+  color: var(--vscode-errorForeground, #f48771);
+}
+
+.vindicate-device-progress-track {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(127, 127, 127, 0.2);
+  overflow: hidden;
+}
+
+.vindicate-device-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--vindicate-accent, #0e639c);
+  transition: width 1s linear;
+}
+
+/* ── Waiting state: pulse dot + shimmer text ── */
+.vindicate-waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  flex-shrink: 0;
+  animation: vindicate-pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes vindicate-pulse-dot {
+  0%, 100% { opacity: 0.45; transform: scale(0.8); }
+  50%       { opacity: 1;    transform: scale(1.15); }
+}
+
+.vindicate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--vindicate-fg-muted) 0%,
+    var(--vindicate-fg) 45%,
+    var(--vindicate-fg-muted) 90%
+  );
+  background-size: 600px auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: vindicate-shimmer 2.6s linear infinite;
+}
+
+@keyframes vindicate-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+/* ── Ghost button (DeviceCodeScreen secondary actions) ── */
+.vindicate-ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 16px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 6px;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--vindicate-fg-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.vindicate-ghost-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-ghost-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCREEN PROGRESS HEADER (Screens 3-5)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-sh {
+  margin-bottom: 24px;
+}
+
+.vindicate-sh-kicker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+  margin-bottom: 6px;
+}
+
+.vindicate-sh-title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--vindicate-fg);
+  margin: 0 0 18px;
+  line-height: 1.2;
+}
+
+.vindicate-sh-bar-track {
+  height: 3px;
+  background: rgba(127, 127, 127, 0.15);
+  border-radius: 2px;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+.vindicate-sh-bar-fill {
+  height: 100%;
+  background: var(--vindicate-accent);
+  border-radius: 2px;
+  transition: width 0.4s;
+}
+
+.vindicate-sh-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-sh-lbl--done  { color: var(--vindicate-fg); }
+.vindicate-sh-lbl--active { color: var(--vindicate-fg); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHARED PILL VARIANTS (.vindicate-vpill)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-vpill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.vindicate-vpill--green {
+  background: color-mix(in oklab, var(--vindicate-status-green) 14%, transparent);
+  color: var(--vindicate-status-green);
+  border: 1px solid color-mix(in oklab, var(--vindicate-status-green) 30%, transparent);
+}
+
+.vindicate-vpill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vindicate-status-green);
+  flex-shrink: 0;
+}
+
+.vindicate-vpill--dashed {
+  background: transparent;
+  color: var(--vindicate-fg-muted);
+  border: 1px dashed var(--vindicate-border);
+}
+
+.vindicate-vpill--blue {
+  background: color-mix(in oklab, var(--vindicate-accent) 14%, transparent);
+  color: var(--vindicate-accent);
+  border: 1px solid color-mix(in oklab, var(--vindicate-accent) 30%, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHARED SCREEN ELEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-screen-hint {
+  font-size: 12.5px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+
+.vindicate-mono-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg);
+  margin-right: 8px;
+}
+
+.vindicate-screen-actions {
+  margin-top: 22px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCREEN 3: AGENT CARDS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-agent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.vindicate-agent-card {
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg, rgba(255,255,255,0.02));
+  transition: border-color 0.15s, background 0.15s;
+  overflow: hidden;
+}
+
+.vindicate-agent-card--checked {
+  border-color: var(--vindicate-accent);
+  background: color-mix(in oklab, var(--vindicate-accent) 5%, transparent);
+}
+
+.vindicate-agent-card--undetected {
+  border-style: dashed;
+  opacity: 0.55;
+}
+
+.vindicate-agent-card-head {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vindicate-agent-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vindicate-agent-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-agent-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vindicate-fg);
+  line-height: 1.2;
+}
+
+.vindicate-agent-name--dim {
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-agent-desc {
+  font-size: 10.5px;
+  color: var(--vindicate-fg-muted);
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
+/* Expanded card body (detected agents only) */
+.vindicate-agent-card-body {
+  padding: 0 14px 14px;
+}
+
+.vindicate-agent-files-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+  margin-bottom: 6px;
+}
+
+.vindicate-agent-files-tree {
+  padding-left: 12px;
+  border-left: 1px solid var(--vindicate-border);
+  margin-bottom: 12px;
+  transition: opacity 0.15s;
+}
+
+.vindicate-agent-files-tree--dim {
+  border-left-style: dashed;
+  opacity: 0.55;
+}
+
+.vindicate-agent-file {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--vindicate-fg);
+  padding: 2px 0;
+  line-height: 1.4;
+}
+
+.vindicate-agent-file--struck {
+  text-decoration: line-through;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-agent-file-arrow {
+  color: var(--vindicate-fg-muted);
+  margin-right: 6px;
+}
+
+.vindicate-agent-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--vindicate-border);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.vindicate-agent-checkbox {
+  accent-color: var(--vindicate-accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.vindicate-agent-checkbox-label {
+  color: var(--vindicate-fg-muted);
+  font-weight: 400;
+  flex: 1;
+}
+
+.vindicate-agent-checkbox-label--active {
+  color: var(--vindicate-fg);
+  font-weight: 500;
+  flex: 1;
+}
+
+.vindicate-agent-checkbox-status {
+  margin-left: auto;
+  font-size: 10.5px;
+  color: var(--vindicate-fg-muted);
+  white-space: nowrap;
+}
+
+.vindicate-agent-checkbox-status--on {
+  color: var(--vindicate-status-green);
+}
+
+/* Add agent + MCP note */
+.vindicate-agent-add-btn {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px dashed var(--vindicate-border);
+  background: transparent;
+  color: var(--vindicate-fg-muted);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s, color 0.15s;
+  width: 100%;
+}
+
+.vindicate-agent-add-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-agent-add-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.vindicate-agent-mcp-note {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.04);
+  border: 1px solid var(--vindicate-border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 11.5px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.55;
+}
+
+.vindicate-agent-count-line {
+  text-align: center;
+  font-size: 10.5px;
+  margin-top: 8px;
+  color: var(--vindicate-fg-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCREEN 4: MODE SELECTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-mode-hero-card {
+  background: var(--vindicate-card-bg, rgba(255,255,255,0.02));
+  border-radius: 12px;
+  padding: 22px;
+  cursor: pointer;
+  border: 1px solid var(--vindicate-border);
+  margin-bottom: 18px;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.vindicate-mode-hero-card:focus-visible {
+  box-shadow: 0 0 0 2px var(--vindicate-accent);
+}
+
+.vindicate-mode-hero-card--selected {
+  border-color: var(--vindicate-accent);
+  background: color-mix(in oklab, var(--vindicate-accent) 6%, transparent);
+  box-shadow:
+    0 0 0 1px var(--vindicate-accent),
+    0 14px 36px -10px color-mix(in oklab, var(--vindicate-accent) 32%, transparent);
+}
+
+.vindicate-mode-hero-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 14px;
+}
+
+.vindicate-mode-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vindicate-mode-roman {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 36px;
+  color: var(--vindicate-accent);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.vindicate-mode-headline {
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 6px;
+  color: var(--vindicate-fg);
+  line-height: 1.3;
+}
+
+.vindicate-mode-check-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.vindicate-mode-check-circle--empty {
+  border: 1.5px solid var(--vindicate-border);
+}
+
+.vindicate-mode-check-circle--filled {
+  background: var(--vindicate-accent);
+  color: #fff;
+}
+
+.vindicate-mode-hero-footer {
+  padding-top: 14px;
+  margin-top: 4px;
+  border-top: 1px solid color-mix(in oklab, var(--vindicate-border) 60%, transparent);
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.vindicate-mode-starts-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+  padding-top: 2px;
+}
+
+.vindicate-mode-starts-text {
+  font-size: 13px;
+  color: var(--vindicate-fg);
+  line-height: 1.55;
+}
+
+/* Roadmap grid */
+.vindicate-mode-roadmap-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+  margin-bottom: 8px;
+}
+
+.vindicate-mode-roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.vindicate-mode-future-card {
+  padding: 14px;
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.03);
+  border: 1px dashed var(--vindicate-border);
+}
+
+.vindicate-mode-future-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.vindicate-mode-future-name-text {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-mode-future-numeral {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1;
+}
+
+.vindicate-mode-future-headline {
+  font-size: 11.5px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCREEN 5: GETTING STARTED REDESIGN
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Header row: mode pill + title + progress count */
+.vindicate-gs-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
+.vindicate-gs-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vindicate-gs-heading {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-gs-progress-count {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--vindicate-fg-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Pre-done (automatic) step */
+.vindicate-gs-predone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--vindicate-status-green) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--vindicate-status-green) 22%, transparent);
+  margin-bottom: 8px;
+}
+
+.vindicate-gs-predone-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--vindicate-status-green);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vindicate-gs-predone-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vindicate-fg);
+  flex: 1;
+}
+
+.vindicate-gs-predone-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--vindicate-status-green);
+}
+
+/* Step card prompt preview */
+.vindicate-gs-prompt-details {
+  margin-bottom: 14px;
+}
+
+.vindicate-gs-prompt-summary {
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--vindicate-fg);
+  margin-bottom: 8px;
+  user-select: none;
+}
+
+.vindicate-gs-prompt-pre {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--vindicate-border);
+  border-radius: 6px;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--vindicate-fg);
+  line-height: 1.6;
+  overflow: auto;
+  margin: 0;
+  max-height: 220px;
+  white-space: pre-wrap;
+}
+
+/* Watching indicator — emerald box with pulse dot + shimmer */
+.vindicate-gs-watch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--vindicate-status-green) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--vindicate-status-green) 22%, transparent);
+  font-size: 11.5px;
+  color: var(--vindicate-fg-muted);
+  margin-bottom: 0;
+}
+
+.vindicate-gs-watch-shimmer {
+  margin-left: auto;
+  font-size: 11px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCREEN 4: MODE SELECTION — 2×2 GRID (replaces hero + roadmap layout)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-mc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* ── Individual mode card ── */
+.vindicate-mc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--vindicate-border);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  outline: none;
+  min-height: 0;
+}
+
+.vindicate-mc-card:focus-visible {
+  box-shadow: 0 0 0 2px var(--vindicate-accent);
+}
+
+.vindicate-mc-card--selected {
+  border-color: var(--vindicate-accent);
+  background: color-mix(in oklab, var(--vindicate-accent) 6%, transparent);
+  box-shadow:
+    0 0 0 1px var(--vindicate-accent),
+    0 12px 32px -8px color-mix(in oklab, var(--vindicate-accent) 30%, transparent);
+}
+
+.vindicate-mc-card--disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+/* ── Card header row: tag pill + check/coming-soon ── */
+.vindicate-mc-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.vindicate-mc-coming-soon {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+}
+
+/* ── Dim pill variant for disabled cards ── */
+.vindicate-vpill--dim {
+  background: rgba(127, 127, 127, 0.1);
+  color: var(--vindicate-fg-muted);
+  border: 1px solid var(--vindicate-border);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* Force mono+uppercase on blue pill too when inside mc-card */
+.vindicate-mc-card .vindicate-vpill--blue {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ── Check circle ── */
+.vindicate-mc-check {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.vindicate-mc-check--empty {
+  border: 1.5px solid var(--vindicate-border);
+}
+
+.vindicate-mc-check--filled {
+  background: var(--vindicate-accent);
+  border: none;
+}
+
+/* ── Headline ── */
+.vindicate-mc-headline {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  margin: 0 0 10px;
+  line-height: 1.35;
+}
+
+/* ── Symptoms bullet list ── */
+.vindicate-mc-symptoms {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.vindicate-mc-symptoms li {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.4;
+}
+
+.vindicate-mc-symptoms li::before {
+  content: "•";
+  color: var(--vindicate-accent);
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.vindicate-mc-card--disabled .vindicate-mc-symptoms li::before {
+  color: var(--vindicate-fg-muted);
+}
+
+/* ── "Vindicate starts by" footer ── */
+.vindicate-mc-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in oklab, var(--vindicate-border) 60%, transparent);
+}
+
+.vindicate-mc-footer-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vindicate-fg-muted);
+  margin-bottom: 5px;
+}
+
+/* ── Done step re-opened: keep green circle, not orange ── */
+.vindicate-gs-step--done.vindicate-gs-step--open .vindicate-gs-num {
+  border: 1px solid rgba(74, 222, 128, 0.2) !important;
+  background: rgba(21, 128, 61, 0.25) !important;
+  color: #4ade80 !important;
+}
+
+/* ── Done-open banner inside expanded done step ── */
+.vindicate-gs-done-banner {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  background: rgba(21, 128, 61, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.14);
+  font-size: 11px;
+  color: #4ade80;
+  line-height: 1.4;
+}
+
+/* ── Prompt preview details/summary ── */
+.vindicate-gs-prompt-details {
+  margin-bottom: 14px;
+}
+
+.vindicate-gs-prompt-summary {
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--vindicate-fg-muted);
+  margin-bottom: 0;
+  user-select: none;
+}
+
+.vindicate-gs-prompt-summary:hover {
+  color: var(--vindicate-fg);
+}
+
+.vindicate-gs-prompt-pre {
+  margin: 8px 0 0;
+  padding: 12px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--vindicate-border);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--vindicate-fg);
+  line-height: 1.65;
+  overflow: auto;
+  max-height: 220px;
+  white-space: pre-wrap;
+}
+
+/* ── Send button ── */
+.vindicate-gs-send-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #b0b0b0;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.vindicate-gs-send-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #d0d0d0;
+}
+
+/* ── Send dropdown ── */
+.vindicate-gs-send-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 210px;
+  z-index: 50;
+  background: #1e1e1e;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.55);
+  padding: 4px;
+}
+
+.vindicate-gs-send-dropdown-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  color: var(--vindicate-fg);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.vindicate-gs-send-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.vindicate-gs-send-dropdown-hint {
+  padding: 5px 10px 4px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--vindicate-fg-muted);
+  letter-spacing: 0.06em;
+  border-top: 1px solid var(--vindicate-border);
+  margin-top: 4px;
+}
+
+/* ── Getting started header row (screen 5) ── */
+.vindicate-gs-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.vindicate-gs-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vindicate-gs-heading {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-gs-progress-count {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--vindicate-fg-muted);
+  white-space: nowrap;
+}
+
+/* ── Predone check circle ── */
+.vindicate-gs-predone-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #15803d;
+  color: #fff;
+}
+
+.vindicate-mc-footer-text {
+  font-size: 11.5px;
+  color: var(--vindicate-fg);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Panel V2 */
+.vindicate-prompts-v2 {
+  align-items: start;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 150px minmax(0, 1fr);
+}
+
+.vindicate-prompts-v2-sidebar {
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 62%, transparent);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: unset;
+  padding: 6px 8px 8px;
+  height: fit-content;
+}
+
+.vindicate-prompts-v2-sidebar-title {
+  color: var(--vscode-descriptionForeground);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 7px 2px 3px;
+  text-transform: uppercase;
+}
+
+.vindicate-prompts-v2-filter {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  display: flex;
+  font-size: 11px;
+  font-weight: 500;
+  justify-content: space-between;
+  height: 26px;
+  line-height: 1;
+  margin: 0;
+  padding: 5px 8px;
+  text-align: left;
+  width: 100%;
+}
+
+.vindicate-prompts-v2-filter:hover {
+  background: color-mix(in srgb, var(--vscode-button-background) 18%, transparent);
+}
+
+.vindicate-prompts-v2-filter.is-active {
+  background: color-mix(in srgb, var(--vscode-button-background) 24%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--vscode-button-background) 36%, transparent);
+  color: var(--vscode-foreground);
+}
+
+.vindicate-prompts-v2-filter-count {
+  color: var(--vscode-textLink-foreground);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+}
+
+.vindicate-prompts-v2-filter-label {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+.vindicate-prompts-v2-filter-label svg {
+  flex-shrink: 0;
+  height: 12px;
+  width: 12px;
+}
+
+.vindicate-prompts-v2-filter-count {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  min-width: 16px;
+  text-align: right;
+}
+
+.vindicate-prompts-v2-filter:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--vscode-focusBorder) 70%, transparent);
+  outline-offset: 0;
+}
+
+.vindicate-prompts-v2-main {
+  min-width: 0;
+}
+
+.vindicate-utility-tabs-v2 {
+  background: var(--vindicate-header-bg);
+  border-bottom: 1px solid var(--vindicate-border);
+  margin-bottom: 0;
+  padding: 0 10px;
+}
+
+.vindicate-utility-tabs-v2 .dash-tab {
+  color: var(--vindicate-fg-muted);
+  margin-bottom: -1px;
+  padding: 9px 10px;
+}
+
+.vindicate-utility-tabs-v2 .dash-tab:hover {
+  color: var(--vindicate-fg);
+}
+
+.vindicate-utility-tabs-v2 .dash-tab.on {
+  border-bottom-color: var(--vindicate-accent);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-prompts-v2-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.vindicate-prompts-v2-search-icon {
+  color: var(--vscode-descriptionForeground);
+  left: 10px;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.vindicate-prompts-v2-search-icon svg {
+  display: block;
+}
+
+.vindicate-prompts-v2-search {
+  background: color-mix(in srgb, var(--vscode-input-background) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-input-border) 75%, transparent);
+  border-radius: 6px;
+  color: var(--vscode-input-foreground);
+  flex: 1;
+  font-size: 12px;
+  min-width: 160px;
+  padding: 6px 10px 6px 24px;
+}
+
+.vindicate-prompts-v2-new,
+.vindicate-prompts-v2-modal-actions button {
+  align-items: center;
+  background: var(--vscode-button-background);
+  border: 1px solid color-mix(in srgb, var(--vscode-button-background) 60%, #000);
+  border-radius: 5px;
+  color: var(--vscode-button-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 6px;
+  justify-content: center;
+  padding: 6px 12px;
+}
+
+.vindicate-prompts-v2-group {
+  margin-bottom: 14px;
+}
+
+.vindicate-prompts-v2-group-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.vindicate-prompts-v2-group-head h4 {
+  color: var(--vscode-foreground);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.vindicate-prompts-v2-group-head span {
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.vindicate-prompts-v2-list {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vindicate-prompts-v2-row {
+  align-items: center;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--vscode-editorWidget-background) 96%, transparent),
+      color-mix(in srgb, var(--vscode-editorWidget-background) 89%, transparent)
+    );
+  border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 78%, transparent);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 4%, transparent);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  min-height: 82px;
+  padding: 12px 12px 11px;
+}
+
+.vindicate-prompts-v2-row.is-pinned-highlight {
+  position: relative;
+}
+
+.vindicate-prompts-v2-row.is-pinned-highlight::before {
+  background: linear-gradient(180deg, #f59e0b, #fbbf24);
+  border-radius: 999px;
+  content: "";
+  height: calc(100% - 16px);
+  left: -1px;
+  position: absolute;
+  top: 8px;
+  width: 3px;
+}
+
+.vindicate-prompts-v2-icon {
+  align-items: center;
+  background: color-mix(in srgb, var(--vindicate-accent) 26%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vindicate-accent) 42%, transparent);
+  border-radius: 8px;
+  color: #4ab1ff;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.vindicate-prompts-v2-icon.cat-specs {
+  background: color-mix(in srgb, #f472b6 18%, transparent);
+  border-color: color-mix(in srgb, #f472b6 40%, transparent);
+  color: #f472b6;
+}
+
+.vindicate-prompts-v2-icon.cat-domain {
+  background: color-mix(in srgb, #06b6d4 18%, transparent);
+  border-color: color-mix(in srgb, #06b6d4 40%, transparent);
+  color: #22d3ee;
+}
+
+.vindicate-prompts-v2-icon.cat-tests {
+  background: color-mix(in srgb, #22c55e 16%, transparent);
+  border-color: color-mix(in srgb, #22c55e 38%, transparent);
+  color: #4ade80;
+}
+
+.vindicate-prompts-v2-icon.cat-custom {
+  background: color-mix(in srgb, #f59e0b 16%, transparent);
+  border-color: color-mix(in srgb, #f59e0b 38%, transparent);
+  color: #fbbf24;
+}
+
+.vindicate-prompts-v2-row-main {
+  min-width: 0;
+}
+
+.vindicate-prompts-v2-row-titleline {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.vindicate-prompts-v2-row-title {
+  color: var(--vscode-foreground);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.vindicate-prompts-v2-row-badge {
+  background: color-mix(in srgb, var(--vscode-textLink-foreground) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-textLink-foreground) 42%, transparent);
+  border-radius: 999px;
+  color: var(--vscode-textLink-foreground);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  padding: 2px 7px 1px;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ONBOARDING LAYOUT — two-column shell
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-ob-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--vs-bg);
+}
+
+/* Scrollable header */
+.vindicate-ob-header {
+  padding: 20px 24px 0;
+  flex-shrink: 0;
+}
+
+/* Two-column body */
+.vindicate-ob-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.vindicate-ob-divider {
+  width: 1px;
+  background: var(--vindicate-border);
+  flex-shrink: 0;
+}
+
+.vindicate-ob-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+/* Collapse to single column on narrow panels */
+@media (max-width: 600px) {
+  .vindicate-cl-sidebar {
+    display: none;
+  }
+  .vindicate-ob-divider {
+    display: none;
+  }
+}
+
+/* ── Header brand row ──────────────────────────────────────────────────────── */
+.vindicate-ob-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.vindicate-ob-brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.vindicate-ob-brand-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-ob-brand-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--vindicate-fg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+}
+
+.vindicate-ob-pre-release-badge {
+  background: color-mix(in srgb, #f59e0b 18%, transparent);
+  border: 1px solid color-mix(in srgb, #f59e0b 50%, transparent);
+  color: #f59e0b;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.vindicate-ob-brand-url {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--vindicate-link);
+  cursor: pointer;
+  text-align: left;
+  display: block;
+}
+
+.vindicate-ob-brand-url:hover {
+  text-decoration: underline;
+}
+
+.vindicate-ob-brand-version {
+  font-size: 11px;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+/* ── Header description ────────────────────────────────────────────────────── */
+.vindicate-ob-description {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--vindicate-fg-muted);
+  margin: 0 0 14px;
+}
+
+/* ── Identity / auth card ──────────────────────────────────────────────────── */
+.vindicate-ob-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--vindicate-border);
+  margin-bottom: 0;
+}
+
+.vindicate-ob-identity--signed-in {
+  border-color: color-mix(in srgb, var(--vindicate-status-green) 40%, transparent);
+  background: color-mix(in srgb, var(--vindicate-status-green) 6%, transparent);
+}
+
+.vindicate-ob-identity--pairing {
+  border-color: color-mix(in srgb, #f59e0b 40%, transparent);
+  background: color-mix(in srgb, #f59e0b 6%, transparent);
+}
+
+.vindicate-ob-identity--signed-out {
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-ob-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--vindicate-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.vindicate-ob-avatar--empty {
+  background: var(--vindicate-card-bg);
+  border: 1px solid var(--vindicate-border);
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-ob-identity-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-ob-identity-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vindicate-ob-signed-in-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--vindicate-status-green);
+  border: 1px solid color-mix(in srgb, var(--vindicate-status-green) 50%, transparent);
+  background: color-mix(in srgb, var(--vindicate-status-green) 12%, transparent);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+}
+
+.vindicate-ob-project-ready-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--vindicate-accent);
+  border: 1px solid color-mix(in srgb, var(--vindicate-accent) 50%, transparent);
+  background: color-mix(in srgb, var(--vindicate-accent) 12%, transparent);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+}
+
+.vindicate-ob-pairing-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: vindicate-pulse 1.4s ease-in-out infinite;
+}
+
+.vindicate-ob-identity-sub {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  margin-top: 1px;
+}
+
+.vindicate-ob-sign-in-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  border: none;
+  border-radius: 5px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.vindicate-ob-sign-in-btn:hover:not(:disabled) {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+.vindicate-ob-sign-in-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.vindicate-ob-ghost-action {
+  background: none;
+  border: none;
+  color: var(--vindicate-fg-muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.vindicate-ob-ghost-action:hover {
+  color: var(--vindicate-fg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ONBOARDING CHECKLIST — left 280px column
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-cl-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 20px 16px 20px 24px;
+}
+
+.vindicate-cl-heading {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+.vindicate-cl-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vindicate-cl-step {
+  display: flex;
+  gap: 10px;
+  padding: 8px 8px 8px 4px;
+  border-radius: 6px;
+  transition: background 0.1s;
+  cursor: default;
+  outline: none;
+}
+
+.vindicate-cl-step--clickable {
+  cursor: pointer;
+}
+
+.vindicate-cl-step--clickable:hover {
+  background: var(--vs-hover);
+}
+
+.vindicate-cl-step--clickable:focus-visible {
+  outline: 1px solid var(--vindicate-accent);
+}
+
+.vindicate-cl-step--highlighted {
+  background: color-mix(in srgb, var(--vindicate-accent) 12%, transparent);
+}
+
+.vindicate-cl-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vindicate-cl-dot--done {
+  background: var(--vindicate-status-green, #4ec9b0);
+}
+
+.vindicate-cl-dot--active {
+  background: var(--vindicate-accent, #0e639c);
+  color: #fff;
+}
+
+.vindicate-cl-dot--locked {
+  background: transparent;
+  border: 1px solid var(--vindicate-border);
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-cl-step-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-cl-title {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--vindicate-fg);
+  line-height: 1.3;
+}
+
+.vindicate-cl-title--done {
+  text-decoration: line-through;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-cl-step--locked .vindicate-cl-title {
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-cl-sub {
+  font-size: 11px;
+  color: var(--vindicate-fg-subtle);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FOLDER PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-fp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.vindicate-fp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vindicate-fp-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.vindicate-fp-recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vindicate-fp-open-link {
+  background: none;
+  border: none;
+  color: var(--vindicate-link);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.vindicate-fp-open-link:hover {
+  text-decoration: underline;
+}
+
+.vindicate-fp-current-folder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-fp-folder-icon {
+  color: var(--vindicate-fg-muted);
+  flex-shrink: 0;
+}
+
+.vindicate-fp-folder-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-fp-folder-ready {
+  font-size: 11px;
+  color: var(--vindicate-status-green);
+  margin-top: 1px;
+}
+
+.vindicate-fp-open-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 24px;
+  border: 1px dashed var(--vindicate-border);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.vindicate-fp-open-icon {
+  color: var(--vindicate-fg-subtle);
+  opacity: 0.6;
+}
+
+.vindicate-fp-open-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  margin: 0;
+}
+
+.vindicate-fp-open-desc {
+  font-size: 11.5px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 280px;
+}
+
+.vindicate-fp-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vindicate-fp-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.1s;
+}
+
+.vindicate-fp-recent-item:hover {
+  background: var(--vs-hover);
+}
+
+.vindicate-fp-recent-icon {
+  color: var(--vindicate-fg-muted);
+  flex-shrink: 0;
+}
+
+.vindicate-fp-recent-name {
+  font-size: 12.5px;
+  color: var(--vindicate-fg);
+  font-weight: 500;
+}
+
+.vindicate-fp-recent-path {
+  font-size: 11px;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+  margin-top: 1px;
+}
+
+.vindicate-fp-recent-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GET STARTED PANEL (no folder + no auth)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-gs-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vindicate-gs-subtitle {
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.vindicate-gs-step {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-gs-step-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--vindicate-accent) 12%, transparent);
+  color: var(--vindicate-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vindicate-gs-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-gs-step-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  margin: 0;
+}
+
+.vindicate-gs-step-desc {
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.vindicate-gs-step-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.vindicate-gs-step-recent-hint {
+  font-size: 11px;
+  color: var(--vindicate-fg-subtle);
+}
+
+/* Step done state */
+.vindicate-gs-step--done {
+  opacity: 0.7;
+}
+
+.vindicate-gs-step-icon--done {
+  background: color-mix(in srgb, #22c55e 15%, transparent);
+  color: #22c55e;
+}
+
+.vindicate-gs-step-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vindicate-gs-done-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, #22c55e 15%, transparent);
+  color: #22c55e;
+}
+
+.vindicate-gs-workspace-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--vindicate-fg-muted);
+  margin-top: 2px;
+}
+
+.vindicate-gs-workspace-name {
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+  font-family: var(--font-mono);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DEVICE CODE PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-dcp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vindicate-dcp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vindicate-dcp-desc {
+  font-size: 12.5px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.vindicate-dcp-card {
+  background: var(--vindicate-card-bg);
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.vindicate-dcp-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.vindicate-dcp-code {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  color: var(--vindicate-fg);
+  line-height: 1;
+}
+
+.vindicate-dcp-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--vindicate-card-bg);
+  border: 1px solid var(--vindicate-border);
+  border-radius: 5px;
+  color: var(--vindicate-fg);
+  font-size: 12px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: border-color 0.1s;
+}
+
+.vindicate-dcp-copy-btn:hover:not(:disabled) {
+  border-color: var(--vindicate-accent);
+}
+
+.vindicate-dcp-copy-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vindicate-dcp-expiry-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vindicate-dcp-expiry-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.vindicate-dcp-expiry-time {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--vindicate-fg);
+}
+
+.vindicate-dcp-expiry-time--urgent {
+  color: #f59e0b;
+}
+
+.vindicate-dcp-progress-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--vindicate-card-bg);
+  border: 1px solid var(--vindicate-border);
+  overflow: hidden;
+}
+
+.vindicate-dcp-progress-fill {
+  height: 100%;
+  background: var(--vindicate-accent);
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
+.vindicate-dcp-progress-fill--urgent {
+  background: #f59e0b;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOOL SELECTION PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-tsp-header {
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODE SELECTION PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-msp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Featured (Build) card */
+.vindicate-msp-featured {
+  border: 1px solid var(--vindicate-accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--vindicate-accent) 6%, var(--vindicate-card-bg));
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vindicate-msp-featured-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vindicate-msp-featured-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  background: var(--vindicate-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.vindicate-msp-featured-title {
+  flex: 1;
+}
+
+.vindicate-msp-mode-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-msp-featured-desc {
+  font-size: 12.5px;
+  color: var(--vindicate-fg-muted);
+  margin: 0;
+}
+
+.vindicate-msp-bullets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.vindicate-msp-bullet {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-msp-bullet-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vindicate-accent);
+  flex-shrink: 0;
+}
+
+.vindicate-msp-vindicate-starts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--vindicate-border);
+}
+
+.vindicate-msp-starts-text {
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.vindicate-msp-cta {
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background 0.1s;
+}
+
+.vindicate-msp-cta:hover {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+/* Soon cards grid */
+.vindicate-msp-soon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.vindicate-msp-soon-card {
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+  padding: 12px;
+  opacity: 0.6;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vindicate-msp-soon-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vindicate-msp-soon-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: var(--vindicate-card-bg);
+  border: 1px solid var(--vindicate-border);
+  color: var(--vindicate-fg-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.vindicate-msp-soon-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--vindicate-fg-subtle);
+  font-family: var(--font-mono);
+}
+
+.vindicate-msp-soon-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vindicate-fg-muted);
+}
+
+.vindicate-msp-soon-desc {
+  font-size: 11px;
+  color: var(--vindicate-fg-subtle);
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAINTENANCE PANEL (cloned configured project, not signed in)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-mp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vindicate-mp-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vindicate-mp-ready-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--vindicate-accent);
+  border: 1px solid color-mix(in srgb, var(--vindicate-accent) 50%, transparent);
+  background: color-mix(in srgb, var(--vindicate-accent) 12%, transparent);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+}
+
+.vindicate-mp-card {
+  border: 1px solid color-mix(in srgb, var(--vindicate-accent) 30%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--vindicate-accent) 5%, var(--vindicate-card-bg));
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.vindicate-mp-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--vindicate-accent) 12%, transparent);
+  color: var(--vindicate-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.vindicate-mp-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--vindicate-fg);
+  margin: 0;
+}
+
+.vindicate-mp-desc {
+  font-size: 12.5px;
+  color: var(--vindicate-fg-muted);
+  margin: 0;
+  line-height: 1.55;
+  max-width: 320px;
+}
+
+.vindicate-mp-sign-in-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  border: none;
+  border-radius: 6px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.1s;
+}
+
+.vindicate-mp-sign-in-btn:hover:not(:disabled) {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+.vindicate-mp-sign-in-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.vindicate-mp-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+}
+
+.vindicate-mp-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCAFFOLD PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-scp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* MCP enable callout (scaffold + dashboard) */
+.vindicate-mcp-callout {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--vindicate-accent) 30%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--vindicate-accent) 8%, transparent);
+}
+
+.vindicate-mcp-callout--attention {
+  position: relative;
+  padding: 14px 16px 14px 18px;
+  border-color: color-mix(in srgb, var(--vindicate-accent) 55%, transparent);
+  background: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--vindicate-accent) 22%, transparent) 0%,
+    color-mix(in srgb, var(--vindicate-accent) 10%, transparent) 42%,
+    color-mix(in srgb, var(--vindicate-accent) 4%, transparent) 100%
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--vindicate-accent) 14%, transparent),
+    0 6px 28px color-mix(in srgb, var(--vindicate-accent) 14%, transparent);
+}
+
+.vindicate-mcp-callout--attention::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--vindicate-accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--vindicate-accent) 70%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vindicate-mcp-callout--attention {
+    animation: vindicate-mcp-callout-glow 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes vindicate-mcp-callout-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--vindicate-accent) 14%, transparent),
+      0 6px 28px color-mix(in srgb, var(--vindicate-accent) 12%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--vindicate-accent) 28%, transparent),
+      0 8px 36px color-mix(in srgb, var(--vindicate-accent) 22%, transparent);
+  }
+}
+
+.vindicate-screen-dashboard .vindicate-mcp-callout {
+  margin-bottom: 18px;
+}
+
+.vindicate-mcp-callout-icon-wrap {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 1px;
+}
+
+.vindicate-mcp-callout--attention .vindicate-mcp-callout-icon-wrap {
+  width: 36px;
+  height: 36px;
+  margin-top: 0;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--vindicate-accent) 24%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vindicate-accent) 45%, transparent);
+}
+
+.vindicate-mcp-callout-icon {
+  color: var(--vindicate-accent);
+  flex-shrink: 0;
+}
+
+.vindicate-mcp-callout--attention .vindicate-mcp-callout-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.vindicate-mcp-callout-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  border: 2px solid color-mix(in srgb, var(--vindicate-accent) 45%, transparent);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vindicate-mcp-callout-pulse {
+    animation: vindicate-mcp-callout-pulse-ring 2s ease-out infinite;
+  }
+}
+
+@keyframes vindicate-mcp-callout-pulse-ring {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.92);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+.vindicate-mcp-callout-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.vindicate-mcp-callout-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vindicate-accent);
+  background: color-mix(in srgb, var(--vindicate-accent) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vindicate-accent) 40%, transparent);
+}
+
+.vindicate-mcp-callout--attention .vindicate-mcp-callout-title {
+  color: var(--vindicate-fg);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+.vindicate-mcp-callout--attention .vindicate-mcp-callout-body {
+  color: var(--vindicate-fg);
+  font-size: 12.5px;
+}
+
+.vindicate-mcp-callout--attention .vindicate-mcp-callout-hint {
+  opacity: 1;
+  font-size: 11.5px;
+}
+
+.vindicate-mcp-callout--attention .vindicate-mcp-callout-on {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+.vindicate-mcp-callout-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.vindicate-mcp-callout-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 3px;
+}
+
+.vindicate-mcp-callout-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--vindicate-fg);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vindicate-mcp-callout-dismiss {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--vindicate-fg-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.vindicate-mcp-callout-dismiss:hover {
+  color: var(--vindicate-fg);
+}
+
+.vindicate-mcp-callout-body {
+  font-size: 12px;
+  color: var(--vindicate-fg-muted);
+  margin: 0 0 5px;
+  line-height: 1.5;
+}
+
+.vindicate-mcp-callout-body strong {
+  color: var(--vindicate-fg);
+  font-weight: 600;
+}
+
+.vindicate-mcp-callout-hint {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  margin: 0;
+  opacity: 0.8;
+}
+
+.vindicate-mcp-callout-on {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, #22c55e 15%, transparent);
+  color: #22c55e;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.vindicate-scp-card {
+  border: 1px solid var(--vindicate-border);
+  border-radius: 10px;
+  background: var(--vindicate-card-bg);
+  overflow: hidden;
+}
+
+/* Header row: numbered badge + title/sub + REQUIRED pill */
+.vindicate-scp-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--vindicate-border);
+}
+
+.vindicate-scp-num-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--vindicate-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.vindicate-scp-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+}
+
+.vindicate-scp-card-sub {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  margin-top: 1px;
+}
+
+/* Inset dark prompt box — distinct inner container */
+.vindicate-scp-prompt-box {
+  margin: 14px 16px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 6px;
+  background: var(--vscode-editor-background, #1e1e1e);
+  overflow: hidden;
+}
+
+.vindicate-scp-prompt-text {
+  display: block;
+  padding: 12px 14px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  color: var(--vindicate-fg-muted);
+  max-height: 160px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  background: none;
+  line-height: 1.7;
+}
+
+.vindicate-scp-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--vindicate-border);
+}
+
+.vindicate-scp-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  border: none;
+  border-radius: 5px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.vindicate-scp-copy-btn:hover {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+.vindicate-scp-copy-btn--copied {
+  background: color-mix(in srgb, var(--vindicate-status-green) 80%, #000);
+}
+
+.vindicate-scp-watch-list {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-bottom: 1px solid var(--vindicate-border);
+}
+
+.vindicate-scp-watch-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+}
+
+.vindicate-scp-watch-file {
+  font-family: var(--font-mono);
+  color: var(--vindicate-fg-muted);
+  flex: 1;
+}
+
+.vindicate-scp-watch-status {
+  font-size: 11px;
+  color: var(--vindicate-fg-subtle);
+}
+
+.vindicate-scp-done-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+  color: var(--vindicate-status-green);
+  background: color-mix(in srgb, var(--vindicate-status-green) 8%, transparent);
+  border-bottom: 1px solid var(--vindicate-border);
+}
+
+.vindicate-scp-outputs {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vindicate-scp-outputs-label {
+  font-size: 11px;
+  color: var(--vindicate-fg-subtle);
+  margin: 0 0 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIDEBAR — onboarding CTA
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vindicate-sidebar-onboarding-cta {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--vindicate-border);
+  border-radius: 8px;
+  background: var(--vindicate-card-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vindicate-sidebar-onboarding-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  margin: 0;
+}
+
+.vindicate-sidebar-onboarding-desc {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.vindicate-prompts-v2-row-badge.pinned {
+  border-color: color-mix(in srgb, var(--ord-amber) 58%, transparent);
+  color: var(--ord-amber);
+}
+
+.vindicate-prompts-v2-row-desc {
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.vindicate-prompts-v2-row-meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.vindicate-prompts-v2-row-meta .meta-key,
+.vindicate-prompts-v2-row-meta .meta-used {
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.vindicate-prompts-v2-row-meta .meta-path {
+  color: var(--vscode-foreground);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.vindicate-prompts-v2-row-meta .meta-chip {
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 56%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 68%, transparent);
+  border-radius: 999px;
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 2px 7px;
+}
+
+.vindicate-prompts-v2-row-actions {
+  align-items: center;
+  align-self: stretch;
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 48%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 68%, transparent);
+  border-radius: 8px;
+  display: flex;
+  gap: 6px;
+  margin: -2px 0;
+  padding: 0 8px;
+}
+
+.vindicate-prompts-v2-row-actions .iconbtn {
+  align-items: center;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 75%, transparent);
+  border-radius: 4px;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 600;
+  height: 28px;
+  justify-content: center;
+  padding: 0;
+  width: 28px;
+}
+
+.vindicate-prompts-v2-row-actions .iconbtn svg,
+.vindicate-prompts-v2-icon svg {
+  display: block;
+  height: 13px;
+  width: 13px;
+}
+
+.vindicate-prompts-v2-row-actions .iconbtn.primary {
+  background: var(--vscode-button-background);
+  border-color: color-mix(in srgb, var(--vscode-button-background) 58%, transparent);
+  color: var(--vscode-button-foreground);
+}
+
+.vindicate-prompts-v2-row-actions .iconbtn:disabled {
+  color: var(--vscode-disabledForeground);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.vindicate-prompts-v2-menu-wrap {
+  position: relative;
+}
+
+.vindicate-prompts-v2-menu {
+  background: var(--vscode-menu-background);
+  border: 1px solid var(--vscode-menu-border, var(--vscode-editorWidget-border));
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+  display: grid;
+  min-width: 150px;
+  padding: 4px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 10;
+}
+
+.vindicate-prompts-v2-menu button {
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--vscode-menu-foreground, var(--vscode-foreground));
+  cursor: pointer;
+  font-size: 12px;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.vindicate-prompts-v2-empty {
+  align-items: center;
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 42%, transparent);
+  border: 1px dashed var(--vscode-editorWidget-border);
+  border-radius: 10px;
+  color: var(--vscode-descriptionForeground);
+  display: flex;
+  font-size: 12px;
+  justify-content: center;
+  min-height: 90px;
+  padding: 12px;
+  text-align: center;
+}
+
+.vindicate-prompts-v2-menu button:hover:not(:disabled) {
+  background: var(--vscode-menu-selectionBackground, rgba(255, 255, 255, 0.08));
+}
+
+.vindicate-prompts-v2-menu button:disabled {
+  color: var(--vscode-disabledForeground);
+  cursor: not-allowed;
+}
+
+.vindicate-prompts-v2-modal-backdrop {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 12px;
+  position: fixed;
+  z-index: 1000;
+}
+
+.vindicate-prompts-v2-modal {
+  background: color-mix(in srgb, var(--vscode-editorWidget-background) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 85%, transparent);
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  display: grid;
+  gap: 0;
+  max-height: calc(100vh - 24px);
+  max-width: 680px;
+  overflow: auto;
+  width: clamp(300px, calc(100vw - 24px), 680px);
+}
+
+.vindicate-prompts-v2-modal-head {
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 75%, transparent);
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+.vindicate-prompts-v2-modal-title-wrap {
+  align-items: center;
+  display: inline-flex;
+  gap: 10px;
+}
+
+.vindicate-prompts-v2-modal-title-icon {
+  align-items: center;
+  color: var(--vscode-descriptionForeground);
+  display: inline-flex;
+  justify-content: center;
+}
+
+.vindicate-prompts-v2-modal h3 {
+  color: var(--vscode-foreground);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.vindicate-prompts-v2-modal-badge {
+  background: color-mix(in srgb, var(--vscode-textLink-foreground) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-textLink-foreground) 42%, transparent);
+  border-radius: 999px;
+  color: var(--vscode-textLink-foreground);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 1px 8px;
+  text-transform: uppercase;
+}
+
+.vindicate-prompts-v2-modal-close {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--vscode-descriptionForeground);
+  cursor: pointer;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.vindicate-prompts-v2-modal-close:hover {
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 60%, transparent);
+  border-color: color-mix(in srgb, var(--vscode-editorWidget-border) 70%, transparent);
+}
+
+.vindicate-prompts-v2-modal-body {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.vindicate-prompts-v2-modal label {
+  color: var(--vscode-foreground);
+  display: grid;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  gap: 5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vindicate-prompts-v2-modal-row2 {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.vindicate-prompts-v2-modal input,
+.vindicate-prompts-v2-modal select,
+.vindicate-prompts-v2-modal textarea {
+  background: color-mix(in srgb, var(--vscode-input-background) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vscode-input-border) 74%, transparent);
+  border-radius: 8px;
+  color: var(--vscode-input-foreground);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  padding: 8px 10px;
+  text-transform: none;
+  width: 100%;
+}
+
+.vindicate-prompts-v2-modal textarea {
+  max-height: 48vh;
+  min-height: 160px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.vindicate-prompts-v2-modal input::placeholder,
+.vindicate-prompts-v2-modal textarea::placeholder {
+  color: color-mix(in srgb, var(--vscode-descriptionForeground) 92%, transparent);
+}
+
+.vindicate-prompts-v2-modal-vars {
+  align-items: center;
+  color: var(--vscode-descriptionForeground);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  gap: 6px;
+  margin: -2px 0 0;
+}
+
+.vindicate-prompts-v2-modal-actions {
+  align-items: center;
+  border-top: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 75%, transparent);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+}
+
+.vindicate-prompts-v2-modal-actions-right {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.vindicate-prompts-v2-modal-footnote {
+  align-items: center;
+  color: var(--vscode-descriptionForeground);
+  display: inline-flex;
+  font-size: 11px;
+  gap: 8px;
+}
+
+.vindicate-prompts-v2-modal-actions button {
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 80%, transparent);
+  border-radius: 8px;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 12px;
+  gap: 8px;
+  justify-content: center;
+  padding: 7px 10px;
+}
+
+.vindicate-prompts-v2-modal-actions button:first-child {
+  background: transparent;
+}
+
+.vindicate-prompts-v2-modal-actions button:last-child {
+  background: var(--vscode-button-background);
+  border-color: color-mix(in srgb, var(--vscode-button-background) 62%, transparent);
+  color: var(--vscode-button-foreground);
+}
+
+.vindicate-prompts-v2-modal-actions button:disabled {
+  opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+  .vindicate-prompts-v2-modal h3 {
+    font-size: 14px;
+  }
+
+  .vindicate-prompts-v2-modal input,
+  .vindicate-prompts-v2-modal select,
+  .vindicate-prompts-v2-modal textarea {
+    font-size: 12px;
+  }
+
+  .vindicate-prompts-v2-modal textarea {
+    min-height: 140px;
+  }
+
+  .vindicate-prompts-v2-modal-row2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vindicate-config-v2 {
+  display: grid;
+  gap: 12px;
+}
+
+.opp-group {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0 14px;
+}
+
+.opp-group h3 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: none;
+}
+
+.opp-group .hint {
+  color: var(--vscode-descriptionForeground);
+  font-size: 11.5px;
+  margin-top: 3px;
+}
+
+.opp-mini-btn {
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 42%, transparent);
+  align-items: center;
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 5px;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 600;
+  gap: 5px;
+  padding: 5px 9px;
+}
+
+.opp-mini-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.opp-mini-btn.ghost {
+  background: transparent;
+  color: var(--vscode-descriptionForeground);
+}
+
+.opp-mini-btn.ghost:hover {
+  background: var(--vscode-list-hoverBackground);
+  border-color: var(--vscode-editorWidget-border);
+  color: var(--vscode-foreground);
+}
+
+.opp-conn-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 22px;
+}
+
+.opp-conn {
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  padding: 14px;
+  position: relative;
+}
+
+.opp-conn.green {
+  border-color: color-mix(in oklab, var(--ord-emerald) 38%, var(--vscode-editorWidget-border));
+}
+
+.opp-conn.amber {
+  border-color: color-mix(in oklab, var(--ord-amber) 38%, var(--vscode-editorWidget-border));
+}
+
+.opp-conn.red {
+  border-color: color-mix(in oklab, var(--ord-red) 38%, var(--vscode-editorWidget-border));
+}
+
+.opp-conn::after {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--vscode-textLink-foreground) 7%, transparent),
+    transparent 40%
+  );
+  content: "";
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.opp-conn.green::after {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ord-emerald) 9%, transparent),
+    transparent 50%
+  );
+  opacity: 1;
+}
+
+.opp-conn.amber::after {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ord-amber) 10%, transparent),
+    transparent 50%
+  );
+  opacity: 1;
+}
+
+.opp-conn.red::after {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--ord-red) 10%, transparent), transparent 50%);
+  opacity: 1;
+}
+
+.opp-conn-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.opp-conn-head .name {
+  align-items: center;
+  display: inline-flex;
+  font-size: 12.5px;
+  font-weight: 600;
+  gap: 7px;
+}
+
+.opp-conn-head .dot {
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+}
+
+.opp-conn.green .opp-conn-head .dot {
+  background: var(--ord-emerald);
+}
+
+.opp-conn.amber .opp-conn-head .dot {
+  background: var(--ord-amber);
+}
+
+.opp-conn.red .opp-conn-head .dot {
+  background: var(--ord-red);
+}
+
+.opp-conn-head .state {
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.opp-conn-body {
+  color: var(--vscode-descriptionForeground);
+  display: flex;
+  flex-direction: column;
+  font-size: 11.5px;
+  gap: 6px;
+  line-height: 1.55;
+  position: relative;
+  z-index: 1;
+}
+
+.vindicate-config-v2-agents-block {
+  padding: 0;
+}
+
+.opp-agent {
+  align-items: center;
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto 1fr auto;
+  margin-bottom: 8px;
+  padding: 10px;
+}
+
+.opp-agent:last-child {
+  margin-bottom: 0;
+}
+
+.opp-agent .gloss {
+  align-items: center;
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 50%, transparent);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 8px;
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.opp-agent .meta .title {
+  align-items: center;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 8px;
+}
+
+.opp-agent .meta .sub {
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.opp-agent .actions {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.opp-state-pill {
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  text-transform: uppercase;
+}
+
+.opp-state-pill.connected {
+  border-color: color-mix(in srgb, var(--ord-emerald) 50%, transparent);
+  color: var(--ord-emerald);
+}
+
+.opp-state-pill.available {
+  border-color: color-mix(in srgb, var(--ord-amber) 45%, transparent);
+  color: var(--ord-amber);
+}
+
+.opp-card-wrap {
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.opp-set {
+  align-items: center;
+  border-top: 1px solid var(--vscode-editorWidget-border);
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+
+.opp-set:first-child {
+  border-top: 0;
+}
+
+.opp-set .left {
+  align-items: center;
+  display: inline-flex;
+  gap: 9px;
+}
+
+.opp-set .st {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.opp-set .small {
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+}
+
+.vindicate-config-file-brand {
+  align-items: center;
+  display: inline-flex;
+  height: 16px;
+  justify-content: center;
+  width: 16px;
+}
+
+.vindicate-config-v2-section {
+  background: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 12px;
+  padding: 11px 12px;
+}
+
+.vindicate-config-v2-section h3 {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.vindicate-config-v2-grid {
+  display: grid;
+  gap: 9px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.vindicate-config-v2-card {
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 52%, transparent);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 10px;
+  display: grid;
+  gap: 8px;
+  padding: 10px 11px;
+}
+
+.vindicate-config-v2-card header {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.vindicate-config-v2-brand {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.vindicate-config-v2-card p {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.vindicate-config-v2-state {
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.vindicate-config-v2-state.is-up {
+  color: var(--ord-emerald);
+}
+
+.vindicate-config-v2-state.is-available {
+  color: var(--vscode-textLink-foreground);
+}
+
+.vindicate-config-v2-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.vindicate-config-v2-actions button {
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 40%, transparent);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 6px;
+  color: var(--vscode-foreground);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 5px 8px;
+}
+
+.vindicate-config-v2-connections {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 8px;
+}
+
+.vindicate-config-v2-connection-card {
+  align-items: center;
+  background: color-mix(in srgb, var(--vscode-sideBar-background) 48%, transparent);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.vindicate-config-v2-connection-card p {
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.vindicate-config-v2-connection-pill {
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  text-transform: uppercase;
+}
+
+.vindicate-config-v2-connection-pill.is-up {
+  border-color: color-mix(in srgb, var(--ord-emerald) 55%, transparent);
+  color: var(--ord-emerald);
+}
+
+.vindicate-config-v2-connection-pill.is-down {
+  border-color: color-mix(in srgb, var(--ord-red) 60%, transparent);
+  color: var(--ord-red);
+}
+
+.vindicate-config-v2-connection-pill.is-unknown {
+  border-color: color-mix(in srgb, var(--ord-amber) 55%, transparent);
+  color: var(--ord-amber);
+}
+
+.vindicate-config-v2-note {
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .opp-conn-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .opp-conn-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .opp-agent {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+
+  .opp-agent .actions {
+    width: 100%;
+  }
+}
+
+/* ── Empty dashboard banner ────────────────────────────────────────────── */
+.vindicate-empty-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--vscode-focusBorder) 30%, transparent);
+  background: color-mix(in srgb, var(--vscode-focusBorder) 6%, transparent);
+}
+
+.vindicate-empty-banner-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--vscode-focusBorder);
+  opacity: 0.8;
+}
+
+.vindicate-empty-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vindicate-empty-banner-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vscode-foreground);
+}
+
+.vindicate-empty-banner-sub {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--vscode-descriptionForeground);
+}
+
+
+/* ---------------------------------------------------------------------------
+   SIGN-IN SUCCESS PANEL
+   --------------------------------------------------------------------------- */
+
+.vindicate-ssp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vindicate-ssp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vindicate-ssp-complete-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  color: var(--vindicate-status-green);
+  border: 1px solid color-mix(in srgb, var(--vindicate-status-green) 50%, transparent);
+  background: color-mix(in srgb, var(--vindicate-status-green) 10%, transparent);
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+
+.vindicate-ssp-card {
+  border: 1px solid color-mix(in srgb, var(--vindicate-status-green) 35%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--vindicate-status-green) 7%, var(--vindicate-card-bg));
+  padding: 36px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.vindicate-ssp-check-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--vindicate-status-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vindicate-ssp-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--vindicate-fg);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.vindicate-ssp-desc {
+  font-size: 13px;
+  color: var(--vindicate-fg-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.vindicate-ssp-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--vindicate-bg) 55%, transparent);
+  border: 1px solid var(--vindicate-border);
+  text-align: left;
+}
+
+.vindicate-ssp-user--in-card {
+  margin-top: 4px;
+}
+
+.vindicate-ssp-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--vindicate-accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.vindicate-ssp-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.vindicate-ssp-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vindicate-fg);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vindicate-ssp-user-email {
+  font-size: 11px;
+  color: var(--vindicate-fg-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Auto-advance button with filling progress bar */
+.vindicate-ssp-advance-btn {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  text-align: center;
+}
+
+.vindicate-ssp-advance-btn:hover {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+.vindicate-ssp-advance-fill {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  background: color-mix(in srgb, #fff 18%, transparent);
+  transition: width 1s linear;
+  pointer-events: none;
+}
+
+.vindicate-ssp-advance-label {
+  position: relative;
+  z-index: 1;
+}

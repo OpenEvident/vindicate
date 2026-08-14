@@ -1,0 +1,45 @@
+{
+  "id": "E02-field-name-collision",
+  "description": "Structural check fails when two refs derive to same field name.",
+  "tags": ["edge", "collision"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "edge2",
+        "schema": {
+          "pages": [
+            {
+              "feature": "edge2",
+              "page_class": "EdgePage",
+              "path": "/edge",
+              "owned_by": "edge2",
+              "elements": [
+                { "ref": "saveA", "tag": "button", "testid": "save", "testid_attr": "data-testid" },
+                { "ref": "saveB", "tag": "button", "testid": "save", "testid_attr": "data-testid" }
+              ],
+              "types": [],
+              "steps": [{ "name": "step_navigate", "jsdoc": "Open edge", "params": [], "actions": [{ "do": "navigate" }] }],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "App - Edge2",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [{ "ac_id": "AC-1", "scenario": "collision", "title": "[AC-1] should fail", "body": [{ "fixture": "edgePage", "call": "step_navigate" }] }]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": false,
+    "error": {
+      "type": "CodegenStructuralError",
+      "messageIncludes": "Field name collision"
+    }
+  }
+}

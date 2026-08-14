@@ -1,0 +1,43 @@
+{
+  "id": "E03-panel-with-path",
+  "description": "Panel definitions must not include path.",
+  "tags": ["edge", "panel"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "edge3",
+        "schema": {
+          "pages": [
+            {
+              "feature": "edge3",
+              "page_class": "BadPanel",
+              "path": "/should-not-exist",
+              "owned_by": "edge3",
+              "is_panel": true,
+              "elements": [{ "ref": "save", "tag": "button", "role": "button", "name": "Save" }],
+              "types": [],
+              "steps": [{ "name": "step_save", "jsdoc": "save", "params": [], "actions": [{ "do": "click", "ref": "save" }] }],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "App - Edge3",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [{ "ac_id": "AC-1", "scenario": "bad panel", "title": "[AC-1] should fail", "body": [{ "fixture": "badPanel", "call": "step_save" }] }]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": false,
+    "error": {
+      "type": "CodegenStructuralError",
+      "messageIncludes": "must not have a 'path' field"
+    }
+  }
+}

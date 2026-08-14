@@ -1,0 +1,84 @@
+{
+  "id": "S03-settings-panel-modal",
+  "description": "Panel generation for modal interactions without page path.",
+  "tags": ["practical", "panel"],
+  "project": { "scaffold": "production" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "settings",
+        "schema": {
+          "pages": [
+            {
+              "feature": "settings",
+              "page_class": "SettingsPanel",
+              "owned_by": "settings",
+              "is_panel": true,
+              "elements": [
+                { "ref": "save", "tag": "button", "role": "button", "name": "Save settings" },
+                { "ref": "title", "tag": "h2", "name": "Settings" }
+              ],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_save",
+                  "jsdoc": "Save panel changes",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }, { "do": "click", "ref": "save" }]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_panelVisible",
+                  "jsdoc": "Panel should be visible",
+                  "params": [],
+                  "assertions": [{ "subject": "element", "ref": "save", "matcher": "toBeVisible" }]
+                }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "App - Settings",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-3",
+                "scenario": "Manage settings in panel",
+                "title": "[AC-3] should save settings",
+                "body": [
+                  { "fixture": "settingsPanel", "call": "step_save" },
+                  { "fixture": "settingsPanel", "call": "verify_panelVisible" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": [
+      "panels/SettingsPanel.ts",
+      "tests/settings.spec.ts"
+    ],
+    "mustContain": {
+      "panels/SettingsPanel.ts": ["extends BasePanel", "async step_save(", "async verify_panelVisible("],
+      "tests/settings.spec.ts": ["await settingsPanel.step_save();"]
+    },
+    "mustNotContain": {
+      "panels/SettingsPanel.ts": ["readonly path", "page.goto(this.path)"]
+    },
+    "invariants": ["I1", "I2", "I5", "I6", "I9"],
+    "compile": true,
+    "golden": true,
+    "goldenFiles": [
+      "panels/SettingsPanel.ts",
+      "tests/settings.spec.ts",
+      "support/config/page.config.ts"
+    ]
+  }
+}

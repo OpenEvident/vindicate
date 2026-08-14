@@ -1,0 +1,94 @@
+{
+  "id": "R08-auth-expected-in-verify-arg",
+  "description": "Regression: page objects import expected when verify assertions reference expected.*",
+  "tags": ["regression", "auth", "expected-data", "create"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "auth",
+              "elements": [
+                {
+                  "ref": "loginErrorDiv",
+                  "tag": "div",
+                  "testid": "login-error",
+                  "testid_attr": "e2e"
+                }
+              ],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_navigate_to_login",
+                  "jsdoc": "Navigate",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_login_error_displayed",
+                  "jsdoc": "Verify login error",
+                  "params": [],
+                  "assertions": [
+                    {
+                      "subject": "element",
+                      "ref": "loginErrorDiv",
+                      "waitFor": "visible",
+                      "matcher": "toContainText",
+                      "arg": "expected.invalidLoginMessage"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "invalidLoginMessage": "Incorrect username or password."
+          },
+          "spec": {
+            "suite": "Auth",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Invalid login",
+                "title": "[AC-1] should show login error",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_navigate_to_login" },
+                  { "fixture": "loginPage", "call": "verify_login_error_displayed" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": [
+      "pages/LoginPage.ts",
+      "support/data/auth/expected.json",
+      "tests/auth.spec.ts"
+    ],
+    "mustContain": {
+      "pages/LoginPage.ts": [
+        "import { authExpected as expected } from '@config/page-loader';",
+        "toContainText(expected.invalidLoginMessage)"
+      ],
+      "tests/auth.spec.ts": ["authExpected as expected"]
+    },
+    "invariants": ["I1", "I2", "I6", "I9"],
+    "compile": true
+  }
+}

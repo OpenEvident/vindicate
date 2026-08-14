@@ -1,0 +1,60 @@
+{
+  "id": "V03-validate-invalid-assertion-arg",
+  "description": "Validate mode rejects broken assertion arg expressions with invalid_assertion_arg.",
+  "tags": ["validate", "assertions"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "validate",
+        "validateTarget": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "HomePage",
+              "path": "/",
+              "owned_by": "auth",
+              "elements": [{ "ref": "home_link", "tag": "a", "role": "link", "name": "Home" }],
+              "types": [],
+              "steps": [],
+              "verifies": [
+                {
+                  "name": "verify_home",
+                  "jsdoc": "Home",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "page", "matcher": "toHaveURL", "arg": "/\\/($|\\\\?)" },
+                    { "subject": "element", "ref": "home_link", "matcher": "toBeVisible" }
+                  ]
+                }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "Auth",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Home",
+                "title": "[AC-1] home",
+                "body": [{ "fixture": "homePage", "call": "verify_home" }]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "validate": {
+      "valid": false,
+      "codesInclude": ["invalid_assertion_arg"]
+    }
+  }
+}

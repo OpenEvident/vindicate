@@ -1,0 +1,5 @@
+# Normalize line endings to LF everywhere, regardless of platform/core.autocrlf settings.
+# Without this, Windows checkouts with core.autocrlf=true convert checked-in fixture/golden
+# files to CRLF, which then fail byte-exact comparisons against tool output that always
+# writes LF (e.g. apps/runtime-mcp/tests/codegen-lab golden snapshot tests).
+* text=auto eol=lf

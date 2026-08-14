@@ -1,0 +1,78 @@
+{
+  "id": "R06-auth-quoted-env-var-arg",
+  "description": "Regression: validate rejects BodyCall args that quote process.env as string literals.",
+  "tags": ["regression", "auth", "validate", "ai-schema"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "validate",
+        "validateTarget": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "auth",
+              "elements": [
+                { "ref": "emailInput", "tag": "input", "testid": "email", "testid_attr": "e2e" },
+                { "ref": "passwordInput", "tag": "input", "testid": "password", "testid_attr": "e2e" },
+                { "ref": "loginButton", "tag": "button", "testid": "login", "testid_attr": "e2e" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate_to_login", "jsdoc": "Navigate", "params": [], "actions": [{ "do": "navigate" }] },
+                {
+                  "name": "step_login_with_credentials",
+                  "jsdoc": "Sign in",
+                  "params": [
+                    { "name": "email", "type": "string" },
+                    { "name": "password", "type": "string" }
+                  ],
+                  "actions": [
+                    { "do": "fill", "ref": "emailInput", "param": "email" },
+                    { "do": "fill", "ref": "passwordInput", "param": "password" },
+                    { "do": "click", "ref": "loginButton" }
+                  ]
+                }
+              ],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "Auth",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Valid Login",
+                "title": "[AC-1] should sign in with valid credentials",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_navigate_to_login" },
+                  {
+                    "fixture": "loginPage",
+                    "call": "step_login_with_credentials",
+                    "args": ["'process.env.TEST_USER_EMAIL!'", "'process.env.TEST_USER_PASSWORD!'"]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "validate": {
+      "valid": false,
+      "errorCountMin": 2,
+      "codesInclude": ["quoted_env_var_arg"]
+    },
+    "filesNotExist": ["tests/auth.spec.ts"]
+  }
+}

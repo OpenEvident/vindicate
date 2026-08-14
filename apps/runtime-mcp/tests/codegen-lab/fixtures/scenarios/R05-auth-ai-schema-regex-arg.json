@@ -1,0 +1,59 @@
+{
+  "id": "R05-auth-ai-schema-regex-arg",
+  "description": "Regression: invalid assertion arg expressions are rejected at codegen time.",
+  "tags": ["regression", "auth", "assertions"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "HomePage",
+              "path": "/",
+              "owned_by": "auth",
+              "elements": [{ "ref": "home_link", "tag": "a", "name": "Home", "role": "link" }],
+              "types": [],
+              "steps": [],
+              "verifies": [
+                {
+                  "name": "verify_authenticated_home",
+                  "jsdoc": "Assert user reached home",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "page", "matcher": "toHaveURL", "arg": "/\\/($|\\\\?)" },
+                    { "subject": "element", "ref": "home_link", "matcher": "toBeVisible" }
+                  ]
+                }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "Auth Home URL",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Home URL regex",
+                "title": "[AC-1] should match home URL",
+                "body": [{ "fixture": "homePage", "call": "verify_authenticated_home" }]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": false,
+    "error": {
+      "type": "CodegenStructuralError",
+      "messageIncludes": "assertion arg"
+    }
+  }
+}

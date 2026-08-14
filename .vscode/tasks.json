@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build:vscode-extension",
+      "type": "shell",
+      "command": "pnpm --filter vindicate build",
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "watch:vscode-extension",
+      "type": "shell",
+      "command": "pnpm --filter vindicate watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": {
+          "regexp": "^(.*)$",
+          "message": 1
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*watching for changes.*",
+          "endsPattern": ".*watching for changes.*"
+        }
+      }
+    },
+    {
+      "label": "typecheck:vscode-extension",
+      "type": "shell",
+      "command": "pnpm --filter vindicate typecheck",
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "test:vscode-extension",
+      "type": "shell",
+      "command": "pnpm --filter vindicate test",
+      "problemMatcher": "$tsc"
+    }
+  ]
+}

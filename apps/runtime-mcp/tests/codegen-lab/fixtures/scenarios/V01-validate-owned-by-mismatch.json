@@ -1,0 +1,74 @@
+{
+  "id": "V01-validate-owned-by-mismatch",
+  "description": "Validate mode returns owned_by_mismatch errors without writing files.",
+  "tags": ["validate", "regression", "auth"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "validate",
+        "validateTarget": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "loginPage",
+              "elements": [
+                { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "e2e" }
+              ],
+              "types": [],
+              "steps": [{ "name": "step_goto_login", "jsdoc": "Go", "params": [], "actions": [{ "do": "navigate" }] }],
+              "verifies": []
+            },
+            {
+              "feature": "auth",
+              "page_class": "HomePage",
+              "path": "/",
+              "owned_by": "homePage",
+              "elements": [{ "ref": "home_link", "tag": "a", "role": "link", "name": "Home" }],
+              "types": [],
+              "steps": [],
+              "verifies": [
+                {
+                  "name": "verify_home",
+                  "jsdoc": "Home",
+                  "params": [],
+                  "assertions": [{ "subject": "element", "ref": "home_link", "matcher": "toBeVisible" }]
+                }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "Auth",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Login",
+                "title": "[AC-1] should login",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_goto_login" },
+                  { "fixture": "homePage", "call": "verify_home" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "validate": {
+      "valid": false,
+      "errorCountMin": 2,
+      "codesInclude": ["owned_by_mismatch"]
+    },
+    "filesNotExist": ["pages/LoginPage.ts", "tests/auth.spec.ts"]
+  }
+}

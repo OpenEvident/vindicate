@@ -1,0 +1,91 @@
+{
+  "id": "A02-matcher-kitchen-sink",
+  "description": "Covers the supported matcher matrix across page and element assertions.",
+  "tags": ["advanced", "matchers"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "matchers",
+        "schema": {
+          "pages": [
+            {
+              "feature": "matchers",
+              "page_class": "MatcherPage",
+              "path": "/matchers",
+              "owned_by": "matchers",
+              "elements": [
+                { "ref": "box", "tag": "div", "role": "region", "name": "Box" },
+                { "ref": "field", "tag": "input", "testid": "field", "testid_attr": "data-testid" },
+                { "ref": "toggle", "tag": "input", "testid": "toggle", "testid_attr": "data-testid", "type": "checkbox" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open matcher page", "params": [], "actions": [{ "do": "navigate" }] }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_allMatchers",
+                  "jsdoc": "Exercise matcher matrix",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "page", "matcher": "toHaveURL", "arg": "'/matchers'" },
+                    { "subject": "page", "matcher": "toHaveTitle", "arg": "expected.pageTitle" },
+                    { "subject": "element", "ref": "box", "matcher": "toBeVisible" },
+                    { "subject": "element", "ref": "box", "matcher": "toBeHidden" },
+                    { "subject": "element", "ref": "field", "matcher": "toBeDisabled" },
+                    { "subject": "element", "ref": "field", "matcher": "toBeEnabled" },
+                    { "subject": "element", "ref": "toggle", "matcher": "toBeChecked" },
+                    { "subject": "element", "ref": "box", "matcher": "toContainText", "arg": "expected.readyText" },
+                    { "subject": "element", "ref": "box", "matcher": "toHaveText", "arg": "expected.readyText" },
+                    { "subject": "element", "ref": "field", "matcher": "toHaveValue", "arg": "expected.helloValue" },
+                    { "subject": "element", "ref": "box", "matcher": "toHaveCount", "arg": "1" },
+                    { "subject": "element", "ref": "box", "matcher": "toHaveAttribute", "arg": "'data-testid', 'box'" },
+                    { "subject": "element", "ref": "box", "matcher": "toHaveClass", "arg": "expected.loadedClass" },
+                    { "subject": "element", "ref": "box", "matcher": "toHaveCSS", "arg": "'display', 'block'" },
+                    { "subject": "element", "ref": "field", "matcher": "toBeEmpty" },
+                    { "subject": "element", "ref": "field", "matcher": "toBeFocused" },
+                    { "subject": "element", "ref": "box", "waitFor": "visible", "matcher": "toBeVisible" }
+                  ]
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "pageTitle": "Matcher Lab",
+            "readyText": "ready",
+            "helloValue": "hello",
+            "loadedClass": "loaded"
+          },
+          "spec": {
+            "suite": "App - Matchers",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-11",
+                "scenario": "Matcher coverage",
+                "title": "[AC-11] should cover matcher matrix",
+                "body": [
+                  { "fixture": "matcherPage", "call": "step_navigate" },
+                  { "fixture": "matcherPage", "call": "verify_allMatchers" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["pages/MatcherPage.ts"],
+    "mustContain": {
+      "pages/MatcherPage.ts": ["toHaveURL('/matchers')", "toHaveTitle(expected.pageTitle)", "toHaveAttribute('data-testid', 'box')", "toHaveCSS('display', 'block')", "waitFor({ state: 'visible' });"]
+    },
+    "invariants": ["I1", "I2", "I4", "I6", "I9"],
+    "compile": true
+  }
+}

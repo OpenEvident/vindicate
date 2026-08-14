@@ -1,0 +1,11 @@
+image: mcr.microsoft.com/playwright:v{{nodeVersion}}-jammy
+stages: [test]
+variables:
+  BASE_URL: "{{BASE_URL}}"
+{{envVarsBlock}}
+{{secretVarsBlock}}
+test:
+  stage: test
+  script:
+    - npm ci
+    - npm test

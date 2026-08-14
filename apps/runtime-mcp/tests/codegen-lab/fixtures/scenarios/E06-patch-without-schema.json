@@ -1,0 +1,29 @@
+{
+  "id": "E06-patch-without-schema",
+  "description": "add_test_cases fails when spec file is missing.",
+  "tags": ["edge", "add-test-cases"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "add_test_cases",
+        "feature": "missing",
+        "cases": [
+          {
+            "ac_id": "AC-9",
+            "scenario": "No spec",
+            "title": "[AC-9] should fail",
+            "body": [{ "fixture": "missingPage", "call": "step_navigate" }]
+          }
+        ]
+      }
+    }
+  ],
+  "expect": {
+    "ok": false,
+    "error": {
+      "type": "CodegenStructuralError",
+      "messageIncludes": "Spec file not found"
+    }
+  }
+}

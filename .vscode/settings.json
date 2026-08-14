@@ -1,0 +1,13 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.workingDirectories": [
+    { "directory": "apps/runtime-worker", "changeProcessCWD": true },
+    { "directory": "apps/runtime-mcp", "changeProcessCWD": true },
+    { "directory": "packages/protocol", "changeProcessCWD": true },
+    { "directory": "packages/observability", "changeProcessCWD": true },
+    { "directory": "packages/config", "changeProcessCWD": true },
+    { "directory": "packages/security", "changeProcessCWD": true },
+    { "directory": "apps/vscode-extension", "changeProcessCWD": true }
+  ]
+}

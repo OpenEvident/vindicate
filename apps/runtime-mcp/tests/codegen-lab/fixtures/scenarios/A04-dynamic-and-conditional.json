@@ -1,0 +1,88 @@
+{
+  "id": "A04-dynamic-and-conditional",
+  "description": "Runtime-parameterized (dynamic) locators plus the click_if_visible conditional action.",
+  "tags": ["advanced", "dynamic", "conditional"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "products",
+        "schema": {
+          "expected": { "seedProductId": "p-1001" },
+          "pages": [
+            {
+              "feature": "products",
+              "page_class": "ProductsPage",
+              "path": "/products",
+              "owned_by": "products",
+              "elements": [
+                { "ref": "promoClose", "tag": "button", "testid": "promo-close", "testid_attr": "data-testid" },
+                { "ref": "deleteBtn", "tag": "button", "testid": "delete-product-{id}", "testid_attr": "data-testid", "dynamic": [{ "name": "id", "type": "string" }] },
+                { "ref": "rowStatus", "tag": "span", "testid": "row-status-{id}", "testid_attr": "data-testid", "dynamic": [{ "name": "id", "type": "string" }] }
+              ],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_open",
+                  "jsdoc": "Open the products page.",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }, { "do": "waitForPageLoad" }]
+                },
+                {
+                  "name": "step_dismiss_promo",
+                  "jsdoc": "Dismiss the promo banner if it appears.",
+                  "params": [],
+                  "actions": [{ "do": "click_if_visible", "ref": "promoClose", "timeout": 3000 }]
+                },
+                {
+                  "name": "step_delete_product",
+                  "jsdoc": "Delete the product row with the given id.",
+                  "params": [{ "name": "id", "type": "string" }],
+                  "actions": [{ "do": "click", "ref": "deleteBtn", "refArgs": ["id"] }]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_row_removed",
+                  "jsdoc": "Verify the product row for the given id is gone.",
+                  "params": [{ "name": "id", "type": "string" }],
+                  "assertions": [
+                    { "subject": "element", "ref": "rowStatus", "refArgs": ["id"], "waitFor": "hidden", "matcher": "toBeHidden" }
+                  ]
+                }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "App - Products",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-200",
+                "scenario": "Delete a seeded product by id",
+                "title": "[AC-200] should delete a product by id",
+                "body": [
+                  { "fixture": "productsPage", "call": "step_open" },
+                  { "fixture": "productsPage", "call": "step_dismiss_promo" },
+                  { "fixture": "productsPage", "call": "step_delete_product", "args": ["expected.seedProductId"] },
+                  { "fixture": "productsPage", "call": "verify_row_removed", "args": ["expected.seedProductId"] }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["pages/ProductsPage.ts", "tests/products.spec.ts", "support/data/products/expected.json"],
+    "invariants": ["I1", "I2", "I6", "I9", "I12"],
+    "compile": true,
+    "golden": true,
+    "goldenFiles": ["pages/ProductsPage.ts", "tests/products.spec.ts"]
+  }
+}

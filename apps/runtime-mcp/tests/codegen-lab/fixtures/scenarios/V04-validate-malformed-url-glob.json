@@ -1,0 +1,68 @@
+{
+  "id": "V04-validate-malformed-url-glob",
+  "description": "Validate mode rejects malformed Playwright URL globs in toHaveURL and waitForURL.",
+  "tags": ["validate", "assertions", "url"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "validate",
+        "validateTarget": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "DashboardPage",
+              "path": "/dashboard",
+              "owned_by": "auth",
+              "elements": [],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_submit",
+                  "jsdoc": "Submit",
+                  "params": [],
+                  "actions": [
+                    { "do": "waitForURL", "pattern": "**/dashboard/index**" }
+                  ]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_dashboard",
+                  "jsdoc": "Dashboard",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "page", "matcher": "toHaveURL", "arg": "'**/dashboard/index**'" }
+                  ]
+                }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "Auth",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Dashboard",
+                "title": "[AC-1] dashboard",
+                "body": [{ "fixture": "dashboardPage", "call": "verify_dashboard" }]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "validate": {
+      "valid": false,
+      "codesInclude": ["malformed_url_glob"]
+    }
+  }
+}

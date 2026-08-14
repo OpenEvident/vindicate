@@ -1,0 +1,65 @@
+{
+  "id": "S07-skip-fixme-cases",
+  "description": "Spec generation supports skip/fixme annotations in cases.",
+  "tags": ["practical", "annotations"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "profile",
+        "schema": {
+          "pages": [
+            {
+              "feature": "profile",
+              "page_class": "ProfilePage",
+              "path": "/profile",
+              "owned_by": "profile",
+              "elements": [{ "ref": "name", "tag": "input", "testid": "name", "testid_attr": "data-testid" }],
+              "types": [],
+              "steps": [{ "name": "step_navigate", "jsdoc": "Open profile", "params": [], "actions": [{ "do": "navigate" }] }],
+              "verifies": [{ "name": "verify_loaded", "jsdoc": "Loaded", "params": [], "assertions": [{ "subject": "element", "ref": "name", "matcher": "toBeVisible" }] }]
+            }
+          ],
+          "spec": {
+            "suite": "App - Profile",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Main path",
+                "title": "[AC-1] should load profile",
+                "body": [{ "fixture": "profilePage", "call": "step_navigate" }]
+              },
+              {
+                "ac_id": "AC-2",
+                "scenario": "Known flaky flow",
+                "title": "[AC-2] should save changes",
+                "annotation": "fixme",
+                "body": [{ "fixture": "profilePage", "call": "step_navigate" }]
+              },
+              {
+                "ac_id": "AC-3",
+                "scenario": "Legacy unsupported browser",
+                "title": "[AC-3] should show fallback",
+                "annotation": "skip",
+                "body": [{ "fixture": "profilePage", "call": "step_navigate" }]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": ["tests/profile.spec.ts", "pages/ProfilePage.ts"],
+    "mustContain": {
+      "tests/profile.spec.ts": ["test.fixme(", "test.skip("]
+    },
+    "invariants": ["I1", "I2", "I6", "I10"],
+    "compile": true
+  }
+}

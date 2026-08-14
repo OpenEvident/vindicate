@@ -1,0 +1,115 @@
+{
+  "id": "S10-grow-tests-incremental",
+  "description": "Incremental path: create shell, register_page, add_test_cases.",
+  "tags": ["practical", "grow-tests", "register-page"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "notifications",
+        "schema": {
+          "pages": [
+            {
+              "feature": "notifications",
+              "page_class": "NotificationsPage",
+              "path": "/notifications",
+              "owned_by": "notifications",
+              "elements": [
+                { "ref": "toggle", "tag": "button", "role": "button", "name": "Enable notifications" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open notifications", "params": [], "actions": [{ "do": "navigate" }] }
+              ],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "App - Notifications",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Open notifications",
+                "title": "[AC-1] should open notifications",
+                "body": [{ "fixture": "notificationsPage", "call": "step_navigate" }]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "input": {
+        "mode": "register_page",
+        "feature": "notifications",
+        "page": {
+          "feature": "notifications",
+          "page_class": "NotificationsSettingsPage",
+          "path": "/notifications/settings",
+          "owned_by": "notifications",
+          "elements": [
+            { "ref": "toast", "tag": "div", "role": "status", "name": "Saved settings" },
+            { "ref": "toggle", "tag": "button", "role": "button", "name": "Enable notifications" }
+          ],
+          "types": [],
+          "steps": [
+            {
+              "name": "step_enableNotifications",
+              "jsdoc": "Enable notifications",
+              "params": [],
+              "actions": [
+                { "do": "click", "ref": "toggle" },
+                { "do": "waitForPageLoad" }
+              ]
+            }
+          ],
+          "verifies": [
+            {
+              "name": "verify_savedToast",
+              "jsdoc": "Saved toast appears",
+              "params": [],
+              "assertions": [
+                { "subject": "element", "ref": "toast", "matcher": "toBeVisible" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "mode": "add_test_cases",
+        "feature": "notifications",
+        "cases": [
+          {
+            "ac_id": "AC-2",
+            "scenario": "Enable notifications",
+            "title": "[AC-2] should enable notifications",
+            "body": [
+              { "fixture": "notificationsSettingsPage", "call": "step_enableNotifications" },
+              { "fixture": "notificationsSettingsPage", "call": "verify_savedToast" }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": [
+      "pages/NotificationsPage.ts",
+      "pages/NotificationsSettingsPage.ts",
+      "tests/notifications.spec.ts"
+    ],
+    "mustContain": {
+      "pages/NotificationsSettingsPage.ts": ["async step_enableNotifications(", "async verify_savedToast("],
+      "tests/notifications.spec.ts": ["[AC-2] should enable notifications"]
+    },
+    "invariants": ["I1", "I2", "I3", "I4", "I6", "I8", "I9"],
+    "compile": true
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "id": "S02-checkout-multi-page",
+  "description": "Multi-page checkout flow with production scaffold and fixture registration.",
+  "tags": ["practical", "create", "multi-page"],
+  "project": { "scaffold": "production" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "checkout",
+        "schema": {
+          "pages": [
+            {
+              "feature": "checkout",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "checkout",
+              "elements": [
+                { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid" },
+                { "ref": "next", "tag": "button", "role": "button", "name": "Continue" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open login", "params": [], "actions": [{ "do": "navigate" }] },
+                { "name": "step_continue", "jsdoc": "Continue to cart", "params": [], "actions": [{ "do": "click", "ref": "next" }] }
+              ],
+              "verifies": [
+                { "name": "verify_loaded", "jsdoc": "Loaded login", "params": [], "assertions": [{ "subject": "element", "ref": "email", "matcher": "toBeVisible" }] }
+              ]
+            },
+            {
+              "feature": "checkout",
+              "page_class": "CartPage",
+              "path": "/cart",
+              "owned_by": "checkout",
+              "elements": [
+                { "ref": "checkout", "tag": "button", "role": "button", "name": "Checkout" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open cart", "params": [], "actions": [{ "do": "navigate" }] },
+                { "name": "step_checkout", "jsdoc": "Go to checkout", "params": [], "actions": [{ "do": "click", "ref": "checkout" }] }
+              ],
+              "verifies": [
+                { "name": "verify_cartReady", "jsdoc": "Cart ready", "params": [], "assertions": [{ "subject": "element", "ref": "checkout", "matcher": "toBeVisible" }] }
+              ]
+            },
+            {
+              "feature": "checkout",
+              "page_class": "CheckoutPage",
+              "path": "/checkout",
+              "owned_by": "checkout",
+              "elements": [
+                { "ref": "placeOrder", "tag": "button", "role": "button", "name": "Place order" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open checkout", "params": [], "actions": [{ "do": "navigate" }] },
+                { "name": "step_placeOrder", "jsdoc": "Submit order", "params": [], "actions": [{ "do": "click", "ref": "placeOrder" }] }
+              ],
+              "verifies": [
+                { "name": "verify_checkoutReady", "jsdoc": "Checkout ready", "params": [], "assertions": [{ "subject": "element", "ref": "placeOrder", "matcher": "toBeVisible" }] }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "App - Checkout",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-22",
+                "scenario": "User checks out",
+                "title": "[AC-22] should complete checkout",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_navigate" },
+                  { "fixture": "loginPage", "call": "step_continue" },
+                  { "fixture": "cartPage", "call": "step_checkout" },
+                  { "fixture": "checkoutPage", "call": "step_placeOrder" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": [
+      "pages/LoginPage.ts",
+      "pages/CartPage.ts",
+      "pages/CheckoutPage.ts",
+      "support/config/page.config.ts",
+      "tests/checkout.spec.ts"
+    ],
+    "mustContain": {
+      "support/config/page.config.ts": [
+        "import { LoginPage } from './page-loader';",
+        "import { CartPage } from './page-loader';",
+        "import { CheckoutPage } from './page-loader';",
+        "loginPage: LoginPage;",
+        "cartPage: CartPage;",
+        "checkoutPage: CheckoutPage;"
+      ],
+      "tests/checkout.spec.ts": ["await loginPage.step_continue();", "await cartPage.step_checkout();", "await checkoutPage.step_placeOrder();"]
+    },
+    "invariants": ["I1", "I2", "I3", "I5", "I6", "I9"],
+    "compile": true,
+    "golden": true,
+    "goldenFiles": [
+      "pages/LoginPage.ts",
+      "pages/CartPage.ts",
+      "pages/CheckoutPage.ts",
+      "tests/checkout.spec.ts",
+      "support/config/page.config.ts"
+    ]
+  }
+}

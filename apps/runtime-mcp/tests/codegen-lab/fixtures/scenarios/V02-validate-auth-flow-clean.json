@@ -1,0 +1,98 @@
+{
+  "id": "V02-validate-auth-flow-clean",
+  "description": "Validate mode passes for corrected multi-page auth schema (no files written).",
+  "tags": ["validate", "auth", "multi-page"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "validate",
+        "validateTarget": "create",
+        "feature": "auth",
+        "schema": {
+          "pages": [
+            {
+              "feature": "auth",
+              "page_class": "LoginPage",
+              "path": "/login",
+              "owned_by": "auth",
+              "elements": [
+                { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "e2e" },
+                { "ref": "submit", "tag": "button", "testid": "login", "testid_attr": "e2e" }
+              ],
+              "types": [],
+              "steps": [
+                {
+                  "name": "step_goto_login",
+                  "jsdoc": "Navigate",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
+                {
+                  "name": "step_login",
+                  "jsdoc": "Submit",
+                  "params": [
+                    { "name": "email", "type": "string" },
+                    { "name": "password", "type": "string" }
+                  ],
+                  "actions": [
+                    { "do": "fill", "ref": "email", "param": "email" },
+                    { "do": "click", "ref": "submit" }
+                  ]
+                }
+              ],
+              "verifies": []
+            },
+            {
+              "feature": "auth",
+              "page_class": "HomePage",
+              "path": "/",
+              "owned_by": "auth",
+              "elements": [{ "ref": "home_link", "tag": "a", "role": "link", "name": "Home" }],
+              "types": [],
+              "steps": [],
+              "verifies": [
+                {
+                  "name": "verify_home",
+                  "jsdoc": "Home visible",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "page", "matcher": "toHaveURL", "arg": "'/'" },
+                    { "subject": "element", "ref": "home_link", "matcher": "toBeVisible" }
+                  ]
+                }
+              ]
+            }
+          ],
+          "spec": {
+            "suite": "Auth Login Flow",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "Valid login",
+                "title": "[AC-1] should reach home",
+                "body": [
+                  { "fixture": "loginPage", "call": "step_goto_login" },
+                  {
+                    "fixture": "loginPage",
+                    "call": "step_login",
+                    "args": ["process.env.AUTH_EMAIL!", "process.env.AUTH_PASSWORD!"]
+                  },
+                  { "fixture": "homePage", "call": "verify_home" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "validate": { "valid": true, "errorCount": 0 },
+    "filesNotExist": ["pages/LoginPage.ts", "tests/auth.spec.ts"]
+  }
+}

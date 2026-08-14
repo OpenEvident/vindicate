@@ -1,0 +1,66 @@
+{
+  "graphId": "setup",
+  "version": 2,
+  "description": "Bootstrap a new Vindicate Playwright project and/or wire CI. Linear arc with a CI-only entry. Satisfies the bootstrap completion gate (C15) before any test work begins. DELIVERY: served as ONE skill (nodes/setup.md), not per-node — the nodes here are the internal step sequence the single skill follows (see setup.graph.md delivery note).",
+  "delivery": "single-skill",
+  "loop": ["understand", "scaffold", "install", "ci-setup", "smoke", "audit"],
+  "entryPoints": {
+    "bootstrap": "understand",
+    "ci": "ci-setup"
+  },
+  "nodes": {
+    "understand": {
+      "label": "Understand",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "scaffold", "when": "project root, app URL, stack, and target (ui/api/both) confirmed" }
+      ]
+    },
+    "scaffold": {
+      "label": "Scaffold",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "install", "when": "folder structure + config files + BasePage and/or BaseApiClient + barrels written for the resolved target (scaffold_project)" }
+      ]
+    },
+    "install": {
+      "label": "Install",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "ci-setup", "when": "dependencies installed (+ Playwright browsers, only when target includes ui)" }
+      ]
+    },
+    "ci-setup": {
+      "label": "CI Setup",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "smoke", "when": "CI file written for user-confirmed platform (e.g. .github/workflows/vindicate-tests.yml or bitbucket-pipelines.yml) (C14)" }
+      ]
+    },
+    "smoke": {
+      "label": "Smoke",
+      "terminal": false,
+      "modes": [],
+      "edges": [
+        { "to": "audit", "when": "a reachability test runs green against BASE_URL" },
+        { "to": "escalate", "when": "the app is unreachable or environment is broken" }
+      ]
+    },
+    "audit": {
+      "label": "Audit",
+      "terminal": true,
+      "modes": [],
+      "edges": []
+    },
+    "escalate": {
+      "label": "Escalate",
+      "terminal": true,
+      "modes": [],
+      "edges": []
+    }
+  }
+}

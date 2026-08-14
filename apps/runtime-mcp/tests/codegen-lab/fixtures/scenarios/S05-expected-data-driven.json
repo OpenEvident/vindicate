@@ -1,0 +1,76 @@
+{
+  "id": "S05-expected-data-driven",
+  "description": "Create flow with expected data object and barrel export.",
+  "tags": ["practical", "expected-data"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "orders",
+        "schema": {
+          "pages": [
+            {
+              "feature": "orders",
+              "page_class": "OrdersPage",
+              "path": "/orders",
+              "owned_by": "orders",
+              "elements": [
+                { "ref": "table", "tag": "table", "role": "table", "name": "Orders table" },
+                { "ref": "refresh", "tag": "button", "role": "button", "name": "Refresh" }
+              ],
+              "types": [],
+              "steps": [
+                { "name": "step_navigate", "jsdoc": "Open orders", "params": [], "actions": [{ "do": "navigate" }] },
+                { "name": "step_refresh", "jsdoc": "Refresh data", "params": [], "actions": [{ "do": "click", "ref": "refresh" }] }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_ordersLoaded",
+                  "jsdoc": "Orders table visible",
+                  "params": [],
+                  "assertions": [{ "subject": "element", "ref": "table", "matcher": "toBeVisible" }]
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "ordersCount": 3,
+            "firstOrderStatus": "PAID"
+          },
+          "spec": {
+            "suite": "App - Orders",
+            "generates_storage_state": null,
+            "storage_state": "playwright/.auth/user.json",
+            "before_each": null,
+            "cases": [
+              {
+                "ac_id": "AC-31",
+                "scenario": "Orders overview",
+                "title": "[AC-31] should display order rows",
+                "body": [
+                  { "fixture": "ordersPage", "call": "step_navigate" },
+                  { "fixture": "ordersPage", "call": "verify_ordersLoaded" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": true,
+    "filesExist": [
+      "support/data/orders/expected.json",
+      "tests/orders.spec.ts",
+      "support/config/page-loader.ts"
+    ],
+    "mustContain": {
+      "support/config/page-loader.ts": ["ordersExpected"],
+      "tests/orders.spec.ts": ["test.use({ storageState: 'playwright/.auth/user.json' });"]
+    },
+    "invariants": ["I1", "I2", "I6", "I9"],
+    "compile": true
+  }
+}

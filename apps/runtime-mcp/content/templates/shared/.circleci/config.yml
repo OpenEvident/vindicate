@@ -1,0 +1,41 @@
+version: 2.1
+
+jobs:
+  vindicate_playwright_tests:
+    docker:
+      - image: mcr.microsoft.com/playwright:v{{nodeVersion}}-jammy
+    working_directory: ~/project
+    environment:
+      BASE_URL: "${BASE_URL}"
+{{envVarsBlock}}
+{{secretVarsBlock}}
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: npm ci
+
+      - run:
+          name: Install Playwright browsers
+          command: npx playwright install chromium --with-deps
+
+      - run:
+          name: Run tests
+          command: npm run ui:headless
+
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: test-results/results.json
+          destination: playwright-report-json/results.json
+
+      - store_artifacts:
+          path: test-results
+          destination: playwright-report
+
+workflows:
+  vindicate_ci:
+    jobs:
+      - vindicate_playwright_tests

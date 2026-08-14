@@ -1,0 +1,41 @@
+{
+  "id": "E04-page-missing-path",
+  "description": "Non-panel pages must include path.",
+  "tags": ["edge", "page"],
+  "project": { "scaffold": "minimal" },
+  "steps": [
+    {
+      "input": {
+        "mode": "create",
+        "feature": "edge4",
+        "schema": {
+          "pages": [
+            {
+              "feature": "edge4",
+              "page_class": "MissingPathPage",
+              "owned_by": "edge4",
+              "elements": [{ "ref": "save", "tag": "button", "role": "button", "name": "Save" }],
+              "types": [],
+              "steps": [{ "name": "step_save", "jsdoc": "save", "params": [], "actions": [{ "do": "click", "ref": "save" }] }],
+              "verifies": []
+            }
+          ],
+          "spec": {
+            "suite": "App - Edge4",
+            "generates_storage_state": null,
+            "storage_state": null,
+            "before_each": null,
+            "cases": [{ "ac_id": "AC-1", "scenario": "missing path", "title": "[AC-1] should fail", "body": [{ "fixture": "missingPathPage", "call": "step_save" }] }]
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "ok": false,
+    "error": {
+      "type": "CodegenStructuralError",
+      "messageIncludes": "missing the required 'path' field"
+    }
+  }
+}
