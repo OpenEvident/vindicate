@@ -32,7 +32,7 @@
     "fastify": "^5.8.5",
     "pidusage": "^4.0.1",
     "pino": "^10.3.1",
-    "playwright-core": "1.60.0",
+    "playwright-core": "1.62.1",
     "zod": "^4.4.3"
   },
   "optionalDependencies": {
