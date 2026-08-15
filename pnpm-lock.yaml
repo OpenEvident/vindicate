@@ -145,8 +145,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/protocol
       chromium-bidi:
-        specifier: ^16.0.1
-        version: 16.0.1(devtools-protocol@0.0.1678596)
+        specifier: ^17.0.2
+        version: 17.0.2(devtools-protocol@0.0.1678596)
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -1894,8 +1894,8 @@ packages:
   chownr@1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
 
-  chromium-bidi@16.0.1:
-    resolution: {integrity: sha512-J63PGu/9PpeCwLIcKYyzWP6yaVL5pxuBc0shlYCYM8BaAkmlwiQboXO1iNbOgSDbVklEyYFfNEcHD8oOAWacUA==}
+  chromium-bidi@17.0.2:
+    resolution: {integrity: sha512-5v9GQFhTktFvotn/OFNJBmKLKRAb6n9r0bVCwf7sHgWc3/JryK0bj1nn93L3pHFrfgcsu6Be6EWsDi+1XHTGDg==}
     engines: {node: '>=20.19.0 <22.0.0 || >=22.12.0'}
     peerDependencies:
       devtools-protocol: '*'
@@ -6128,7 +6128,7 @@ snapshots:
   chownr@1.1.4:
     optional: true
 
-  chromium-bidi@16.0.1(devtools-protocol@0.0.1678596):
+  chromium-bidi@17.0.2(devtools-protocol@0.0.1678596):
     dependencies:
       devtools-protocol: 0.0.1678596
       mitt: 3.0.1
