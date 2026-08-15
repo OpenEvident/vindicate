@@ -19,7 +19,10 @@ export const PROTOCOL_COMPATIBILITY_MATRIX: Readonly<
  *
  * @throws {Error} When the version is outside the matrix entry for `consumer`.
  */
-export function assertConsumerCompatibility(consumer: ProtocolConsumer, protocolVersion: string): void {
+export function assertConsumerCompatibility(
+  consumer: ProtocolConsumer,
+  protocolVersion: string
+): void {
   const range = PROTOCOL_COMPATIBILITY_MATRIX[consumer];
   if (protocolVersion < range.minProtocolVersion || protocolVersion > range.maxProtocolVersion) {
     throw new Error(

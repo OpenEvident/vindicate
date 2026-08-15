@@ -25,7 +25,9 @@ export function isShuttingDown(): boolean {
 }
 
 /** Test seam — replaces default shutdown (which calls process.exit). */
-export function setShutdownRunnerForTests(runner: ((deps: ShutdownDeps) => Promise<void>) | undefined): void {
+export function setShutdownRunnerForTests(
+  runner: ((deps: ShutdownDeps) => Promise<void>) | undefined
+): void {
   shutdownRunner = runner;
 }
 

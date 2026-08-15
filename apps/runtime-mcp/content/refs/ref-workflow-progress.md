@@ -13,21 +13,21 @@ tools, transitions — is at the **top** of **`phase_instructions`**. Read that 
 Each response includes **`progress_display`** — the server sets this from **this client's MCP
 capabilities** (whether it renders MCP App panels). **Follow `progress_display.instruction` exactly.**
 
-| `progress_display.mode` | Meaning |
-|---|---|
-| `mcp_app` | Host renders the workflow-progress panel from `phases` / `view`. **Do not** post progress markdown in chat. |
-| `markdown_in_chat` | Host has no MCP App panel. Post **`markdown_panel`** verbatim in your next user-visible message. |
+| `progress_display.mode` | Meaning                                                                                                     |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `mcp_app`               | Host renders the workflow-progress panel from `phases` / `view`. **Do not** post progress markdown in chat. |
+| `markdown_in_chat`      | Host has no MCP App panel. Post **`markdown_panel`** verbatim in your next user-visible message.            |
 
 ## Other fields (same tool result)
 
-| Field | Purpose |
-|---|---|
-| `phases` | Structured checklist (✓ done · ● active · ○ pending) — used by the MCP App panel and for your state. |
-| `markdown_panel` | Present only when `progress_display.mode` is `markdown_in_chat`. |
-| `progress_echo` | `{ path, node, completed[] }` — **copy into every next `vindicate_workflow` call.** No server-side job id. |
-| `agent_directives.done_before_leave` | Done-conditions for the **current** phase — satisfy before leaving. |
-| `agent_directives.next_when_ready` | Exact next `vindicate_workflow` call when done-conditions are met. |
-| `warnings` | Soft transition or spine warnings — heed but they never block. |
+| Field                                | Purpose                                                                                                    |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `phases`                             | Structured checklist (✓ done · ● active · ○ pending) — used by the MCP App panel and for your state.       |
+| `markdown_panel`                     | Present only when `progress_display.mode` is `markdown_in_chat`.                                           |
+| `progress_echo`                      | `{ path, node, completed[] }` — **copy into every next `vindicate_workflow` call.** No server-side job id. |
+| `agent_directives.done_before_leave` | Done-conditions for the **current** phase — satisfy before leaving.                                        |
+| `agent_directives.next_when_ready`   | Exact next `vindicate_workflow` call when done-conditions are met.                                         |
+| `warnings`                           | Soft transition or spine warnings — heed but they never block.                                             |
 
 ## On each phase change
 

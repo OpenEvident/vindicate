@@ -9,8 +9,9 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<{
 }>;
 
 function getToolHandler(server: McpServer, name: string): ToolHandler {
-  const tools = (server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> })
-    ._registeredTools;
+  const tools = (
+    server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> }
+  )._registeredTools;
   const tool = tools[name];
   if (tool === undefined) {
     throw new Error(`tool not registered: ${name}`);
@@ -28,7 +29,10 @@ describe("design-tool", () => {
     const server = new McpServer({ name: "test", version: "0" });
     registerDesignTool(server);
 
-    const result = await getToolHandler(server, "vindicate_design")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_design"
+    )({
       suites: [
         {
           title: "Auth",
@@ -53,7 +57,10 @@ describe("design-tool", () => {
     const server = new McpServer({ name: "test", version: "0" });
     registerDesignTool(server);
 
-    const result = await getToolHandler(server, "vindicate_design")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_design"
+    )({
       previous: {
         suites: [
           {

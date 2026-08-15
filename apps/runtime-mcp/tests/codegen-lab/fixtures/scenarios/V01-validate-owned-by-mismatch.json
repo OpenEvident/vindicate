@@ -20,7 +20,14 @@
                 { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "e2e" }
               ],
               "types": [],
-              "steps": [{ "name": "step_goto_login", "jsdoc": "Go", "params": [], "actions": [{ "do": "navigate" }] }],
+              "steps": [
+                {
+                  "name": "step_goto_login",
+                  "jsdoc": "Go",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
+              ],
               "verifies": []
             },
             {
@@ -36,7 +43,9 @@
                   "name": "verify_home",
                   "jsdoc": "Home",
                   "params": [],
-                  "assertions": [{ "subject": "element", "ref": "home_link", "matcher": "toBeVisible" }]
+                  "assertions": [
+                    { "subject": "element", "ref": "home_link", "matcher": "toBeVisible" }
+                  ]
                 }
               ]
             }

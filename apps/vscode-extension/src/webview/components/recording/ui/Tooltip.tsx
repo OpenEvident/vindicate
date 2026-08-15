@@ -11,7 +11,7 @@ interface TooltipProps {
 
 export function Tooltip({ content, children, side = "top" }: TooltipProps) {
   const [open, setOpen] = useState(false);
-  const [pos,  setPos]  = useState<{ top: number; left: number } | null>(null);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const triggerRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLSpanElement>(null);
 
@@ -23,8 +23,14 @@ export function Tooltip({ content, children, side = "top" }: TooltipProps) {
     setPos(computePopperPosition(rect, w, h, side));
   }, [open, side]);
 
-  const show = () => { setPos(null); setOpen(true); };
-  const hide = () => { setOpen(false); setPos(null); };
+  const show = () => {
+    setPos(null);
+    setOpen(true);
+  };
+  const hide = () => {
+    setOpen(false);
+    setPos(null);
+  };
 
   return (
     <>
@@ -39,26 +45,27 @@ export function Tooltip({ content, children, side = "top" }: TooltipProps) {
         {children}
       </span>
 
-      {open && createPortal(
-        <span
-          ref={tooltipRef}
-          role="tooltip"
-          style={
-            pos
-              ? { position: "fixed", top: pos.top, left: pos.left, opacity: 1 }
-              : { position: "fixed", top: -9999,   left: -9999,    opacity: 0 }
-          }
-          className={[
-            "z-[9999] pointer-events-none whitespace-nowrap",
-            "rounded-md border border-vs-border bg-vs-sidebar",
-            "px-2 py-1 text-[10.5px] text-vs-text shadow-lg",
-            "transition-opacity duration-150",
-          ].join(" ")}
-        >
-          {content}
-        </span>,
-        document.body,
-      )}
+      {open &&
+        createPortal(
+          <span
+            ref={tooltipRef}
+            role="tooltip"
+            style={
+              pos
+                ? { position: "fixed", top: pos.top, left: pos.left, opacity: 1 }
+                : { position: "fixed", top: -9999, left: -9999, opacity: 0 }
+            }
+            className={[
+              "z-[9999] pointer-events-none whitespace-nowrap",
+              "rounded-md border border-vs-border bg-vs-sidebar",
+              "px-2 py-1 text-[10.5px] text-vs-text shadow-lg",
+              "transition-opacity duration-150"
+            ].join(" ")}
+          >
+            {content}
+          </span>,
+          document.body
+        )}
     </>
   );
 }

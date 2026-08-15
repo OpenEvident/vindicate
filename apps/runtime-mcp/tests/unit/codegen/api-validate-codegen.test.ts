@@ -120,7 +120,11 @@ function baseSchema(): ApiFullSchema {
               args: ["{ title: 'hello', body: 'world', userId: 1 }"],
               assertions: [
                 { subject: "status", matcher: "toBe", arg: "201" },
-                { subject: "body_json", matcher: "toMatchObject", arg: "{ title: 'hello', body: 'world', userId: 1 }" }
+                {
+                  subject: "body_json",
+                  matcher: "toMatchObject",
+                  arg: "{ title: 'hello', body: 'world', userId: 1 }"
+                }
               ]
             }
           ]
@@ -222,7 +226,12 @@ describe("api-validate-codegen", () => {
             ...client,
             methods: [
               ...client.methods,
-              { name: "getByOwner", http_method: "get", path: "posts/{postId}/owner", supports_header_override: true }
+              {
+                name: "getByOwner",
+                http_method: "get",
+                path: "posts/{postId}/owner",
+                supports_header_override: true
+              }
             ]
           }
         ]
@@ -411,9 +420,9 @@ describe("api-validate-codegen", () => {
       const schema = baseSchema();
       firstCall(schema).capture = { as: "createdPost", field: "id" };
       const errors = collectApiCrossReferenceErrors(schema);
-      expect(errors.some((e) => e.code === "duplicate_capture_name" || e.code === "invalid_capture_name")).toBe(
-        false
-      );
+      expect(
+        errors.some((e) => e.code === "duplicate_capture_name" || e.code === "invalid_capture_name")
+      ).toBe(false);
     });
 
     it("flags capture.as colliding with the auto-generated response variable name in a multi-call case", () => {
@@ -439,7 +448,10 @@ describe("api-validate-codegen", () => {
         assertions: [{ subject: "status", matcher: "toBe", arg: "404" }],
         capture: { as: "shared" }
       };
-      schema.spec.cases[0]!.calls = [{ ...firstCall(schema), capture: { as: "shared" } }, secondCall];
+      schema.spec.cases[0]!.calls = [
+        { ...firstCall(schema), capture: { as: "shared" } },
+        secondCall
+      ];
       const errors = collectApiCrossReferenceErrors(schema);
       expect(errors.some((e) => e.code === "duplicate_capture_name")).toBe(true);
     });
@@ -456,7 +468,10 @@ describe("api-validate-codegen", () => {
       firstCall(schema).capture = { as: "createdPost", field: "body_json" };
       const errors = collectApiCrossReferenceErrors(schema);
       expect(errors).toContainEqual(
-        expect.objectContaining({ code: "ambiguous_capture_field", path: "spec.cases[0].calls[0].capture.field" })
+        expect.objectContaining({
+          code: "ambiguous_capture_field",
+          path: "spec.cases[0].calls[0].capture.field"
+        })
       );
     });
 

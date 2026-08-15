@@ -65,8 +65,7 @@ describe("buildScopedCandidate", () => {
   });
 
   it("uses the ARIA implicit role, never the raw tag name, for both container and target", () => {
-    document.body.innerHTML =
-      '<ul><li>Item text<button type="button">Remove</button></li></ul>';
+    document.body.innerHTML = '<ul><li>Item text<button type="button">Remove</button></li></ul>';
     const btn = document.querySelector("button")!;
     const candidate = buildScopedCandidate(btn, (el) => el.textContent?.trim() ?? "");
     expect(candidate?.container?.role).toBe("listitem");
@@ -84,7 +83,8 @@ describe("buildScopedCandidate", () => {
 
 describe("buildSiblingTextCandidate", () => {
   const accessibleName = (el: Element) => el.textContent?.trim() ?? "";
-  const isInteractive = (el: Element) => ["button", "a", "input", "select", "textarea"].includes(el.tagName.toLowerCase());
+  const isInteractive = (el: Element) =>
+    ["button", "a", "input", "select", "textarea"].includes(el.tagName.toLowerCase());
 
   it("builds a verified-shape xpath candidate when exactly one non-interactive sibling carries text", () => {
     document.body.innerHTML = '<div><input type="checkbox"><span>GAY EVENT</span></div>';
@@ -92,7 +92,8 @@ describe("buildSiblingTextCandidate", () => {
     const candidate = buildSiblingTextCandidate(checkbox, accessibleName, isInteractive);
     expect(candidate).toEqual({
       strategy: "sibling_text",
-      value: '//input[preceding-sibling::*[normalize-space()="GAY EVENT"] or following-sibling::*[normalize-space()="GAY EVENT"]]',
+      value:
+        '//input[preceding-sibling::*[normalize-space()="GAY EVENT"] or following-sibling::*[normalize-space()="GAY EVENT"]]',
       strength: "medium"
     });
   });
@@ -104,13 +105,15 @@ describe("buildSiblingTextCandidate", () => {
   });
 
   it("returns null when more than one sibling carries text (ambiguous)", () => {
-    document.body.innerHTML = '<div><input type="checkbox"><span>Label A</span><span>Label B</span></div>';
+    document.body.innerHTML =
+      '<div><input type="checkbox"><span>Label A</span><span>Label B</span></div>';
     const checkbox = document.querySelector("input")!;
     expect(buildSiblingTextCandidate(checkbox, accessibleName, isInteractive)).toBeNull();
   });
 
   it("ignores interactive siblings when counting text sources", () => {
-    document.body.innerHTML = '<div><input type="checkbox"><button>Not a label</button><span>Real Label</span></div>';
+    document.body.innerHTML =
+      '<div><input type="checkbox"><button>Not a label</button><span>Real Label</span></div>';
     const checkbox = document.querySelector("input")!;
     const candidate = buildSiblingTextCandidate(checkbox, accessibleName, isInteractive);
     expect(candidate?.value).toContain("Real Label");

@@ -61,7 +61,10 @@ export class FakeBrowserBridge implements IBrowserBridge {
   }
 
   /** Test helper — next createContext for this session rejects once. */
-  failNextCreateContext(sessionId: string, error: Error = new Error("fake bridge: createContext failed")): void {
+  failNextCreateContext(
+    sessionId: string,
+    error: Error = new Error("fake bridge: createContext failed")
+  ): void {
     this.createContextFailures.set(sessionId, error);
   }
 
@@ -89,7 +92,10 @@ export class FakeBrowserBridge implements IBrowserBridge {
     return Promise.resolve({ created: true });
   }
 
-  async ensureHealthyContext(sessionId: string, options?: CreateContextOptions): Promise<CreateContextResult> {
+  async ensureHealthyContext(
+    sessionId: string,
+    options?: CreateContextOptions
+  ): Promise<CreateContextResult> {
     void options;
     if (!this.alive.has(sessionId)) {
       return this.createContext(sessionId);
@@ -144,7 +150,8 @@ export class FakeBrowserBridge implements IBrowserBridge {
       off: (): void => {
         /* noop */
       },
-      screenshot: (): Promise<Buffer> => Promise.resolve(Buffer.from([0x89, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
+      screenshot: (): Promise<Buffer> =>
+        Promise.resolve(Buffer.from([0x89, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
       context: (): BrowserContext => ctx,
       locator: (): Locator => fakeLocator(),
       // A real page with no iframes reports exactly one frame (the main frame) — matches
@@ -202,7 +209,10 @@ export class FakeBrowserBridge implements IBrowserBridge {
 
   setupRecording(
     _sessionId: string,
-    _onEvent: (payload: Record<string, unknown>, source: RecordingEventSource) => void | Promise<void>
+    _onEvent: (
+      payload: Record<string, unknown>,
+      source: RecordingEventSource
+    ) => void | Promise<void>
   ): Promise<void> {
     void _sessionId;
     void _onEvent;

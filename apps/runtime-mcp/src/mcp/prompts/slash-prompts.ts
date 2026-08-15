@@ -25,9 +25,7 @@ export function buildSlashPromptText(
   contextLines: string[] = []
 ): string {
   const context =
-    contextLines.length > 0
-      ? `\n\nContext:\n${contextLines.map((l) => `- ${l}`).join("\n")}`
-      : "";
+    contextLines.length > 0 ? `\n\nContext:\n${contextLines.map((l) => `- ${l}`).join("\n")}` : "";
   return [
     headline,
     `Call vindicate_workflow with path="${route.path}" to load the workflow map and entry node for this task.`,
@@ -54,7 +52,12 @@ export function registerSlashPrompts(server: McpServer): void {
       description: "Set up Playwright automation for this project from scratch",
       argsSchema: {
         url: z.string().optional().describe("Base URL of the app (e.g. https://localhost:3000)"),
-        project_dir: z.string().optional().describe("Subdirectory to scaffold into (e.g. vindicate-test). Omit to scaffold at repo root.")
+        project_dir: z
+          .string()
+          .optional()
+          .describe(
+            "Subdirectory to scaffold into (e.g. vindicate-test). Omit to scaffold at repo root."
+          )
       }
     },
     (args) =>
@@ -82,14 +85,10 @@ export function registerSlashPrompts(server: McpServer): void {
     },
     (args) =>
       promptResult(
-        buildSlashPromptText(
-          SLASH_ROUTES["write-test"],
-          "Write new automated tests.",
-          [
-            ...(args.feature ? [`Feature: ${args.feature}`] : []),
-            ...(args.url ? [`URL: ${args.url}`] : [])
-          ]
-        )
+        buildSlashPromptText(SLASH_ROUTES["write-test"], "Write new automated tests.", [
+          ...(args.feature ? [`Feature: ${args.feature}`] : []),
+          ...(args.url ? [`URL: ${args.url}`] : [])
+        ])
       )
   );
 
@@ -104,11 +103,9 @@ export function registerSlashPrompts(server: McpServer): void {
     },
     (args) =>
       promptResult(
-        buildSlashPromptText(
-          SLASH_ROUTES["fix-test"],
-          "Fix a failing Playwright test.",
-          [...(args.test ? [`Test: ${args.test}`] : [])]
-        )
+        buildSlashPromptText(SLASH_ROUTES["fix-test"], "Fix a failing Playwright test.", [
+          ...(args.test ? [`Test: ${args.test}`] : [])
+        ])
       )
   );
 
@@ -142,11 +139,9 @@ export function registerSlashPrompts(server: McpServer): void {
     },
     (args) =>
       promptResult(
-        buildSlashPromptText(
-          SLASH_ROUTES.gaps,
-          "Analyse test coverage gaps.",
-          [...(args.area ? [`Area: ${args.area}`] : [])]
-        )
+        buildSlashPromptText(SLASH_ROUTES.gaps, "Analyse test coverage gaps.", [
+          ...(args.area ? [`Area: ${args.area}`] : [])
+        ])
       )
   );
 
@@ -161,11 +156,9 @@ export function registerSlashPrompts(server: McpServer): void {
     },
     (args) =>
       promptResult(
-        buildSlashPromptText(
-          SLASH_ROUTES.coverage,
-          "Report AC coverage from stories vs specs.",
-          [...(args.feature ? [`Feature: ${args.feature}`] : [])]
-        )
+        buildSlashPromptText(SLASH_ROUTES.coverage, "Report AC coverage from stories vs specs.", [
+          ...(args.feature ? [`Feature: ${args.feature}`] : [])
+        ])
       )
   );
 
@@ -175,10 +168,7 @@ export function registerSlashPrompts(server: McpServer): void {
       title: "Heal flaky tests",
       description: "Stabilise intermittently failing Playwright tests"
     },
-    () =>
-      promptResult(
-        buildSlashPromptText(SLASH_ROUTES.heal, "Stabilise flaky Playwright tests.")
-      )
+    () => promptResult(buildSlashPromptText(SLASH_ROUTES.heal, "Stabilise flaky Playwright tests."))
   );
 
   server.registerPrompt(
@@ -190,11 +180,9 @@ export function registerSlashPrompts(server: McpServer): void {
     },
     (args) =>
       promptResult(
-        buildSlashPromptText(
-          SLASH_ROUTES.refactor,
-          "Refactor Playwright tests.",
-          [...(args.files ? [`Target: ${args.files}`] : [])]
-        )
+        buildSlashPromptText(SLASH_ROUTES.refactor, "Refactor Playwright tests.", [
+          ...(args.files ? [`Target: ${args.files}`] : [])
+        ])
       )
   );
 

@@ -29,28 +29,19 @@ describe("classifyNavigation", () => {
 
   it("returns implicit after a recent click", () => {
     expect(
-      classifyNavigation(
-        [{ action: "click", timestamp: "2026-06-14T12:00:03.500Z" }],
-        now
-      )
+      classifyNavigation([{ action: "click", timestamp: "2026-06-14T12:00:03.500Z" }], now)
     ).toBe("implicit");
   });
 
   it("returns explicit when isolated from interactions", () => {
     expect(
-      classifyNavigation(
-        [{ action: "navigate", timestamp: "2026-06-14T12:00:00.000Z" }],
-        now
-      )
+      classifyNavigation([{ action: "navigate", timestamp: "2026-06-14T12:00:00.000Z" }], now)
     ).toBe("explicit");
   });
 
   it("returns explicit when the last interaction is outside the window", () => {
     expect(
-      classifyNavigation(
-        [{ action: "click", timestamp: "2026-06-14T12:00:00.000Z" }],
-        now
-      )
+      classifyNavigation([{ action: "click", timestamp: "2026-06-14T12:00:00.000Z" }], now)
     ).toBe("explicit");
   });
 });

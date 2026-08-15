@@ -1,7 +1,11 @@
 import { create } from "zustand";
 
 import { postToExtension } from "@/lib/bridge";
-import { deriveTargetUrlFromSteps, getNavigationTrigger, renumberSteps } from "@/lib/recording-formatters";
+import {
+  deriveTargetUrlFromSteps,
+  getNavigationTrigger,
+  renumberSteps
+} from "@/lib/recording-formatters";
 import type {
   LocatorCandidate,
   NewRecordingForm,
@@ -96,7 +100,10 @@ interface RecordingActions {
   deleteSavedRecording: () => void;
   resetAfterDiscard: () => void;
   setDiscardFailed: (error: string) => void;
-  setPlaybackState: (state: PlaybackState["status"], detail?: Partial<Extract<PlaybackState, { status: "failed" }>> & { total?: number }) => void;
+  setPlaybackState: (
+    state: PlaybackState["status"],
+    detail?: Partial<Extract<PlaybackState, { status: "failed" }>> & { total?: number }
+  ) => void;
   setPlaybackProgress: (current: number, total: number, recordingName: string) => void;
   openSession: (session: RecordingSession) => void;
   openArtifact: (artifactPath: string) => void;
@@ -187,7 +194,10 @@ export function getTimelineStepNumber(
   return preconditionCount + index + 1;
 }
 
-function resolvePreviewTargetAfterAppend(state: RecordingState, merged: RecordingStep[]): PreviewTarget {
+function resolvePreviewTargetAfterAppend(
+  state: RecordingState,
+  merged: RecordingStep[]
+): PreviewTarget {
   if (state.mode === "recording") {
     const recorded = selectEditorRecordedSteps({ ...state, steps: merged });
     const lastRecorded = recorded[recorded.length - 1];
@@ -211,7 +221,9 @@ export function resolveReviewPreviewTarget(state: RecordingState): PreviewTarget
   }
 
   const recorded = selectEditorRecordedSteps(state);
-  const lastWithScreenshot = [...recorded].reverse().find((s) => nonEmptyString(s.screenshotUrl) !== null);
+  const lastWithScreenshot = [...recorded]
+    .reverse()
+    .find((s) => nonEmptyString(s.screenshotUrl) !== null);
   if (lastWithScreenshot !== undefined) {
     return { type: "step", seq: lastWithScreenshot.seq };
   }
@@ -297,11 +309,19 @@ export const useRecordingStore = create<RecordingState & RecordingActions>((set,
   setDashboardSessions: (entries, error) =>
     set({ dashboardSessions: entries, dashboardLoading: false, dashboardError: error ?? null }),
 
-  setDashboardLoading: (loading) => set({ dashboardLoading: loading, ...(loading ? { dashboardError: null } : {}) }),
+  setDashboardLoading: (loading) =>
+    set({ dashboardLoading: loading, ...(loading ? { dashboardError: null } : {}) }),
 
   setWorkerOnline: (online) => set({ workerOnline: online }),
 
-  startLiveRecording: (sessionId, name, startedBy, safeName, preconditionRecordings = [], projectRoot) =>
+  startLiveRecording: (
+    sessionId,
+    name,
+    startedBy,
+    safeName,
+    preconditionRecordings = [],
+    projectRoot
+  ) =>
     set({
       view: "editor",
       sessionId,
@@ -348,7 +368,9 @@ export const useRecordingStore = create<RecordingState & RecordingActions>((set,
         }
       }
       merged.sort((a, b) => a.seq - b.seq);
-      const latestWithScreenshot = [...merged].reverse().find((s) => nonEmptyString(s.screenshotUrl) !== null);
+      const latestWithScreenshot = [...merged]
+        .reverse()
+        .find((s) => nonEmptyString(s.screenshotUrl) !== null);
       const previewTarget = resolvePreviewTargetAfterAppend(state, merged);
       const followLiveStep = state.mode === "recording" && previewTarget.type === "step";
 
@@ -358,7 +380,7 @@ export const useRecordingStore = create<RecordingState & RecordingActions>((set,
         ...(followLiveStep ? { openLocatorSeq: null } : {}),
         finalScreenshotUrl:
           state.mode === "recording"
-            ? latestWithScreenshot?.screenshotUrl ?? state.finalScreenshotUrl
+            ? (latestWithScreenshot?.screenshotUrl ?? state.finalScreenshotUrl)
             : state.finalScreenshotUrl
       };
     }),
@@ -375,7 +397,9 @@ export const useRecordingStore = create<RecordingState & RecordingActions>((set,
     preconditionRecordings = []
   }) => {
     const firstWithScreenshot = steps.find((s) => nonEmptyString(s.screenshotUrl) !== null);
-    const lastWithScreenshot = [...steps].reverse().find((s) => nonEmptyString(s.screenshotUrl) !== null);
+    const lastWithScreenshot = [...steps]
+      .reverse()
+      .find((s) => nonEmptyString(s.screenshotUrl) !== null);
     const finalScreenshotUrl =
       nonEmptyString(restoredFinalScreenshotUrl) ??
       lastWithScreenshot?.screenshotUrl ??
@@ -429,11 +453,13 @@ export const useRecordingStore = create<RecordingState & RecordingActions>((set,
     });
   },
 
-  setSessionLoadFailed: (error) => set({ sessionLoading: false, sessionLoadError: error, isStopping: false }),
+  setSessionLoadFailed: (error) =>
+    set({ sessionLoading: false, sessionLoadError: error, isStopping: false }),
 
   completeRecordingStop: (incomingFinalUrl) =>
     set((state) => {
-      const finalScreenshotUrl = nonEmptyString(incomingFinalUrl) ?? nonEmptyString(state.finalScreenshotUrl);
+      const finalScreenshotUrl =
+        nonEmptyString(incomingFinalUrl) ?? nonEmptyString(state.finalScreenshotUrl);
       return {
         mode: "review",
         finalScreenshotUrl,

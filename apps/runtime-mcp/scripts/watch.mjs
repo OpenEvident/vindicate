@@ -37,9 +37,9 @@ const ctx = await esbuild.context({
         build.onEnd((result) => {
           if (result.errors.length === 0) copyContent();
         });
-      },
-    },
-  ],
+      }
+    }
+  ]
 });
 
 await ctx.watch();

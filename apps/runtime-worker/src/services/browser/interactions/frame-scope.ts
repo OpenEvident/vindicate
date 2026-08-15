@@ -32,7 +32,10 @@ function xpathLiteral(s: string): string {
  * `onUnrenderable` lets each caller raise its own error type (`ElementNotFoundError` for the live
  * resolver, a plain `Error` for recording playback) rather than this shared module picking one for both.
  */
-export function renderFrameHopSelector(hop: StructuredLocator, onUnrenderable: (strategy: string) => never): string {
+export function renderFrameHopSelector(
+  hop: StructuredLocator,
+  onUnrenderable: (strategy: string) => never
+): string {
   switch (hop.strategy) {
     case "testid":
       return `xpath=//*[@${hop.attr}=${xpathLiteral(hop.value ?? "")}]`;

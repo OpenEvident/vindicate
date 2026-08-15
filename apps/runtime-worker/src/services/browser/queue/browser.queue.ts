@@ -1,7 +1,10 @@
 /**
  * @file Per-session mutex with global resource governor gating (ARCHITECTURE §8.4, §9).
  */
-import type { GovernorState, IResourceGovernor } from "../../../core/governor/resource-governor.interface.js";
+import type {
+  GovernorState,
+  IResourceGovernor
+} from "../../../core/governor/resource-governor.interface.js";
 import { SessionBusyError, WorkerThrottledError } from "../../../shared/errors/worker.errors.js";
 
 export class BrowserQueue {

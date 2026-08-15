@@ -7,13 +7,18 @@ function mockContext() {
   return {
     workspaceState: {
       get: <T>(key: string, defaultValue?: T): T => {
-        return (storage.has(key) ? (storage.get(key) as T) : (defaultValue as T));
+        return storage.has(key) ? (storage.get(key) as T) : (defaultValue as T);
       },
       update: vi.fn(async (key: string, value: unknown) => {
         storage.set(key, value);
       })
     }
-  } as unknown as { workspaceState: { get: <T>(key: string, defaultValue?: T) => T; update: (key: string, value: unknown) => Promise<void> } };
+  } as unknown as {
+    workspaceState: {
+      get: <T>(key: string, defaultValue?: T) => T;
+      update: (key: string, value: unknown) => Promise<void>;
+    };
+  };
 }
 
 describe("DashboardDeltaTracker", () => {

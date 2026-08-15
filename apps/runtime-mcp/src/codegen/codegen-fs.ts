@@ -63,7 +63,10 @@ export async function fileExists(fs: ProjectFs, relativePath: string): Promise<b
  * Returns a ProjectFs whose `write` method calls `guard(relativePath)` before
  * every write. Uses prototype delegation so all other methods are unchanged.
  */
-export function applyPathGuard(fs: ProjectFs, guard: (relativePath: string) => Promise<void>): ProjectFs {
+export function applyPathGuard(
+  fs: ProjectFs,
+  guard: (relativePath: string) => Promise<void>
+): ProjectFs {
   const proxy = Object.create(fs) as ProjectFs;
   proxy.write = async (relativePath: string, content: string): Promise<void> => {
     await guard(relativePath);

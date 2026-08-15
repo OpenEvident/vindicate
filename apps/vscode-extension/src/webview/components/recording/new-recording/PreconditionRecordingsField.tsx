@@ -116,7 +116,10 @@ export function PreconditionRecordingsField({
           )}
         </div>
       ) : (
-        <ol className="m-0 flex list-none flex-col gap-2 p-0" aria-label="Pre-condition playback order">
+        <ol
+          className="m-0 flex list-none flex-col gap-2 p-0"
+          aria-label="Pre-condition playback order"
+        >
           {value.map((name, index) => {
             const session = sessionByName.get(name);
             const isDragging = dragIndex === index;
@@ -145,7 +148,9 @@ export function PreconditionRecordingsField({
                     tabIndex={disabled ? -1 : 0}
                     className={[
                       "flex h-8 w-7 shrink-0 items-center justify-center rounded-md",
-                      disabled ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing text-vs-text-dim hover:text-vs-text"
+                      disabled
+                        ? "cursor-not-allowed opacity-40"
+                        : "cursor-grab active:cursor-grabbing text-vs-text-dim hover:text-vs-text"
                     ].join(" ")}
                   >
                     <GripVertical size={14} />

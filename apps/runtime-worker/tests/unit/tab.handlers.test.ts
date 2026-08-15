@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { handleSwitchTabByUrl, openPages } from "../../src/services/browser/interactions/tab.handlers.js";
+import {
+  handleSwitchTabByUrl,
+  openPages
+} from "../../src/services/browser/interactions/tab.handlers.js";
 
 describe("tab.handlers", () => {
   it("openPages filters closed pages", () => {
@@ -23,7 +26,9 @@ describe("tab.handlers", () => {
     it("matches immediately when the tab already exists (no polling needed)", async () => {
       const bringToFront = vi.fn().mockResolvedValue(undefined);
       const target = fakePage("https://login.klarna.com/oauth2/auth?x=1", bringToFront);
-      const context = { pages: () => [fakePage("https://demo.kustom.co/checkout/"), target] } as never;
+      const context = {
+        pages: () => [fakePage("https://demo.kustom.co/checkout/"), target]
+      } as never;
       const state = { activePageIndex: 0 };
 
       const result = await handleSwitchTabByUrl(context, state, "klarna.com", 2000, 50);
@@ -44,7 +49,9 @@ describe("tab.handlers", () => {
         bringToFront: vi.fn().mockResolvedValue(undefined),
         title: vi.fn().mockResolvedValue("Klarna")
       };
-      const context = { pages: () => [fakePage("https://demo.kustom.co/checkout/"), popup] } as never;
+      const context = {
+        pages: () => [fakePage("https://demo.kustom.co/checkout/"), popup]
+      } as never;
       const state = { activePageIndex: 0 };
 
       setTimeout(() => {

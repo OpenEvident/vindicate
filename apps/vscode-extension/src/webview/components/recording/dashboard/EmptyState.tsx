@@ -9,7 +9,7 @@ const STEPS = [
     dotColor: "bg-tone-red",
     ringColor: "ring-tone-red/20",
     title: "Record",
-    desc: "Open a browser and click around. Every step gets recorded automatically.",
+    desc: "Open a browser and click around. Every step gets recorded automatically."
   },
   {
     id: "review",
@@ -19,7 +19,7 @@ const STEPS = [
     dotColor: "bg-tone-blue",
     ringColor: "ring-tone-blue/20",
     title: "Review",
-    desc: "Remove unwanted steps and pick the best locator for each action.",
+    desc: "Remove unwanted steps and pick the best locator for each action."
   },
   {
     id: "generate",
@@ -29,8 +29,8 @@ const STEPS = [
     dotColor: "bg-tone-emerald",
     ringColor: "ring-tone-emerald/20",
     title: "Generate",
-    desc: "Export a clean file your agent uses to write tests.",
-  },
+    desc: "Export a clean file your agent uses to write tests."
+  }
 ] as const;
 
 interface EmptyStateProps {
@@ -62,7 +62,7 @@ export function EmptyState({ onNewRecording }: EmptyStateProps) {
                   "flex h-11 w-11 items-center justify-center rounded-full",
                   "ring-[6px]",
                   step.ringColor,
-                  "bg-vs-hover border border-vs-border",
+                  "bg-vs-hover border border-vs-border"
                 ].join(" ")}
               >
                 <step.Icon size={17} className={step.accentColor} />
@@ -70,7 +70,12 @@ export function EmptyState({ onNewRecording }: EmptyStateProps) {
 
               {/* Step number + title */}
               <div className="flex flex-col items-center gap-0.5">
-                <span className={["font-mono text-[9px] uppercase tracking-[0.12em]", step.accentColor].join(" ")}>
+                <span
+                  className={[
+                    "font-mono text-[9px] uppercase tracking-[0.12em]",
+                    step.accentColor
+                  ].join(" ")}
+                >
                   {step.step}
                 </span>
                 <span className="text-[12.5px] font-semibold">{step.title}</span>
@@ -101,7 +106,7 @@ export function EmptyState({ onNewRecording }: EmptyStateProps) {
           "inline-flex items-center gap-2 rounded-xl px-5 py-2.5",
           "bg-tone-red text-white text-[12.5px] font-semibold border-0 cursor-pointer",
           "shadow-[0_6px_18px_-6px_color-mix(in_oklab,var(--color-tone-red)_60%,transparent)]",
-          "transition-all duration-150 hover:brightness-110 hover:-translate-y-px active:translate-y-0",
+          "transition-all duration-150 hover:brightness-110 hover:-translate-y-px active:translate-y-0"
         ].join(" ")}
       >
         <span aria-hidden="true" className="w-2 h-2 rounded-full bg-white/80" />

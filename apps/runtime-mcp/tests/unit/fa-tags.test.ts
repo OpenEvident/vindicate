@@ -48,7 +48,10 @@ AC-1: [FA-01-4] should not match here
     ];
     const duplicates = findCrossStoryFaDuplicates(stories);
     expect(duplicates).toEqual([
-      { tag: "FA-01-4", files: [".vindicate/stories/login.story.md", ".vindicate/stories/auth.story.md"] }
+      {
+        tag: "FA-01-4",
+        files: [".vindicate/stories/login.story.md", ".vindicate/stories/auth.story.md"]
+      }
     ]);
   });
 });

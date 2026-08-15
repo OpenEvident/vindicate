@@ -24,7 +24,10 @@ export async function applyOnboardingStepComplete(
     deps.statusBar.setState("active");
     await persistOnboarding(deps);
     deps.broadcaster.broadcast({ type: "onboarding:stepDone", step });
-    deps.broadcaster.broadcast({ type: "onboarding:stateSync", state: deps.workspaceState.getState() });
+    deps.broadcaster.broadcast({
+      type: "onboarding:stateSync",
+      state: deps.workspaceState.getState()
+    });
     deps.broadcaster.broadcast({ type: "navigate:screen", screen: "dashboard" });
     deps.trackStep?.(step, "completed");
     return;

@@ -17,8 +17,22 @@
               "owned_by": "catalog",
               "elements": [{ "ref": "title", "tag": "h1", "name": "Catalog" }],
               "types": [],
-              "steps": [{ "name": "step_navigate", "jsdoc": "Open catalog", "params": [], "actions": [{ "do": "navigate" }] }],
-              "verifies": [{ "name": "verify_loaded", "jsdoc": "Loaded", "params": [], "assertions": [{ "subject": "element", "ref": "title", "matcher": "toBeVisible" }] }]
+              "steps": [
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open catalog",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_loaded",
+                  "jsdoc": "Loaded",
+                  "params": [],
+                  "assertions": [{ "subject": "element", "ref": "title", "matcher": "toBeVisible" }]
+                }
+              ]
             }
           ],
           "spec": {

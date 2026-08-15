@@ -4,10 +4,7 @@ import { postToExtension } from "../../lib/bridge";
 import { SCAFFOLD_PROMPT } from "../../lib/prompts";
 import { useOnboardingStore } from "../../stores/onboardingStore";
 
-const WATCHED_FILES = [
-  ".vindicate/stories/*.story.md",
-  "tests/**/*.spec.ts"
-];
+const WATCHED_FILES = [".vindicate/stories/*.story.md", "tests/**/*.spec.ts"];
 
 export function ScaffoldPanel() {
   const onboardingDone = useOnboardingStore((s) => s.onboardingDone);
@@ -25,18 +22,19 @@ export function ScaffoldPanel() {
 
       <p className="vindicate-screen-hint">
         <span className="vindicate-mono-label">HOW THIS WORKS</span>
-        Copy the prompt below, paste it into your agent, then watch Vindicate tick each file off as it
-        lands on disk.
+        Copy the prompt below, paste it into your agent, then watch Vindicate tick each file off as
+        it lands on disk.
       </p>
 
       <McpEnableCallout title="Before you run the prompt" variant="scaffold" attention />
 
       {/* Prompt card */}
       <div className="vindicate-scp-card">
-
         {/* Card header */}
         <div className="vindicate-scp-card-head">
-          <div className="vindicate-scp-num-badge" aria-hidden>1</div>
+          <div className="vindicate-scp-num-badge" aria-hidden>
+            1
+          </div>
           <div className="vindicate-scp-card-meta">
             <div className="vindicate-scp-card-title">Project setup</div>
             <div className="vindicate-scp-card-sub">Playwright project structure · TypeScript</div>
@@ -56,7 +54,17 @@ export function ScaffoldPanel() {
             className={`vindicate-scp-copy-btn${copied ? " vindicate-scp-copy-btn--copied" : ""}`}
             onClick={() => void copyPrompt()}
           >
-            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
               <rect x="5" y="5" width="9" height="9" rx="1" />
               <path d="M11 5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2" />
             </svg>
@@ -82,7 +90,9 @@ export function ScaffoldPanel() {
               <div key={f} className="vindicate-scp-watch-row">
                 <span className="vindicate-pulse-dot" aria-hidden />
                 <span className="vindicate-scp-watch-file">{f}</span>
-                <span className="vindicate-shimmer vindicate-scp-watch-status">Waiting for file…</span>
+                <span className="vindicate-shimmer vindicate-scp-watch-status">
+                  Waiting for file…
+                </span>
               </div>
             ))}
           </div>
@@ -91,7 +101,17 @@ export function ScaffoldPanel() {
         {/* Done state */}
         {onboardingDone && (
           <div className="vindicate-scp-done-banner">
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
               <polyline points="2,7 5.5,10.5 12,4" />
             </svg>
             Scaffold complete — re-run the prompt any time to regenerate files.
@@ -103,12 +123,13 @@ export function ScaffoldPanel() {
           <p className="vindicate-scp-outputs-label">Expected outputs:</p>
           {WATCHED_FILES.map((f) => (
             <div key={f} className="vindicate-agent-file">
-              <span className="vindicate-agent-file-arrow" aria-hidden>└</span>
+              <span className="vindicate-agent-file-arrow" aria-hidden>
+                └
+              </span>
               {f}
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

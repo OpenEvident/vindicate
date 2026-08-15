@@ -2,7 +2,8 @@ export function renderCoverage(root: HTMLElement, data: Record<string, unknown>)
   const total = data.total_tests as number | undefined;
   const suites = data.suite_count as number | undefined;
   const gaps = data.coverage_gaps as number | undefined;
-  const features = (data.features as Array<{ name: string; status: string; test_count: number }>) ?? [];
+  const features =
+    (data.features as Array<{ name: string; status: string; test_count: number }>) ?? [];
 
   const header = document.createElement("div");
   header.className = "panel-header";

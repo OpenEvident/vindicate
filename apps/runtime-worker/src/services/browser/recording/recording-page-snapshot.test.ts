@@ -43,7 +43,9 @@ describe("captureRecordingPageSnapshot", () => {
     `;
 
     const result = captureRecordingPageSnapshot({ testidCandidates: ["data-testid"] });
-    expect(result.elements.every((el) => el.element.id !== undefined || el.name === "Go")).toBe(true);
+    expect(result.elements.every((el) => el.element.id !== undefined || el.name === "Go")).toBe(
+      true
+    );
     expect(result.elements.some((el) => el.name === "Stop")).toBe(false);
   });
 
@@ -208,7 +210,8 @@ describe("captureRecordingPageSnapshot", () => {
   it("role_name candidate still space-joins the same as before (getByRole path unaffected)", () => {
     // Regression guard for the pre-existing "ColomboColombo District" fix this must not undo:
     // role_name (getByRole matching) still needs the ARIA-accessible-name-style space-joined value.
-    document.body.innerHTML = "<button><span>Colombo</span><span>Colombo District, Sri Lanka</span></button>";
+    document.body.innerHTML =
+      "<button><span>Colombo</span><span>Colombo District, Sri Lanka</span></button>";
 
     const result = captureRecordingPageSnapshot({ testidCandidates: ["data-testid"] });
     const btn = result.elements.find((el) => el.tag === "button");

@@ -2,7 +2,12 @@
  * Compact markdown projection of a recording artifact for AI consumption.
  * No @refs — recording snapshots are historical; browser_act needs live browser_read refs.
  */
-import type { RecordingArtifact, RecordingPageSnapshot, RecordedStep, SelectorCandidate } from "@vindicate/protocol";
+import type {
+  RecordingArtifact,
+  RecordingPageSnapshot,
+  RecordedStep,
+  SelectorCandidate
+} from "@vindicate/protocol";
 
 interface RefSnapshotForDelta {
   readonly name: string;
@@ -23,12 +28,19 @@ interface SnapshotCheckpoint {
 function computeDelta(
   previous: Readonly<Record<string, RefSnapshotForDelta>>,
   current: Readonly<Record<string, RefSnapshotForDelta>>
-): { added: string[]; removed: string[]; changed: Array<{ ref: string; changes: Array<{ field: string; before: string; after: string }> }> } {
+): {
+  added: string[];
+  removed: string[];
+  changed: Array<{ ref: string; changes: Array<{ field: string; before: string; after: string }> }>;
+} {
   const prevRefs = new Set(Object.keys(previous));
   const curRefs = new Set(Object.keys(current));
   const added = [...curRefs].filter((r) => !prevRefs.has(r)).sort();
   const removed = [...prevRefs].filter((r) => !curRefs.has(r)).sort();
-  const changed: Array<{ ref: string; changes: Array<{ field: string; before: string; after: string }> }> = [];
+  const changed: Array<{
+    ref: string;
+    changes: Array<{ field: string; before: string; after: string }>;
+  }> = [];
 
   for (const ref of curRefs) {
     if (!prevRefs.has(ref)) {
@@ -44,19 +56,39 @@ function computeDelta(
       row.push({ field: "value", before: p.value ?? "null", after: c.value ?? "null" });
     }
     if (String(p.disabled ?? "null") !== String(c.disabled ?? "null")) {
-      row.push({ field: "disabled", before: String(p.disabled ?? "null"), after: String(c.disabled ?? "null") });
+      row.push({
+        field: "disabled",
+        before: String(p.disabled ?? "null"),
+        after: String(c.disabled ?? "null")
+      });
     }
     if (String(p.aria_invalid ?? "null") !== String(c.aria_invalid ?? "null")) {
-      row.push({ field: "aria_invalid", before: String(p.aria_invalid ?? "null"), after: String(c.aria_invalid ?? "null") });
+      row.push({
+        field: "aria_invalid",
+        before: String(p.aria_invalid ?? "null"),
+        after: String(c.aria_invalid ?? "null")
+      });
     }
     if (String(p.aria_required ?? "null") !== String(c.aria_required ?? "null")) {
-      row.push({ field: "aria_required", before: String(p.aria_required ?? "null"), after: String(c.aria_required ?? "null") });
+      row.push({
+        field: "aria_required",
+        before: String(p.aria_required ?? "null"),
+        after: String(c.aria_required ?? "null")
+      });
     }
     if (String(p.aria_expanded ?? "null") !== String(c.aria_expanded ?? "null")) {
-      row.push({ field: "aria_expanded", before: String(p.aria_expanded ?? "null"), after: String(c.aria_expanded ?? "null") });
+      row.push({
+        field: "aria_expanded",
+        before: String(p.aria_expanded ?? "null"),
+        after: String(c.aria_expanded ?? "null")
+      });
     }
     if (String(p.aria_checked ?? "null") !== String(c.aria_checked ?? "null")) {
-      row.push({ field: "aria_checked", before: String(c.aria_checked ?? "null"), after: String(c.aria_checked ?? "null") });
+      row.push({
+        field: "aria_checked",
+        before: String(c.aria_checked ?? "null"),
+        after: String(c.aria_checked ?? "null")
+      });
     }
     if (row.length > 0) {
       changed.push({ ref, changes: row });
@@ -76,7 +108,11 @@ export function formatChosenLocator(chosen: SelectorCandidate | null | undefined
   if (chosen.strategy === "role_name" || chosen.strategy === "role+name") {
     return chosen.value;
   }
-  if (chosen.strategy === "label" || chosen.strategy === "placeholder" || chosen.strategy === "text") {
+  if (
+    chosen.strategy === "label" ||
+    chosen.strategy === "placeholder" ||
+    chosen.strategy === "text"
+  ) {
     return `${chosen.strategy}: ${chosen.value}`;
   }
   if (
@@ -167,9 +203,12 @@ function formatFlowStep(
   const n = String(step.seq).padEnd(2, " ");
   const action = step.action.padEnd(9, " ");
   const locator = formatChosenLocator(step.chosen);
-  const dynamicHint = step.chosen?.dynamic === true ? " ⚠ looks auto-generated — prefer data-testid/role+name" : "";
+  const dynamicHint =
+    step.chosen?.dynamic === true ? " ⚠ looks auto-generated — prefer data-testid/role+name" : "";
   const delegateHint =
-    step.chosen?.click_delegate === true ? " (click-delegate ancestor — click only, no check/uncheck)" : "";
+    step.chosen?.click_delegate === true
+      ? " (click-delegate ancestor — click only, no check/uncheck)"
+      : "";
   const locatorSuffix = locator.length > 0 ? ` ${locator}${dynamicHint}${delegateHint}` : "";
 
   if (step.action === "snapshot") {
@@ -184,7 +223,10 @@ function formatFlowStep(
     return `${n} navigate  ${step.url ?? ""}`;
   }
   if (step.action === "press_key") {
-    const target = step.element?.name !== undefined && step.element.name.length > 0 ? ` on "${step.element.name}"` : "";
+    const target =
+      step.element?.name !== undefined && step.element.name.length > 0
+        ? ` on "${step.element.name}"`
+        : "";
     return `${n} press_key ${step.key ?? ""}${target}${locatorSuffix}`;
   }
   if (step.action === "fill" || step.action === "select") {
@@ -206,9 +248,7 @@ function formatFlowStep(
 
   const label = step.element?.name?.trim();
   const target =
-    label !== undefined && label.length > 0
-      ? `"${label}"`
-      : step.element?.tag ?? "element";
+    label !== undefined && label.length > 0 ? `"${label}"` : (step.element?.tag ?? "element");
   return `${n} ${action} ${target}${locatorSuffix}`;
 }
 
@@ -220,8 +260,7 @@ function elementIdentity(el: RecordingPageSnapshot["elements"][number]): string 
 }
 
 function formatSnapshotElementLine(el: RecordingPageSnapshot["elements"][number]): string {
-  const valueBadge =
-    el.value !== undefined && el.value.length > 0 ? ` (${el.value})` : "";
+  const valueBadge = el.value !== undefined && el.value.length > 0 ? ` (${el.value})` : "";
   return `- ${elementIdentity(el)}${valueBadge}${formatFlags(el)}`;
 }
 

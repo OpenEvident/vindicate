@@ -6,7 +6,8 @@ import { builderDef, clientDef, clientMethod } from "../../shared/codegen-testki
 
 function assertSyntacticallyValid(source: string): void {
   const sourceFile = ts.createSourceFile("generated.ts", source, ts.ScriptTarget.ESNext, true);
-  const diagnostics = (sourceFile as unknown as { parseDiagnostics?: unknown[] }).parseDiagnostics ?? [];
+  const diagnostics =
+    (sourceFile as unknown as { parseDiagnostics?: unknown[] }).parseDiagnostics ?? [];
   expect(diagnostics).toEqual([]);
 }
 
@@ -66,7 +67,9 @@ describe("buildApiClient", () => {
     expect(source).toContain(
       "update(postId: number, post: Partial<Post>, headers?: Record<string, string>) {"
     );
-    expect(source).toContain("return this.request.put(`posts/${postId}`, { data: post, headers });");
+    expect(source).toContain(
+      "return this.request.put(`posts/${postId}`, { data: post, headers });"
+    );
     assertSyntacticallyValid(source);
   });
 
@@ -94,13 +97,18 @@ describe("buildApiClient", () => {
           clientMethod("uploadFile", {
             http_method: "post",
             path: "upload",
-            body_param: { name: "file", type: "{ name: string; mimeType: string; buffer: Buffer }" },
+            body_param: {
+              name: "file",
+              type: "{ name: string; mimeType: string; buffer: Buffer }"
+            },
             body_type: "multipart"
           })
         ]
       })
     );
-    expect(multipartSource).toContain("return this.request.post('upload', { multipart: file, headers });");
+    expect(multipartSource).toContain(
+      "return this.request.post('upload', { multipart: file, headers });"
+    );
     assertSyntacticallyValid(multipartSource);
   });
 
@@ -108,7 +116,13 @@ describe("buildApiClient", () => {
     const source = buildApiClient(
       clientDef({
         client_class: "PostClient",
-        methods: [clientMethod("getAll", { http_method: "get", path: "posts", supports_header_override: false })]
+        methods: [
+          clientMethod("getAll", {
+            http_method: "get",
+            path: "posts",
+            supports_header_override: false
+          })
+        ]
       })
     );
     expect(source).toContain("getAll() {");
@@ -120,10 +134,20 @@ describe("buildApiClient", () => {
     const source = buildApiClient(
       clientDef({
         client_class: "PostClient",
-        types: [{ name: "Post", fields: [{ name: "id", type: "number" }, { name: "title", type: "string" }] }]
+        types: [
+          {
+            name: "Post",
+            fields: [
+              { name: "id", type: "number" },
+              { name: "title", type: "string" }
+            ]
+          }
+        ]
       })
     );
-    expect(source.indexOf("export interface Post")).toBeLessThan(source.indexOf("export class PostClient"));
+    expect(source.indexOf("export interface Post")).toBeLessThan(
+      source.indexOf("export class PostClient")
+    );
     assertSyntacticallyValid(source);
   });
 
@@ -131,7 +155,9 @@ describe("buildApiClient", () => {
     const source = buildApiClient(
       clientDef({
         client_class: "PostClient",
-        methods: [clientMethod("getAll", { http_method: "get", path: "posts", jsdoc: "Fetch every post." })]
+        methods: [
+          clientMethod("getAll", { http_method: "get", path: "posts", jsdoc: "Fetch every post." })
+        ]
       })
     );
     expect(source).toContain("/**\n   * Fetch every post.\n   */");

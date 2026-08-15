@@ -18,7 +18,9 @@ export function findCrossStoryFaDuplicates(
 ): Array<{ tag: string; files: string[] }> {
   const byTag = new Map<string, Set<string>>();
   for (const story of stories) {
-    for (const tag of extractFaTagsFromFeatureSection(story.content.replace(/^---[\s\S]*?---\n/, ""))) {
+    for (const tag of extractFaTagsFromFeatureSection(
+      story.content.replace(/^---[\s\S]*?---\n/, "")
+    )) {
       const files = byTag.get(tag) ?? new Set<string>();
       files.add(story.path);
       byTag.set(tag, files);

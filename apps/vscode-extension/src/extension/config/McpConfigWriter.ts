@@ -34,7 +34,9 @@ export class McpConfigWriter implements IMcpConfigWriter {
           json = JSON.parse(raw) as Record<string, Record<string, unknown>>;
         } catch {
           // Empty or malformed file — treat as a fresh config and overwrite.
-          this.logger.warn(`Malformed MCP config at ${target.configPath} — resetting to empty config.`);
+          this.logger.warn(
+            `Malformed MCP config at ${target.configPath} — resetting to empty config.`
+          );
         }
       } catch (err) {
         if (!(err && typeof err === "object" && "code" in err && err.code === "ENOENT")) {

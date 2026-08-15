@@ -42,13 +42,11 @@ export class FileWatcherService implements IFileWatcherService {
   private refreshInFlight = false;
   private refreshQueued = false;
   private readonly refreshDebounceMs = 1000;
-  private branchCache:
-    | {
-        folderPath: string;
-        value: string;
-        atMs: number;
-      }
-    | null = null;
+  private branchCache: {
+    folderPath: string;
+    value: string;
+    atMs: number;
+  } | null = null;
   private readonly branchCacheTtlMs = 15_000;
   private readonly testFileIndex = new TestFileIndex();
 
@@ -83,7 +81,9 @@ export class FileWatcherService implements IFileWatcherService {
       new vscode.RelativePattern(vscode.Uri.file(folderPath), relative);
 
     const domainWatcher = vscode.workspace.createFileSystemWatcher(pattern(".vindicate/domain.md"));
-    const contextWatcher = vscode.workspace.createFileSystemWatcher(pattern(".vindicate/context.md"));
+    const contextWatcher = vscode.workspace.createFileSystemWatcher(
+      pattern(".vindicate/context.md")
+    );
     const featuresWatcher = vscode.workspace.createFileSystemWatcher(
       pattern(".vindicate/stories/*.story.md")
     );
@@ -214,8 +214,8 @@ export class FileWatcherService implements IFileWatcherService {
           branch
         },
         {
-        featuresDirExists,
-        playwrightResultsFound: playwrightResults !== null
+          featuresDirExists,
+          playwrightResultsFound: playwrightResults !== null
         }
       );
       this.metricsEmitter.fire(metrics);

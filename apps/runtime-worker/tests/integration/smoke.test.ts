@@ -43,7 +43,9 @@ describe("runtime-worker smoke", () => {
     const dir = path.join(os.tmpdir(), `vindicate-smoke-${Date.now()}`);
     await mkdir(dir, { recursive: true });
     dataDir = dir;
-    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), {
+      encryptFilenames: false
+    });
     const store = new BrowserSessionStore(disk, logger, 24);
     await store.initializeFromDisk();
     const governor = new FakeResourceGovernor();
@@ -93,7 +95,9 @@ describe("runtime-worker smoke", () => {
     });
 
     const health = await app.inject({ method: "GET", url: "/health" });
-    expect(RuntimeHealthResponseSchema.safeParse(JSON.parse(health.body) as unknown).success).toBe(true);
+    expect(RuntimeHealthResponseSchema.safeParse(JSON.parse(health.body) as unknown).success).toBe(
+      true
+    );
 
     const caps = await app.inject({
       method: "GET",

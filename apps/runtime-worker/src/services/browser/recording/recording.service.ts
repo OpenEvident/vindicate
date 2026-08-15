@@ -6,7 +6,12 @@ import type { Frame, Page } from "playwright-core";
 import type { IEventBus } from "../../../core/events/event-bus.interface.js";
 import type { IBrowserBridge } from "../../../infrastructure/browser/browser-bridge.interface.js";
 import type { ISessionStore } from "../session/session.store.interface.js";
-import { toVindicateRelativePath, type RecordingArtifact, type RecordedStep, type StructuredLocator } from "@vindicate/protocol";
+import {
+  toVindicateRelativePath,
+  type RecordingArtifact,
+  type RecordedStep,
+  type StructuredLocator
+} from "@vindicate/protocol";
 import {
   classifyNavigation,
   isRealPageUrl,
@@ -46,7 +51,9 @@ const IMPLICIT_NAV_TRIGGER_WINDOW_MS = 12_000;
 
 function asSelectorCandidate(
   value: unknown
-): { strategy: string; value: string; attr?: string; strength?: "strong" | "medium" | "weak" } | undefined {
+):
+  | { strategy: string; value: string; attr?: string; strength?: "strong" | "medium" | "weak" }
+  | undefined {
   if (typeof value !== "object" || value === null) {
     return undefined;
   }
@@ -58,13 +65,17 @@ function asSelectorCandidate(
     strategy: candidate.strategy,
     value: candidate.value,
     ...(typeof candidate.attr === "string" ? { attr: candidate.attr } : {}),
-    ...(candidate.strength === "strong" || candidate.strength === "medium" || candidate.strength === "weak"
+    ...(candidate.strength === "strong" ||
+    candidate.strength === "medium" ||
+    candidate.strength === "weak"
       ? { strength: candidate.strength }
       : {})
   };
 }
 
-function toRecordingEventPayload(payload: Record<string, unknown>): RecordingEventPayload | undefined {
+function toRecordingEventPayload(
+  payload: Record<string, unknown>
+): RecordingEventPayload | undefined {
   if (typeof payload.action !== "string") {
     return undefined;
   }
@@ -99,7 +110,9 @@ function toRecordingEventPayload(payload: Record<string, unknown>): RecordingEve
           const targetCandidates = Array.isArray(t.candidates)
             ? t.candidates
                 .map((candidate) => asSelectorCandidate(candidate))
-                .filter((candidate): candidate is NonNullable<typeof candidate> => candidate !== undefined)
+                .filter(
+                  (candidate): candidate is NonNullable<typeof candidate> => candidate !== undefined
+                )
             : undefined;
           const targetChosen = asSelectorCandidate(t.chosen) ?? null;
           const targetElementRaw = t.element;
@@ -144,11 +157,15 @@ function toRecordingEventPayload(payload: Record<string, unknown>): RecordingEve
       ? { navigation_trigger: payload["navigation_trigger"] }
       : {}),
     ...(payload["env_var"] === true ? { env_var: true } : {}),
-    ...(typeof payload["env_var_name"] === "string" ? { env_var_name: payload["env_var_name"] } : {})
+    ...(typeof payload["env_var_name"] === "string"
+      ? { env_var_name: payload["env_var_name"] }
+      : {})
   };
 }
 
-function isNavigationTriggerAction(payload: RecordingEventPayload): payload is RecordingEventPayload & {
+function isNavigationTriggerAction(
+  payload: RecordingEventPayload
+): payload is RecordingEventPayload & {
   action: "click" | "dblclick" | "press_key";
 } {
   if (payload.action === "click" || payload.action === "dblclick") {
@@ -245,7 +262,11 @@ export class RecordingService {
 
         const preNavUrl = recordingState.currentUrl;
         const nowMs = Date.now();
-        const navigationTrigger = this.classifyNavigationTriggerForFrameNav(recordingState, nowMs, newUrl);
+        const navigationTrigger = this.classifyNavigationTriggerForFrameNav(
+          recordingState,
+          nowMs,
+          newUrl
+        );
 
         if (
           navigationTrigger === "implicit" &&
@@ -331,9 +352,15 @@ export class RecordingService {
   private broadcastPausedState(sessionId: string, paused: boolean): void {
     let openPages: Page[];
     try {
-      openPages = this.bridge.getContext(sessionId).pages().filter((p) => !p.isClosed());
+      openPages = this.bridge
+        .getContext(sessionId)
+        .pages()
+        .filter((p) => !p.isClosed());
     } catch (err: unknown) {
-      this.logger.warn({ err, sessionId }, "[recording] paused-state broadcast: no context — skipping");
+      this.logger.warn(
+        { err, sessionId },
+        "[recording] paused-state broadcast: no context — skipping"
+      );
       return;
     }
     for (const p of openPages) {
@@ -341,7 +368,10 @@ export class RecordingService {
         const w = window as Window & { __vindicateApplyPausedState?: (paused: boolean) => void };
         w.__vindicateApplyPausedState?.(isPaused);
       }, paused).catch((err: unknown) => {
-        this.logger.warn({ err, sessionId }, "[recording] paused-state broadcast to a page failed — continuing");
+        this.logger.warn(
+          { err, sessionId },
+          "[recording] paused-state broadcast to a page failed — continuing"
+        );
       });
     }
   }
@@ -390,7 +420,11 @@ export class RecordingService {
    * recorder script that would otherwise emit raw DOM events is never injected for agent sessions in the
    * first place — there is nothing here for an agent session to attribute.
    */
-  private async attributePageIfChanged(sessionId: string, state: RecordingSessionState, page: Page): Promise<void> {
+  private async attributePageIfChanged(
+    sessionId: string,
+    state: RecordingSessionState,
+    page: Page
+  ): Promise<void> {
     if (state.started_by === "agent") {
       return;
     }
@@ -453,14 +487,20 @@ export class RecordingService {
         testidCandidates: buildTestidCandidates(state.testidAttr)
       });
     } catch (err: unknown) {
-      this.logger.warn({ err, sessionId: state.sessionId }, "[recording] frame_path derivation failed — continuing");
+      this.logger.warn(
+        { err, sessionId: state.sessionId },
+        "[recording] frame_path derivation failed — continuing"
+      );
       return payload;
     }
     if (framePath.length === 0) {
       return payload;
     }
 
-    const withFramePath = (c: SelectorCandidatePayload): SelectorCandidatePayload => ({ ...c, frame_path: framePath });
+    const withFramePath = (c: SelectorCandidatePayload): SelectorCandidatePayload => ({
+      ...c,
+      frame_path: framePath
+    });
 
     return {
       ...payload,
@@ -473,7 +513,9 @@ export class RecordingService {
               ...(payload.target.candidates !== undefined
                 ? { candidates: payload.target.candidates.map(withFramePath) }
                 : {}),
-              ...(payload.target.chosen != null ? { chosen: withFramePath(payload.target.chosen) } : {})
+              ...(payload.target.chosen != null
+                ? { chosen: withFramePath(payload.target.chosen) }
+                : {})
             }
           }
         : {})
@@ -521,7 +563,10 @@ export class RecordingService {
       return;
     }
 
-    if (payload.action === "navigate" && shouldSkipDuplicateNavigateStep(recordingState.steps, payload.url)) {
+    if (
+      payload.action === "navigate" &&
+      shouldSkipDuplicateNavigateStep(recordingState.steps, payload.url)
+    ) {
       return;
     }
 
@@ -593,12 +638,21 @@ export class RecordingService {
       session_id: sessionId,
       step: { ...step },
       screenshot_path: step.screenshot_after
-        ? path.join(state.projectRoot, ".vindicate", "recordings", state.safeName, step.screenshot_after)
+        ? path.join(
+            state.projectRoot,
+            ".vindicate",
+            "recordings",
+            state.safeName,
+            step.screenshot_after
+          )
         : undefined
     });
   }
 
-  private async handleManualSnapshot(sessionId: string, payload: RecordingEventPayload): Promise<void> {
+  private async handleManualSnapshot(
+    sessionId: string,
+    payload: RecordingEventPayload
+  ): Promise<void> {
     const seq = this.store.addStep(sessionId, {
       action: "snapshot",
       timestamp: payload.timestamp ?? new Date().toISOString(),
@@ -623,10 +677,18 @@ export class RecordingService {
         this.store.updateStepPageSnapshot(sessionId, seq, pageSnapshot);
       }
 
-      const screenshotDir = path.join(state.projectRoot, ".vindicate", "recordings", state.safeName);
+      const screenshotDir = path.join(
+        state.projectRoot,
+        ".vindicate",
+        "recordings",
+        state.safeName
+      );
       await fs.mkdir(screenshotDir, { recursive: true });
       const screenshotFile = `step-${String(seq).padStart(3, "0")}.png`;
-      await screenshotWithoutOverlay(page, { path: path.join(screenshotDir, screenshotFile), type: "png" });
+      await screenshotWithoutOverlay(page, {
+        path: path.join(screenshotDir, screenshotFile),
+        type: "png"
+      });
       this.store.updateStepScreenshot(sessionId, seq, screenshotFile);
     } catch (err: unknown) {
       this.logger.warn({ err, sessionId, seq }, "[recording] manual snapshot failed — continuing");
@@ -642,7 +704,13 @@ export class RecordingService {
       session_id: sessionId,
       step: { ...step },
       screenshot_path: step.screenshot_after
-        ? path.join(state.projectRoot, ".vindicate", "recordings", state.safeName, step.screenshot_after)
+        ? path.join(
+            state.projectRoot,
+            ".vindicate",
+            "recordings",
+            state.safeName,
+            step.screenshot_after
+          )
         : undefined
     });
   }
@@ -656,7 +724,12 @@ export class RecordingService {
     try {
       const page = await this.bridge.getPage(sessionId);
       await waitForStepScreenshotSettle(page, action, this.settleCfg);
-      const screenshotDir = path.join(state.projectRoot, ".vindicate", "recordings", state.safeName);
+      const screenshotDir = path.join(
+        state.projectRoot,
+        ".vindicate",
+        "recordings",
+        state.safeName
+      );
       await fs.mkdir(screenshotDir, { recursive: true });
       const screenshotFile = `step-${String(seq).padStart(3, "0")}.png`;
       const screenshotPath = path.join(screenshotDir, screenshotFile);
@@ -723,7 +796,12 @@ export class RecordingService {
       if (pageSnapshot !== undefined) {
         state.finalSnapshot = pageSnapshot;
       }
-      const screenshotDir = path.join(state.projectRoot, ".vindicate", "recordings", state.safeName);
+      const screenshotDir = path.join(
+        state.projectRoot,
+        ".vindicate",
+        "recordings",
+        state.safeName
+      );
       await fs.mkdir(screenshotDir, { recursive: true });
       const screenshotFile = "final.png";
       const screenshotPath = path.join(screenshotDir, screenshotFile);
@@ -783,7 +861,13 @@ export class RecordingService {
       session_id: sessionId,
       step: { ...step },
       screenshot_path: step.screenshot_after
-        ? path.join(state.projectRoot, ".vindicate", "recordings", state.safeName, step.screenshot_after)
+        ? path.join(
+            state.projectRoot,
+            ".vindicate",
+            "recordings",
+            state.safeName,
+            step.screenshot_after
+          )
         : undefined
     });
   }
@@ -863,7 +947,9 @@ export class RecordingService {
       ...(step.screenshot_after !== undefined ? { screenshot_after: step.screenshot_after } : {}),
       ...(step.page_snapshot !== undefined ? { page_snapshot: step.page_snapshot } : {}),
       ...(step.actor !== undefined ? { actor: step.actor } : {}),
-      ...(step.navigation_trigger !== undefined ? { navigation_trigger: step.navigation_trigger } : {}),
+      ...(step.navigation_trigger !== undefined
+        ? { navigation_trigger: step.navigation_trigger }
+        : {}),
       ...(step.env_var === true ? { env_var: true } : {}),
       ...(step.env_var_name !== undefined ? { env_var_name: step.env_var_name } : {})
     })) as RecordedStep[];
@@ -875,7 +961,9 @@ export class RecordingService {
       project_root: finalState.projectRoot,
       status: "finalized" as const,
       steps: artifactSteps,
-      ...(finalState.finalSnapshot !== undefined ? { final_snapshot: finalState.finalSnapshot } : {}),
+      ...(finalState.finalSnapshot !== undefined
+        ? { final_snapshot: finalState.finalSnapshot }
+        : {}),
       started_by: finalState.started_by,
       actor_summary: { human: humanSteps, agent: agentSteps },
       pre_conditions: finalizedData?.pre_conditions ?? [],
@@ -890,7 +978,12 @@ export class RecordingService {
     const artifactPath = path.join(recordingsDir, `${finalState.safeName}.json`);
     await fs.writeFile(artifactPath, JSON.stringify(artifact, null, 2), "utf-8");
 
-    const screenshotDir = path.join(finalState.projectRoot, ".vindicate", "recordings", finalState.safeName);
+    const screenshotDir = path.join(
+      finalState.projectRoot,
+      ".vindicate",
+      "recordings",
+      finalState.safeName
+    );
     const thumbCandidatePath = path.join(screenshotDir, "step-001.png");
     let thumbnail_path: string | undefined;
     try {
@@ -961,7 +1054,9 @@ export class RecordingService {
       ...(step.screenshot_after !== undefined ? { screenshot_after: step.screenshot_after } : {}),
       ...(step.page_snapshot !== undefined ? { page_snapshot: step.page_snapshot } : {}),
       ...(step.actor !== undefined ? { actor: step.actor } : {}),
-      ...(step.navigation_trigger !== undefined ? { navigation_trigger: step.navigation_trigger } : {}),
+      ...(step.navigation_trigger !== undefined
+        ? { navigation_trigger: step.navigation_trigger }
+        : {}),
       ...(step.env_var === true ? { env_var: true } : {}),
       ...(step.env_var_name !== undefined ? { env_var_name: step.env_var_name } : {})
     })) as RecordedStep[];
@@ -1051,7 +1146,10 @@ export class RecordingService {
         summary: fields.summary
       });
     } else {
-      this.logger.warn({ projectRoot, safeName }, "[recording] index entry missing during annotate — reconstructing");
+      this.logger.warn(
+        { projectRoot, safeName },
+        "[recording] index entry missing during annotate — reconstructing"
+      );
       const screenshotDir = path.join(projectRoot, ".vindicate", "recordings", safeName);
       const thumbCandidatePath = path.join(screenshotDir, "step-001.png");
       let thumbnail_path: string | undefined;
@@ -1232,7 +1330,10 @@ export class RecordingService {
         recorderHostId: RECORDER_HOST_ID
       });
     } catch (err: unknown) {
-      this.logger.warn({ err, sessionId: state.sessionId }, "[recording] page snapshot failed — continuing");
+      this.logger.warn(
+        { err, sessionId: state.sessionId },
+        "[recording] page snapshot failed — continuing"
+      );
       return undefined;
     }
   }

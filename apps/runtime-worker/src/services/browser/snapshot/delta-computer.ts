@@ -88,14 +88,49 @@ export function computeDelta(
     pushIfChanged(row, "name", p.name, c.name);
     pushIfChanged(row, "value", p.value ?? "null", c.value ?? "null");
     pushIfChanged(row, "disabled", serializeBool(p.disabled), serializeBool(c.disabled));
-    pushIfChanged(row, "aria_invalid", serializeAria(p.aria_invalid), serializeAria(c.aria_invalid));
+    pushIfChanged(
+      row,
+      "aria_invalid",
+      serializeAria(p.aria_invalid),
+      serializeAria(c.aria_invalid)
+    );
     pushIfChanged(row, "aria_busy", serializeAria(p.aria_busy), serializeAria(c.aria_busy));
-    pushIfChanged(row, "aria_expanded", serializeAria(p.aria_expanded), serializeAria(c.aria_expanded));
-    pushIfChanged(row, "aria_checked", serializeAria(p.aria_checked), serializeAria(c.aria_checked));
-    pushIfChanged(row, "aria_selected", serializeAria(p.aria_selected), serializeAria(c.aria_selected));
-    pushIfChanged(row, "aria_required", serializeAria(p.aria_required), serializeAria(c.aria_required));
-    pushIfChanged(row, "aria_pressed", serializeAria(p.aria_pressed), serializeAria(c.aria_pressed));
-    pushIfChanged(row, "aria_haspopup", serializeAria(p.aria_haspopup), serializeAria(c.aria_haspopup));
+    pushIfChanged(
+      row,
+      "aria_expanded",
+      serializeAria(p.aria_expanded),
+      serializeAria(c.aria_expanded)
+    );
+    pushIfChanged(
+      row,
+      "aria_checked",
+      serializeAria(p.aria_checked),
+      serializeAria(c.aria_checked)
+    );
+    pushIfChanged(
+      row,
+      "aria_selected",
+      serializeAria(p.aria_selected),
+      serializeAria(c.aria_selected)
+    );
+    pushIfChanged(
+      row,
+      "aria_required",
+      serializeAria(p.aria_required),
+      serializeAria(c.aria_required)
+    );
+    pushIfChanged(
+      row,
+      "aria_pressed",
+      serializeAria(p.aria_pressed),
+      serializeAria(c.aria_pressed)
+    );
+    pushIfChanged(
+      row,
+      "aria_haspopup",
+      serializeAria(p.aria_haspopup),
+      serializeAria(c.aria_haspopup)
+    );
     if (row.length > 0) {
       changed.push({ ref, changes: row });
     }

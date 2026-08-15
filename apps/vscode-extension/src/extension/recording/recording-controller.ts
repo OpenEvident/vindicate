@@ -67,13 +67,20 @@ function asRecordingSteps(value: unknown): RecordedStepPayload[] {
     return [];
   }
   return value.filter((item): item is RecordedStepPayload => {
-    return typeof item === "object" && item !== null && typeof (item as RecordedStepPayload).seq === "number";
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as RecordedStepPayload).seq === "number"
+    );
   });
 }
 
 export class RecordingController {
   private readonly sessionStore: RecordingSessionStore;
-  private readonly stepBuffer = new Map<string, Array<{ step: RecordedStepPayload; screenshotAbsPath?: string }>>();
+  private readonly stepBuffer = new Map<
+    string,
+    Array<{ step: RecordedStepPayload; screenshotAbsPath?: string }>
+  >();
   private readonly flushTimers = new Map<string, NodeJS.Timeout>();
   private readonly webviewErrorNotifiedAt = new Map<string, number>();
   private static readonly WEBVIEW_ERROR_DEDUPE_MS = 15000;
@@ -177,11 +184,18 @@ export class RecordingController {
     const projectRoot = session?.projectRoot ?? vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     const shouldResyncSteps = options?.resyncSteps === true || state.status === "none";
 
-    if (shouldResyncSteps && projectRoot !== undefined && safeName !== undefined && safeName.length > 0) {
+    if (
+      shouldResyncSteps &&
+      projectRoot !== undefined &&
+      safeName !== undefined &&
+      safeName.length > 0
+    ) {
       const recordingDir = path.join(projectRoot, ".vindicate", "recordings", safeName);
       const resolvedSteps = state.steps.map((step) => {
         const absPath =
-          step.screenshot_after !== undefined ? path.join(recordingDir, step.screenshot_after) : undefined;
+          step.screenshot_after !== undefined
+            ? path.join(recordingDir, step.screenshot_after)
+            : undefined;
         return this.resolveStepUris(step, absPath, webview);
       });
 
@@ -222,10 +236,13 @@ export class RecordingController {
 
   private async stopRecordingSession(sessionId: string): Promise<void> {
     try {
-      const res = await fetch(`http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/stop`, {
-        method: "POST",
-        headers: this.internalHeaders()
-      });
+      const res = await fetch(
+        `http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/stop`,
+        {
+          method: "POST",
+          headers: this.internalHeaders()
+        }
+      );
       if (res.ok) {
         return;
       }
@@ -246,10 +263,13 @@ export class RecordingController {
 
   private async takeRecordingSnapshot(sessionId: string): Promise<void> {
     try {
-      await fetch(`http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/snapshot`, {
-        method: "POST",
-        headers: this.internalHeaders()
-      });
+      await fetch(
+        `http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/snapshot`,
+        {
+          method: "POST",
+          headers: this.internalHeaders()
+        }
+      );
     } catch {
       /* browser closed or worker offline */
     }
@@ -319,7 +339,9 @@ export class RecordingController {
     };
   }
 
-  private buildActiveSessionViews(panel: RecordingsDashboardPanel | RecordingPanel): RecordingSessionView[] {
+  private buildActiveSessionViews(
+    panel: RecordingsDashboardPanel | RecordingPanel
+  ): RecordingSessionView[] {
     return this.sessionStore
       .getAll()
       .filter(
@@ -353,13 +375,17 @@ export class RecordingController {
     }
   }
 
-  private bufferStep(sessionId: string, step: RecordedStepPayload, screenshotAbsPath?: string): void {
+  private bufferStep(
+    sessionId: string,
+    step: RecordedStepPayload,
+    screenshotAbsPath?: string
+  ): void {
     if (!this.stepBuffer.has(sessionId)) {
       this.stepBuffer.set(sessionId, []);
     }
-    this.stepBuffer.get(sessionId)!.push(
-      screenshotAbsPath !== undefined ? { step, screenshotAbsPath } : { step }
-    );
+    this.stepBuffer
+      .get(sessionId)!
+      .push(screenshotAbsPath !== undefined ? { step, screenshotAbsPath } : { step });
 
     clearTimeout(this.flushTimers.get(sessionId));
     this.flushTimers.set(
@@ -382,17 +408,22 @@ export class RecordingController {
     }
     this.postToRecordingWebviews(sessionId, {
       type: "recording_steps_batch",
-      steps: items.map(({ step, screenshotAbsPath }) => this.resolveStepUris(step, screenshotAbsPath, webview))
+      steps: items.map(({ step, screenshotAbsPath }) =>
+        this.resolveStepUris(step, screenshotAbsPath, webview)
+      )
     });
   }
 
   private async discardRecordingSession(sessionId: string, closeSession = true): Promise<void> {
     try {
-      await fetch(`http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/discard`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...this.internalHeaders() },
-        body: JSON.stringify({ ...(closeSession ? { close_session: true } : {}) })
-      });
+      await fetch(
+        `http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/discard`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...this.internalHeaders() },
+          body: JSON.stringify({ ...(closeSession ? { close_session: true } : {}) })
+        }
+      );
     } catch {
       /* best effort */
     }
@@ -429,7 +460,10 @@ export class RecordingController {
       body.post_conditions = postConditions;
     }
     const dependsOn = asStringArray(msg["depends_on"]) ?? [];
-    const session = sessionId !== undefined ? this.sessionStore.getAll().find((s) => s.id === sessionId) : undefined;
+    const session =
+      sessionId !== undefined
+        ? this.sessionStore.getAll().find((s) => s.id === sessionId)
+        : undefined;
     const preconditions = session?.preconditionRecordings ?? [];
     body.depends_on = [...new Set([...preconditions, ...dependsOn])];
     const summary = asString(msg["summary"]);
@@ -460,9 +494,12 @@ export class RecordingController {
     name: string;
   }> {
     try {
-      const res = await fetch(`http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/state`, {
-        headers: this.internalHeaders()
-      });
+      const res = await fetch(
+        `http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/state`,
+        {
+          headers: this.internalHeaders()
+        }
+      );
       if (!res.ok) {
         return { status: "none", steps: [], name: "" };
       }
@@ -478,7 +515,9 @@ export class RecordingController {
   }
 
   private async recoverActiveRecordings(): Promise<void> {
-    for (const session of this.sessionStore.getAll().filter((s) => s.status === "recording" || s.status === "review")) {
+    for (const session of this.sessionStore
+      .getAll()
+      .filter((s) => s.status === "recording" || s.status === "review")) {
       try {
         const state = await this.fetchRecordingState(session.id);
         if (state.status === "none") {
@@ -486,7 +525,12 @@ export class RecordingController {
           continue;
         }
         let thumbnailPath = session.thumbnailPath;
-        const recordingDir = path.join(session.projectRoot, ".vindicate", "recordings", session.safeName);
+        const recordingDir = path.join(
+          session.projectRoot,
+          ".vindicate",
+          "recordings",
+          session.safeName
+        );
         if (thumbnailPath === undefined) {
           const finalPath = path.join(recordingDir, "final.png");
           try {
@@ -524,7 +568,9 @@ export class RecordingController {
           status: state.status === "finalized" ? "review" : state.status,
           steps: state.steps.map((s) => {
             const absPath =
-              s.screenshot_after !== undefined ? path.join(recordingDir, s.screenshot_after) : undefined;
+              s.screenshot_after !== undefined
+                ? path.join(recordingDir, s.screenshot_after)
+                : undefined;
             return this.resolveStepUris(s, absPath, webview);
           }),
           name: state.name,
@@ -570,7 +616,9 @@ export class RecordingController {
     }
   }
 
-  private async sendRecordingsList(panel: RecordingsDashboardPanel | RecordingPanel): Promise<void> {
+  private async sendRecordingsList(
+    panel: RecordingsDashboardPanel | RecordingPanel
+  ): Promise<void> {
     const active = this.buildActiveSessionViews(panel);
     const projectRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (projectRoot === undefined) {
@@ -592,7 +640,9 @@ export class RecordingController {
         return;
       }
       const { entries } = (await res.json()) as { entries: RecordingsIndexEntry[] };
-      const finalized = entries.map((entry) => this.resolveEntryUris(entry, panel.webview, projectRoot));
+      const finalized = entries.map((entry) =>
+        this.resolveEntryUris(entry, panel.webview, projectRoot)
+      );
       panel.postMessage({ type: "recordings_list", entries: [...active, ...finalized] });
     } catch (err) {
       panel.postMessage({
@@ -695,7 +745,12 @@ export class RecordingController {
       return;
     }
     const recordingSafeName = session?.safeName ?? safeName;
-    const recordingDir = path.join(projectRootForSession, ".vindicate", "recordings", recordingSafeName);
+    const recordingDir = path.join(
+      projectRootForSession,
+      ".vindicate",
+      "recordings",
+      recordingSafeName
+    );
     const finalScreenshotUrl =
       session?.thumbnailPath !== undefined
         ? this.toWebviewFileUri(webview, session.thumbnailPath)
@@ -705,7 +760,9 @@ export class RecordingController {
       status: state.status === "finalized" ? "review" : state.status,
       steps: state.steps.map((step) => {
         const absPath =
-          step.screenshot_after !== undefined ? path.join(recordingDir, step.screenshot_after) : undefined;
+          step.screenshot_after !== undefined
+            ? path.join(recordingDir, step.screenshot_after)
+            : undefined;
         return this.resolveStepUris(step, absPath, webview);
       }),
       name: state.name || name,
@@ -1067,13 +1124,16 @@ export class RecordingController {
             return;
           }
           const session = this.sessionStore.getAll().find((s) => s.id === sessionId);
-          const res = await fetch(`http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/discard`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", ...this.internalHeaders() },
-            body: JSON.stringify({
-              ...(session?.started_by !== "agent" ? { close_session: true } : {})
-            })
-          });
+          const res = await fetch(
+            `http://127.0.0.1:${RUNTIME_PORT}/browser/sessions/${sessionId}/recording/discard`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json", ...this.internalHeaders() },
+              body: JSON.stringify({
+                ...(session?.started_by !== "agent" ? { close_session: true } : {})
+              })
+            }
+          );
           if (!res.ok) {
             let errorMsg = `Discard failed: ${res.status}`;
             try {
@@ -1117,7 +1177,9 @@ export class RecordingController {
             this.postDiscardFailed("", errorMsg);
             return;
           }
-          const stale = this.sessionStore.getAll().find((s) => recordingSlugKey(s.safeName) === recordingSlugKey(safeName));
+          const stale = this.sessionStore
+            .getAll()
+            .find((s) => recordingSlugKey(s.safeName) === recordingSlugKey(safeName));
           if (stale !== undefined) {
             this.sessionStore.remove(stale.id);
           }
@@ -1221,7 +1283,9 @@ export class RecordingController {
           screenshotPath !== undefined
             ? {
                 screenshotPath,
-                ...(event["final_snapshot"] !== undefined ? { finalSnapshot: event["final_snapshot"] } : {})
+                ...(event["final_snapshot"] !== undefined
+                  ? { finalSnapshot: event["final_snapshot"] }
+                  : {})
               }
             : event["final_snapshot"] !== undefined
               ? { finalSnapshot: event["final_snapshot"] }
@@ -1243,7 +1307,9 @@ export class RecordingController {
             ? toVindicateRelativePath(artifactPath, projectRoot)
             : artifactPath;
         const storePath =
-          projectRoot !== undefined ? resolveVindicatePath(projectRoot, artifactPath) : artifactPath;
+          projectRoot !== undefined
+            ? resolveVindicatePath(projectRoot, artifactPath)
+            : artifactPath;
         this.sessionStore.updateStatus(sessionId, "finalized", { artifactPath: storePath });
         this.postToRecordingWebviews(sessionId, { type: "recording_finalized", path: displayPath });
         break;

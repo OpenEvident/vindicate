@@ -39,10 +39,14 @@ export async function executeApiRequest(
   input: ApiRequestInput
 ): Promise<ApiRequestResult> {
   if (input.body !== undefined && input.body_type === undefined) {
-    throw new ValidationError("api_request: body_type is required when body is provided ('json' or 'form')");
+    throw new ValidationError(
+      "api_request: body_type is required when body is provided ('json' or 'form')"
+    );
   }
   if (input.body_type === "form" && !isPlainStringRecord(input.body)) {
-    throw new ValidationError("api_request: body_type 'form' requires body to be a flat object of string values");
+    throw new ValidationError(
+      "api_request: body_type 'form' requires body to be a flat object of string values"
+    );
   }
 
   const timeoutMs = Math.min(input.timeout_ms ?? DEFAULT_TIMEOUT_MS, MAX_TIMEOUT_MS);
@@ -53,7 +57,9 @@ export async function executeApiRequest(
       method: input.method,
       ...(input.headers !== undefined ? { headers: input.headers } : {}),
       ...(input.body !== undefined && input.body_type === "json" ? { data: input.body } : {}),
-      ...(input.body !== undefined && input.body_type === "form" ? { form: input.body as Record<string, string> } : {}),
+      ...(input.body !== undefined && input.body_type === "form"
+        ? { form: input.body as Record<string, string> }
+        : {}),
       ...(input.params !== undefined ? { params: input.params } : {}),
       timeout: timeoutMs
     });

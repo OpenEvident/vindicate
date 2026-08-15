@@ -43,7 +43,12 @@ export class SnapshotMemoryTable {
     return this.sessions.get(sessionId)?.cache.get(snapshotId);
   }
 
-  commit(sessionId: string, snapshotId: number, url: string, refMap: Record<string, RefSnapshotForDelta>): void {
+  commit(
+    sessionId: string,
+    snapshotId: number,
+    url: string,
+    refMap: Record<string, RefSnapshotForDelta>
+  ): void {
     let s = this.sessions.get(sessionId);
     if (s === undefined) {
       s = { nextSnapshotId: snapshotId, cache: new Map() };

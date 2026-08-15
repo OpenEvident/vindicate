@@ -19,7 +19,17 @@ function barClass(tone: KPICardProps["tone"]): string {
   return "bg-[var(--ord-emerald)]";
 }
 
-export function KPICard({ label, value, sub, unit, weight, tone = "green", delta, sparkline, tip }: KPICardProps) {
+export function KPICard({
+  label,
+  value,
+  sub,
+  unit,
+  weight,
+  tone = "green",
+  delta,
+  sparkline,
+  tip
+}: KPICardProps) {
   const numeric = typeof value === "number" ? Math.max(0, Math.min(value, 100)) : null;
   const deltaClass = delta?.startsWith("+") ? "up" : delta?.startsWith("-") ? "down" : "flat";
   const max = sparkline ? Math.max(...sparkline, 1) : 1;
@@ -45,12 +55,15 @@ export function KPICard({ label, value, sub, unit, weight, tone = "green", delta
         {unit && <span className="ml-1 text-sm text-[var(--vs-text-dim)]">{unit}</span>}
         {delta && (
           <span className={`kpi-delta ${deltaClass}`}>
-            {deltaClass === "up" ? "▲" : deltaClass === "down" ? "▼" : "—"} {delta.replace(/^[+-]/, "")}
+            {deltaClass === "up" ? "▲" : deltaClass === "down" ? "▼" : "—"}{" "}
+            {delta.replace(/^[+-]/, "")}
           </span>
         )}
       </div>
       {showProgressBar && (
-        <div className={`kpi-bar ${tone === "green" ? "green" : tone === "amber" ? "amber" : tone === "red" ? "red" : ""}`}>
+        <div
+          className={`kpi-bar ${tone === "green" ? "green" : tone === "amber" ? "amber" : tone === "red" ? "red" : ""}`}
+        >
           <span className={`block h-full ${barClass(tone)}`} style={{ width: `${numeric}%` }} />
         </div>
       )}

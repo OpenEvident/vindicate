@@ -84,11 +84,13 @@ describe("codegen invariants", () => {
 
   it("I6 — filesWritten matches files that exist on disk", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema()
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema()
+      })
+    );
     expect(new Set(result.filesWritten).size).toBe(result.filesWritten.length);
     for (const filePath of result.filesWritten) {
       await expect(fs.read(filePath)).resolves.toBeTypeOf("string");
@@ -118,18 +120,20 @@ describe("codegen invariants", () => {
   it("I8 — add_test_cases writes only the spec file", async () => {
     const { fs } = await createProjectRoot();
     await runGenerator(fs, { mode: "create", feature: "login", schema: fullSchema() });
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "add_test_cases",
-      feature: "login",
-      cases: [
-        {
-          ac_id: "AC-9",
-          scenario: "Extra",
-          title: "[AC-9] should do more",
-          body: [{ fixture: "loginPage", call: "step_navigate" }]
-        }
-      ]
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "add_test_cases",
+        feature: "login",
+        cases: [
+          {
+            ac_id: "AC-9",
+            scenario: "Extra",
+            title: "[AC-9] should do more",
+            body: [{ fixture: "loginPage", call: "step_navigate" }]
+          }
+        ]
+      })
+    );
     expect(result.filesWritten).toEqual(["tests/login.spec.ts"]);
   });
 

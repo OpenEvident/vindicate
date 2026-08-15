@@ -22,9 +22,7 @@ export async function* parseSseStream(
       const parts = buffer.split("\n\n");
       buffer = parts.pop() ?? "";
       for (const part of parts) {
-        const line = part
-          .split("\n")
-          .find((l) => l.startsWith("data: "));
+        const line = part.split("\n").find((l) => l.startsWith("data: "));
         if (line === undefined) {
           continue;
         }
@@ -37,9 +35,7 @@ export async function* parseSseStream(
       }
     }
     if (buffer.trim().length > 0) {
-      const line = buffer
-        .split("\n")
-        .find((l) => l.startsWith("data: "));
+      const line = buffer.split("\n").find((l) => l.startsWith("data: "));
       if (line !== undefined) {
         try {
           yield JSON.parse(line.slice(6)) as Record<string, unknown>;

@@ -37,9 +37,9 @@ describe("ContentService", () => {
     expect(map.graphId).toBe("main");
     expect(map.mermaid).toContain("flowchart");
     expect(map.entryRouting.some((r) => r.path === "write" && r.node === "understand")).toBe(true);
-    expect(map.entryRouting.some((r) => r.path === "requirements" && r.node === "requirements")).toBe(
-      true
-    );
+    expect(
+      map.entryRouting.some((r) => r.path === "requirements" && r.node === "requirements")
+    ).toBe(true);
     expect(map.pickEntry).toContain("write");
     expect(map.pickEntry).toContain("requirements");
   });

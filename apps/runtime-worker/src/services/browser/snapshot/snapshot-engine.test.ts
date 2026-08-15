@@ -12,7 +12,9 @@ import { SnapshotEngine } from "./snapshot-engine.js";
 function fakeLocatorFor(ariaSnapshotResult: string | Error, elementHandleResult: unknown): unknown {
   return {
     ariaSnapshot: (): Promise<string> =>
-      ariaSnapshotResult instanceof Error ? Promise.reject(ariaSnapshotResult) : Promise.resolve(ariaSnapshotResult),
+      ariaSnapshotResult instanceof Error
+        ? Promise.reject(ariaSnapshotResult)
+        : Promise.resolve(ariaSnapshotResult),
     elementHandle: (): Promise<unknown> => Promise.resolve(elementHandleResult)
   };
 }
@@ -36,7 +38,11 @@ function makeEvaluateRunner(): Page["evaluate"] {
   };
 }
 
-function makePage(currentUrl: { value: string }, evaluate: Page["evaluate"], otherTabUrls: string[] = []): Page {
+function makePage(
+  currentUrl: { value: string },
+  evaluate: Page["evaluate"],
+  otherTabUrls: string[] = []
+): Page {
   const page = {
     url: () => currentUrl.value,
     title: () => Promise.resolve("Example"),
@@ -57,7 +63,9 @@ describe("SnapshotEngine", () => {
     const url = { value: "https://example.com/" };
     const memory = new SnapshotMemoryTable(8);
     const engine = new SnapshotEngine(memory, cfg, () => {});
-    const first = await engine.takeSnapshot("sess-2", makePage(url, makeEvaluateRunner()), { mode: "interactive" });
+    const first = await engine.takeSnapshot("sess-2", makePage(url, makeEvaluateRunner()), {
+      mode: "interactive"
+    });
 
     document.body.innerHTML = `<button data-testid="go">Go</button><input data-testid="extra" />`;
     const second = await engine.takeSnapshot("sess-2", makePage(url, makeEvaluateRunner()), {
@@ -77,19 +85,27 @@ describe("SnapshotEngine", () => {
     const url = { value: "https://example.com/checkout" };
     const memory = new SnapshotMemoryTable(8);
     const engine = new SnapshotEngine(memory, cfg, () => {});
-    const first = await engine.takeSnapshot("sess-supersedes", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive"
-    });
+    const first = await engine.takeSnapshot(
+      "sess-supersedes",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive"
+      }
+    );
     const oldRef = first.elements?.find((e) => e.testid === "card-number-old")?.ref;
     expect(oldRef).toBeDefined();
 
     document.body.innerHTML =
       `<input data-testid="card-number-old" aria-label="Card number">` +
       `<input data-testid="card-number-new" aria-label="Card number">`;
-    const second = await engine.takeSnapshot("sess-supersedes", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive",
-      delta: { since_snapshot_id: first.snapshot_id }
-    });
+    const second = await engine.takeSnapshot(
+      "sess-supersedes",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive",
+        delta: { since_snapshot_id: first.snapshot_id }
+      }
+    );
 
     const newEl = second.elements?.find((e) => e.testid === "card-number-new");
     const oldElStill = second.elements?.find((e) => e.testid === "card-number-old");
@@ -105,9 +121,13 @@ describe("SnapshotEngine", () => {
     const url = { value: "https://example.com/checkout" };
     const memory = new SnapshotMemoryTable(8);
     const engine = new SnapshotEngine(memory, cfg, () => {});
-    const first = await engine.takeSnapshot("sess-supersedes-first", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive"
-    });
+    const first = await engine.takeSnapshot(
+      "sess-supersedes-first",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive"
+      }
+    );
 
     expect(first.elements?.every((e) => e.supersedes_ref === undefined)).toBe(true);
   });
@@ -117,7 +137,9 @@ describe("SnapshotEngine", () => {
     const url = { value: "https://example.com/page-a" };
     const memory = new SnapshotMemoryTable(8);
     const engine = new SnapshotEngine(memory, cfg, () => {});
-    const first = await engine.takeSnapshot("sess-3", makePage(url, makeEvaluateRunner()), { mode: "interactive" });
+    const first = await engine.takeSnapshot("sess-3", makePage(url, makeEvaluateRunner()), {
+      mode: "interactive"
+    });
 
     url.value = "https://example.com/page-b";
     const second = await engine.takeSnapshot("sess-3", makePage(url, makeEvaluateRunner()), {
@@ -137,7 +159,9 @@ describe("SnapshotEngine", () => {
     `;
     const url = { value: "https://example.com/" };
     const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
-    const result = await engine.takeSnapshot("sess-4", makePage(url, makeEvaluateRunner()), { mode: "interactive" });
+    const result = await engine.takeSnapshot("sess-4", makePage(url, makeEvaluateRunner()), {
+      mode: "interactive"
+    });
     const btn = result.elements?.find((e) => e.testid === "busy-btn");
     expect(btn?.aria_busy).toBe(true);
     expect(btn?.aria_expanded).toBe(false);
@@ -197,7 +221,9 @@ describe("SnapshotEngine", () => {
     // name, so we must never emit getByRole('alert', { name: 'Invalid credentials' }).
     const alert = result.elements.find((e) => e.role === "alert");
     expect(alert).toBeDefined();
-    expect(alert?.locator?.strategy === "role_name" && alert?.locator?.name !== undefined).toBe(false);
+    expect(alert?.locator?.strategy === "role_name" && alert?.locator?.name !== undefined).toBe(
+      false
+    );
 
     // Control: a button's text IS its accessible name, so role_name keeps the name.
     const button = result.elements.find((e) => e.role === "button");
@@ -240,7 +266,10 @@ describe("SnapshotEngine", () => {
   it("collapses near-duplicate siblings once there are genuinely many of them", async () => {
     // 15 identical, identically-labelled rows — a real data-list flood (search results, a table body),
     // well past SIBLING_COLLAPSE_THRESHOLD (12).
-    const rows = Array.from({ length: 15 }, (_, i) => `<button data-testid="row-${i}">Item</button>`).join("");
+    const rows = Array.from(
+      { length: 15 },
+      (_, i) => `<button data-testid="row-${i}">Item</button>`
+    ).join("");
     document.body.innerHTML = `<div id="list">${rows}</div>`;
     const url = { value: "https://example.com/" };
     const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
@@ -250,7 +279,7 @@ describe("SnapshotEngine", () => {
     });
     expect(result.collapsed_count).toBeGreaterThan(0);
     expect(result.elements?.some((e) => (e.collapsed_siblings ?? 0) > 0)).toBe(true);
-    expect((result.elements?.length ?? 0)).toBeLessThan(15);
+    expect(result.elements?.length ?? 0).toBeLessThan(15);
   });
 
   it("does not collapse a small, permanent set of distinctly-labelled controls (a nav menu, a tab bar)", async () => {
@@ -259,7 +288,10 @@ describe("SnapshotEngine", () => {
     // collapsing 15 identically-labelled data rows above.
     const labels = ["Dashboard", "Events", "Members", "Memberships", "Messaging", "Settings"];
     const items = labels
-      .map((label) => `<div class="menu-item" tabindex="0"><i class="icon"></i><span>${label}</span></div>`)
+      .map(
+        (label) =>
+          `<div class="menu-item" tabindex="0"><i class="icon"></i><span>${label}</span></div>`
+      )
       .join("");
     document.body.innerHTML = `<div class="side-menu">${items}</div>`;
     const url = { value: "https://example.com/" };
@@ -279,16 +311,39 @@ describe("SnapshotEngine", () => {
     // comfortably over a flat count threshold — none of them carry the project's test-id attribute,
     // which is the signal that lets an uninstrumented, large-but-static menu survive uncollapsed.
     const labels = [
-      "Dashboard", "Events", "Members", "Memberships", "Coupons", "Newsletter", "Messaging", "Menu",
-      "Inventory", "Store", "Groups", "Purchases & Refunds", "Reports", "Staff", "Surveys", "Ads",
-      "Rules & Terms", "Alerts", "Settings"
+      "Dashboard",
+      "Events",
+      "Members",
+      "Memberships",
+      "Coupons",
+      "Newsletter",
+      "Messaging",
+      "Menu",
+      "Inventory",
+      "Store",
+      "Groups",
+      "Purchases & Refunds",
+      "Reports",
+      "Staff",
+      "Surveys",
+      "Ads",
+      "Rules & Terms",
+      "Alerts",
+      "Settings"
     ];
     const items = labels
-      .map((label) => `<div class="menu-item" tabindex="0"><i class="icon"></i><span>${label}</span></div>`)
+      .map(
+        (label) =>
+          `<div class="menu-item" tabindex="0"><i class="icon"></i><span>${label}</span></div>`
+      )
       .join("");
     document.body.innerHTML = `<div class="side-menu">${items}</div>`;
     const url = { value: "https://example.com/" };
-    const engine = new SnapshotEngine(new SnapshotMemoryTable(8), { ...cfg, VINDICATE_SNAPSHOT_MAX_NODES: 100 }, () => {});
+    const engine = new SnapshotEngine(
+      new SnapshotMemoryTable(8),
+      { ...cfg, VINDICATE_SNAPSHOT_MAX_NODES: 100 },
+      () => {}
+    );
     const result = await engine.takeSnapshot("sess-6c", makePage(url, makeEvaluateRunner()), {
       mode: "interactive",
       collapse: true
@@ -303,23 +358,37 @@ describe("SnapshotEngine", () => {
     // Same shape and count as the sidebar above, but each row carries the project's test-id attribute —
     // a deliberate developer signal of real, repeated data (e.g. 19 search results), so this one should
     // still collapse well before the uninstrumented case would.
-    const rows = Array.from({ length: 19 }, (_, i) => `<button data-testid="row-${i}">Item</button>`).join("");
+    const rows = Array.from(
+      { length: 19 },
+      (_, i) => `<button data-testid="row-${i}">Item</button>`
+    ).join("");
     document.body.innerHTML = `<div id="list">${rows}</div>`;
     const url = { value: "https://example.com/" };
-    const engine = new SnapshotEngine(new SnapshotMemoryTable(8), { ...cfg, VINDICATE_SNAPSHOT_MAX_NODES: 100 }, () => {});
+    const engine = new SnapshotEngine(
+      new SnapshotMemoryTable(8),
+      { ...cfg, VINDICATE_SNAPSHOT_MAX_NODES: 100 },
+      () => {}
+    );
     const result = await engine.takeSnapshot("sess-6d", makePage(url, makeEvaluateRunner()), {
       mode: "interactive",
       collapse: true
     });
     expect(result.collapsed_count).toBeGreaterThan(0);
-    expect((result.elements?.length ?? 0)).toBeLessThan(19);
+    expect(result.elements?.length ?? 0).toBeLessThan(19);
   });
 
   it("truncates when max_nodes cap is exceeded", async () => {
-    const buttons = Array.from({ length: 12 }, (_, i) => `<button data-testid="b-${i}">B${i}</button>`).join("");
+    const buttons = Array.from(
+      { length: 12 },
+      (_, i) => `<button data-testid="b-${i}">B${i}</button>`
+    ).join("");
     document.body.innerHTML = `<div>${buttons}</div>`;
     const url = { value: "https://example.com/" };
-    const engine = new SnapshotEngine(new SnapshotMemoryTable(8), { ...cfg, VINDICATE_SNAPSHOT_MAX_NODES: 5 }, () => {});
+    const engine = new SnapshotEngine(
+      new SnapshotMemoryTable(8),
+      { ...cfg, VINDICATE_SNAPSHOT_MAX_NODES: 5 },
+      () => {}
+    );
     const result = await engine.takeSnapshot("sess-7", makePage(url, makeEvaluateRunner()), {
       mode: "interactive",
       collapse: false
@@ -381,23 +450,39 @@ describe("SnapshotEngine", () => {
     // it entirely. Stub it the same way the existing overlay tests in this file already do.
     const dialog = document.querySelector('[role="dialog"]')!;
     dialog.getBoundingClientRect = () => ({
-      width: 320, height: 480, top: 10, left: 10, right: 330, bottom: 490, x: 10, y: 10, toJSON: () => ({})
+      width: 320,
+      height: 480,
+      top: 10,
+      left: 10,
+      right: 330,
+      bottom: 490,
+      x: 10,
+      y: 10,
+      toJSON: () => ({})
     });
     const url = { value: "https://example.com/" };
     const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
 
-    const full = await engine.takeSnapshot("sess-overlay-scope", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive"
-    });
+    const full = await engine.takeSnapshot(
+      "sess-overlay-scope",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive"
+      }
+    );
     // Folded: the 12 buttons collapse to one dialog summary row, not 12 individual rows.
     expect(full.elements?.some((e) => e.name === "Confirm")).toBe(false);
     const dialogRef = full.elements?.find((e) => e.role === "dialog")?.ref;
     expect(dialogRef).toBeDefined();
 
-    const scoped = await engine.takeSnapshot("sess-overlay-scope", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive",
-      scope: { ref: dialogRef! }
-    });
+    const scoped = await engine.takeSnapshot(
+      "sess-overlay-scope",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive",
+        scope: { ref: dialogRef! }
+      }
+    );
 
     expect(scoped.elements?.some((e) => e.name === "Confirm")).toBe(true);
     expect(scoped.elements?.some((e) => e.testid === "sibling-of-dialog")).toBe(false);
@@ -426,7 +511,9 @@ describe("SnapshotEngine", () => {
       collapse: false
     });
 
-    expect(engine.getDescriptor("sess-merge", outsideRef!)?.snapshotUrl).toBe("https://example.com/");
+    expect(engine.getDescriptor("sess-merge", outsideRef!)?.snapshotUrl).toBe(
+      "https://example.com/"
+    );
   });
 
   it("gives colliding row controls distinct refs scoped to their named rows", async () => {
@@ -502,7 +589,15 @@ describe("SnapshotEngine", () => {
     `;
     const dialog = document.querySelector('[role="dialog"]')!;
     dialog.getBoundingClientRect = () => ({
-      width: 300, height: 300, top: 0, left: 0, right: 300, bottom: 300, x: 0, y: 0, toJSON: () => ({})
+      width: 300,
+      height: 300,
+      top: 0,
+      left: 0,
+      right: 300,
+      bottom: 300,
+      x: 0,
+      y: 0,
+      toJSON: () => ({})
     });
 
     const url = { value: "https://booking.com/" };
@@ -536,15 +631,27 @@ describe("SnapshotEngine", () => {
     `;
     const dialog = document.querySelector('[role="dialog"]')!;
     dialog.getBoundingClientRect = () => ({
-      width: 300, height: 300, top: 0, left: 0, right: 300, bottom: 300, x: 0, y: 0, toJSON: () => ({})
+      width: 300,
+      height: 300,
+      top: 0,
+      left: 0,
+      right: 300,
+      bottom: 300,
+      x: 0,
+      y: 0,
+      toJSON: () => ({})
     });
 
     const url = { value: "https://demo.kustom.co/" };
     const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
-    const full = await engine.takeSnapshot("sess-overlay-scope", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive",
-      collapse: false
-    });
+    const full = await engine.takeSnapshot(
+      "sess-overlay-scope",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive",
+        collapse: false
+      }
+    );
 
     expect(full.overlay_active).toBeDefined();
     const overlayRef = full.overlay_active?.ref;
@@ -553,10 +660,14 @@ describe("SnapshotEngine", () => {
     expect(full.elements?.some((e) => e.ref === overlayRef && e.role === "dialog")).toBe(true);
 
     // The follow-up scoped read the banner tells the agent to make — must not throw.
-    const scoped = await engine.takeSnapshot("sess-overlay-scope", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive",
-      scope: { ref: overlayRef! }
-    });
+    const scoped = await engine.takeSnapshot(
+      "sess-overlay-scope",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive",
+        scope: { ref: overlayRef! }
+      }
+    );
     expect(scoped.elements?.some((e) => e.testid === "close")).toBe(true);
     expect(scoped.elements?.some((e) => e.testid === "checkout")).toBe(true);
   });
@@ -570,16 +681,28 @@ describe("SnapshotEngine", () => {
     `;
     const dialog = document.querySelector('[role="dialog"]')!;
     dialog.getBoundingClientRect = () => ({
-      width: 320, height: 240, top: 10, left: 10, right: 330, bottom: 250, x: 10, y: 10, toJSON: () => ({})
+      width: 320,
+      height: 240,
+      top: 10,
+      left: 10,
+      right: 330,
+      bottom: 250,
+      x: 10,
+      y: 10,
+      toJSON: () => ({})
     });
 
     const url = { value: "https://example.com/" };
     const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
-    const result = await engine.takeSnapshot("sess-scope-overlay", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive",
-      scope: { css: "#main" },
-      collapse: false
-    });
+    const result = await engine.takeSnapshot(
+      "sess-scope-overlay",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive",
+        scope: { css: "#main" },
+        collapse: false
+      }
+    );
 
     expect(result.elements?.some((e) => e.testid === "in-main")).toBe(true);
     expect(result.elements?.some((e) => e.name === "Dismiss")).toBe(false);
@@ -600,16 +723,28 @@ describe("SnapshotEngine", () => {
     const dialogs = Array.from(document.querySelectorAll('[role="dialog"]'));
     for (const d of dialogs) {
       d.getBoundingClientRect = () => ({
-        width: 300, height: 220, top: 0, left: 0, right: 300, bottom: 220, x: 0, y: 0, toJSON: () => ({})
+        width: 300,
+        height: 220,
+        top: 0,
+        left: 0,
+        right: 300,
+        bottom: 220,
+        x: 0,
+        y: 0,
+        toJSON: () => ({})
       });
     }
 
     const url = { value: "https://example.com/" };
     const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
-    const result = await engine.takeSnapshot("sess-z-overlay", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive",
-      collapse: false
-    });
+    const result = await engine.takeSnapshot(
+      "sess-z-overlay",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive",
+        collapse: false
+      }
+    );
 
     expect(result.overlay_active).toBeDefined();
     expect(result.overlay_active?.name).toBe("Foreground dialog");
@@ -623,15 +758,27 @@ describe("SnapshotEngine", () => {
     `;
     const alertDialog = document.querySelector('[role="alertdialog"]')!;
     alertDialog.getBoundingClientRect = () => ({
-      width: 280, height: 180, top: 20, left: 20, right: 300, bottom: 200, x: 20, y: 20, toJSON: () => ({})
+      width: 280,
+      height: 180,
+      top: 20,
+      left: 20,
+      right: 300,
+      bottom: 200,
+      x: 20,
+      y: 20,
+      toJSON: () => ({})
     });
 
     const url = { value: "https://example.com/" };
     const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
-    const result = await engine.takeSnapshot("sess-alertdialog", makePage(url, makeEvaluateRunner()), {
-      mode: "interactive",
-      collapse: false
-    });
+    const result = await engine.takeSnapshot(
+      "sess-alertdialog",
+      makePage(url, makeEvaluateRunner()),
+      {
+        mode: "interactive",
+        collapse: false
+      }
+    );
 
     expect(result.overlay_active).toBeDefined();
     expect(result.overlay_active?.role).toBe("alertdialog");
@@ -687,7 +834,10 @@ describe("SnapshotEngine", () => {
         makePage(url, makeEvaluateRunner(), ["https://login.klarna.com/oauth2/auth?x=1"]),
         { mode: "interactive" }
       );
-      expect(result.other_tabs).toEqual({ count: 1, urls: ["https://login.klarna.com/oauth2/auth?x=1"] });
+      expect(result.other_tabs).toEqual({
+        count: 1,
+        urls: ["https://login.klarna.com/oauth2/auth?x=1"]
+      });
     });
 
     it("caps the listed URLs but keeps the true count", async () => {
@@ -695,9 +845,13 @@ describe("SnapshotEngine", () => {
       const url = { value: "https://example.com/" };
       const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
       const manyTabs = Array.from({ length: 8 }, (_, i) => `https://example.com/tab-${i}`);
-      const result = await engine.takeSnapshot("sess-tabs-3", makePage(url, makeEvaluateRunner(), manyTabs), {
-        mode: "interactive"
-      });
+      const result = await engine.takeSnapshot(
+        "sess-tabs-3",
+        makePage(url, makeEvaluateRunner(), manyTabs),
+        {
+          mode: "interactive"
+        }
+      );
       expect(result.other_tabs?.count).toBe(8);
       expect(result.other_tabs?.urls.length).toBeLessThan(8);
     });
@@ -731,7 +885,8 @@ describe("SnapshotEngine", () => {
       attr: "data-testid",
       value: "klarna-checkout-iframe"
     };
-    const DIALOG_ARIA_SNAPSHOT = '- iframe [ref=e2]:\n  - dialog "Choose package locker" [ref=f1]:\n    - button "Confirm"\n';
+    const DIALOG_ARIA_SNAPSHOT =
+      '- iframe [ref=e2]:\n  - dialog "Choose package locker" [ref=f1]:\n    - button "Confirm"\n';
     const CANNED_DIALOG_RESULT = {
       elements: [
         {
@@ -740,7 +895,12 @@ describe("SnapshotEngine", () => {
           role: "dialog",
           name: "Choose package locker",
           in_viewport: true,
-          locator: { strategy: "role_name", confidence: "high", role: "dialog", name: "Choose package locker" }
+          locator: {
+            strategy: "role_name",
+            confidence: "high",
+            role: "dialog",
+            name: "Choose package locker"
+          }
         }
       ],
       truncated: false,
@@ -759,7 +919,8 @@ describe("SnapshotEngine", () => {
       const topLocator = vi.fn((selector: string) => {
         if (selector === "body") return fakeLocatorFor(DIALOG_ARIA_SNAPSHOT, null);
         if (selector === "aria-ref=e2") return fakeLocatorFor("", iframeHandle);
-        if (selector === 'xpath=//*[@data-testid="klarna-checkout-iframe"]') return fakeLocatorFor("", iframeHandle);
+        if (selector === 'xpath=//*[@data-testid="klarna-checkout-iframe"]')
+          return fakeLocatorFor("", iframeHandle);
         throw new Error(`unexpected top selector ${selector}`);
       });
 
@@ -791,7 +952,10 @@ describe("SnapshotEngine", () => {
         url: () => "https://checkout.test/klarna-frame",
         waitForURL: vi.fn().mockResolvedValue(undefined)
       };
-      const iframeHandle = { evaluate: vi.fn().mockResolvedValue(HOST_LOCATOR), contentFrame: vi.fn().mockResolvedValue(childFrame) };
+      const iframeHandle = {
+        evaluate: vi.fn().mockResolvedValue(HOST_LOCATOR),
+        contentFrame: vi.fn().mockResolvedValue(childFrame)
+      };
       const page = setupPage(iframeHandle);
 
       const engine = new SnapshotEngine(new SnapshotMemoryTable(8), cfg, () => {});
@@ -854,7 +1018,10 @@ describe("SnapshotEngine", () => {
       expect(dialogRef).toBeDefined();
 
       await expect(
-        engine.takeSnapshot("sess-iframe-gone", page, { mode: "interactive", scope: { ref: dialogRef! } })
+        engine.takeSnapshot("sess-iframe-gone", page, {
+          mode: "interactive",
+          scope: { ref: dialogRef! }
+        })
       ).rejects.toThrow(/could no longer be located/);
     });
   });

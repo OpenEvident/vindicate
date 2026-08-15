@@ -18,10 +18,18 @@ export function renderTestRunLive(root: HTMLElement, data: Record<string, unknow
   const header = document.createElement("div");
   header.className = "panel-header";
   const outcome = data.outcome as string | undefined;
-  const phaseLabel =
-    running ? "Running" : outcome === "error" ? "Error" : outcome === "fail" ? "Failed" : "Complete";
-  const phaseClass =
-    running ? " panel-phase-running" : outcome === "fail" || outcome === "error" ? " panel-phase-fail" : "";
+  const phaseLabel = running
+    ? "Running"
+    : outcome === "error"
+      ? "Error"
+      : outcome === "fail"
+        ? "Failed"
+        : "Complete";
+  const phaseClass = running
+    ? " panel-phase-running"
+    : outcome === "fail" || outcome === "error"
+      ? " panel-phase-fail"
+      : "";
   header.innerHTML = `
     <div class="panel-logo">V</div>
     <span class="panel-title">Vindicate</span>
@@ -80,7 +88,13 @@ export function renderTestRunLive(root: HTMLElement, data: Record<string, unknow
       const statusClass =
         t.status === "passed" ? "badge-pass" : t.status === "failed" ? "badge-fail" : "badge-skip";
       const statusLabel =
-        t.status === "passed" ? "Pass" : t.status === "failed" ? "Fail" : running ? "Running…" : "Skip";
+        t.status === "passed"
+          ? "Pass"
+          : t.status === "failed"
+            ? "Fail"
+            : running
+              ? "Running…"
+              : "Skip";
       const title = document.createElement("div");
       title.className = "test-result-title";
       title.innerHTML = `<span>${escapeHtml(t.title)}</span><span class="badge ${statusClass}">${statusLabel}</span>`;

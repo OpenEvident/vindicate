@@ -8,15 +8,15 @@
 Vindicate is an AI-agent-driven Playwright test automation toolkit. It has three runtime
 components, all running **locally on the developer's machine** — no cloud service involved:
 
-| Component | What it is | Lives in |
-|---|---|---|
-| **Vindicate VS Code Extension** | The UI, onboarding, and process supervisor. Works in VS Code and Cursor (both are VS Code forks). | `apps/vscode-extension` |
-| **runtime-worker** | A local HTTP daemon that drives a real Chromium browser via Playwright — sessions, actions, snapshots, recordings. | `apps/runtime-worker` |
-| **runtime-mcp** | A local MCP (Model Context Protocol) server. This is what the AI agent (Cursor, Claude Code, GitHub Copilot, etc.) actually talks to as "Vindicate's tools." | `apps/runtime-mcp` |
+| Component                       | What it is                                                                                                                                                   | Lives in                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
+| **Vindicate VS Code Extension** | The UI, onboarding, and process supervisor. Works in VS Code and Cursor (both are VS Code forks).                                                            | `apps/vscode-extension` |
+| **runtime-worker**              | A local HTTP daemon that drives a real Chromium browser via Playwright — sessions, actions, snapshots, recordings.                                           | `apps/runtime-worker`   |
+| **runtime-mcp**                 | A local MCP (Model Context Protocol) server. This is what the AI agent (Cursor, Claude Code, GitHub Copilot, etc.) actually talks to as "Vindicate's tools." | `apps/runtime-mcp`      |
 
 The extension does not do test automation itself — it **spawns and supervises** the other two local
 processes, and writes the config files that tell an agent's IDE how to reach `runtime-mcp`. The
-actual automation work happens in `runtime-worker` (browser control) and is *orchestrated* by
+actual automation work happens in `runtime-worker` (browser control) and is _orchestrated_ by
 `runtime-mcp` (the tool surface + workflow guidance the agent calls).
 
 ## 2. System overview
@@ -50,8 +50,8 @@ flowchart TB
 
 **Key structural fact:** `runtime-worker` and `runtime-mcp` are **machine-wide singletons**, not
 one-per-editor-window. If you have Cursor and VS Code open on two different projects at once, both
-editors' extension instances share the *same* `runtime-worker` (port 9121) and the *same*
-`runtime-mcp` (port 9223) process. Isolation between projects happens at the *session/request*
+editors' extension instances share the _same_ `runtime-worker` (port 9121) and the _same_
+`runtime-mcp` (port 9223) process. Isolation between projects happens at the _session/request_
 level, not the process level (see §5 and §6).
 
 ## 3. Component responsibilities
@@ -70,6 +70,7 @@ level, not the process level (see §5 and §6).
   shared worker/MCP processes and the shared key file rather than owning their own.
 
 Activation sequence (`extension.ts` → `boot.ts`):
+
 1. Construct services (config writers, file watcher, health ping, etc.).
 2. Resolve the open workspace folder.
 3. `RuntimeLifecycle.start(folderPath)` — unconditionally spawns/attaches to `runtime-worker`, then
@@ -167,6 +168,7 @@ keys) — so every editor, on every profile, on every app, reads the same key an
 to whatever worker is already running.
 
 **Consequences of the shared-singleton model:**
+
 - Opening multiple projects at once, in multiple editors/apps at once, or closing and reopening an
   editor later — all just attach to the already-running worker/MCP rather than erroring or spawning
   duplicates.
@@ -201,11 +203,11 @@ Because `runtime-worker` and `runtime-mcp` are shared singletons, correctness de
   `x-vindicate-project-root` header is a secondary channel some MCP clients don't forward).
 - `runtime-mcp` builds a **fresh `McpServer` + `ProjectFs` instance per client session**, bound to
   that session's `project_root`. All file reads/writes/codegen/tests for that session are scoped to
-  that folder — never to whichever project a *different* window happens to be using.
+  that folder — never to whichever project a _different_ window happens to be using.
 - Browser sessions created through `browser_session` carry `project_root` in the create-session
   payload; `runtime-worker` stores it on the session record and every later file/recording
   operation for that session reads it back from there — not from any worker-level setting.
-- The one config value that *isn't* per-session, `VINDICATE_PROJECT_ROOT`, only affects a legacy
+- The one config value that _isn't_ per-session, `VINDICATE_PROJECT_ROOT`, only affects a legacy
   fallback path used by clients with no workspace concept (Claude Desktop, prior to its removal
   from the onboarding flow); real IDE clients always supply an explicit `project_root`.
 
@@ -217,16 +219,16 @@ connection-level property the extension wires into the MCP URL when it writes th
 Written on demand as the user pairs an agent in onboarding (`vindicate.confirmTools`) or via the
 Config tab. All are additive/idempotent — re-running does not clobber existing entries.
 
-| Tool | File | Format |
-|---|---|---|
-| Cursor | `.cursor/mcp.json` | `{ mcpServers: { Vindicate: { url, headers } } }` |
-| Cursor | `.cursor/rules/vindicate.mdc` | Cursor project rule |
-| Cursor | `.cursor/skills/<skill>/SKILL.md` | Agent skill |
-| VS Code / GitHub Copilot | `.vscode/mcp.json` | `{ servers: { Vindicate: { type: "http", url, headers } } }` |
-| VS Code / GitHub Copilot | `.github/copilot-instructions.md` | Marker-delimited Vindicate block |
-| Claude Code | `.mcp.json` | `{ mcpServers: { Vindicate: { type: "http", url, headers } } }` |
-| Claude Code | `CLAUDE.md` | Vindicate project instructions |
-| Claude Code | `.claude/skills/<skill>/SKILL.md` | Agent skill |
+| Tool                     | File                              | Format                                                          |
+| ------------------------ | --------------------------------- | --------------------------------------------------------------- |
+| Cursor                   | `.cursor/mcp.json`                | `{ mcpServers: { Vindicate: { url, headers } } }`               |
+| Cursor                   | `.cursor/rules/vindicate.mdc`     | Cursor project rule                                             |
+| Cursor                   | `.cursor/skills/<skill>/SKILL.md` | Agent skill                                                     |
+| VS Code / GitHub Copilot | `.vscode/mcp.json`                | `{ servers: { Vindicate: { type: "http", url, headers } } }`    |
+| VS Code / GitHub Copilot | `.github/copilot-instructions.md` | Marker-delimited Vindicate block                                |
+| Claude Code              | `.mcp.json`                       | `{ mcpServers: { Vindicate: { type: "http", url, headers } } }` |
+| Claude Code              | `CLAUDE.md`                       | Vindicate project instructions                                  |
+| Claude Code              | `.claude/skills/<skill>/SKILL.md` | Agent skill                                                     |
 
 `url` is always `http://127.0.0.1:9223/mcp?project_root=<workspace folder>`; `headers` carries
 `x-vindicate-project-root` as a fallback channel.
@@ -254,6 +256,7 @@ via the `vindicate_workflow` tool to get phase-specific guidance instead of one 
   ```
 
   A separate `setup` graph covers first-time project bootstrap and CI wiring.
+
 - **Nodes** (`content/nodes/*.md`) are the actual guidance markdown the agent reads at each phase,
   with YAML frontmatter declaring the node's graph, valid modes, and which **refs** to append.
 - **Refs** (`content/refs/*.md`) are shared reference material (conformance contract, page-object
@@ -266,23 +269,23 @@ via the `vindicate_workflow` tool to get phase-specific guidance instead of one 
 
 Registered in `mcp-server.ts` (`apps/runtime-mcp/src/mcp/tools/`):
 
-| Category | Tools |
-|---|---|
-| Workflow | `vindicate_workflow`, `vindicate_validate_story`, `vindicate_ask_user`, `vindicate_design`, `vindicate_show_panel` |
-| Codegen / project | `vindicate_generate_code` (UI + API modes), `scaffold_project`, `run_tests` |
-| Browser | `browser_session`, `browser_navigate`, `browser_read`, `browser_act`, `browser_assert`, `browser_diagnose` (optional, flag-gated) |
-| API | `api_request` — stateless single-request fallback/gap-filler, mirrors `browser_diagnose`'s role for UI |
-| Recording | `browser_record_start`, `browser_record_finalize`, `browser_record_discard`, `browser_record_list`, `browser_record_read`, `browser_record_annotate`, `browser_record_get` |
+| Category          | Tools                                                                                                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Workflow          | `vindicate_workflow`, `vindicate_validate_story`, `vindicate_ask_user`, `vindicate_design`, `vindicate_show_panel`                                                         |
+| Codegen / project | `vindicate_generate_code` (UI + API modes), `scaffold_project`, `run_tests`                                                                                                |
+| Browser           | `browser_session`, `browser_navigate`, `browser_read`, `browser_act`, `browser_assert`, `browser_diagnose` (optional, flag-gated)                                          |
+| API               | `api_request` — stateless single-request fallback/gap-filler, mirrors `browser_diagnose`'s role for UI                                                                     |
+| Recording         | `browser_record_start`, `browser_record_finalize`, `browser_record_discard`, `browser_record_list`, `browser_record_read`, `browser_record_annotate`, `browser_record_get` |
 
 `browser_diagnose` is gated by `VINDICATE_VISUAL_DIAGNOSIS` (default on) — a kill switch, not a
 per-user setting.
 
 ## 10. Ports and protocols
 
-| Component | Port | Protocol | Auth |
-|---|---|---|---|
-| `runtime-worker` | `9121` | HTTP + SSE (Fastify) | `x-vindicate-internal-key` header |
-| `runtime-mcp` | `9223` | HTTP (MCP Streamable HTTP transport) at `/mcp`; plain HTTP elsewhere | none on `/mcp`; internal key for its own calls out to the worker |
+| Component        | Port   | Protocol                                                             | Auth                                                             |
+| ---------------- | ------ | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `runtime-worker` | `9121` | HTTP + SSE (Fastify)                                                 | `x-vindicate-internal-key` header                                |
+| `runtime-mcp`    | `9223` | HTTP (MCP Streamable HTTP transport) at `/mcp`; plain HTTP elsewhere | none on `/mcp`; internal key for its own calls out to the worker |
 
 All local ports are bound to `127.0.0.1` only — never exposed on the network. There is no cloud
 component in this system at all.

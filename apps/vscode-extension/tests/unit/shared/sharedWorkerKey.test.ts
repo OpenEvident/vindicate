@@ -24,7 +24,8 @@ describe("getOrCreateSharedWorkerKey", () => {
   });
 
   it("creates a key file on first use and returns a key long enough for the worker's schema", async () => {
-    const { getOrCreateSharedWorkerKey } = await import("../../../src/extension/shared/sharedWorkerKey");
+    const { getOrCreateSharedWorkerKey } =
+      await import("../../../src/extension/shared/sharedWorkerKey");
     const key = await getOrCreateSharedWorkerKey();
     expect(key.length).toBeGreaterThanOrEqual(32);
 
@@ -33,14 +34,16 @@ describe("getOrCreateSharedWorkerKey", () => {
   });
 
   it("returns the same key on subsequent calls instead of generating a new one", async () => {
-    const { getOrCreateSharedWorkerKey } = await import("../../../src/extension/shared/sharedWorkerKey");
+    const { getOrCreateSharedWorkerKey } =
+      await import("../../../src/extension/shared/sharedWorkerKey");
     const first = await getOrCreateSharedWorkerKey();
     const second = await getOrCreateSharedWorkerKey();
     expect(second).toBe(first);
   });
 
   it("every caller (simulating every editor/profile/app) reads the identical key", async () => {
-    const { getOrCreateSharedWorkerKey } = await import("../../../src/extension/shared/sharedWorkerKey");
+    const { getOrCreateSharedWorkerKey } =
+      await import("../../../src/extension/shared/sharedWorkerKey");
     const results = await Promise.all([
       getOrCreateSharedWorkerKey(),
       getOrCreateSharedWorkerKey(),
@@ -54,7 +57,8 @@ describe("getOrCreateSharedWorkerKey", () => {
     await mkdir(path.join(homeDir, ".vindicate"), { recursive: true });
     await writeFile(path.join(homeDir, ".vindicate", "worker.key"), "a".repeat(64), "utf8");
 
-    const { getOrCreateSharedWorkerKey } = await import("../../../src/extension/shared/sharedWorkerKey");
+    const { getOrCreateSharedWorkerKey } =
+      await import("../../../src/extension/shared/sharedWorkerKey");
     const key = await getOrCreateSharedWorkerKey();
     expect(key).toBe("a".repeat(64));
   });
@@ -64,7 +68,8 @@ describe("getOrCreateSharedWorkerKey", () => {
     await mkdir(path.join(homeDir, ".vindicate"), { recursive: true });
     await writeFile(path.join(homeDir, ".vindicate", "worker.key"), "too-short", "utf8");
 
-    const { getOrCreateSharedWorkerKey } = await import("../../../src/extension/shared/sharedWorkerKey");
+    const { getOrCreateSharedWorkerKey } =
+      await import("../../../src/extension/shared/sharedWorkerKey");
     const key = await getOrCreateSharedWorkerKey();
     expect(key.length).toBeGreaterThanOrEqual(32);
     expect(key).not.toBe("too-short");

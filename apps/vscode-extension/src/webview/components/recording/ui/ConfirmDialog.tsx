@@ -28,14 +28,16 @@ export function ConfirmDialog({
   secondaryDanger = false,
   onConfirm,
   onCancel,
-  onSecondary,
+  onSecondary
 }: ConfirmDialogProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
 
   // Focus confirm button on mount; close on Escape
   useEffect(() => {
     confirmRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onCancel(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [onCancel]);
@@ -57,7 +59,7 @@ export function ConfirmDialog({
         className={[
           "relative w-[340px] rounded-2xl border border-vs-border bg-vs-sidebar",
           "px-6 py-5 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.7)]",
-          "animate-pop",
+          "animate-pop"
         ].join(" ")}
       >
         {/* Icon + title */}
@@ -67,19 +69,13 @@ export function ConfirmDialog({
               <AlertTriangle size={15} className="text-tone-red" />
             </span>
           )}
-          <h2
-            id="confirm-dialog-title"
-            className="text-[13.5px] font-semibold leading-snug"
-          >
+          <h2 id="confirm-dialog-title" className="text-[13.5px] font-semibold leading-snug">
             {title}
           </h2>
         </div>
 
         {/* Message */}
-        <p
-          id="confirm-dialog-desc"
-          className="mb-5 text-[12px] leading-relaxed text-vs-text-dim"
-        >
+        <p id="confirm-dialog-desc" className="mb-5 text-[12px] leading-relaxed text-vs-text-dim">
           {message}
         </p>
 
@@ -97,7 +93,7 @@ export function ConfirmDialog({
                 "text-[12px] font-semibold cursor-pointer transition-all duration-150",
                 secondaryDanger
                   ? "border-tone-red/40 bg-tone-red/10 text-tone-red hover:bg-tone-red/20"
-                  : "border-vs-border bg-vs-hover text-vs-text-dim hover:text-vs-text",
+                  : "border-vs-border bg-vs-hover text-vs-text-dim hover:text-vs-text"
               ].join(" ")}
             >
               {secondaryLabel}
@@ -112,7 +108,7 @@ export function ConfirmDialog({
               "text-[12px] font-semibold cursor-pointer transition-all duration-150",
               danger
                 ? "border-tone-red/40 bg-tone-red/10 text-tone-red hover:bg-tone-red/20"
-                : "border-vs-accent/40 bg-vs-accent/10 text-vs-accent hover:bg-vs-accent/20",
+                : "border-vs-accent/40 bg-vs-accent/10 text-vs-accent hover:bg-vs-accent/20"
             ].join(" ")}
           >
             {confirmLabel}
@@ -120,6 +116,6 @@ export function ConfirmDialog({
         </div>
       </div>
     </div>,
-    document.body,
+    document.body
   );
 }

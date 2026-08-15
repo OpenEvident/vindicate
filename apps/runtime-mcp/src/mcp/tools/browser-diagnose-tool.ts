@@ -37,7 +37,9 @@ function isScreenshotWire(value: unknown): value is ScreenshotWire {
 
 function unwrapScreenshot(result: unknown): ScreenshotWire {
   if (typeof result !== "object" || result === null) {
-    throw new Error("browser_diagnose received invalid screenshot result — retry after browser_read");
+    throw new Error(
+      "browser_diagnose received invalid screenshot result — retry after browser_read"
+    );
   }
   const record = result as Record<string, unknown>;
   if (record.action === "screenshot") {
@@ -54,7 +56,10 @@ function unwrapScreenshot(result: unknown): ScreenshotWire {
   return record;
 }
 
-export function registerBrowserDiagnoseTool(server: McpServer, deps: BrowserDiagnoseToolDeps): void {
+export function registerBrowserDiagnoseTool(
+  server: McpServer,
+  deps: BrowserDiagnoseToolDeps
+): void {
   server.registerTool(
     "browser_diagnose",
     {
@@ -63,9 +68,7 @@ export function registerBrowserDiagnoseTool(server: McpServer, deps: BrowserDiag
       annotations: { readOnlyHint: true },
       inputSchema: {
         session_id: UuidSchema,
-        scope: z
-          .union([z.object({ ref: z.string() }), z.object({ css: z.string() })])
-          .optional(),
+        scope: z.union([z.object({ ref: z.string() }), z.object({ css: z.string() })]).optional(),
         full_page: z.boolean().optional()
       }
     },

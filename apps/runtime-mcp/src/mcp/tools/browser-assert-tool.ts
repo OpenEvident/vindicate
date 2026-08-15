@@ -18,10 +18,7 @@ export function registerBrowserAssertTool(server: McpServer, workerClient: IComm
         session_id: UuidSchema,
         expect: z.string().optional(),
         extract: z
-          .record(
-            z.string(),
-            z.enum(["string", "string | null", "boolean", "number | null"])
-          )
+          .record(z.string(), z.enum(["string", "string | null", "boolean", "number | null"]))
           .optional()
       }
     },

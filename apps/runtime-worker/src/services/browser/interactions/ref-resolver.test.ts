@@ -19,68 +19,115 @@ function locStub(count = 1): { count: ReturnType<typeof vi.fn> } {
 }
 
 function descWith(locator: StructuredLocator): ElementDescriptor {
-  return { testidAttr: "data-testid", tag: "button", role: "button", name: "", snapshotUrl: PAGE_URL, locator };
+  return {
+    testidAttr: "data-testid",
+    tag: "button",
+    role: "button",
+    name: "",
+    snapshotUrl: PAGE_URL,
+    locator
+  };
 }
 
 describe("resolveRef", () => {
   it("throws when descriptor is undefined", async () => {
-    await expect(resolveRef({} as Page, "ref-abc", undefined)).rejects.toThrow(ElementNotFoundError);
+    await expect(resolveRef({} as Page, "ref-abc", undefined)).rejects.toThrow(
+      ElementNotFoundError
+    );
   });
 
   it("throws when the descriptor is from a previous page (URL-guard)", async () => {
     const page = asPage({ locator: vi.fn() });
-    const stale = { ...descWith({ strategy: "testid", confidence: "high", attr: "data-testid", value: "x" }), snapshotUrl: "https://app.test/other" };
+    const stale = {
+      ...descWith({ strategy: "testid", confidence: "high", attr: "data-testid", value: "x" }),
+      snapshotUrl: "https://app.test/other"
+    };
     await expect(resolveRef(page, "ref-abc", stale)).rejects.toThrow(ElementNotFoundError);
   });
 
   it("throws when the descriptor has no structured locator", async () => {
     const page = asPage({ locator: vi.fn() });
-    const desc: ElementDescriptor = { testidAttr: "data-testid", tag: "button", role: "button", name: "", snapshotUrl: PAGE_URL };
+    const desc: ElementDescriptor = {
+      testidAttr: "data-testid",
+      tag: "button",
+      role: "button",
+      name: "",
+      snapshotUrl: PAGE_URL
+    };
     await expect(resolveRef(page, "ref-abc", desc)).rejects.toThrow(ElementNotFoundError);
   });
 
   it("no-locator error does not imply retrying will help (this is not transient)", async () => {
     const page = asPage({ locator: vi.fn() });
-    const desc: ElementDescriptor = { testidAttr: "data-testid", tag: "button", role: "button", name: "", snapshotUrl: PAGE_URL };
+    const desc: ElementDescriptor = {
+      testidAttr: "data-testid",
+      tag: "button",
+      role: "button",
+      name: "",
+      snapshotUrl: PAGE_URL
+    };
     await expect(resolveRef(page, "ref-abc", desc)).rejects.toThrow(
       /no derivable locator.*not transient.*escalate/i
     );
-    await expect(resolveRef(page, "ref-abc", desc)).rejects.not.toThrow(/call browser_read and retry/);
+    await expect(resolveRef(page, "ref-abc", desc)).rejects.not.toThrow(
+      /call browser_read and retry/
+    );
   });
 
   it("renders the testid tier as an XPath honouring the session attribute", async () => {
     const locator = vi.fn().mockReturnValue(locStub());
     const page = asPage({ locator });
-    await resolveRef(page, "ref-abc", descWith({ strategy: "testid", confidence: "high", attr: "data-cy", value: "save" }));
+    await resolveRef(
+      page,
+      "ref-abc",
+      descWith({ strategy: "testid", confidence: "high", attr: "data-cy", value: "save" })
+    );
     expect(locator).toHaveBeenCalledWith('xpath=//*[@data-cy="save"]');
   });
 
   it("renders xpath-backed tiers (dom_id) via the stored expression", async () => {
     const locator = vi.fn().mockReturnValue(locStub());
     const page = asPage({ locator });
-    await resolveRef(page, "ref-abc", descWith({ strategy: "dom_id", confidence: "high", value: "save", xpath: '//*[@id="save"]' }));
+    await resolveRef(
+      page,
+      "ref-abc",
+      descWith({ strategy: "dom_id", confidence: "high", value: "save", xpath: '//*[@id="save"]' })
+    );
     expect(locator).toHaveBeenCalledWith('xpath=//*[@id="save"]');
   });
 
   it("renders the sibling_text tier as an XPath via the stored expression (no accessible name)", async () => {
     const locator = vi.fn().mockReturnValue(locStub());
     const page = asPage({ locator });
-    const xpath = '//button[preceding-sibling::*[normalize-space()="Delete"] or following-sibling::*[normalize-space()="Delete"]]';
-    await resolveRef(page, "ref-abc", descWith({ strategy: "sibling_text", confidence: "high", value: "Delete", xpath }));
+    const xpath =
+      '//button[preceding-sibling::*[normalize-space()="Delete"] or following-sibling::*[normalize-space()="Delete"]]';
+    await resolveRef(
+      page,
+      "ref-abc",
+      descWith({ strategy: "sibling_text", confidence: "high", value: "Delete", xpath })
+    );
     expect(locator).toHaveBeenCalledWith(`xpath=${xpath}`);
   });
 
   it("renders role_name via getByRole with exact name", async () => {
     const getByRole = vi.fn().mockReturnValue(locStub());
     const page = asPage({ getByRole });
-    await resolveRef(page, "ref-abc", descWith({ strategy: "role_name", confidence: "high", role: "button", name: "Save" }));
+    await resolveRef(
+      page,
+      "ref-abc",
+      descWith({ strategy: "role_name", confidence: "high", role: "button", name: "Save" })
+    );
     expect(getByRole).toHaveBeenCalledWith("button", { name: "Save", exact: true });
   });
 
   it("renders placeholder via getByPlaceholder", async () => {
     const getByPlaceholder = vi.fn().mockReturnValue(locStub());
     const page = asPage({ getByPlaceholder });
-    await resolveRef(page, "ref-abc", descWith({ strategy: "placeholder", confidence: "high", value: "Username" }));
+    await resolveRef(
+      page,
+      "ref-abc",
+      descWith({ strategy: "placeholder", confidence: "high", value: "Username" })
+    );
     expect(getByPlaceholder).toHaveBeenCalledWith("Username", { exact: true });
   });
 
@@ -89,13 +136,17 @@ describe("resolveRef", () => {
     const rowGetByRole = vi.fn().mockReturnValue(inner);
     const getByRole = vi.fn().mockReturnValue({ getByRole: rowGetByRole });
     const page = asPage({ getByRole });
-    await resolveRef(page, "ref-row", descWith({
-      strategy: "scoped",
-      confidence: "high",
-      role: "button",
-      name: "Delete",
-      container: { role: "row", name: "Product ABC" }
-    }));
+    await resolveRef(
+      page,
+      "ref-row",
+      descWith({
+        strategy: "scoped",
+        confidence: "high",
+        role: "button",
+        name: "Delete",
+        container: { role: "row", name: "Product ABC" }
+      })
+    );
     expect(getByRole).toHaveBeenCalledWith("row", { name: "Product ABC" });
     expect(rowGetByRole).toHaveBeenCalledWith("button", { name: "Delete", exact: true });
   });
@@ -104,7 +155,11 @@ describe("resolveRef", () => {
     const locator = vi.fn().mockReturnValue(locStub(2));
     const page = asPage({ locator });
     await expect(
-      resolveRef(page, "ref-abc", descWith({ strategy: "dom_id", confidence: "high", value: "x", xpath: '//*[@id="x"]' }))
+      resolveRef(
+        page,
+        "ref-abc",
+        descWith({ strategy: "dom_id", confidence: "high", value: "x", xpath: '//*[@id="x"]' })
+      )
     ).rejects.toThrow(ElementNotFoundError);
   });
 
@@ -112,7 +167,11 @@ describe("resolveRef", () => {
     const getByRole = vi.fn().mockReturnValue(locStub(0));
     const page = asPage({ getByRole });
     await expect(
-      resolveRef(page, "ref-abc", descWith({ strategy: "role_name", confidence: "high", role: "button", name: "Later" }))
+      resolveRef(
+        page,
+        "ref-abc",
+        descWith({ strategy: "role_name", confidence: "high", role: "button", name: "Later" })
+      )
     ).resolves.toBeDefined();
   });
 
@@ -131,12 +190,22 @@ describe("resolveRef", () => {
           confidence: "high",
           role: "textbox",
           name: "Email address",
-          frame_path: [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe", xpath: '//*[@id="klarna-checkout-iframe"]' }]
+          frame_path: [
+            {
+              strategy: "dom_id",
+              confidence: "high",
+              value: "klarna-checkout-iframe",
+              xpath: '//*[@id="klarna-checkout-iframe"]'
+            }
+          ]
         })
       );
 
       expect(frameLocator).toHaveBeenCalledWith('xpath=//*[@id="klarna-checkout-iframe"]');
-      expect(frameGetByRole).toHaveBeenCalledWith("textbox", { name: "Email address", exact: true });
+      expect(frameGetByRole).toHaveBeenCalledWith("textbox", {
+        name: "Email address",
+        exact: true
+      });
     });
 
     it("chains multiple frameLocator hops in order for a doubly-nested iframe", async () => {
@@ -156,7 +225,12 @@ describe("resolveRef", () => {
           role: "button",
           name: "Pay with Klarna",
           frame_path: [
-            { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe", xpath: '//*[@id="klarna-checkout-iframe"]' },
+            {
+              strategy: "dom_id",
+              confidence: "high",
+              value: "klarna-checkout-iframe",
+              xpath: '//*[@id="klarna-checkout-iframe"]'
+            },
             { strategy: "nth", confidence: "low", xpath: "/html/body/iframe[1]" }
           ]
         })
@@ -164,7 +238,10 @@ describe("resolveRef", () => {
 
       expect(outerFrameLocator).toHaveBeenCalledWith('xpath=//*[@id="klarna-checkout-iframe"]');
       expect(innerFrameLocator).toHaveBeenCalledWith("xpath=/html/body/iframe[1]");
-      expect(innermostGetByRole).toHaveBeenCalledWith("button", { name: "Pay with Klarna", exact: true });
+      expect(innermostGetByRole).toHaveBeenCalledWith("button", {
+        name: "Pay with Klarna",
+        exact: true
+      });
     });
 
     it("renders a testid frame_path hop the same way the testid strategy renders elsewhere", async () => {
@@ -180,7 +257,9 @@ describe("resolveRef", () => {
           confidence: "high",
           value: "target",
           xpath: '//*[@id="target"]',
-          frame_path: [{ strategy: "testid", confidence: "high", attr: "data-testid", value: "payment-frame" }]
+          frame_path: [
+            { strategy: "testid", confidence: "high", attr: "data-testid", value: "payment-frame" }
+          ]
         })
       );
 
@@ -192,7 +271,11 @@ describe("resolveRef", () => {
       const frameLocator = vi.fn();
       const page = asPage({ getByRole, frameLocator });
 
-      await resolveRef(page, "ref-abc", descWith({ strategy: "role_name", confidence: "high", role: "button", name: "Save" }));
+      await resolveRef(
+        page,
+        "ref-abc",
+        descWith({ strategy: "role_name", confidence: "high", role: "button", name: "Save" })
+      );
 
       expect(frameLocator).not.toHaveBeenCalled();
       expect(getByRole).toHaveBeenCalledWith("button", { name: "Save", exact: true });

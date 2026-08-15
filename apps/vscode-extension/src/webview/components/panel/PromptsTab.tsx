@@ -22,14 +22,7 @@ import { postToExtension } from "../../lib/bridge";
 import { BUILT_IN_PROMPTS } from "../../lib/prompts";
 import { usePromptsStore } from "../../stores/promptsStore";
 
-type PromptFilter =
-  | "all"
-  | "pinned"
-  | "onboarding"
-  | "domain"
-  | "specs"
-  | "tests"
-  | "custom";
+type PromptFilter = "all" | "pinned" | "onboarding" | "domain" | "specs" | "tests" | "custom";
 
 interface PromptItem {
   id: string;
@@ -150,7 +143,8 @@ export function PromptsTab() {
     const q = query.trim().toLowerCase();
     return items.filter((item) => {
       if (activeFilter === "pinned" && !pinnedIds.has(item.id)) return false;
-      if (activeFilter !== "all" && activeFilter !== "pinned" && item.category !== activeFilter) return false;
+      if (activeFilter !== "all" && activeFilter !== "pinned" && item.category !== activeFilter)
+        return false;
       if (!q) return true;
       return (
         item.name.toLowerCase().includes(q) ||
@@ -260,11 +254,23 @@ export function PromptsTab() {
   const rest = sorted.filter((item) => !pinnedIds.has(item.id));
   const groups: Array<{ id: string; title: string; items: PromptItem[] }> = [
     { id: "pinned", title: "Pinned", items: pinned },
-    { id: "onboarding", title: "Onboarding", items: rest.filter((item) => item.category === "onboarding") },
+    {
+      id: "onboarding",
+      title: "Onboarding",
+      items: rest.filter((item) => item.category === "onboarding")
+    },
     { id: "domain", title: "Domain", items: rest.filter((item) => item.category === "domain") },
-    { id: "specs", title: "Feature specs", items: rest.filter((item) => item.category === "specs") },
+    {
+      id: "specs",
+      title: "Feature specs",
+      items: rest.filter((item) => item.category === "specs")
+    },
     { id: "tests", title: "Tests", items: rest.filter((item) => item.category === "tests") },
-    { id: "custom", title: "My templates", items: rest.filter((item) => item.category === "custom") }
+    {
+      id: "custom",
+      title: "My templates",
+      items: rest.filter((item) => item.category === "custom")
+    }
   ];
   const detectedVariables = useMemo(() => extractVariables(draft.text), [draft.text]);
 
@@ -272,60 +278,60 @@ export function PromptsTab() {
     <div className="vindicate-prompts-v2">
       <aside className="vindicate-prompts-v2-sidebar">
         <h3 className="vindicate-prompts-v2-sidebar-title">Library</h3>
-        {(["all", "pinned"] as PromptFilter[]).map((filter) => (
+        {(["all", "pinned"] as PromptFilter[]).map((filter) =>
           (() => {
             const Icon = FILTER_ICONS[filter];
             return (
-          <button
-            key={filter}
-            type="button"
-            className={`vindicate-prompts-v2-filter${activeFilter === filter ? " is-active" : ""}`}
-            onClick={() => setActiveFilter(filter)}
-          >
-            <span className="vindicate-prompts-v2-filter-label">
-              <Icon size={12} strokeWidth={2} />
-              {FILTER_LABELS[filter]}
-            </span>
-            <span className="vindicate-prompts-v2-filter-count">{counts[filter]}</span>
-          </button>
+              <button
+                key={filter}
+                type="button"
+                className={`vindicate-prompts-v2-filter${activeFilter === filter ? " is-active" : ""}`}
+                onClick={() => setActiveFilter(filter)}
+              >
+                <span className="vindicate-prompts-v2-filter-label">
+                  <Icon size={12} strokeWidth={2} />
+                  {FILTER_LABELS[filter]}
+                </span>
+                <span className="vindicate-prompts-v2-filter-count">{counts[filter]}</span>
+              </button>
             );
           })()
-        ))}
+        )}
         <h3 className="vindicate-prompts-v2-sidebar-title">Built-in</h3>
-        {(["onboarding", "domain", "specs", "tests"] as PromptFilter[]).map((filter) => (
+        {(["onboarding", "domain", "specs", "tests"] as PromptFilter[]).map((filter) =>
           (() => {
             const Icon = FILTER_ICONS[filter];
             return (
-          <button
-            key={filter}
-            type="button"
-            className={`vindicate-prompts-v2-filter${activeFilter === filter ? " is-active" : ""}`}
-            onClick={() => setActiveFilter(filter)}
-          >
-            <span className="vindicate-prompts-v2-filter-label">
-              <Icon size={12} strokeWidth={2} />
-              {FILTER_LABELS[filter]}
-            </span>
-            <span className="vindicate-prompts-v2-filter-count">{counts[filter]}</span>
-          </button>
+              <button
+                key={filter}
+                type="button"
+                className={`vindicate-prompts-v2-filter${activeFilter === filter ? " is-active" : ""}`}
+                onClick={() => setActiveFilter(filter)}
+              >
+                <span className="vindicate-prompts-v2-filter-label">
+                  <Icon size={12} strokeWidth={2} />
+                  {FILTER_LABELS[filter]}
+                </span>
+                <span className="vindicate-prompts-v2-filter-count">{counts[filter]}</span>
+              </button>
             );
           })()
-        ))}
+        )}
         <h3 className="vindicate-prompts-v2-sidebar-title">Yours</h3>
         {(() => {
           const Icon = FILTER_ICONS.custom;
           return (
-        <button
-          type="button"
-          className={`vindicate-prompts-v2-filter${activeFilter === "custom" ? " is-active" : ""}`}
-          onClick={() => setActiveFilter("custom")}
-        >
-          <span className="vindicate-prompts-v2-filter-label">
-            <Icon size={12} strokeWidth={2} />
-            {FILTER_LABELS.custom}
-          </span>
-          <span className="vindicate-prompts-v2-filter-count">{counts.custom}</span>
-        </button>
+            <button
+              type="button"
+              className={`vindicate-prompts-v2-filter${activeFilter === "custom" ? " is-active" : ""}`}
+              onClick={() => setActiveFilter("custom")}
+            >
+              <span className="vindicate-prompts-v2-filter-label">
+                <Icon size={12} strokeWidth={2} />
+                {FILTER_LABELS.custom}
+              </span>
+              <span className="vindicate-prompts-v2-filter-count">{counts.custom}</span>
+            </button>
           );
         })()}
       </aside>
@@ -350,7 +356,9 @@ export function PromptsTab() {
         </div>
 
         {sorted.length === 0 ? (
-          <div className="vindicate-prompts-v2-empty">No prompts match this filter. Try a different category.</div>
+          <div className="vindicate-prompts-v2-empty">
+            No prompts match this filter. Try a different category.
+          </div>
         ) : (
           groups
             .filter((group) => group.items.length > 0)
@@ -375,15 +383,20 @@ export function PromptsTab() {
                         {(() => {
                           const CategoryIcon = CATEGORY_ICONS[item.category];
                           return (
-                        <div className={`vindicate-prompts-v2-icon cat-${item.category}`} aria-hidden>
+                            <div
+                              className={`vindicate-prompts-v2-icon cat-${item.category}`}
+                              aria-hidden
+                            >
                               <CategoryIcon size={13} strokeWidth={2} />
-                        </div>
+                            </div>
                           );
                         })()}
                         <div className="vindicate-prompts-v2-row-main">
                           <div className="vindicate-prompts-v2-row-titleline">
                             <p className="vindicate-prompts-v2-row-title">{item.name}</p>
-                            <span className="vindicate-prompts-v2-row-badge">{FILTER_LABELS[item.category]}</span>
+                            <span className="vindicate-prompts-v2-row-badge">
+                              {FILTER_LABELS[item.category]}
+                            </span>
                             {pinnedIds.has(item.id) && (
                               <span className="vindicate-prompts-v2-row-badge pinned">Pinned</span>
                             )}
@@ -417,7 +430,12 @@ export function PromptsTab() {
                           >
                             <Copy size={12} strokeWidth={2} />
                           </button>
-                          <button type="button" className="iconbtn" disabled aria-label="Send prompt">
+                          <button
+                            type="button"
+                            className="iconbtn"
+                            disabled
+                            aria-label="Send prompt"
+                          >
                             <SendHorizontal size={12} strokeWidth={2} />
                           </button>
                           <button

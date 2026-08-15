@@ -45,7 +45,9 @@ import { WorkerManager } from "./processes/WorkerManager";
 import { RecordingController } from "./recording/recording-controller";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  const debugLogging = vscode.workspace.getConfiguration("vindicate").get<boolean>("debugLogging", false);
+  const debugLogging = vscode.workspace
+    .getConfiguration("vindicate")
+    .get<boolean>("debugLogging", false);
   const sessionLogFile = debugLogging ? createSessionLogFile() : undefined;
   const logger = new VindicateLogger(sessionLogFile);
   const telemetry = new TelemetryService(logger);
@@ -325,7 +327,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   if (!homeShown) {
     await context.globalState.update(STATE_KEYS.homeShown, true);
     try {
-      const pkg = JSON.parse(readFileSync(path.join(context.extensionPath, "package.json"), "utf8")) as { version?: string };
+      const pkg = JSON.parse(
+        readFileSync(path.join(context.extensionPath, "package.json"), "utf8")
+      ) as { version?: string };
       logger.info(`First install detected — extension version ${pkg.version ?? "unknown"}`);
     } catch {
       logger.info("First install detected — extension version unknown");

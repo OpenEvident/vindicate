@@ -26,7 +26,8 @@ describe("deriveIframeHostLocator", () => {
   // is verified against real Chromium — confirmed empirically against the actual Klarna checkout iframe
   // (id="klarna-checkout-iframe" → dom_id) — and pinned by the real-Chromium integration test.
   it("degrades T2/T3/T6 to nth under happy-dom's XPath gap (real behavior verified via real Chromium)", () => {
-    document.body.innerHTML = '<iframe id="klarna-checkout-iframe" name="express-checkout"></iframe>';
+    document.body.innerHTML =
+      '<iframe id="klarna-checkout-iframe" name="express-checkout"></iframe>';
     const el = document.querySelector("iframe")!;
     expect(deriveIframeHostLocator(el, OPTS)).toMatchObject({ strategy: "nth", confidence: "low" });
   });
@@ -34,7 +35,10 @@ describe("deriveIframeHostLocator", () => {
   it("falls all the way to positional nth when nothing else identifies the iframe", () => {
     document.body.innerHTML = "<div><iframe></iframe><iframe></iframe></div>";
     const [first, second] = Array.from(document.querySelectorAll("iframe"));
-    expect(deriveIframeHostLocator(first!, OPTS)).toMatchObject({ strategy: "nth", confidence: "low" });
+    expect(deriveIframeHostLocator(first!, OPTS)).toMatchObject({
+      strategy: "nth",
+      confidence: "low"
+    });
     const secondLoc = deriveIframeHostLocator(second!, OPTS);
     expect(secondLoc.strategy).toBe("nth");
     // Different positions must produce different xpaths, or two distinct iframes would collide.

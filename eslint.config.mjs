@@ -24,7 +24,7 @@ export default [
       "@typescript-eslint/consistent-type-imports": [
         "error",
         {
-          "prefer": "type-imports"
+          prefer: "type-imports"
         }
       ]
     }
@@ -39,9 +39,9 @@ export default [
         process: "readonly",
         console: "readonly",
         setTimeout: "readonly",
-        clearTimeout: "readonly",
-      },
-    },
+        clearTimeout: "readonly"
+      }
+    }
   },
   prettierConfig
 ];

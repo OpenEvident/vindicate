@@ -157,7 +157,9 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
   fastify.post("/sessions", async (request, reply) => {
     const parsed = BrowserCreateSessionBodySchema.safeParse(request.body);
     if (!parsed.success) {
-      const details = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join(", ");
+      const details = parsed.error.issues
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
+        .join(", ");
       throw new ValidationError(`Invalid create session body — ${details}`);
     }
     const record = await store.create(parsed.data);
@@ -180,7 +182,10 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
     } catch (err: unknown) {
       await store.abandon(record.session_id);
       await bridge.destroyContext(record.session_id).catch(() => {});
-      logger.error({ err, sessionId: record.session_id }, "failed to create browser context or initial navigation");
+      logger.error(
+        { err, sessionId: record.session_id },
+        "failed to create browser context or initial navigation"
+      );
       throw err;
     }
     const response = BrowserCreateSessionResponseSchema.parse({
@@ -233,46 +238,52 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
     return reply.send({ session_id: id, status: "active" as const });
   });
 
-  fastify.post<{ Params: { id: string } }>("/sessions/:id/resume_from_pause", async (request, reply) => {
-    const { id } = request.params;
-    const queryParsed = ResumeFromPauseQuerySchema.safeParse(request.query ?? {});
-    if (!queryParsed.success) {
-      throw new ValidationError("Invalid resume_from_pause query");
-    }
-    const flag = queryParsed.data.include_snapshot;
-    const includeSnapshot = flag === "true" || flag === "1";
-
-    const rec = store.get(id);
-    if (rec === undefined) {
-      throw new SessionNotFoundError(id);
-    }
-    if (rec.status !== "paused") {
-      throw new SessionUnresumableError(id, "session is not paused");
-    }
-    await store.applyTrigger(id, "resume_from_pause");
-    try {
-      const created = await bridge.createContext(id, { headless: rec.headless });
-      if (!created.created) {
-        logger.warn({ sessionId: id }, "resume_from_pause reusing existing browser context — verifying health");
-        await bridge.ensureHealthyContext(id, { headless: rec.headless });
+  fastify.post<{ Params: { id: string } }>(
+    "/sessions/:id/resume_from_pause",
+    async (request, reply) => {
+      const { id } = request.params;
+      const queryParsed = ResumeFromPauseQuerySchema.safeParse(request.query ?? {});
+      if (!queryParsed.success) {
+        throw new ValidationError("Invalid resume_from_pause query");
       }
-    } catch (err: unknown) {
-      logger.error({ err, sessionId: id }, "resume_from_pause failed to recreate context");
-      await store.applyTrigger(id, "crash").catch(() => {
-        /* ignore rollback errors */
-      });
-      throw err;
-    }
-    sessionLogs.attachContext(id, bridge.getContext(id));
-    eventBus.publish({ event: "session_resumed_from_pause", session_id: id });
+      const flag = queryParsed.data.include_snapshot;
+      const includeSnapshot = flag === "true" || flag === "1";
 
-    if (includeSnapshot) {
-      const page = await bridge.getPage(id);
-      const snapshot = await snapshotEngine.takeSnapshot(id, page, { mode: "interactive" });
-      return reply.send({ session_id: id, status: "active" as const, snapshot });
+      const rec = store.get(id);
+      if (rec === undefined) {
+        throw new SessionNotFoundError(id);
+      }
+      if (rec.status !== "paused") {
+        throw new SessionUnresumableError(id, "session is not paused");
+      }
+      await store.applyTrigger(id, "resume_from_pause");
+      try {
+        const created = await bridge.createContext(id, { headless: rec.headless });
+        if (!created.created) {
+          logger.warn(
+            { sessionId: id },
+            "resume_from_pause reusing existing browser context — verifying health"
+          );
+          await bridge.ensureHealthyContext(id, { headless: rec.headless });
+        }
+      } catch (err: unknown) {
+        logger.error({ err, sessionId: id }, "resume_from_pause failed to recreate context");
+        await store.applyTrigger(id, "crash").catch(() => {
+          /* ignore rollback errors */
+        });
+        throw err;
+      }
+      sessionLogs.attachContext(id, bridge.getContext(id));
+      eventBus.publish({ event: "session_resumed_from_pause", session_id: id });
+
+      if (includeSnapshot) {
+        const page = await bridge.getPage(id);
+        const snapshot = await snapshotEngine.takeSnapshot(id, page, { mode: "interactive" });
+        return reply.send({ session_id: id, status: "active" as const, snapshot });
+      }
+      return reply.send({ session_id: id, status: "active" as const });
     }
-    return reply.send({ session_id: id, status: "active" as const });
-  });
+  );
 
   fastify.post<{ Params: { id: string } }>("/sessions/:id/commands", async (request, reply) => {
     if (isShuttingDown()) {
@@ -370,7 +381,12 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
     if (!parsed.success) {
       throw new ValidationError("Invalid query — project_root is required");
     }
-    const artifactPath = path.join(parsed.data.project_root, ".vindicate", "recordings", `${request.params.safeName}.json`);
+    const artifactPath = path.join(
+      parsed.data.project_root,
+      ".vindicate",
+      "recordings",
+      `${request.params.safeName}.json`
+    );
     try {
       const raw = await fs.readFile(artifactPath, "utf-8");
       const artifact = RecordingArtifactSchema.parse(JSON.parse(raw));
@@ -380,33 +396,48 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
     }
   });
 
-  fastify.delete<{ Params: { safeName: string } }>("/recordings/:safeName", async (request, reply) => {
-    const parsed = ProjectRootQuerySchema.safeParse(request.query ?? {});
-    if (!parsed.success) {
-      throw new ValidationError("Invalid query — project_root is required");
+  fastify.delete<{ Params: { safeName: string } }>(
+    "/recordings/:safeName",
+    async (request, reply) => {
+      const parsed = ProjectRootQuerySchema.safeParse(request.query ?? {});
+      if (!parsed.success) {
+        throw new ValidationError("Invalid query — project_root is required");
+      }
+      const artifactPath = path.join(
+        parsed.data.project_root,
+        ".vindicate",
+        "recordings",
+        `${request.params.safeName}.json`
+      );
+      try {
+        await fs.access(artifactPath);
+      } catch {
+        return reply.status(404).send({ error: "recording_not_found" });
+      }
+      await recordingService.deleteArtifact(parsed.data.project_root, request.params.safeName);
+      return reply.status(200).send({ ok: true as const });
     }
-    const artifactPath = path.join(parsed.data.project_root, ".vindicate", "recordings", `${request.params.safeName}.json`);
-    try {
-      await fs.access(artifactPath);
-    } catch {
-      return reply.status(404).send({ error: "recording_not_found" });
-    }
-    await recordingService.deleteArtifact(parsed.data.project_root, request.params.safeName);
-    return reply.status(200).send({ ok: true as const });
-  });
+  );
 
-  fastify.patch<{ Params: { safeName: string } }>("/recordings/:safeName", async (request, reply) => {
-    const parsedQuery = ProjectRootQuerySchema.safeParse(request.query ?? {});
-    if (!parsedQuery.success) {
-      throw new ValidationError("Invalid query — project_root is required");
+  fastify.patch<{ Params: { safeName: string } }>(
+    "/recordings/:safeName",
+    async (request, reply) => {
+      const parsedQuery = ProjectRootQuerySchema.safeParse(request.query ?? {});
+      if (!parsedQuery.success) {
+        throw new ValidationError("Invalid query — project_root is required");
+      }
+      const parsedBody = RecordingAnnotateBodySchema.safeParse(request.body ?? {});
+      if (!parsedBody.success) {
+        throw new ValidationError("Invalid annotate body");
+      }
+      await recordingService.annotateArtifact(
+        parsedQuery.data.project_root,
+        request.params.safeName,
+        parsedBody.data
+      );
+      return reply.send({ ok: true as const });
     }
-    const parsedBody = RecordingAnnotateBodySchema.safeParse(request.body ?? {});
-    if (!parsedBody.success) {
-      throw new ValidationError("Invalid annotate body");
-    }
-    await recordingService.annotateArtifact(parsedQuery.data.project_root, request.params.safeName, parsedBody.data);
-    return reply.send({ ok: true as const });
-  });
+  );
 
   fastify.post<{
     Params: { safeName: string };
@@ -434,9 +465,15 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
           ...(parsedBody.data.steps !== undefined
             ? { editedSteps: parsedBody.data.steps as unknown as RecordingStep[] }
             : {}),
-          ...(parsedBody.data.pre_conditions !== undefined ? { pre_conditions: parsedBody.data.pre_conditions } : {}),
-          ...(parsedBody.data.post_conditions !== undefined ? { post_conditions: parsedBody.data.post_conditions } : {}),
-          ...(parsedBody.data.depends_on !== undefined ? { depends_on: parsedBody.data.depends_on } : {}),
+          ...(parsedBody.data.pre_conditions !== undefined
+            ? { pre_conditions: parsedBody.data.pre_conditions }
+            : {}),
+          ...(parsedBody.data.post_conditions !== undefined
+            ? { post_conditions: parsedBody.data.post_conditions }
+            : {}),
+          ...(parsedBody.data.depends_on !== undefined
+            ? { depends_on: parsedBody.data.depends_on }
+            : {}),
           ...(parsedBody.data.summary !== undefined ? { summary: parsedBody.data.summary } : {})
         }
       );
@@ -446,52 +483,58 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
     }
   });
 
-  fastify.post<{ Params: { id: string }; Body: { name: string; started_by?: "human" | "agent"; testid_attr?: string } }>(
-    "/sessions/:id/recording/start",
+  fastify.post<{
+    Params: { id: string };
+    Body: { name: string; started_by?: "human" | "agent"; testid_attr?: string };
+  }>("/sessions/:id/recording/start", async (request, reply) => {
+    const { id } = request.params;
+    const parsed = RecordingStartBodySchema.safeParse(request.body ?? {});
+    if (!parsed.success) {
+      throw new ValidationError("Invalid recording start body");
+    }
+    const session = store.get(id);
+    if (session === undefined) {
+      return reply.status(404).send({ error: "session_not_found" });
+    }
+    if (session.status !== "active") {
+      return reply.status(400).send({ error: "session_not_active" });
+    }
+    const startOptions: {
+      testidAttr?: string;
+      started_by?: "human" | "agent";
+      skip_entry_navigate?: boolean;
+    } = {};
+    const testidAttr = parsed.data.testid_attr ?? session.testid_attr;
+    if (testidAttr !== undefined) {
+      startOptions.testidAttr = testidAttr;
+    }
+    if (parsed.data.started_by !== undefined) {
+      startOptions.started_by = parsed.data.started_by;
+    }
+    if (parsed.data.skip_entry_navigate === true) {
+      startOptions.skip_entry_navigate = true;
+    }
+    await recordingService.start(id, parsed.data.name, session.project_root, startOptions);
+    return reply.status(200).send({ ok: true });
+  });
+
+  fastify.post<{ Params: { id: string } }>(
+    "/sessions/:id/recording/stop",
     async (request, reply) => {
       const { id } = request.params;
-      const parsed = RecordingStartBodySchema.safeParse(request.body ?? {});
-      if (!parsed.success) {
-        throw new ValidationError("Invalid recording start body");
-      }
-      const session = store.get(id);
-      if (session === undefined) {
-        return reply.status(404).send({ error: "session_not_found" });
-      }
-      if (session.status !== "active") {
-        return reply.status(400).send({ error: "session_not_active" });
-      }
-      const startOptions: {
-        testidAttr?: string;
-        started_by?: "human" | "agent";
-        skip_entry_navigate?: boolean;
-      } = {};
-      const testidAttr = parsed.data.testid_attr ?? session.testid_attr;
-      if (testidAttr !== undefined) {
-        startOptions.testidAttr = testidAttr;
-      }
-      if (parsed.data.started_by !== undefined) {
-        startOptions.started_by = parsed.data.started_by;
-      }
-      if (parsed.data.skip_entry_navigate === true) {
-        startOptions.skip_entry_navigate = true;
-      }
-      await recordingService.start(id, parsed.data.name, session.project_root, startOptions);
+      await recordingService.stop(id);
       return reply.status(200).send({ ok: true });
     }
   );
 
-  fastify.post<{ Params: { id: string } }>("/sessions/:id/recording/stop", async (request, reply) => {
-    const { id } = request.params;
-    await recordingService.stop(id);
-    return reply.status(200).send({ ok: true });
-  });
-
-  fastify.post<{ Params: { id: string } }>("/sessions/:id/recording/snapshot", async (request, reply) => {
-    const { id } = request.params;
-    await recordingService.takeManualSnapshot(id);
-    return reply.status(200).send({ ok: true });
-  });
+  fastify.post<{ Params: { id: string } }>(
+    "/sessions/:id/recording/snapshot",
+    async (request, reply) => {
+      const { id } = request.params;
+      await recordingService.takeManualSnapshot(id);
+      return reply.status(200).send({ ok: true });
+    }
+  );
 
   fastify.post<{
     Params: { id: string };
@@ -513,9 +556,15 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
       return reply.status(404).send({ error: "session_not_found" });
     }
     const finalized = await recordingService.finalize(id, {
-      ...(parsed.data.steps !== undefined ? { editedSteps: parsed.data.steps as unknown as RecordingStep[] } : {}),
-      ...(parsed.data.pre_conditions !== undefined ? { pre_conditions: parsed.data.pre_conditions } : {}),
-      ...(parsed.data.post_conditions !== undefined ? { post_conditions: parsed.data.post_conditions } : {}),
+      ...(parsed.data.steps !== undefined
+        ? { editedSteps: parsed.data.steps as unknown as RecordingStep[] }
+        : {}),
+      ...(parsed.data.pre_conditions !== undefined
+        ? { pre_conditions: parsed.data.pre_conditions }
+        : {}),
+      ...(parsed.data.post_conditions !== undefined
+        ? { post_conditions: parsed.data.post_conditions }
+        : {}),
       ...(parsed.data.depends_on !== undefined ? { depends_on: parsed.data.depends_on } : {}),
       ...(parsed.data.summary !== undefined ? { summary: parsed.data.summary } : {})
     });
@@ -545,10 +594,13 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
     }
   );
 
-  fastify.get<{ Params: { id: string } }>("/sessions/:id/recording/state", async (request, reply) => {
-    const { id } = request.params;
-    return reply.send(recordingService.getRecordingStateResponse(id));
-  });
+  fastify.get<{ Params: { id: string } }>(
+    "/sessions/:id/recording/state",
+    async (request, reply) => {
+      const { id } = request.params;
+      return reply.send(recordingService.getRecordingStateResponse(id));
+    }
+  );
 
   fastify.post<{ Params: { id: string }; Body: { recordingName: string } }>(
     "/sessions/:id/recording/playback",
@@ -560,7 +612,9 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
       }
       const session = store.get(id);
       if (session === undefined) {
-        return reply.status(404).send({ ok: false, error: "Session not found", failedStep: 0, action: "" });
+        return reply
+          .status(404)
+          .send({ ok: false, error: "Session not found", failedStep: 0, action: "" });
       }
 
       const index = await RecordingsIndexService.getAll(session.project_root);
@@ -569,17 +623,32 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
         return reply.send({ ok: false, error: "Recording not found", failedStep: 0, action: "" });
       }
 
-      const artifactPath = path.join(session.project_root, ".vindicate", "recordings", `${entry.safe_name}.json`);
+      const artifactPath = path.join(
+        session.project_root,
+        ".vindicate",
+        "recordings",
+        `${entry.safe_name}.json`
+      );
       let artifact;
       try {
         const raw = await fs.readFile(artifactPath, "utf-8");
         artifact = RecordingArtifactSchema.parse(JSON.parse(raw));
       } catch {
-        return reply.send({ ok: false, error: "Recording artifact not found", failedStep: 0, action: "" });
+        return reply.send({
+          ok: false,
+          error: "Recording artifact not found",
+          failedStep: 0,
+          action: ""
+        });
       }
 
       const page = await bridge.getPage(id);
-      const result = await playbackRecordingSteps(page, artifact.steps, commandConfig, commandConfig.VINDICATE_ACTION_TIMEOUT_MS);
+      const result = await playbackRecordingSteps(
+        page,
+        artifact.steps,
+        commandConfig,
+        commandConfig.VINDICATE_ACTION_TIMEOUT_MS
+      );
       return reply.send(result);
     }
   );

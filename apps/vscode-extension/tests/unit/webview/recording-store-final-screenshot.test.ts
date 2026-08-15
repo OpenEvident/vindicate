@@ -1,6 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useRecordingStore, selectEditorRecordedSteps, selectEditorTimelineStepCount, getTimelineStepNumber, resolveReviewPreviewTarget, selectIsEditingSavedArtifact } from "../../../src/webview/stores/recordingStore";
+import {
+  useRecordingStore,
+  selectEditorRecordedSteps,
+  selectEditorTimelineStepCount,
+  getTimelineStepNumber,
+  resolveReviewPreviewTarget,
+  selectIsEditingSavedArtifact
+} from "../../../src/webview/stores/recordingStore";
 import type { RecordingStep } from "../../../src/webview/lib/recording-ui-types";
 
 const step = (seq: number, screenshotUrl?: string): RecordingStep => ({
@@ -12,7 +19,10 @@ const step = (seq: number, screenshotUrl?: string): RecordingStep => ({
   ...(screenshotUrl !== undefined ? { screenshotUrl } : {})
 });
 
-const navigateStep = (seq: number, trigger: "explicit" | "implicit" = "explicit"): RecordingStep => ({
+const navigateStep = (
+  seq: number,
+  trigger: "explicit" | "implicit" = "explicit"
+): RecordingStep => ({
   seq,
   action: "navigate",
   url: "https://example.com/",
@@ -26,7 +36,10 @@ describe("recordingStore final screenshot", () => {
   beforeEach(() => {
     useRecordingStore.setState({
       mode: "recording",
-      steps: [step(1, "https://example.com/step-001.png"), step(2, "https://example.com/step-002.png")],
+      steps: [
+        step(1, "https://example.com/step-001.png"),
+        step(2, "https://example.com/step-002.png")
+      ],
       finalScreenshotUrl: null,
       previewTarget: { type: "none" }
     });
@@ -44,7 +57,10 @@ describe("recordingStore final screenshot", () => {
   it("completeRecordingStop without final.png keeps the last captured step selected", () => {
     useRecordingStore.setState({
       mode: "recording",
-      steps: [step(1, "https://example.com/step-001.png"), step(2, "https://example.com/step-002.png")],
+      steps: [
+        step(1, "https://example.com/step-001.png"),
+        step(2, "https://example.com/step-002.png")
+      ],
       previewTarget: { type: "step", seq: 2 },
       finalScreenshotUrl: null
     });
@@ -57,7 +73,10 @@ describe("recordingStore final screenshot", () => {
   it("setMode(review) selects the last captured step when final.png is unavailable", () => {
     useRecordingStore.setState({
       mode: "recording",
-      steps: [step(1, "https://example.com/step-001.png"), step(2, "https://example.com/step-002.png")],
+      steps: [
+        step(1, "https://example.com/step-001.png"),
+        step(2, "https://example.com/step-002.png")
+      ],
       previewTarget: { type: "step", seq: 2 },
       finalScreenshotUrl: null
     });
@@ -106,7 +125,9 @@ describe("recordingStore final screenshot", () => {
 
     useRecordingStore.getState().appendSteps([step(1)]);
 
-    expect(useRecordingStore.getState().steps[0]?.screenshotUrl).toBe("https://example.com/step-001.png");
+    expect(useRecordingStore.getState().steps[0]?.screenshotUrl).toBe(
+      "https://example.com/step-001.png"
+    );
   });
 
   it("completeRecordingStop(null) preserves an existing finalScreenshotUrl fallback", () => {
@@ -119,7 +140,9 @@ describe("recordingStore final screenshot", () => {
 
     useRecordingStore.getState().completeRecordingStop(null);
 
-    expect(useRecordingStore.getState().finalScreenshotUrl).toBe("https://example.com/step-001.png");
+    expect(useRecordingStore.getState().finalScreenshotUrl).toBe(
+      "https://example.com/step-001.png"
+    );
     expect(useRecordingStore.getState().previewTarget).toEqual({ type: "final" });
   });
 
@@ -180,7 +203,10 @@ describe("recordingStore final screenshot", () => {
     useRecordingStore.setState({ finalizedPath: null });
     expect(selectIsEditingSavedArtifact(useRecordingStore.getState())).toBe(false);
 
-    useRecordingStore.setState({ mode: "finalized", finalizedPath: ".vindicate/recordings/login.json" });
+    useRecordingStore.setState({
+      mode: "finalized",
+      finalizedPath: ".vindicate/recordings/login.json"
+    });
     expect(selectIsEditingSavedArtifact(useRecordingStore.getState())).toBe(false);
   });
 
@@ -244,7 +270,9 @@ describe("recordingStore final screenshot", () => {
       steps: [navigateStep(1, "implicit"), step(2)]
     });
 
-    expect(selectEditorRecordedSteps(useRecordingStore.getState()).map((s) => s.seq)).toEqual([1, 2]);
+    expect(selectEditorRecordedSteps(useRecordingStore.getState()).map((s) => s.seq)).toEqual([
+      1, 2
+    ]);
   });
 
   it("restoreSession restores precondition recordings for saved artifacts", () => {
@@ -339,7 +367,10 @@ describe("recordingStore final screenshot", () => {
     useRecordingStore.setState({
       mode: "review",
       removedSeqs: new Set<number>(),
-      steps: [step(1, "https://example.com/step-001.png"), step(2, "https://example.com/step-002.png")]
+      steps: [
+        step(1, "https://example.com/step-001.png"),
+        step(2, "https://example.com/step-002.png")
+      ]
     });
 
     const first = selectEditorRecordedSteps(useRecordingStore.getState());

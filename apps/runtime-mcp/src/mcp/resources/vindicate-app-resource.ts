@@ -5,10 +5,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  registerAppResource,
-  RESOURCE_MIME_TYPE
-} from "@modelcontextprotocol/ext-apps/server";
+import { registerAppResource, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 
 export const APP_RESOURCE_URI = "ui://vindicate/app.html";
 

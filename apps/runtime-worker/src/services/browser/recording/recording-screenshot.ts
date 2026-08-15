@@ -77,6 +77,9 @@ export async function waitForStepScreenshotSettle(
 }
 
 /** Final capture uses the same settle path as mutating browser actions. */
-export async function waitForFinalScreenshotSettle(page: Page, cfg: SettleConfigSlice): Promise<void> {
+export async function waitForFinalScreenshotSettle(
+  page: Page,
+  cfg: SettleConfigSlice
+): Promise<void> {
   await runSettle(page, cfg);
 }

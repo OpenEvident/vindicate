@@ -15,9 +15,18 @@
               "page_class": "LoginPage",
               "path": "/login",
               "owned_by": "auth",
-              "elements": [{ "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid" }],
+              "elements": [
+                { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid" }
+              ],
               "types": [],
-              "steps": [{ "name": "step_login", "jsdoc": "Open login", "params": [], "actions": [{ "do": "navigate" }] }],
+              "steps": [
+                {
+                  "name": "step_login",
+                  "jsdoc": "Open login",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
+              ],
               "verifies": []
             },
             {
@@ -27,7 +36,14 @@
               "owned_by": "auth",
               "elements": [{ "ref": "dash", "tag": "a", "role": "link", "name": "Dashboard" }],
               "types": [],
-              "steps": [{ "name": "step_openDashboard", "jsdoc": "Open dashboard", "params": [], "actions": [{ "do": "click", "ref": "dash" }] }],
+              "steps": [
+                {
+                  "name": "step_openDashboard",
+                  "jsdoc": "Open dashboard",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "dash" }]
+                }
+              ],
               "verifies": []
             }
           ],

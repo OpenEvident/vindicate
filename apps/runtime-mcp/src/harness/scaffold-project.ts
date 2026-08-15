@@ -40,7 +40,6 @@ function renderTemplate(content: string, vars: Record<string, string>): string {
   return out;
 }
 
-
 function ciBlocks(
   envVars: string[],
   secretVars: string[],
@@ -68,9 +67,11 @@ function ciBlocks(
  * screenshot/video/action-timeout use-block, and the chromium projects array) — present for "ui"
  * and "both", empty for "api" (no browser is ever launched, so they'd just be dead config). Same
  * computed-placeholder pattern as {@link ciBlocks}, not a new templating engine. */
-function browserConfigBlocks(
-  target: ScaffoldTarget
-): { devicesImport: string; browserUseBlock: string; projectsBlock: string } {
+function browserConfigBlocks(target: ScaffoldTarget): {
+  devicesImport: string;
+  browserUseBlock: string;
+  projectsBlock: string;
+} {
   if (target === "api") {
     return { devicesImport: "", browserUseBlock: "", projectsBlock: "" };
   }
@@ -106,7 +107,10 @@ function envExampleExtras(target: ScaffoldTarget): string {
   );
 }
 
-const CI_TEMPLATE_BY_PLATFORM: Record<Exclude<ScaffoldProjectInput["ciPlatform"], "other">, string> = {
+const CI_TEMPLATE_BY_PLATFORM: Record<
+  Exclude<ScaffoldProjectInput["ciPlatform"], "other">,
+  string
+> = {
   github: ".github/workflows/vindicate-tests.yml",
   bitbucket: "bitbucket-pipelines.yml",
   gitlab: ".gitlab-ci.yml",
@@ -137,7 +141,9 @@ export async function scaffoldProject(
   const templates = await loadScaffoldTemplates(target);
   const projectDir = normalizeProjectDir(input.projectDir ?? ".");
   const nodeVersion = input.nodeVersion ?? "20";
-  const envVars = normalizeVarNames(input.envVars ?? ["BASE_URL"]).filter((name) => name !== "BASE_URL");
+  const envVars = normalizeVarNames(input.envVars ?? ["BASE_URL"]).filter(
+    (name) => name !== "BASE_URL"
+  );
   const secretVars = normalizeVarNames(input.secretVars ?? []);
   const ciPlatform = input.ciPlatform === "other" ? "github" : input.ciPlatform;
   const blocks = ciBlocks(envVars, secretVars, ciPlatform);

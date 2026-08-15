@@ -12,8 +12,9 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<{
 }>;
 
 function getToolHandler(server: McpServer, name: string): ToolHandler {
-  const tools = (server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> })
-    ._registeredTools;
+  const tools = (
+    server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> }
+  )._registeredTools;
   const tool = tools[name];
   if (tool === undefined) {
     throw new Error(`tool not registered: ${name}`);
@@ -51,7 +52,10 @@ describe("ask-user-tool", () => {
       content: { choice: "grow_tests" }
     }));
 
-    const result = await getToolHandler(server, "vindicate_ask_user")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_ask_user"
+    )({
       question: "Which workflow?",
       options: [
         { label: "Write tests", value: "grow_tests" },
@@ -70,7 +74,10 @@ describe("ask-user-tool", () => {
     registerAskUserTool(server);
     attachElicit(server, async () => ({ action: "cancel" }));
 
-    const result = await getToolHandler(server, "vindicate_ask_user")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_ask_user"
+    )({
       question: "Which workflow?",
       options: [
         { label: "Write tests", value: "grow_tests" },
@@ -96,7 +103,10 @@ describe("ask-user-tool", () => {
       content: { answer: "checkout flow" }
     }));
 
-    const result = await getToolHandler(server, "vindicate_ask_user")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_ask_user"
+    )({
       question: "Which area should we cover?"
     });
 
@@ -110,7 +120,10 @@ describe("ask-user-tool", () => {
     const server = new McpServer({ name: "test", version: "0" });
     registerAskUserTool(server);
 
-    const result = await getToolHandler(server, "vindicate_ask_user")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_ask_user"
+    )({
       question: "Which area should we cover?"
     });
 

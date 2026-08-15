@@ -62,10 +62,14 @@ describe("extractMeaningfulIframeRefs", () => {
 });
 
 describe("rehashRefForFrame", () => {
-  const FRAME_PATH: StructuredLocator[] = [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }];
+  const FRAME_PATH: StructuredLocator[] = [
+    { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }
+  ];
 
   it("is deterministic for the same ref and frame_path", () => {
-    expect(rehashRefForFrame("ref-abc12345", FRAME_PATH)).toBe(rehashRefForFrame("ref-abc12345", FRAME_PATH));
+    expect(rehashRefForFrame("ref-abc12345", FRAME_PATH)).toBe(
+      rehashRefForFrame("ref-abc12345", FRAME_PATH)
+    );
   });
 
   it("produces the standard ref-xxxxxxxx shape", () => {
@@ -77,8 +81,12 @@ describe("rehashRefForFrame", () => {
   });
 
   it("differs between two different frame paths for the same original ref", () => {
-    const otherPath: StructuredLocator[] = [{ strategy: "dom_id", confidence: "high", value: "other-iframe" }];
-    expect(rehashRefForFrame("ref-abc12345", FRAME_PATH)).not.toBe(rehashRefForFrame("ref-abc12345", otherPath));
+    const otherPath: StructuredLocator[] = [
+      { strategy: "dom_id", confidence: "high", value: "other-iframe" }
+    ];
+    expect(rehashRefForFrame("ref-abc12345", FRAME_PATH)).not.toBe(
+      rehashRefForFrame("ref-abc12345", otherPath)
+    );
   });
 });
 
@@ -133,7 +141,11 @@ describe("disambiguateDuplicateRefs", () => {
   });
 
   it("does not confuse three-or-more-way collisions with each other", () => {
-    const result = disambiguateDuplicateRefs([el({ name: "A" }), el({ name: "B" }), el({ name: "C" })]);
+    const result = disambiguateDuplicateRefs([
+      el({ name: "A" }),
+      el({ name: "B" }),
+      el({ name: "C" })
+    ]);
     const refs = result.map((e) => e.ref);
     expect(new Set(refs).size).toBe(3);
   });
@@ -148,7 +160,9 @@ describe("withFramePath", () => {
     in_viewport: true,
     locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Email address" }
   };
-  const FRAME_PATH: StructuredLocator[] = [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }];
+  const FRAME_PATH: StructuredLocator[] = [
+    { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }
+  ];
 
   it("attaches frame_path to the element's locator and rehashes its ref", () => {
     const result = withFramePath(BASE_EL, FRAME_PATH);
@@ -184,7 +198,9 @@ describe("withFramePath", () => {
 function fakeLocatorFor(ariaSnapshotResult: string | Error, elementHandleResult: unknown): unknown {
   return {
     ariaSnapshot: (): Promise<string> =>
-      ariaSnapshotResult instanceof Error ? Promise.reject(ariaSnapshotResult) : Promise.resolve(ariaSnapshotResult),
+      ariaSnapshotResult instanceof Error
+        ? Promise.reject(ariaSnapshotResult)
+        : Promise.resolve(ariaSnapshotResult),
     elementHandle: (): Promise<unknown> => Promise.resolve(elementHandleResult)
   };
 }
@@ -210,9 +226,18 @@ describe("captureChildFrames", () => {
       in_viewport: true,
       locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Email address" }
     };
-    const hostLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" };
+    const hostLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "klarna-checkout-iframe"
+    };
     const childFrame = {
-      evaluate: vi.fn().mockResolvedValue({ elements: [capturedEl], truncated: false, collapsed_count: 0, alerts: [] }),
+      evaluate: vi.fn().mockResolvedValue({
+        elements: [capturedEl],
+        truncated: false,
+        collapsed_count: 0,
+        alerts: []
+      }),
       locator: vi.fn().mockReturnValue(fakeLocatorFor("- text: nothing nested\n", null)),
       url: () => "https://checkout.klarna.com/frame",
       waitForURL: vi.fn().mockResolvedValue(undefined)
@@ -224,7 +249,8 @@ describe("captureChildFrames", () => {
     };
 
     const topLocator = vi.fn((selector: string) => {
-      if (selector === "body") return fakeLocatorFor("- iframe [ref=e2]:\n  - text: Email address\n", null);
+      if (selector === "body")
+        return fakeLocatorFor("- iframe [ref=e2]:\n  - text: Email address\n", null);
       if (selector === "aria-ref=e2") return fakeLocatorFor("", iframeHandle);
       throw new Error(`unexpected selector ${selector}`);
     });
@@ -243,9 +269,10 @@ describe("captureChildFrames", () => {
 
   it("never throws — a failing ariaSnapshot at the top degrades to no extra elements", async () => {
     const topLocator = vi.fn().mockReturnValue(fakeLocatorFor(new Error("frame detached"), null));
-    const page = { frames: () => [{}, {}] as unknown[], locator: topLocator } as unknown as Parameters<
-      typeof captureChildFrames
-    >[0];
+    const page = {
+      frames: () => [{}, {}] as unknown[],
+      locator: topLocator
+    } as unknown as Parameters<typeof captureChildFrames>[0];
     await expect(captureChildFrames(page, OPTS)).resolves.toEqual([]);
   });
 
@@ -255,9 +282,10 @@ describe("captureChildFrames", () => {
       if (selector === "aria-ref=e2") return fakeLocatorFor("", null);
       throw new Error(`unexpected selector ${selector}`);
     });
-    const page = { frames: () => [{}, {}] as unknown[], locator: topLocator } as unknown as Parameters<
-      typeof captureChildFrames
-    >[0];
+    const page = {
+      frames: () => [{}, {}] as unknown[],
+      locator: topLocator
+    } as unknown as Parameters<typeof captureChildFrames>[0];
     await expect(captureChildFrames(page, OPTS)).resolves.toEqual([]);
   });
 
@@ -273,12 +301,21 @@ describe("captureChildFrames", () => {
       in_viewport: true,
       locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number" }
     };
-    const hostLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "stripe-frame" };
+    const hostLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "stripe-frame"
+    };
     const callOrder: string[] = [];
     const childFrame = {
       evaluate: vi.fn().mockImplementation(() => {
         callOrder.push("evaluate");
-        return Promise.resolve({ elements: [capturedEl], truncated: false, collapsed_count: 0, alerts: [] });
+        return Promise.resolve({
+          elements: [capturedEl],
+          truncated: false,
+          collapsed_count: 0,
+          alerts: []
+        });
       }),
       locator: vi.fn().mockReturnValue(fakeLocatorFor("- text: nothing nested\n", null)),
       url: () => "about:blank",
@@ -293,7 +330,8 @@ describe("captureChildFrames", () => {
       ownerFrame: vi.fn().mockResolvedValue(MAIN_FRAME)
     };
     const topLocator = vi.fn((selector: string) => {
-      if (selector === "body") return fakeLocatorFor("- iframe [ref=e2]:\n  - text: loading\n", null);
+      if (selector === "body")
+        return fakeLocatorFor("- iframe [ref=e2]:\n  - text: loading\n", null);
       if (selector === "aria-ref=e2") return fakeLocatorFor("", iframeHandle);
       throw new Error(`unexpected selector ${selector}`);
     });
@@ -310,7 +348,9 @@ describe("captureChildFrames", () => {
     expect(result[0]?.ref).not.toBe(capturedEl.ref);
 
     // The predicate handed to waitForURL must actually detect "left about:blank", not just be present.
-    const predicate = childFrame.waitForURL.mock.calls[0]?.[0] as (url: { href: string }) => boolean;
+    const predicate = childFrame.waitForURL.mock.calls[0]?.[0] as (url: {
+      href: string;
+    }) => boolean;
     expect(predicate({ href: "about:blank" })).toBe(false);
     expect(predicate({ href: "https://js.stripe.com/checkout-frame" })).toBe(true);
   });
@@ -324,9 +364,18 @@ describe("captureChildFrames", () => {
       in_viewport: true,
       locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Email" }
     };
-    const hostLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "checkout-frame" };
+    const hostLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "checkout-frame"
+    };
     const childFrame = {
-      evaluate: vi.fn().mockResolvedValue({ elements: [capturedEl], truncated: false, collapsed_count: 0, alerts: [] }),
+      evaluate: vi.fn().mockResolvedValue({
+        elements: [capturedEl],
+        truncated: false,
+        collapsed_count: 0,
+        alerts: []
+      }),
       locator: vi.fn().mockReturnValue(fakeLocatorFor("- text: nothing nested\n", null)),
       url: () => "https://checkout.klarna.com/frame",
       waitForURL: vi.fn().mockResolvedValue(undefined)
@@ -354,9 +403,15 @@ describe("captureChildFrames", () => {
   });
 
   it("still attempts the capture, best-effort, when the frame never leaves about:blank within the wait", async () => {
-    const hostLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "stuck-frame" };
+    const hostLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "stuck-frame"
+    };
     const childFrame = {
-      evaluate: vi.fn().mockResolvedValue({ elements: [], truncated: false, collapsed_count: 0, alerts: [] }),
+      evaluate: vi
+        .fn()
+        .mockResolvedValue({ elements: [], truncated: false, collapsed_count: 0, alerts: [] }),
       locator: vi.fn().mockReturnValue(fakeLocatorFor("", null)),
       url: () => "about:blank",
       waitForURL: vi.fn().mockRejectedValue(new Error("Timeout waiting for URL"))
@@ -367,7 +422,8 @@ describe("captureChildFrames", () => {
       ownerFrame: vi.fn().mockResolvedValue(MAIN_FRAME)
     };
     const topLocator = vi.fn((selector: string) => {
-      if (selector === "body") return fakeLocatorFor("- iframe [ref=e2]:\n  - text: still loading\n", null);
+      if (selector === "body")
+        return fakeLocatorFor("- iframe [ref=e2]:\n  - text: still loading\n", null);
       if (selector === "aria-ref=e2") return fakeLocatorFor("", iframeHandle);
       throw new Error(`unexpected selector ${selector}`);
     });
@@ -389,7 +445,11 @@ describe("captureChildFrames", () => {
     // starving the frame budget on peripheral content instead of the primary form. This proves both
     // top-level siblings are captured before either one's nested child is even looked at.
     const callOrder: string[] = [];
-    const HOST_LOCATOR: StructuredLocator = { strategy: "nth", confidence: "low", xpath: "/iframe[1]" };
+    const HOST_LOCATOR: StructuredLocator = {
+      strategy: "nth",
+      confidence: "low",
+      xpath: "/iframe[1]"
+    };
 
     function trackedEvaluate(tag: string) {
       return vi.fn().mockImplementation(() => {
@@ -413,7 +473,8 @@ describe("captureChildFrames", () => {
     const siblingAFrame = {
       evaluate: trackedEvaluate("siblingA"),
       locator: vi.fn((selector: string) => {
-        if (selector === "body") return fakeLocatorFor("- iframe [ref=e10]:\n  - text: nested\n", null);
+        if (selector === "body")
+          return fakeLocatorFor("- iframe [ref=e10]:\n  - text: nested\n", null);
         if (selector === "aria-ref=e10") return fakeLocatorFor("", siblingAChildHandle);
         throw new Error(`unexpected selector ${selector}`);
       }),
@@ -445,7 +506,11 @@ describe("captureChildFrames", () => {
     };
 
     const topLocator = vi.fn((selector: string) => {
-      if (selector === "body") return fakeLocatorFor("- iframe [ref=e2]:\n  - text: A\n- iframe [ref=e3]:\n  - text: B\n", null);
+      if (selector === "body")
+        return fakeLocatorFor(
+          "- iframe [ref=e2]:\n  - text: A\n- iframe [ref=e3]:\n  - text: B\n",
+          null
+        );
       if (selector === "aria-ref=e2") return fakeLocatorFor("", siblingAHandle);
       if (selector === "aria-ref=e3") return fakeLocatorFor("", siblingBHandle);
       throw new Error(`unexpected selector ${selector}`);
@@ -477,14 +542,17 @@ describe("captureChildFrames", () => {
     it("skips a top-level discovery whose resolved handle actually belongs to a different frame", async () => {
       const OTHER_FRAME = { __otherFrame: true };
       const flattenedHandle = {
-        evaluate: vi.fn().mockResolvedValue({ strategy: "dom_id", confidence: "high", value: "stripe-frame" }),
+        evaluate: vi
+          .fn()
+          .mockResolvedValue({ strategy: "dom_id", confidence: "high", value: "stripe-frame" }),
         contentFrame: vi.fn().mockResolvedValue({}),
         // The flattening artifact: this handle was resolved via the top-level page's own
         // ariaSnapshot, but it doesn't actually live there.
         ownerFrame: vi.fn().mockResolvedValue(OTHER_FRAME)
       };
       const topLocator = vi.fn((selector: string) => {
-        if (selector === "body") return fakeLocatorFor("- iframe [ref=e2]:\n  - text: Card number\n", null);
+        if (selector === "body")
+          return fakeLocatorFor("- iframe [ref=e2]:\n  - text: Card number\n", null);
         if (selector === "aria-ref=e2") return fakeLocatorFor("", flattenedHandle);
         throw new Error(`unexpected selector ${selector}`);
       });
@@ -510,10 +578,19 @@ describe("captureChildFrames", () => {
         in_viewport: true,
         locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number" }
       };
-      const realHostLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "stripe-frame" };
+      const realHostLocator: StructuredLocator = {
+        strategy: "dom_id",
+        confidence: "high",
+        value: "stripe-frame"
+      };
 
       const stripeChildFrame = {
-        evaluate: vi.fn().mockResolvedValue({ elements: [capturedEl], truncated: false, collapsed_count: 0, alerts: [] }),
+        evaluate: vi.fn().mockResolvedValue({
+          elements: [capturedEl],
+          truncated: false,
+          collapsed_count: 0,
+          alerts: []
+        }),
         locator: vi.fn().mockReturnValue(fakeLocatorFor("", null)),
         url: () => "https://js.stripe.com/checkout-frame",
         waitForURL: vi.fn().mockResolvedValue(undefined)
@@ -525,9 +602,12 @@ describe("captureChildFrames", () => {
       // eslint-disable-next-line prefer-const
       let stripeHandleViaKlarna: unknown;
       const klarnaFrame = {
-        evaluate: vi.fn().mockResolvedValue({ elements: [], truncated: false, collapsed_count: 0, alerts: [] }),
+        evaluate: vi
+          .fn()
+          .mockResolvedValue({ elements: [], truncated: false, collapsed_count: 0, alerts: [] }),
         locator: vi.fn((selector: string) => {
-          if (selector === "body") return fakeLocatorFor("- iframe [ref=e10]:\n  - text: Card number\n", null);
+          if (selector === "body")
+            return fakeLocatorFor("- iframe [ref=e10]:\n  - text: Card number\n", null);
           if (selector === "aria-ref=e10") return fakeLocatorFor("", stripeHandleViaKlarna);
           throw new Error(`unexpected selector ${selector}`);
         }),
@@ -542,7 +622,11 @@ describe("captureChildFrames", () => {
         ownerFrame: vi.fn().mockResolvedValue(klarnaFrame)
       };
       const klarnaHandle = {
-        evaluate: vi.fn().mockResolvedValue({ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }),
+        evaluate: vi.fn().mockResolvedValue({
+          strategy: "dom_id",
+          confidence: "high",
+          value: "klarna-checkout-iframe"
+        }),
         contentFrame: vi.fn().mockResolvedValue(klarnaFrame),
         ownerFrame: vi.fn().mockResolvedValue(MAIN_FRAME)
       };
@@ -600,7 +684,11 @@ describe("computeFramePathForFrame", () => {
   });
 
   it("derives a single-hop frame_path for an event inside one iframe", async () => {
-    const hostLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "payment-frame" };
+    const hostLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "payment-frame"
+    };
     const handle = { evaluate: vi.fn().mockResolvedValue(hostLocator) };
     const mainFrame = { parentFrame: vi.fn().mockReturnValue(null) };
     const leafFrame = {
@@ -618,8 +706,17 @@ describe("computeFramePathForFrame", () => {
   });
 
   it("orders a two-hop nested frame_path outermost first", async () => {
-    const outerLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" };
-    const innerLocator: StructuredLocator = { strategy: "testid", confidence: "high", attr: "data-testid", value: "stripe-frame" };
+    const outerLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "klarna-checkout-iframe"
+    };
+    const innerLocator: StructuredLocator = {
+      strategy: "testid",
+      confidence: "high",
+      attr: "data-testid",
+      value: "stripe-frame"
+    };
     const outerHandle = { evaluate: vi.fn().mockResolvedValue(outerLocator) };
     const innerHandle = { evaluate: vi.fn().mockResolvedValue(innerLocator) };
     const mainFrame = { parentFrame: vi.fn().mockReturnValue(null) };
@@ -641,7 +738,11 @@ describe("computeFramePathForFrame", () => {
   });
 
   it("returns whatever hops resolved so far when an ancestor's frameElement() rejects mid-navigation", async () => {
-    const outerLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "outer-frame" };
+    const outerLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "outer-frame"
+    };
     const outerHandle = { evaluate: vi.fn().mockResolvedValue(outerLocator) };
     const mainFrame = { parentFrame: vi.fn().mockReturnValue(null) };
     const outerFrame = {
@@ -676,7 +777,12 @@ describe("resolveFrameForPath", () => {
   });
 
   it("resolves a single-hop frame_path to the iframe's content frame", async () => {
-    const hop: StructuredLocator = { strategy: "testid", confidence: "high", attr: "data-testid", value: "klarna-checkout-iframe" };
+    const hop: StructuredLocator = {
+      strategy: "testid",
+      confidence: "high",
+      attr: "data-testid",
+      value: "klarna-checkout-iframe"
+    };
     const childFrame = { evaluate: vi.fn() };
     const handle = { contentFrame: vi.fn().mockResolvedValue(childFrame) };
     const locator = vi.fn().mockReturnValue({ elementHandle: vi.fn().mockResolvedValue(handle) });
@@ -689,14 +795,28 @@ describe("resolveFrameForPath", () => {
   });
 
   it("walks a two-hop frame_path outermost first", async () => {
-    const outerHop: StructuredLocator = { strategy: "testid", confidence: "high", attr: "data-testid", value: "outer-frame" };
-    const innerHop: StructuredLocator = { strategy: "testid", confidence: "high", attr: "data-testid", value: "inner-frame" };
+    const outerHop: StructuredLocator = {
+      strategy: "testid",
+      confidence: "high",
+      attr: "data-testid",
+      value: "outer-frame"
+    };
+    const innerHop: StructuredLocator = {
+      strategy: "testid",
+      confidence: "high",
+      attr: "data-testid",
+      value: "inner-frame"
+    };
     const innerFrame = { evaluate: vi.fn() };
     const innerHandle = { contentFrame: vi.fn().mockResolvedValue(innerFrame) };
-    const innerLocator = vi.fn().mockReturnValue({ elementHandle: vi.fn().mockResolvedValue(innerHandle) });
+    const innerLocator = vi
+      .fn()
+      .mockReturnValue({ elementHandle: vi.fn().mockResolvedValue(innerHandle) });
     const outerFrame = { locator: innerLocator };
     const outerHandle = { contentFrame: vi.fn().mockResolvedValue(outerFrame) };
-    const outerLocator = vi.fn().mockReturnValue({ elementHandle: vi.fn().mockResolvedValue(outerHandle) });
+    const outerLocator = vi
+      .fn()
+      .mockReturnValue({ elementHandle: vi.fn().mockResolvedValue(outerHandle) });
     const page = { locator: outerLocator } as unknown as Parameters<typeof resolveFrameForPath>[0];
 
     const result = await resolveFrameForPath(page, [outerHop, innerHop]);
@@ -718,15 +838,27 @@ describe("resolveFrameForPath", () => {
   });
 
   it("returns null when the hop's elementHandle() rejects (the ancestor navigated away mid-resolve)", async () => {
-    const hop: StructuredLocator = { strategy: "testid", confidence: "high", attr: "data-testid", value: "gone-frame" };
-    const locator = vi.fn().mockReturnValue({ elementHandle: vi.fn().mockRejectedValue(new Error("detached")) });
+    const hop: StructuredLocator = {
+      strategy: "testid",
+      confidence: "high",
+      attr: "data-testid",
+      value: "gone-frame"
+    };
+    const locator = vi
+      .fn()
+      .mockReturnValue({ elementHandle: vi.fn().mockRejectedValue(new Error("detached")) });
     const page = { locator } as unknown as Parameters<typeof resolveFrameForPath>[0];
 
     await expect(resolveFrameForPath(page, [hop])).resolves.toBeNull();
   });
 
   it("returns null when the hop element yields no elementHandle at all", async () => {
-    const hop: StructuredLocator = { strategy: "testid", confidence: "high", attr: "data-testid", value: "missing-frame" };
+    const hop: StructuredLocator = {
+      strategy: "testid",
+      confidence: "high",
+      attr: "data-testid",
+      value: "missing-frame"
+    };
     const locator = vi.fn().mockReturnValue({ elementHandle: vi.fn().mockResolvedValue(null) });
     const page = { locator } as unknown as Parameters<typeof resolveFrameForPath>[0];
 
@@ -735,7 +867,12 @@ describe("resolveFrameForPath", () => {
   });
 
   it("returns null when the iframe host's contentFrame() is not attached", async () => {
-    const hop: StructuredLocator = { strategy: "testid", confidence: "high", attr: "data-testid", value: "torn-down-frame" };
+    const hop: StructuredLocator = {
+      strategy: "testid",
+      confidence: "high",
+      attr: "data-testid",
+      value: "torn-down-frame"
+    };
     const handle = { contentFrame: vi.fn().mockResolvedValue(null) };
     const locator = vi.fn().mockReturnValue({ elementHandle: vi.fn().mockResolvedValue(handle) });
     const page = { locator } as unknown as Parameters<typeof resolveFrameForPath>[0];

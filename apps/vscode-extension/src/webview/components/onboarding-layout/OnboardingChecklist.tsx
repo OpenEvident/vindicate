@@ -10,7 +10,16 @@ function StepDot({ status, index }: { status: "done" | "active" | "locked"; inde
   if (status === "done") {
     return (
       <div className="vindicate-cl-dot vindicate-cl-dot--done" aria-hidden>
-        <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="11"
+          height="11"
+          viewBox="0 0 14 14"
+          fill="none"
+          stroke="#fff"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <polyline points="2,7 5.5,10.5 12,4" />
         </svg>
       </div>
@@ -75,8 +84,7 @@ export function OnboardingChecklist() {
           const isDone = step.status === "done";
           const isActive = step.status === "active";
           const effectivePanel = activePanelOverride ?? screen;
-          const isHighlighted =
-            step.clickable && effectivePanel === panelScreenByStep[step.index];
+          const isHighlighted = step.clickable && effectivePanel === panelScreenByStep[step.index];
 
           return (
             <div
@@ -101,10 +109,11 @@ export function OnboardingChecklist() {
             >
               <StepDot status={step.status} index={step.index} />
               <div className="vindicate-cl-step-body">
-                <div className={[
-                  "vindicate-cl-title",
-                  isDone ? "vindicate-cl-title--done" : ""
-                ].filter(Boolean).join(" ")}>
+                <div
+                  className={["vindicate-cl-title", isDone ? "vindicate-cl-title--done" : ""]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   {step.title}
                 </div>
                 <div className="vindicate-cl-sub">{step.subtitle}</div>

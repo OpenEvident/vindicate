@@ -48,10 +48,7 @@ export class HealthPingService implements vscode.Disposable {
   }
 
   private async ping(): Promise<void> {
-    const [runtime, mcp] = await Promise.all([
-      this.checkPort(RUNTIME_PORT),
-      this.checkMcpHealth()
-    ]);
+    const [runtime, mcp] = await Promise.all([this.checkPort(RUNTIME_PORT), this.checkMcpHealth()]);
     const health: ServiceHealth = { runtime, mcp };
     this.publishHealth(health);
   }

@@ -16,13 +16,30 @@
               "path": "/login",
               "owned_by": "login",
               "elements": [
-                { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid", "type": "email" },
-                { "ref": "password", "tag": "input", "testid": "password", "testid_attr": "data-testid", "type": "password" },
+                {
+                  "ref": "email",
+                  "tag": "input",
+                  "testid": "email",
+                  "testid_attr": "data-testid",
+                  "type": "email"
+                },
+                {
+                  "ref": "password",
+                  "tag": "input",
+                  "testid": "password",
+                  "testid_attr": "data-testid",
+                  "type": "password"
+                },
                 { "ref": "submit", "tag": "button", "role": "button", "name": "Sign in" }
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open login page", "params": [], "actions": [{ "do": "navigate" }] },
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open login page",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
                 {
                   "name": "step_signIn",
                   "jsdoc": "Fill credentials and submit",
@@ -88,14 +105,23 @@
       "support/config/page-loader.ts",
       "support/config/page.config.ts"
     ],
-    "filesWrittenIncludes": [
-      "pages/LoginPage.ts",
-      "tests/login.spec.ts"
-    ],
+    "filesWrittenIncludes": ["pages/LoginPage.ts", "tests/login.spec.ts"],
     "mustContain": {
-      "pages/LoginPage.ts": ["// AUTO-GENERATED", "async step_signIn(email: string, password: string)", "async verify_loginVisible(", "locator-helper:"],
-      "support/config/page.config.ts": ["import { LoginPage } from './page-loader';", "loginPage: LoginPage;", "loginPage: async ({ page }, use)"],
-      "tests/login.spec.ts": ["test.describe('App - Login'", "await loginPage.step_signIn(expected.loginEmail, expected.loginPassword);"]
+      "pages/LoginPage.ts": [
+        "// AUTO-GENERATED",
+        "async step_signIn(email: string, password: string)",
+        "async verify_loginVisible(",
+        "locator-helper:"
+      ],
+      "support/config/page.config.ts": [
+        "import { LoginPage } from './page-loader';",
+        "loginPage: LoginPage;",
+        "loginPage: async ({ page }, use)"
+      ],
+      "tests/login.spec.ts": [
+        "test.describe('App - Login'",
+        "await loginPage.step_signIn(expected.loginEmail, expected.loginPassword);"
+      ]
     },
     "mustNotContain": {
       "pages/LoginPage.ts": ["locator('[", "locator('.", "locator('#"]
@@ -103,10 +129,6 @@
     "invariants": ["I1", "I2", "I3", "I4", "I5", "I6", "I9"],
     "compile": true,
     "golden": true,
-    "goldenFiles": [
-      "pages/LoginPage.ts",
-      "tests/login.spec.ts",
-      "support/config/page.config.ts"
-    ]
+    "goldenFiles": ["pages/LoginPage.ts", "tests/login.spec.ts", "support/config/page.config.ts"]
   }
 }

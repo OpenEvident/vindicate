@@ -14,7 +14,10 @@
       "terminal": false,
       "modes": [],
       "edges": [
-        { "to": "scaffold", "when": "project root, app URL, stack, and target (ui/api/both) confirmed" }
+        {
+          "to": "scaffold",
+          "when": "project root, app URL, stack, and target (ui/api/both) confirmed"
+        }
       ]
     },
     "scaffold": {
@@ -22,7 +25,10 @@
       "terminal": false,
       "modes": [],
       "edges": [
-        { "to": "install", "when": "folder structure + config files + BasePage and/or BaseApiClient + barrels written for the resolved target (scaffold_project)" }
+        {
+          "to": "install",
+          "when": "folder structure + config files + BasePage and/or BaseApiClient + barrels written for the resolved target (scaffold_project)"
+        }
       ]
     },
     "install": {
@@ -30,7 +36,10 @@
       "terminal": false,
       "modes": [],
       "edges": [
-        { "to": "ci-setup", "when": "dependencies installed (+ Playwright browsers, only when target includes ui)" }
+        {
+          "to": "ci-setup",
+          "when": "dependencies installed (+ Playwright browsers, only when target includes ui)"
+        }
       ]
     },
     "ci-setup": {
@@ -38,7 +47,10 @@
       "terminal": false,
       "modes": [],
       "edges": [
-        { "to": "smoke", "when": "CI file written for user-confirmed platform (e.g. .github/workflows/vindicate-tests.yml or bitbucket-pipelines.yml) (C14)" }
+        {
+          "to": "smoke",
+          "when": "CI file written for user-confirmed platform (e.g. .github/workflows/vindicate-tests.yml or bitbucket-pipelines.yml) (C14)"
+        }
       ]
     },
     "smoke": {

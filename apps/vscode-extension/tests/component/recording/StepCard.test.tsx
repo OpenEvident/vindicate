@@ -10,7 +10,7 @@ const clickStep: RecordingStep = {
   timestamp: "2026-06-20T00:00:00.000Z",
   element: { name: "Submit", tag: "button" },
   candidates: [{ strategy: "dom_id", value: "submit-btn", strength: "strong" }],
-  chosen: { strategy: "dom_id", value: "submit-btn", strength: "strong" },
+  chosen: { strategy: "dom_id", value: "submit-btn", strength: "strong" }
 };
 
 const switchTabStep: RecordingStep = {
@@ -19,7 +19,7 @@ const switchTabStep: RecordingStep = {
   timestamp: "2026-06-20T00:00:01.000Z",
   url: "https://checkout.klarna.com/session/abc",
   candidates: [],
-  chosen: null,
+  chosen: null
 };
 
 describe("StepCard locator area", () => {
@@ -41,6 +41,8 @@ describe("StepCard locator area", () => {
 
   it("shows the switch_tab_by_url target label instead", () => {
     render(<StepCard step={switchTabStep} mode="review" selected={false} isLocatorOpen={false} />);
-    expect(screen.getByText("Switched to tab: https://checkout.klarna.com/session/abc")).toBeInTheDocument();
+    expect(
+      screen.getByText("Switched to tab: https://checkout.klarna.com/session/abc")
+    ).toBeInTheDocument();
   });
 });

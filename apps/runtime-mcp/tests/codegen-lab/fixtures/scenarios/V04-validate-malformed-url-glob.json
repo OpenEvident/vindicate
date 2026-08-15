@@ -23,9 +23,7 @@
                   "name": "step_submit",
                   "jsdoc": "Submit",
                   "params": [],
-                  "actions": [
-                    { "do": "waitForURL", "pattern": "**/dashboard/index**" }
-                  ]
+                  "actions": [{ "do": "waitForURL", "pattern": "**/dashboard/index**" }]
                 }
               ],
               "verifies": [

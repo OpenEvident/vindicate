@@ -41,14 +41,18 @@ export function HealthHero({ metrics }: { metrics: DashboardMetrics }) {
           )}
         </h3>
         <p className="mt-1 text-xs leading-[1.55] text-[var(--vs-text-dim)]">
-          {metrics.tests.passed} of {metrics.tests.total} tests passing · {metrics.tests.failed} failing · ran{" "}
-          {metrics.tests.lastRunAt}.
+          {metrics.tests.passed} of {metrics.tests.total} tests passing · {metrics.tests.failed}{" "}
+          failing · ran {metrics.tests.lastRunAt}.
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           <span className="run-pill pass">✓ {metrics.tests.passed} passed</span>
           <span className="run-pill fail">✗ {metrics.tests.failed} failed</span>
-          {metrics.tests.skipped > 0 && <span className="run-pill skip">↷ {metrics.tests.skipped} skipped</span>}
-          {metrics.tests.flaky > 0 && <span className="run-pill flak">⚡ {metrics.tests.flaky} flaky</span>}
+          {metrics.tests.skipped > 0 && (
+            <span className="run-pill skip">↷ {metrics.tests.skipped} skipped</span>
+          )}
+          {metrics.tests.flaky > 0 && (
+            <span className="run-pill flak">⚡ {metrics.tests.flaky} flaky</span>
+          )}
           <span className="run-pill">{metrics.tests.durationLabel}</span>
         </div>
       </div>

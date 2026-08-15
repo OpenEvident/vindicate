@@ -22,11 +22,17 @@ export function ModeSelectionPanel() {
       {/* Build — the available mode */}
       <div className="vindicate-msp-featured">
         <div className="vindicate-msp-featured-head">
-          <div className="vindicate-msp-featured-icon" aria-hidden>B</div>
-          <div className="vindicate-msp-featured-title">
-            <span className="vindicate-msp-mode-name">{BUILD.id.charAt(0).toUpperCase() + BUILD.id.slice(1)}</span>
+          <div className="vindicate-msp-featured-icon" aria-hidden>
+            B
           </div>
-          <span className="vindicate-vpill vindicate-vpill--green" style={{ marginLeft: "auto" }}>AVAILABLE</span>
+          <div className="vindicate-msp-featured-title">
+            <span className="vindicate-msp-mode-name">
+              {BUILD.id.charAt(0).toUpperCase() + BUILD.id.slice(1)}
+            </span>
+          </div>
+          <span className="vindicate-vpill vindicate-vpill--green" style={{ marginLeft: "auto" }}>
+            AVAILABLE
+          </span>
         </div>
 
         <p className="vindicate-msp-featured-desc">{BUILD.headline}</p>
@@ -45,11 +51,7 @@ export function ModeSelectionPanel() {
           <p className="vindicate-msp-starts-text">{BUILD.vindicateStarts}</p>
         </div>
 
-        <button
-          type="button"
-          className="vindicate-msp-cta"
-          onClick={confirm}
-        >
+        <button type="button" className="vindicate-msp-cta" onClick={confirm}>
           Start with Build →
         </button>
       </div>
@@ -64,7 +66,9 @@ export function ModeSelectionPanel() {
               </div>
               <span className="vindicate-msp-soon-badge">SOON</span>
             </div>
-            <div className="vindicate-msp-soon-name">{m.id.charAt(0).toUpperCase() + m.id.slice(1)}</div>
+            <div className="vindicate-msp-soon-name">
+              {m.id.charAt(0).toUpperCase() + m.id.slice(1)}
+            </div>
             <div className="vindicate-msp-soon-desc">{m.headline}</div>
           </div>
         ))}

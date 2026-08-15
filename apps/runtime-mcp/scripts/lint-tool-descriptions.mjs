@@ -11,13 +11,7 @@ const toolsDir = path.join(root, "src", "mcp", "tools");
 
 const MAX_NAME_LEN = 30;
 const MAX_DESC_WORDS = 120;
-const FORBIDDEN = [
-  "workflowId",
-  "sectionId",
-  "phase pack",
-  "workflow_id",
-  "section_id"
-];
+const FORBIDDEN = ["workflowId", "sectionId", "phase pack", "workflow_id", "section_id"];
 
 const namePattern = /^[a-z][a-z0-9_]*$/;
 const toolStartRegex = /registerTool\s*\(\s*["'`]([^"'`]+)["'`]\s*,/g;

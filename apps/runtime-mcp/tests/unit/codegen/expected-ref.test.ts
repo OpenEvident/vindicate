@@ -14,12 +14,10 @@ describe("expected-ref", () => {
   });
 
   it("expectedKeysForStringValue returns all matching keys", () => {
-    expect(
-      expectedKeysForStringValue(
-        { a: "same", b: "other", c: "same" },
-        "same"
-      )
-    ).toEqual(["a", "c"]);
+    expect(expectedKeysForStringValue({ a: "same", b: "other", c: "same" }, "same")).toEqual([
+      "a",
+      "c"
+    ]);
   });
 
   it("duplicateExpectedStringValues finds colliding values", () => {

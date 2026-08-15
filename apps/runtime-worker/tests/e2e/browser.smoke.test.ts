@@ -43,7 +43,9 @@ describe.skipIf(!runLive)("browser e2e smoke", () => {
     const dir = path.join(os.tmpdir(), `vindicate-e2e-${Date.now()}`);
     await mkdir(dir, { recursive: true });
     dataDir = dir;
-    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), {
+      encryptFilenames: false
+    });
     const store = new BrowserSessionStore(disk, logger, 24);
     await store.initializeFromDisk();
     const sessionLogs = new SessionLogRegistry({
@@ -111,10 +113,7 @@ describe.skipIf(!runLive)("browser e2e smoke", () => {
       url: `/browser/sessions/${sessionId}/commands`,
       headers: internalAuthHeaders(),
       payload: {
-        steps: [
-          { action: "navigate", url: "https://example.com/" },
-          { action: "snapshot" }
-        ]
+        steps: [{ action: "navigate", url: "https://example.com/" }, { action: "snapshot" }]
       }
     });
     expect(cmd.statusCode).toBe(200);

@@ -50,15 +50,27 @@ async function seedProductionScaffold(root: string): Promise<void> {
   // scaffold_project can lay down UI, API, or both) — this seeds a UI-only production scaffold,
   // matching what these codegen-lab scenarios exercise.
   const uiTemplatesDir = path.join(TEMPLATES_DIR, "ui");
-  await copyTemplate(root, path.join(uiTemplatesDir, "support/config/page-loader.ts"), "support/config/page-loader.ts");
-  await copyTemplate(root, path.join(uiTemplatesDir, "support/config/page.config.ts"), "support/config/page.config.ts");
+  await copyTemplate(
+    root,
+    path.join(uiTemplatesDir, "support/config/page-loader.ts"),
+    "support/config/page-loader.ts"
+  );
+  await copyTemplate(
+    root,
+    path.join(uiTemplatesDir, "support/config/page.config.ts"),
+    "support/config/page.config.ts"
+  );
   await copyTemplate(root, path.join(uiTemplatesDir, "pages/BasePage.ts"), "pages/BasePage.ts");
   await copyTemplate(root, path.join(uiTemplatesDir, "panels/BasePanel.ts"), "panels/BasePanel.ts");
 }
 
 async function seedMinimalApiScaffold(root: string): Promise<void> {
   await mkdir(path.join(root, "support", "config"), { recursive: true });
-  await writeFile(path.join(root, "support/config/client-loader.ts"), CLIENT_LOADER_TEMPLATE, "utf8");
+  await writeFile(
+    path.join(root, "support/config/client-loader.ts"),
+    CLIENT_LOADER_TEMPLATE,
+    "utf8"
+  );
   await writeFile(path.join(root, "support/config/api.config.ts"), API_CONFIG_TEMPLATE, "utf8");
 }
 
@@ -69,12 +81,23 @@ async function seedProductionApiScaffold(root: string): Promise<void> {
     path.join(apiTemplatesDir, "support/config/client-loader.ts"),
     "support/config/client-loader.ts"
   );
-  await copyTemplate(root, path.join(apiTemplatesDir, "support/config/api.config.ts"), "support/config/api.config.ts");
-  await copyTemplate(root, path.join(apiTemplatesDir, "clients/BaseApiClient.ts"), "clients/BaseApiClient.ts");
+  await copyTemplate(
+    root,
+    path.join(apiTemplatesDir, "support/config/api.config.ts"),
+    "support/config/api.config.ts"
+  );
+  await copyTemplate(
+    root,
+    path.join(apiTemplatesDir, "clients/BaseApiClient.ts"),
+    "clients/BaseApiClient.ts"
+  );
 }
 
 export async function createProjectRoot(options?: CreateProjectRootOptions): Promise<ProjectRoot> {
-  const root = path.join(os.tmpdir(), `vindicate-codegen-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const root = path.join(
+    os.tmpdir(),
+    `vindicate-codegen-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
   trackedRoots.push(root);
   await mkdir(root, { recursive: true });
 

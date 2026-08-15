@@ -56,9 +56,7 @@ describe("Recording routes", () => {
     const body = JSON.parse(finalize.body) as { path: string };
     expect(body.path).toContain("Login-Flow.json");
 
-    const artifact = JSON.parse(
-      await readFile(path.join(ctx.dataDir, body.path), "utf-8")
-    ) as {
+    const artifact = JSON.parse(await readFile(path.join(ctx.dataDir, body.path), "utf-8")) as {
       name: string;
       status: string;
     };
@@ -139,7 +137,10 @@ describe("Recording routes", () => {
     expect(refinalize.statusCode).toBe(200);
 
     const artifact = JSON.parse(
-      await readFile(path.join(ctx.dataDir, ".vindicate", "recordings", "Checkout-Flow.json"), "utf-8")
+      await readFile(
+        path.join(ctx.dataDir, ".vindicate", "recordings", "Checkout-Flow.json"),
+        "utf-8"
+      )
     ) as { summary: string; steps: Array<{ url?: string }> };
     expect(artifact.summary).toBe("Updated checkout flow");
     expect(artifact.steps[0]?.url).toBe("https://example.com/checkout");

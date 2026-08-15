@@ -31,8 +31,17 @@ describe("WorkerClient.apiRequest", () => {
     const fetchFn = vi.fn<typeof fetch>(async (url, init) => {
       expect(toRequestUrl(url)).toBe("http://worker/api-request");
       expect(init?.method).toBe("POST");
-      expect(JSON.parse(init?.body as string)).toEqual({ method: "GET", url: "https://example.com/thing" });
-      return jsonResponse({ status: 200, status_text: "OK", headers: {}, body: "hello", body_json: undefined });
+      expect(JSON.parse(init?.body as string)).toEqual({
+        method: "GET",
+        url: "https://example.com/thing"
+      });
+      return jsonResponse({
+        status: 200,
+        status_text: "OK",
+        headers: {},
+        body: "hello",
+        body_json: undefined
+      });
     });
 
     const client = makeClient(fetchFn);
@@ -44,13 +53,20 @@ describe("WorkerClient.apiRequest", () => {
 
   it("maps a worker api.request_failed response to ApiRequestFailedError, not a generic error", async () => {
     const fetchFn = vi.fn<typeof fetch>(async () =>
-      jsonResponse({ ok: false, error: "GET https://x.invalid/ failed: getaddrinfo ENOTFOUND", code: "api.request_failed" }, 502)
+      jsonResponse(
+        {
+          ok: false,
+          error: "GET https://x.invalid/ failed: getaddrinfo ENOTFOUND",
+          code: "api.request_failed"
+        },
+        502
+      )
     );
 
     const client = makeClient(fetchFn);
-    await expect(client.apiRequest({ method: "GET", url: "https://x.invalid/" })).rejects.toBeInstanceOf(
-      ApiRequestFailedError
-    );
+    await expect(
+      client.apiRequest({ method: "GET", url: "https://x.invalid/" })
+    ).rejects.toBeInstanceOf(ApiRequestFailedError);
   });
 
   it("sends internal-key auth headers on the request", async () => {

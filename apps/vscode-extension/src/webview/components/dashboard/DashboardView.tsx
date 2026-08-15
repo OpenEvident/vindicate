@@ -1,10 +1,7 @@
 import { useMemo, useState } from "react";
 import { createEmptyDashboardMetrics } from "../../../shared/metricAvailability";
 import { McpEnableCallout } from "../shared/McpEnableCallout";
-import {
-  isDashboardMcpBannerHidden,
-  setDashboardMcpBannerHidden
-} from "../../lib/mcpBannerPrefs";
+import { isDashboardMcpBannerHidden, setDashboardMcpBannerHidden } from "../../lib/mcpBannerPrefs";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import { useOnboardingStore } from "../../stores/onboardingStore";
 import { CanvasHeader, type DashboardTabId } from "./CanvasHeader";
@@ -16,8 +13,7 @@ export function DashboardView() {
   const [activeTab, setActiveTab] = useState<DashboardTabId>("overview");
   const folderPath = useOnboardingStore((s) => s.folderPath);
   const [dismissedFolder, setDismissedFolder] = useState<string | null>(null);
-  const mcpBannerHidden =
-    dismissedFolder === folderPath || isDashboardMcpBannerHidden(folderPath);
+  const mcpBannerHidden = dismissedFolder === folderPath || isDashboardMcpBannerHidden(folderPath);
   const storedMetrics = useDashboardStore((s) => s.metrics);
   const isLoading = useDashboardStore((s) => s.isLoading);
   const folderName = useOnboardingStore((s) => s.folderName);

@@ -19,8 +19,9 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<{
 }>;
 
 function getToolHandler(server: McpServer, name: string): ToolHandler {
-  const tools = (server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> })
-    ._registeredTools;
+  const tools = (
+    server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> }
+  )._registeredTools;
   const tool = tools[name];
   if (tool === undefined) {
     throw new Error(`tool not registered: ${name}`);
@@ -36,9 +37,15 @@ function textFromResult(result: Awaited<ReturnType<ToolHandler>>): string {
 describe("scaffold-tools", () => {
   it("returns an agent-friendly error when ci_platform is missing", async () => {
     const server = new McpServer({ name: "test", version: "0" });
-    registerScaffoldTools(server, new ProjectFs({ projectRoot: process.cwd(), maxFileBytes: 512_000 }));
+    registerScaffoldTools(
+      server,
+      new ProjectFs({ projectRoot: process.cwd(), maxFileBytes: 512_000 })
+    );
 
-    const result = await getToolHandler(server, "scaffold_project")({
+    const result = await getToolHandler(
+      server,
+      "scaffold_project"
+    )({
       base_url: "https://app.example.com"
     });
 
@@ -50,9 +57,15 @@ describe("scaffold-tools", () => {
 
   it("forwards target to scaffoldProject when provided", async () => {
     const server = new McpServer({ name: "test", version: "0" });
-    registerScaffoldTools(server, new ProjectFs({ projectRoot: process.cwd(), maxFileBytes: 512_000 }));
+    registerScaffoldTools(
+      server,
+      new ProjectFs({ projectRoot: process.cwd(), maxFileBytes: 512_000 })
+    );
 
-    await getToolHandler(server, "scaffold_project")({
+    await getToolHandler(
+      server,
+      "scaffold_project"
+    )({
       base_url: "https://app.example.com",
       ci_platform: "github",
       target: "api"
@@ -66,9 +79,15 @@ describe("scaffold-tools", () => {
 
   it("returns an agent-friendly error when target is missing", async () => {
     const server = new McpServer({ name: "test", version: "0" });
-    registerScaffoldTools(server, new ProjectFs({ projectRoot: process.cwd(), maxFileBytes: 512_000 }));
+    registerScaffoldTools(
+      server,
+      new ProjectFs({ projectRoot: process.cwd(), maxFileBytes: 512_000 })
+    );
 
-    const result = await getToolHandler(server, "scaffold_project")({
+    const result = await getToolHandler(
+      server,
+      "scaffold_project"
+    )({
       base_url: "https://app.example.com",
       ci_platform: "github"
     });

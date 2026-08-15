@@ -119,7 +119,10 @@ describe("playbackRecordingSteps precondition filtering", () => {
 
     expect(result.ok).toBe(true);
     expect(goto).toHaveBeenCalledTimes(1);
-    expect(goto).toHaveBeenCalledWith("https://app.test/settings", { waitUntil: "load", timeout: 1000 });
+    expect(goto).toHaveBeenCalledWith("https://app.test/settings", {
+      waitUntil: "load",
+      timeout: 1000
+    });
   });
 
   it("treats first navigate without trigger as entry navigate and skips it", async () => {
@@ -149,7 +152,10 @@ describe("playbackRecordingSteps precondition filtering", () => {
 
     expect(result.ok).toBe(true);
     expect(goto).toHaveBeenCalledTimes(1);
-    expect(goto).toHaveBeenCalledWith("https://app.test/profile", { waitUntil: "load", timeout: 1000 });
+    expect(goto).toHaveBeenCalledWith("https://app.test/profile", {
+      waitUntil: "load",
+      timeout: 1000
+    });
   });
 
   it("does not fail replay when a played navigate never reaches real network-idle (best-effort settle only)", async () => {
@@ -160,7 +166,8 @@ describe("playbackRecordingSteps precondition filtering", () => {
     const goto = vi.fn(async () => {});
     const page = fakePage(goto);
     const waitForLoadState = vi.fn().mockRejectedValue(new Error("Timeout 20ms exceeded"));
-    (page as unknown as { waitForLoadState: typeof waitForLoadState }).waitForLoadState = waitForLoadState;
+    (page as unknown as { waitForLoadState: typeof waitForLoadState }).waitForLoadState =
+      waitForLoadState;
     const steps: RecordedStep[] = [
       {
         seq: 1,
@@ -184,7 +191,10 @@ describe("playbackRecordingSteps precondition filtering", () => {
     const result = await playbackRecordingSteps(page, steps, settleCfg, 1000);
 
     expect(result.ok).toBe(true);
-    expect(goto).toHaveBeenCalledWith("https://app.test/checkout", { waitUntil: "load", timeout: 1000 });
+    expect(goto).toHaveBeenCalledWith("https://app.test/checkout", {
+      waitUntil: "load",
+      timeout: 1000
+    });
     expect(waitForLoadState).toHaveBeenCalledTimes(1);
     const [state, opts] = waitForLoadState.mock.calls[0] as [string, { timeout: number }];
     expect(state).toBe("networkidle");
@@ -288,7 +298,14 @@ describe("playbackRecordingSteps frame_path resolution", () => {
           strategy: "dom_id",
           value: "submit-btn",
           strength: "strong",
-          frame_path: [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe", xpath: '//*[@id="klarna-checkout-iframe"]' }]
+          frame_path: [
+            {
+              strategy: "dom_id",
+              confidence: "high",
+              value: "klarna-checkout-iframe",
+              xpath: '//*[@id="klarna-checkout-iframe"]'
+            }
+          ]
         }
       }
     ];

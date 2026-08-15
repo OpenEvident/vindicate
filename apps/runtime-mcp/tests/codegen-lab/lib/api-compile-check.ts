@@ -85,7 +85,10 @@ function runCommand(command: string, args: string[], cwd: string): Promise<void>
 }
 
 export async function compileGeneratedApiProject(root: string): Promise<void> {
-  const templatePath = path.resolve(RUNTIME_MCP_ROOT, "tests/codegen-lab/tsconfig.codegen-lab.json");
+  const templatePath = path.resolve(
+    RUNTIME_MCP_ROOT,
+    "tests/codegen-lab/tsconfig.codegen-lab.json"
+  );
   const templateRaw = await readFile(templatePath, "utf8");
   const template = JSON.parse(templateRaw) as Record<string, unknown>;
 
@@ -114,7 +117,13 @@ export async function compileGeneratedApiProject(root: string): Promise<void> {
       // missing a required field.
       noImplicitAny: false
     },
-    include: ["clients/**/*.ts", "builders/**/*.ts", "tests/**/*.ts", "support/**/*.ts", "types/**/*.d.ts"]
+    include: [
+      "clients/**/*.ts",
+      "builders/**/*.ts",
+      "tests/**/*.ts",
+      "support/**/*.ts",
+      "types/**/*.d.ts"
+    ]
   };
   await writeFile(
     path.join(root, "tsconfig.codegen-lab-api.generated.json"),
@@ -126,5 +135,9 @@ export async function compileGeneratedApiProject(root: string): Promise<void> {
   await writeFile(path.join(root, "types", "playwright-test.d.ts"), PLAYWRIGHT_TEST_SHIM, "utf8");
 
   const tscBin = require.resolve("typescript/bin/tsc");
-  await runCommand(process.execPath, [tscBin, "-p", "tsconfig.codegen-lab-api.generated.json", "--noEmit"], root);
+  await runCommand(
+    process.execPath,
+    [tscBin, "-p", "tsconfig.codegen-lab-api.generated.json", "--noEmit"],
+    root
+  );
 }

@@ -12,8 +12,9 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<{
 }>;
 
 function getToolHandler(server: McpServer, name: string): ToolHandler {
-  const tools = (server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> })
-    ._registeredTools;
+  const tools = (
+    server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> }
+  )._registeredTools;
   const tool = tools[name];
   if (tool === undefined) {
     throw new Error(`tool not registered: ${name}`);
@@ -72,7 +73,11 @@ describe("browser_diagnose tool", () => {
     const result = await getToolHandler(server, "browser_diagnose")({ session_id: sessionId });
     expect(result.isError).toBeUndefined();
     expect(result.content).toHaveLength(2);
-    expect(result.content[0]).toMatchObject({ type: "image", data: "aGVsbG8=", mimeType: "image/jpeg" });
+    expect(result.content[0]).toMatchObject({
+      type: "image",
+      data: "aGVsbG8=",
+      mimeType: "image/jpeg"
+    });
     expect(result.content[1]?.text).toBe("https://app.test/page · Test Page · viewport");
     expect(worker.calls.some((c) => c.method === "runStep")).toBe(true);
   });

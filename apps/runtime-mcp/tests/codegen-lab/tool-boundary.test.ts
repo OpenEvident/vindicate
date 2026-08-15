@@ -17,7 +17,14 @@ describe("codegen tool boundary validation", () => {
             owned_by: "login",
             elements: [{ ref: "submit", tag: "button", role: "button", name: "Submit" }],
             types: [],
-            steps: [{ name: "step_submit", jsdoc: "Submit", params: [], actions: [{ do: "clck", ref: "submit" }] }],
+            steps: [
+              {
+                name: "step_submit",
+                jsdoc: "Submit",
+                params: [],
+                actions: [{ do: "clck", ref: "submit" }]
+              }
+            ],
             verifies: []
           }
         ],
@@ -26,7 +33,14 @@ describe("codegen tool boundary validation", () => {
           generates_storage_state: null,
           storage_state: null,
           before_each: null,
-          cases: [{ ac_id: "AC-1", scenario: "Submit", title: "[AC-1] submit", body: [{ fixture: "loginPage", call: "step_submit" }] }]
+          cases: [
+            {
+              ac_id: "AC-1",
+              scenario: "Submit",
+              title: "[AC-1] submit",
+              body: [{ fixture: "loginPage", call: "step_submit" }]
+            }
+          ]
         }
       }
     });
@@ -51,8 +65,22 @@ describe("codegen tool boundary validation", () => {
             owned_by: "login",
             elements: [{ ref: "submit", tag: "button", role: "button", name: "Submit" }],
             types: [],
-            steps: [{ name: "step_submit", jsdoc: "Submit", params: [], actions: [{ do: "click", ref: "submit" }] }],
-            verifies: [{ name: "verify_submit", jsdoc: "Verify", params: [], assertions: [{ subject: "element", ref: "submit", matcher: "toBeVisibl" }] }]
+            steps: [
+              {
+                name: "step_submit",
+                jsdoc: "Submit",
+                params: [],
+                actions: [{ do: "click", ref: "submit" }]
+              }
+            ],
+            verifies: [
+              {
+                name: "verify_submit",
+                jsdoc: "Verify",
+                params: [],
+                assertions: [{ subject: "element", ref: "submit", matcher: "toBeVisibl" }]
+              }
+            ]
           }
         ],
         spec: {
@@ -60,7 +88,14 @@ describe("codegen tool boundary validation", () => {
           generates_storage_state: null,
           storage_state: null,
           before_each: null,
-          cases: [{ ac_id: "AC-1", scenario: "Submit", title: "[AC-1] submit", body: [{ fixture: "loginPage", call: "step_submit" }] }]
+          cases: [
+            {
+              ac_id: "AC-1",
+              scenario: "Submit",
+              title: "[AC-1] submit",
+              body: [{ fixture: "loginPage", call: "step_submit" }]
+            }
+          ]
         }
       }
     });

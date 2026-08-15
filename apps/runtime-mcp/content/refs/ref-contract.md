@@ -11,6 +11,7 @@ The gate is `npm run audit` (`tsc --noEmit`) plus the audit node's grep checklis
 validator.
 
 **Severity tags:**
+
 - `[CRITICAL]` — blocks completion. Must resolve before the smoke/audit gate passes.
 - `[MAJOR]` — must fix before merging. Auditable via grep.
 - `[LOW]` — polish. Acceptable as follow-up.
@@ -19,32 +20,33 @@ validator.
 
 ## Clauses
 
-| ID | Rule |
-|----|------|
-| C1 | Every page class extends `BasePage` (`pages/BasePage.ts`). Panels do NOT extend BasePage — they compose it. |
-| C2 | Action methods are `step_<verb>`; assertions are `verify_<thing>`. Both `async`, both return `Promise<this>`. Read getters (`get_*` on page objects, `get<Thing>()` on panels) returning data are exempt from `Promise<this>`. |
-| C3 | Specs import `test` from `@config/page.config`. Import from `@config/page-loader` only when schema includes `expected` (as `<featureCamel>Expected`). No deep imports. |
-| C4 | `support/config/page-loader.ts` contains only single-line `export … from '…'` statements — no logic, no consts, no path aliases inside the file. |
-| C5 | Every page object used in a test is provided as a fixture in `support/config/page.config.ts`. Tests never call `new <Page>(page)`. |
-| C6 | Test data is JSON under `support/data/<feature>/`, imported via barrel as the file's own top-level shape. No wrapper objects, no runtime loaders. |
-| C7 | Forbidden: custom logger, method decorator, custom `globalSetup`, `authenticatedPage` fixture, `DataLoader` / `CredentialResolver` classes. Generator-managed auth setup via `generates_storage_state` is allowed. |
-| C8 | Fixture destructures and function parameter lists stay on a single line — never broken vertically. |
-| C9 | The only secret/configuration source is `.env`, read via `process.env.X`. No config wrapper class. |
-| C10 | Tests live only in `tests/`. `specs/`, `e2e/`, `__tests__/`, `features/` are forbidden. [CRITICAL] |
-| C11 | Typecheck with `npm run audit` (`tsc --noEmit`) — must be clean before any phase closes. |
-| C14 | A CI workflow is present after bootstrap for the selected platform (`<project-root>/.github/workflows/vindicate-tests.yml` for GitHub, `<project-root>/bitbucket-pipelines.yml` for Bitbucket). For GitHub, filename and top-level `name:` MUST contain the lowercase `vindicate` token. Job and step `name:` fields are free-form. |
+| ID  | Rule                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| C1  | Every page class extends `BasePage` (`pages/BasePage.ts`). Panels do NOT extend BasePage — they compose it.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| C2  | Action methods are `step_<verb>`; assertions are `verify_<thing>`. Both `async`, both return `Promise<this>`. Read getters (`get_*` on page objects, `get<Thing>()` on panels) returning data are exempt from `Promise<this>`.                                                                                                                                                                                                                                                                                                                                                                         |
+| C3  | Specs import `test` from `@config/page.config`. Import from `@config/page-loader` only when schema includes `expected` (as `<featureCamel>Expected`). No deep imports.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| C4  | `support/config/page-loader.ts` contains only single-line `export … from '…'` statements — no logic, no consts, no path aliases inside the file.                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| C5  | Every page object used in a test is provided as a fixture in `support/config/page.config.ts`. Tests never call `new <Page>(page)`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| C6  | Test data is JSON under `support/data/<feature>/`, imported via barrel as the file's own top-level shape. No wrapper objects, no runtime loaders.                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| C7  | Forbidden: custom logger, method decorator, custom `globalSetup`, `authenticatedPage` fixture, `DataLoader` / `CredentialResolver` classes. Generator-managed auth setup via `generates_storage_state` is allowed.                                                                                                                                                                                                                                                                                                                                                                                     |
+| C8  | Fixture destructures and function parameter lists stay on a single line — never broken vertically.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| C9  | The only secret/configuration source is `.env`, read via `process.env.X`. No config wrapper class.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| C10 | Tests live only in `tests/`. `specs/`, `e2e/`, `__tests__/`, `features/` are forbidden. [CRITICAL]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| C11 | Typecheck with `npm run audit` (`tsc --noEmit`) — must be clean before any phase closes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| C14 | A CI workflow is present after bootstrap for the selected platform (`<project-root>/.github/workflows/vindicate-tests.yml` for GitHub, `<project-root>/bitbucket-pipelines.yml` for Bitbucket). For GitHub, filename and top-level `name:` MUST contain the lowercase `vindicate` token. Job and step `name:` fields are free-form.                                                                                                                                                                                                                                                                    |
 | C15 | Bootstrap completion gate — all of these must exist before any capture, add-feature, or smoke phase begins: `package.json`, `tsconfig.json`, `playwright.config.ts`, `.env`, `.gitignore`, `support/config/page-loader.ts`, `support/config/page.config.ts`, `pages/BasePage.ts`, and directories `support/config/`, `support/data/`, `pages/`, `panels/`, `tests/`. When the project lives in a subdirectory (e.g. `vindicate-test/`), `.vindicate/config.json` at CWD must also exist with `{ "projectRoot": "<subdir>" }`. All vindicate-generated source is `.ts` only — no `.mjs`, `.js`, `.cjs`. |
-| C16 | One `test()` per scenario in `.vindicate/stories/<feature>.story.md`, tagged `[AC-x]`. Story file drives count — no cap. Bootstrap smoke spec (1 reachability test) is excluded. |
-| C17 | No `tests/<feature>.spec.ts` until (a) C15 satisfied AND (b) a real `<Feature>Page.ts` or panel exists under `pages/` or `panels/` with ≥1 `step_*` and ≥1 `verify_*` AND (c) `npm run audit` passes for that file. `vindicate_generate_code` `create` emits page object + spec atomically and is exempt. [CRITICAL] |
-| C18 | Every locator MUST come from the derived structured locator (strategy one of `testid | testid_xpath | dom_id | role_name | label | placeholder | text | attr_combo | scoped | sibling_text | nth`, or `dyn_param`) and carry a `// locator-helper: <strategy>` comment in the source. A locator is normally a `private` field; a runtime-parameterized (`dyn_param`) locator is instead a `private` method returning `Locator`. [CRITICAL] |
-| C20 | Every test title starts with exactly one `[AC-x]` tag mapped to an existing AC ID in the linked story file. Format: `test('[AC-1] should <behavior>', ...)`. Tag must be first token. No multi-AC tags. [MAJOR] |
-| C21 | After writing all tests, emit one chat line: `✅ AC coverage: N/N covered`, derived from `{ total, covered[], missing[], stale[] }`. |
+| C16 | One `test()` per scenario in `.vindicate/stories/<feature>.story.md`, tagged `[AC-x]`. Story file drives count — no cap. Bootstrap smoke spec (1 reachability test) is excluded.                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| C17 | No `tests/<feature>.spec.ts` until (a) C15 satisfied AND (b) a real `<Feature>Page.ts` or panel exists under `pages/` or `panels/` with ≥1 `step_*` and ≥1 `verify_*` AND (c) `npm run audit` passes for that file. `vindicate_generate_code` `create` emits page object + spec atomically and is exempt. [CRITICAL]                                                                                                                                                                                                                                                                                   |
+| C18 | Every locator MUST come from the derived structured locator (strategy one of `testid                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | testid_xpath | dom_id | role_name | label | placeholder | text | attr_combo | scoped | sibling_text | nth`, or `dyn_param`) and carry a `// locator-helper: <strategy>`comment in the source. A locator is normally a`private` field; a runtime-parameterized (`dyn_param`) locator is instead a `private`method returning`Locator`. [CRITICAL] |
+| C20 | Every test title starts with exactly one `[AC-x]` tag mapped to an existing AC ID in the linked story file. Format: `test('[AC-1] should <behavior>', ...)`. Tag must be first token. No multi-AC tags. [MAJOR]                                                                                                                                                                                                                                                                                                                                                                                        |
+| C21 | After writing all tests, emit one chat line: `✅ AC coverage: N/N covered`, derived from `{ total, covered[], missing[], stale[] }`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 ---
 
 ## Root folder allowlist [CRITICAL]
 
 Project root contains **only** these plain directories:
+
 - **Allowed:** `tests/`, `pages/`, `panels/`, `support/`, `test-results/`, `playwright-report/`, `node_modules/`
 - **Forbidden:** `src/`, `features/`, `e2e/`, `specs/`, `__tests__/`, `helpers/`, `utils/`, `lib/`,
   `data/` (root — lives under `support/`), `config/` (root — lives under `support/`)
@@ -70,14 +72,14 @@ then delete the rogue folder before completion.
 
 ## Per-folder file-name patterns [CRITICAL]
 
-| Folder | Pattern | Forbidden |
-|---|---|---|
-| `pages/` | `<PascalCase>Page.ts` | `loginPage.ts`, `login-page.ts`, `Login.ts`, `LoginPage.tsx` |
-| `panels/` | `<PascalCase>Panel.ts` | `Header.ts`, `header-panel.ts` |
-| `support/data/<feature>/` | lowercase `<noun>.json` | `Users.json`, `user-data.json`, `expected.JSON` |
-| `tests/` | `<feature>.spec.ts` | `login.test.ts`, `LoginSpec.ts`, `login_spec.ts` |
-| `support/config/` | kebab-case `*.ts` | `pageLoader.ts`, `PageLoader.ts` |
-| all source | `*.ts` only | `*.mjs`, `*.cjs`, `*.js`, `*.jsx`, `*.tsx` |
+| Folder                    | Pattern                 | Forbidden                                                    |
+| ------------------------- | ----------------------- | ------------------------------------------------------------ |
+| `pages/`                  | `<PascalCase>Page.ts`   | `loginPage.ts`, `login-page.ts`, `Login.ts`, `LoginPage.tsx` |
+| `panels/`                 | `<PascalCase>Panel.ts`  | `Header.ts`, `header-panel.ts`                               |
+| `support/data/<feature>/` | lowercase `<noun>.json` | `Users.json`, `user-data.json`, `expected.JSON`              |
+| `tests/`                  | `<feature>.spec.ts`     | `login.test.ts`, `LoginSpec.ts`, `login_spec.ts`             |
+| `support/config/`         | kebab-case `*.ts`       | `pageLoader.ts`, `PageLoader.ts`                             |
+| all source                | `*.ts` only             | `*.mjs`, `*.cjs`, `*.js`, `*.jsx`, `*.tsx`                   |
 
 ---
 
@@ -93,7 +95,7 @@ its own from the same identity evidence.)
 - Tier order: `testid` (`getByTestId`) → `testid_xpath` (`//*[@attr]`) → `dom_id` (`//*[@id]`) →
   `role_name` (`getByRole` exact) → `label`/`placeholder`/`text` → `attr_combo` (`//tag[@a][@b]`) →
   `scoped` (container `getByRole().getByRole()`) → `sibling_text` (`//tag[preceding-sibling::*[…] or
-  following-sibling::*[…]]`, only when no accessible name exists at all) → `nth` (positional, low
+following-sibling::*[…]]`, only when no accessible name exists at all) → `nth` (positional, low
   confidence).
 - A `dyn_param` locator is a **method** with a `${param}` template literal when a specific runtime value
   must be targeted (the only place parameterization sits over the derived locator).
@@ -122,15 +124,17 @@ its own from the same identity evidence.)
   never in the spec body.
 
 **Visual diagnosis (agent tools) [MAJOR]**
+
 - `browser_diagnose` is **fallback-only** — call only after `browser_read` on the same session when you
   still cannot locate or act on the target.
-- **Diagnosis only** — use the screenshot to understand *why* you are stuck (modal, disabled control,
+- **Diagnosis only** — use the screenshot to understand _why_ you are stuck (modal, disabled control,
   missing prior step). **Never** use it to invent or author selectors.
 - **One shot per stuck-point** — do not spam screenshots; re-read scoped or escalate instead.
 - **Big pages:** when `browser_read` shows `⚠️ showing N of M elements`, scope the next read before
   diagnosing or escalating.
 
 **Standalone debug scripts (agent tooling) [MAJOR]**
+
 - Some questions a live `browser_read`/`browser_act` loop cannot answer at all — the real HTTP status
   behind a "timeout" (409 vs a genuine hang), the exact values inside a third-party widget (picker
   columns, a rich-text editor's DOM shape), whether two same-labeled elements really collide. For
@@ -143,7 +147,7 @@ its own from the same identity evidence.)
   (`vindicate_ask_user`) instead of iterating. This is the same one-shot discipline as `browser_diagnose`
   above, applied to code instead of screenshots.
 - **Diagnosis only — never authored into the deliverable [CRITICAL].** The script itself never becomes
-  part of `tests/`/`pages/`/`panels/`; only the *finding* (e.g. "scope to the open modal", "use
+  part of `tests/`/`pages/`/`panels/`; only the _finding_ (e.g. "scope to the open modal", "use
   `pressSequentially`, not `fill`, for this editor", "slots collide — randomize / retry with a fresh
   one") gets hand-written into the real `.ts` file.
 - **Always deleted before reporting done** — confirm with a working-tree check (e.g. `git status`)
@@ -174,14 +178,14 @@ Short `browser_act` verbs map to worker actions (`select`→`select_option`, `sc
 `press`→`press_key`, `upload`→`upload_file`). Recorded artifacts use **worker names** (`fill`, `drag`,
 `dblclick`, `upload_file`).
 
-| Action | When to use | Notes |
-|--------|-------------|-------|
-| `fill` | Set a value on text, number, textarea, contenteditable, **range** | Default for value-set. Replaces existing value. Not for checkbox/radio/file — use `check`/`uncheck`/`upload`. Falls back to filling a single native `<input>`/`<textarea>`/contenteditable descendant when the resolved element is itself a non-editable wrapper (e.g. `<ion-input>`) — no extra step needed. |
-| `type` | Keystroke-sensitive fields (masked PIN, some OTP widgets); **JS-model rich-text editors (Quill, Slate, TinyMCE)** whose internal state only updates from real keystroke events — `fill` silently no-ops on these even though the element is contenteditable | Character-by-character; use sparingly. |
-| `hover` | Reveal menus, tooltips, lazy dropdowns before click | Not recorded in human artifacts (drive-only). |
-| `dblclick` | Double-click to open/edit | Recorded as `dblclick`. |
-| `drag` | Pointer drag source → `to_ref` target | `strategy:"manual"` (default) or `"native"` for HTML5 DnD. Codegen emits `dragTo()`. |
-| `upload` | `<input type="file">` | Exploration: `sample` kind or absolute `files` on worker. Tests: `support/data/<feature>/…` paths. |
+| Action     | When to use                                                                                                                                                                                                                                                 | Notes                                                                                                                                                                                                                                                                                                         |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fill`     | Set a value on text, number, textarea, contenteditable, **range**                                                                                                                                                                                           | Default for value-set. Replaces existing value. Not for checkbox/radio/file — use `check`/`uncheck`/`upload`. Falls back to filling a single native `<input>`/`<textarea>`/contenteditable descendant when the resolved element is itself a non-editable wrapper (e.g. `<ion-input>`) — no extra step needed. |
+| `type`     | Keystroke-sensitive fields (masked PIN, some OTP widgets); **JS-model rich-text editors (Quill, Slate, TinyMCE)** whose internal state only updates from real keystroke events — `fill` silently no-ops on these even though the element is contenteditable | Character-by-character; use sparingly.                                                                                                                                                                                                                                                                        |
+| `hover`    | Reveal menus, tooltips, lazy dropdowns before click                                                                                                                                                                                                         | Not recorded in human artifacts (drive-only).                                                                                                                                                                                                                                                                 |
+| `dblclick` | Double-click to open/edit                                                                                                                                                                                                                                   | Recorded as `dblclick`.                                                                                                                                                                                                                                                                                       |
+| `drag`     | Pointer drag source → `to_ref` target                                                                                                                                                                                                                       | `strategy:"manual"` (default) or `"native"` for HTML5 DnD. Codegen emits `dragTo()`.                                                                                                                                                                                                                          |
+| `upload`   | `<input type="file">`                                                                                                                                                                                                                                       | Exploration: `sample` kind or absolute `files` on worker. Tests: `support/data/<feature>/…` paths.                                                                                                                                                                                                            |
 
 ---
 
@@ -204,6 +208,7 @@ Short `browser_act` verbs map to worker actions (`select`→`select_option`, `sc
 ## 7-token naming rule [CRITICAL]
 
 For feature noun `<x>` (lowercase, all 7 tokens derived from the same noun unchanged):
+
 1. Story file: `.vindicate/stories/<x>.story.md` ← canonical source
 2. Data folder: `support/data/<x>/`
 3. Page class + file: `<X>Page` in `pages/<X>Page.ts`
@@ -239,13 +244,13 @@ Audit grep: `grep -rn "<X>Page\|<x>Page\|<x>Expected\|<x>\.spec\.ts" pages panel
 
 ## Decision reference
 
-| Question | Answer |
-|---|---|
-| `BasePage` or page object? | `BasePage` only for selector-agnostic utilities used by every page. |
-| Page or panel? | Pages own URLs and lifecycles. Panels own a reusable DOM region on multiple pages. |
-| New data — type, JSON, or barrel? | Test data → JSON. Tiny shape used by one page → exported `type` co-located. Never wrap JSON. |
-| Need to log in? | Default: inline via `loginPage.step_login(...)`. Generator-managed auth setup (`generates_storage_state` / `storage_state`) is allowed when explicitly requested. |
-| Want collapsible reporter steps? | `await test.step('label', async () => { ... })`. Never a method decorator. |
-| New env var? | Add to `.env` (values) and `.env.example` (keys only, no secret values). Read via `process.env.X`. No config wrapper class. |
-| Assert something not on a page object? | Add a `verify_*` method first. No bare `expect()` in spec. |
-| Fixture list feels long? | The test does too much — split it. Never wrap or aggregate fixtures. |
+| Question                               | Answer                                                                                                                                                            |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BasePage` or page object?             | `BasePage` only for selector-agnostic utilities used by every page.                                                                                               |
+| Page or panel?                         | Pages own URLs and lifecycles. Panels own a reusable DOM region on multiple pages.                                                                                |
+| New data — type, JSON, or barrel?      | Test data → JSON. Tiny shape used by one page → exported `type` co-located. Never wrap JSON.                                                                      |
+| Need to log in?                        | Default: inline via `loginPage.step_login(...)`. Generator-managed auth setup (`generates_storage_state` / `storage_state`) is allowed when explicitly requested. |
+| Want collapsible reporter steps?       | `await test.step('label', async () => { ... })`. Never a method decorator.                                                                                        |
+| New env var?                           | Add to `.env` (values) and `.env.example` (keys only, no secret values). Read via `process.env.X`. No config wrapper class.                                       |
+| Assert something not on a page object? | Add a `verify_*` method first. No bare `expect()` in spec.                                                                                                        |
+| Fixture list feels long?               | The test does too much — split it. Never wrap or aggregate fixtures.                                                                                              |

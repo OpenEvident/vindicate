@@ -2,7 +2,10 @@ import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AntigravityAgentsMdWriter } from "../../../src/extension/config/AntigravityAgentsMdWriter";
-import { buildAgentsMdBlock, VINDICATE_AGENTS_MARKERS } from "../../../src/extension/config/vindicateRuleContent";
+import {
+  buildAgentsMdBlock,
+  VINDICATE_AGENTS_MARKERS
+} from "../../../src/extension/config/vindicateRuleContent";
 
 describe("AntigravityAgentsMdWriter", () => {
   const root = path.join(process.cwd(), "tests", "tmp-antigravity-agents-md");
@@ -78,7 +81,11 @@ describe("AntigravityAgentsMdWriter", () => {
     // Text is identical to VINDICATE_CLAUDE_MARKERS by design, but isConfigured must not depend on
     // that coincidence — this is really asserting the writer works standalone, not cross-checking
     // against the other writer's export.
-    await writeFile(agentsMdPath, "<!-- something-else:start -->\nunrelated\n<!-- something-else:end -->", "utf8");
+    await writeFile(
+      agentsMdPath,
+      "<!-- something-else:start -->\nunrelated\n<!-- something-else:end -->",
+      "utf8"
+    );
     expect(await writer.isConfigured(root)).toBe(false);
   });
 });

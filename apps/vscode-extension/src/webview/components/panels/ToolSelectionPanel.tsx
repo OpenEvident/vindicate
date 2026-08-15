@@ -27,7 +27,16 @@ const AGENT_ICONS: Record<ToolKey, { bg: string; el: ReactElement }> = {
   claudeCode: {
     bg: "#d97757",
     el: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.6" strokeLinecap="round" aria-hidden>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#ffffff"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        aria-hidden
+      >
         <line x1="12" y1="3.2" x2="12" y2="20.8" />
         <line x1="3.2" y1="12" x2="20.8" y2="12" />
         <line x1="5.8" y1="5.8" x2="18.2" y2="18.2" />
@@ -41,7 +50,10 @@ const AGENT_ICONS: Record<ToolKey, { bg: string; el: ReactElement }> = {
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
         <circle cx="12" cy="3.5" r="0.9" fill="#fff" />
         <path d="M12 4 L12 5.6" stroke="#fff" strokeWidth="1.3" />
-        <path d="M4 13c0-3.4 3.6-6 8-6s8 2.6 8 6v3c0 1.2-1 2-2.2 2-1 0-1.8-.6-2-1.6-.4 1-1.4 1.6-2.6 1.6h-2.4c-1.2 0-2.2-.6-2.6-1.6-.2 1-1 1.6-2 1.6C5 18 4 17.2 4 16v-3z" fill="#fff" />
+        <path
+          d="M4 13c0-3.4 3.6-6 8-6s8 2.6 8 6v3c0 1.2-1 2-2.2 2-1 0-1.8-.6-2-1.6-.4 1-1.4 1.6-2.6 1.6h-2.4c-1.2 0-2.2-.6-2.6-1.6-.2 1-1 1.6-2 1.6C5 18 4 17.2 4 16v-3z"
+          fill="#fff"
+        />
         <circle cx="9.2" cy="13.5" r="1.1" fill="#0a0a0a" />
         <circle cx="14.8" cy="13.5" r="1.1" fill="#0a0a0a" />
       </svg>
@@ -94,7 +106,9 @@ function AgentCard({
           {icon.el}
         </div>
         <div className="vindicate-agent-info">
-          <div className={`vindicate-agent-name${dimmed ? " vindicate-agent-name--dim" : ""}`}>{label}</div>
+          <div className={`vindicate-agent-name${dimmed ? " vindicate-agent-name--dim" : ""}`}>
+            {label}
+          </div>
           <div className="vindicate-agent-desc">{hint}</div>
         </div>
         {detected ? (
@@ -112,10 +126,17 @@ function AgentCard({
           {checked ? "Will write to this project" : "Would write (skipped)"}
         </div>
         {files.length > 0 && (
-          <div className={`vindicate-agent-files-tree${!checked ? " vindicate-agent-files-tree--dim" : ""}`}>
+          <div
+            className={`vindicate-agent-files-tree${!checked ? " vindicate-agent-files-tree--dim" : ""}`}
+          >
             {files.map((f) => (
-              <div key={f} className={`vindicate-agent-file${!checked ? " vindicate-agent-file--struck" : ""}`}>
-                <span className="vindicate-agent-file-arrow" aria-hidden>└</span>
+              <div
+                key={f}
+                className={`vindicate-agent-file${!checked ? " vindicate-agent-file--struck" : ""}`}
+              >
+                <span className="vindicate-agent-file-arrow" aria-hidden>
+                  └
+                </span>
                 {f}
               </div>
             ))}
@@ -130,10 +151,16 @@ function AgentCard({
             className="vindicate-agent-checkbox"
             aria-label={`Use ${label} on this project`}
           />
-          <span className={checked ? "vindicate-agent-checkbox-label--active" : "vindicate-agent-checkbox-label"}>
+          <span
+            className={
+              checked ? "vindicate-agent-checkbox-label--active" : "vindicate-agent-checkbox-label"
+            }
+          >
             Use {label} on this project
           </span>
-          <span className={`vindicate-agent-checkbox-status${checked ? " vindicate-agent-checkbox-status--on" : ""}`}>
+          <span
+            className={`vindicate-agent-checkbox-status${checked ? " vindicate-agent-checkbox-status--on" : ""}`}
+          >
             {locked ? "Configured ✓" : checked ? "✓ Will configure" : "Skipped"}
           </span>
         </label>

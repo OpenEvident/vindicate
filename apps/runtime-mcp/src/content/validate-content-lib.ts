@@ -30,8 +30,7 @@ export const SUBSTITUTABLE_VARS = [
   "packageManager"
 ] as const;
 
-const TOOL_PATTERN =
-  /\b(vindicate_[a-z_]+|browser_[a-z_]+|scaffold_project|run_tests)\b/g;
+const TOOL_PATTERN = /\b(vindicate_[a-z_]+|browser_[a-z_]+|scaffold_project|run_tests)\b/g;
 
 export interface ContentValidationResult {
   readonly ok: boolean;
@@ -58,9 +57,10 @@ export interface NodeDocForValidation {
   body: string;
 }
 
-export function validateGraphStructure(
-  graph: GraphDocForValidation
-): { errors: string[]; warnings: string[] } {
+export function validateGraphStructure(graph: GraphDocForValidation): {
+  errors: string[];
+  warnings: string[];
+} {
   const errors: string[] = [];
   const warnings: string[] = [];
   const nodeIds = new Set(Object.keys(graph.nodes));

@@ -34,7 +34,9 @@ describe("session lifecycle SSE events", () => {
       event?: string;
       session_id?: string;
     }>;
-    expect(events.some((e) => e.event === "session_paused" && e.session_id === sessionId)).toBe(true);
+    expect(events.some((e) => e.event === "session_paused" && e.session_id === sessionId)).toBe(
+      true
+    );
 
     await authInject(ctx.app, {
       method: "POST",

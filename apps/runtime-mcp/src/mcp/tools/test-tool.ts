@@ -121,7 +121,9 @@ export function parsePlaywrightJsonReport(stdout: string): RunTestsResult | null
           status,
           duration_ms: Math.round(result.duration ?? 0),
           retries: result.retry ?? 0,
-          ...(result.error?.message !== undefined ? { error: stripAnsi(result.error.message) } : {}),
+          ...(result.error?.message !== undefined
+            ? { error: stripAnsi(result.error.message) }
+            : {}),
           ...(result.attachments !== undefined && result.attachments.length > 0
             ? { attachments: result.attachments }
             : {})
@@ -163,9 +165,7 @@ export function parsePlaywrightJsonReport(stdout: string): RunTestsResult | null
   };
 }
 
-function mapPlaywrightStatus(
-  status: string | undefined
-): PlaywrightTestCaseResult["status"] {
+function mapPlaywrightStatus(status: string | undefined): PlaywrightTestCaseResult["status"] {
   switch (status) {
     case "passed":
       return "passed";
@@ -347,7 +347,9 @@ export async function readFailureContext(
 }
 
 /** @internal Exported for unit tests. */
-export async function buildRunTestsPayload(result: RunTestsResult): Promise<Record<string, unknown>> {
+export async function buildRunTestsPayload(
+  result: RunTestsResult
+): Promise<Record<string, unknown>> {
   let inlinedCount = 0;
 
   // Sequential, not Promise.all(map(...)) — the inline cap must apply to the first N failing tests in
@@ -384,7 +386,13 @@ export async function buildRunTestsPayload(result: RunTestsResult): Promise<Reco
       ...(c.error !== undefined ? { error: c.error } : {}),
       ...(context !== undefined ? { context, context_truncated: contextTruncated } : {}),
       ...(attachments.length > 0
-        ? { attachments: attachments.map((a) => ({ name: a.name, contentType: a.contentType, path: a.path })) }
+        ? {
+            attachments: attachments.map((a) => ({
+              name: a.name,
+              contentType: a.contentType,
+              path: a.path
+            }))
+          }
         : {})
     });
   }

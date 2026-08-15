@@ -610,9 +610,9 @@ function normalizeCategory(id: BuiltInPromptId): BuiltInPromptCategory {
   return "onboarding";
 }
 
-export const BUILT_IN_PROMPTS: BuiltInPrompt[] = (Object.entries(PROMPTS) as Array<
-  [BuiltInPromptId, (typeof PROMPTS)[BuiltInPromptId]]
->).map(([id, prompt]) => ({
+export const BUILT_IN_PROMPTS: BuiltInPrompt[] = (
+  Object.entries(PROMPTS) as Array<[BuiltInPromptId, (typeof PROMPTS)[BuiltInPromptId]]>
+).map(([id, prompt]) => ({
   id,
   title: prompt.title,
   description: prompt.description,

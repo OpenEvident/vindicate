@@ -46,7 +46,9 @@ export function verify(
   };
 }
 
-export function pageDef(overrides: Partial<PageDef> & Pick<PageDef, "page_class" | "feature">): PageDef {
+export function pageDef(
+  overrides: Partial<PageDef> & Pick<PageDef, "page_class" | "feature">
+): PageDef {
   return {
     owned_by: overrides.feature,
     path: "/login",
@@ -96,9 +98,7 @@ export function fullSchema(overrides?: Partial<FullSchema>): FullSchema {
           step("step_submit", [{ do: "click", ref: "submit" }])
         ],
         verifies: [
-          verify("verify_loaded", [
-            { subject: "element", ref: "email", matcher: "toBeVisible" }
-          ])
+          verify("verify_loaded", [{ subject: "element", ref: "email", matcher: "toBeVisible" }])
         ]
       })
     ],

@@ -67,14 +67,11 @@ export class HighlightService {
           const roleOpts = d.name.length > 0 ? { name: d.name } : {};
           return page
             .getByRole(d.role as Parameters<Page["getByRole"]>[0], roleOpts)
-            .evaluate(
-              (el, s) => {
-                const html = el as HTMLElement;
-                html.style.outline = s.outline;
-                html.style.outlineOffset = s.outlineOffset;
-              },
-              style
-            )
+            .evaluate((el, s) => {
+              const html = el as HTMLElement;
+              html.style.outline = s.outline;
+              html.style.outlineOffset = s.outlineOffset;
+            }, style)
             .catch(() => {});
         })
       );
@@ -96,22 +93,25 @@ export class HighlightService {
         testidAttr: d.testidAttr,
         ...(d.domId !== undefined ? { domId: d.domId } : {})
       }));
-      await page.evaluate(({ descs: items }) => {
-        const cssSelector = (d: CssDescriptorPayload): string => {
-          if (d.testid !== undefined) {
-            const escaped = d.testid.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-            return `[${d.testidAttr}="${escaped}"]`;
+      await page.evaluate(
+        ({ descs: items }) => {
+          const cssSelector = (d: CssDescriptorPayload): string => {
+            if (d.testid !== undefined) {
+              const escaped = d.testid.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+              return `[${d.testidAttr}="${escaped}"]`;
+            }
+            return `#${CSS.escape(d.domId!)}`;
+          };
+          for (const d of items) {
+            document.querySelectorAll(cssSelector(d)).forEach((el) => {
+              const html = el as HTMLElement;
+              html.style.outline = "";
+              html.style.outlineOffset = "";
+            });
           }
-          return `#${CSS.escape(d.domId!)}`;
-        };
-        for (const d of items) {
-          document.querySelectorAll(cssSelector(d)).forEach((el) => {
-            const html = el as HTMLElement;
-            html.style.outline = "";
-            html.style.outlineOffset = "";
-          });
-        }
-      }, { descs });
+        },
+        { descs }
+      );
     }
 
     if (roleDescriptors.length > 0) {

@@ -87,7 +87,9 @@ export async function showStatusBarMenu(deps: StatusBarMenuDeps): Promise<void> 
     });
   }
 
-  const header = folderPath ? `${onboardingSummary(state)} · ${healthSummary(health)}` : "No workspace folder";
+  const header = folderPath
+    ? `${onboardingSummary(state)} · ${healthSummary(health)}`
+    : "No workspace folder";
 
   type QuickPickEntry = vscode.QuickPickItem & { entry: MenuEntry };
 

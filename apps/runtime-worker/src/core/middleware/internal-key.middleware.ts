@@ -3,7 +3,13 @@
  */
 import { timingSafeEqual } from "node:crypto";
 
-import type { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyRequest, RawServerDefault } from "fastify";
+import type {
+  FastifyBaseLogger,
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  RawServerDefault
+} from "fastify";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
 const HEADER_NAME = "x-vindicate-internal-key";

@@ -98,9 +98,7 @@ export function resolveStructuredLocator(el: ElementDescriptor): StructuredLocat
     // the name during capture; this guards hand-authored / legacy-field schemas, where we lack the DOM
     // to tell author names from content, so we only strip for the unambiguous live-region roles.)
     const useName =
-      el.name !== undefined &&
-      el.name.length > 0 &&
-      !NAME_PROHIBITED_ROLES.has(el.role);
+      el.name !== undefined && el.name.length > 0 && !NAME_PROHIBITED_ROLES.has(el.role);
     return {
       strategy: "role_name",
       confidence: useName ? "high" : "low",
@@ -160,7 +158,9 @@ function renderFrameHopExpr(hop: StructuredLocator, ref: string, dynamic: boolea
     case "attr_combo":
     case "nth":
       if (hop.xpath === undefined || hop.xpath.length === 0) {
-        throw new CodegenLocatorError(`ref '${ref}' has a frame_path hop with no xpath expression.`);
+        throw new CodegenLocatorError(
+          `ref '${ref}' has a frame_path hop with no xpath expression.`
+        );
       }
       xp = hop.xpath;
       break;
@@ -228,7 +228,9 @@ function renderLocatorExpr(loc: StructuredLocator, ref: string, dynamic: boolean
     case "sibling_text":
     case "nth":
       if (loc.xpath === undefined || loc.xpath.length === 0) {
-        throw new CodegenLocatorError(`ref '${ref}' has a '${loc.strategy}' locator with no xpath expression.`);
+        throw new CodegenLocatorError(
+          `ref '${ref}' has a '${loc.strategy}' locator with no xpath expression.`
+        );
       }
       return `${scope}.locator(${tsLit(loc.xpath, dynamic)})`;
     default:

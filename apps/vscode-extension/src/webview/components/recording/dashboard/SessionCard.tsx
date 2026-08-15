@@ -38,13 +38,20 @@ export function SessionCard({ session, listMode, onOpen, onOpenArtifact }: Sessi
           listMode ? "w-[168px] min-h-[92px] border-r" : "h-[128px] border-b"
         ].join(" ")}
       >
-        <SessionThumb {...(session.thumbnailUrl !== undefined ? { thumbnailUrl: session.thumbnailUrl } : {})} />
+        <SessionThumb
+          {...(session.thumbnailUrl !== undefined ? { thumbnailUrl: session.thumbnailUrl } : {})}
+        />
         <div className="absolute top-2.5 left-2.5 z-10">
           <StatusBadge status={session.status} />
         </div>
       </div>
 
-      <div className={["flex flex-1 flex-col gap-2 p-3.5 min-w-0", listMode ? "justify-center" : ""].join(" ")}>
+      <div
+        className={[
+          "flex flex-1 flex-col gap-2 p-3.5 min-w-0",
+          listMode ? "justify-center" : ""
+        ].join(" ")}
+      >
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h3 className="m-0 truncate text-ui-lg font-semibold text-vs-text">{session.name}</h3>

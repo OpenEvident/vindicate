@@ -3,7 +3,9 @@ import { describe, expect, it } from "vitest";
 import type { ElementDescriptor } from "../snapshot/element-descriptor.js";
 import { resolveByTarget } from "./intent-resolver.js";
 
-function desc(overrides: Partial<ElementDescriptor> & Pick<ElementDescriptor, "role" | "name">): ElementDescriptor {
+function desc(
+  overrides: Partial<ElementDescriptor> & Pick<ElementDescriptor, "role" | "name">
+): ElementDescriptor {
   return {
     testidAttr: "data-testid",
     tag: "button",

@@ -50,7 +50,10 @@ export async function compileGeneratedProject(root: string): Promise<void> {
   await ensureFile(root, "pages/BasePage.ts", path.join(templatesDir, "pages/BasePage.ts"));
   await ensureFile(root, "panels/BasePanel.ts", path.join(templatesDir, "panels/BasePanel.ts"));
 
-  const templatePath = path.resolve(RUNTIME_MCP_ROOT, "tests/codegen-lab/tsconfig.codegen-lab.json");
+  const templatePath = path.resolve(
+    RUNTIME_MCP_ROOT,
+    "tests/codegen-lab/tsconfig.codegen-lab.json"
+  );
   const templateRaw = await readFile(templatePath, "utf8");
   const template = JSON.parse(templateRaw) as Record<string, unknown>;
 
@@ -64,7 +67,13 @@ export async function compileGeneratedProject(root: string): Promise<void> {
         "@config/page-loader": ["types/config-page-loader.d.ts"]
       }
     },
-    include: ["pages/**/*.ts", "panels/**/*.ts", "tests/**/*.ts", "auth.setup.ts", "types/**/*.d.ts"]
+    include: [
+      "pages/**/*.ts",
+      "panels/**/*.ts",
+      "tests/**/*.ts",
+      "auth.setup.ts",
+      "types/**/*.d.ts"
+    ]
   };
   await writeFile(
     path.join(root, "tsconfig.codegen-lab.generated.json"),
@@ -218,5 +227,9 @@ ${expectedDecls.join("\n")}
   );
 
   const tscBin = require.resolve("typescript/bin/tsc");
-  await runCommand(process.execPath, [tscBin, "-p", "tsconfig.codegen-lab.generated.json", "--noEmit"], root);
+  await runCommand(
+    process.execPath,
+    [tscBin, "-p", "tsconfig.codegen-lab.generated.json", "--noEmit"],
+    root
+  );
 }

@@ -21,41 +21,68 @@ function fakeResponse(overrides: {
 describe("executeApiRequest", () => {
   it("sends a GET with no body and returns status/headers/body", async () => {
     const fetch = vi.fn().mockResolvedValue(
-      fakeResponse({ status: 200, statusText: "OK", headers: { "content-type": "text/plain" }, text: "hello" })
+      fakeResponse({
+        status: 200,
+        statusText: "OK",
+        headers: { "content-type": "text/plain" },
+        text: "hello"
+      })
     );
     const context: ApiFetchContext = { fetch };
 
-    const result = await executeApiRequest(context, { method: "GET", url: "https://example.com/thing" });
+    const result = await executeApiRequest(context, {
+      method: "GET",
+      url: "https://example.com/thing"
+    });
 
     expect(result.status).toBe(200);
     expect(result.status_text).toBe("OK");
     expect(result.body).toBe("hello");
     expect(result.body_json).toBeUndefined();
-    expect(fetch).toHaveBeenCalledWith("https://example.com/thing", expect.objectContaining({ method: "GET" }));
+    expect(fetch).toHaveBeenCalledWith(
+      "https://example.com/thing",
+      expect.objectContaining({ method: "GET" })
+    );
   });
 
   it("parses body_json when Content-Type is JSON and the body actually parses", async () => {
     const fetch = vi.fn().mockResolvedValue(
-      fakeResponse({ headers: { "content-type": "application/json; charset=utf-8" }, text: '{"id":1,"ok":true}' })
+      fakeResponse({
+        headers: { "content-type": "application/json; charset=utf-8" },
+        text: '{"id":1,"ok":true}'
+      })
     );
-    const result = await executeApiRequest({ fetch }, { method: "GET", url: "https://example.com/thing" });
+    const result = await executeApiRequest(
+      { fetch },
+      { method: "GET", url: "https://example.com/thing" }
+    );
 
     expect(result.body_json).toEqual({ id: 1, ok: true });
   });
 
   it("leaves body_json undefined when Content-Type claims JSON but the body doesn't parse", async () => {
-    const fetch = vi.fn().mockResolvedValue(
-      fakeResponse({ headers: { "content-type": "application/json" }, text: "not actually json" })
+    const fetch = vi
+      .fn()
+      .mockResolvedValue(
+        fakeResponse({ headers: { "content-type": "application/json" }, text: "not actually json" })
+      );
+    const result = await executeApiRequest(
+      { fetch },
+      { method: "GET", url: "https://example.com/thing" }
     );
-    const result = await executeApiRequest({ fetch }, { method: "GET", url: "https://example.com/thing" });
 
     expect(result.body_json).toBeUndefined();
     expect(result.body).toBe("not actually json");
   });
 
   it("leaves body_json undefined when Content-Type is not JSON, even if the body happens to parse", async () => {
-    const fetch = vi.fn().mockResolvedValue(fakeResponse({ headers: { "content-type": "text/html" }, text: "123" }));
-    const result = await executeApiRequest({ fetch }, { method: "GET", url: "https://example.com/thing" });
+    const fetch = vi
+      .fn()
+      .mockResolvedValue(fakeResponse({ headers: { "content-type": "text/html" }, text: "123" }));
+    const result = await executeApiRequest(
+      { fetch },
+      { method: "GET", url: "https://example.com/thing" }
+    );
 
     expect(result.body_json).toBeUndefined();
   });
@@ -89,7 +116,12 @@ describe("executeApiRequest", () => {
     const fetch = vi.fn().mockResolvedValue(fakeResponse({}));
     await executeApiRequest(
       { fetch },
-      { method: "POST", url: "https://example.com/thing", body: { a: "1", b: "2" }, body_type: "form" }
+      {
+        method: "POST",
+        url: "https://example.com/thing",
+        body: { a: "1", b: "2" },
+        body_type: "form"
+      }
     );
 
     expect(fetch).toHaveBeenCalledWith(
@@ -103,7 +135,10 @@ describe("executeApiRequest", () => {
   it("rejects a body without body_type", async () => {
     const fetch = vi.fn();
     await expect(
-      executeApiRequest({ fetch }, { method: "POST", url: "https://example.com/thing", body: { a: 1 } })
+      executeApiRequest(
+        { fetch },
+        { method: "POST", url: "https://example.com/thing", body: { a: 1 } }
+      )
     ).rejects.toBeInstanceOf(ValidationError);
     expect(fetch).not.toHaveBeenCalled();
   });
@@ -127,14 +162,22 @@ describe("executeApiRequest", () => {
   });
 
   it("never wraps a real HTTP response (even a 500) as an error — that's the tool's success case", async () => {
-    const fetch = vi.fn().mockResolvedValue(fakeResponse({ status: 500, statusText: "Internal Server Error" }));
-    const result = await executeApiRequest({ fetch }, { method: "GET", url: "https://example.com/thing" });
+    const fetch = vi
+      .fn()
+      .mockResolvedValue(fakeResponse({ status: 500, statusText: "Internal Server Error" }));
+    const result = await executeApiRequest(
+      { fetch },
+      { method: "GET", url: "https://example.com/thing" }
+    );
     expect(result.status).toBe(500);
   });
 
   it("clamps an excessive timeout_ms to the configured maximum", async () => {
     const fetch = vi.fn().mockResolvedValue(fakeResponse({}));
-    await executeApiRequest({ fetch }, { method: "GET", url: "https://example.com/thing", timeout_ms: 999_999 });
+    await executeApiRequest(
+      { fetch },
+      { method: "GET", url: "https://example.com/thing", timeout_ms: 999_999 }
+    );
 
     const call = fetch.mock.calls[0]?.[1] as { timeout: number };
     expect(call.timeout).toBe(60_000);

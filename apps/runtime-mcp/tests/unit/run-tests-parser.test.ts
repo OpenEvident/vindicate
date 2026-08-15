@@ -33,8 +33,7 @@ describe("parsePlaywrightJsonReport", () => {
 
   it("strips ANSI colour codes from the error message — pure overhead for a text-reading agent", () => {
     const ESC = "\x1b";
-    const coloredMessage =
-      `Error: ${ESC}[2mexpect(${ESC}[22m${ESC}[31mlocator${ESC}[39m${ESC}[2m).${ESC}[22mtoBeVisible() failed`;
+    const coloredMessage = `Error: ${ESC}[2mexpect(${ESC}[22m${ESC}[31mlocator${ESC}[39m${ESC}[2m).${ESC}[22mtoBeVisible() failed`;
     const stdout = `line reporter\n${JSON.stringify({
       suites: [
         {
@@ -46,7 +45,14 @@ describe("parsePlaywrightJsonReport", () => {
               file: "tests/a.spec.ts",
               tests: [
                 {
-                  results: [{ status: "failed", duration: 100, retry: 0, error: { message: coloredMessage } }]
+                  results: [
+                    {
+                      status: "failed",
+                      duration: 100,
+                      retry: 0,
+                      error: { message: coloredMessage }
+                    }
+                  ]
                 }
               ]
             }
@@ -90,6 +96,13 @@ describe("parsePlaywrightJsonReport", () => {
 
     // Failures first, in original relative order (LAB-3, LAB-4, LAB-6); then skips (LAB-2); then
     // passes, in original relative order (LAB-1, LAB-5).
-    expect(titles).toEqual(["LAB-3 fail", "LAB-4 fail", "LAB-6 fail", "LAB-2 skip", "LAB-1 pass", "LAB-5 pass"]);
+    expect(titles).toEqual([
+      "LAB-3 fail",
+      "LAB-4 fail",
+      "LAB-6 fail",
+      "LAB-2 skip",
+      "LAB-1 pass",
+      "LAB-5 pass"
+    ]);
   });
 });

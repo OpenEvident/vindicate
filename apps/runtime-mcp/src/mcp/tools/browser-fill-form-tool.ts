@@ -59,7 +59,9 @@ export function buildFillFormSteps(fields: readonly FillFormField[]): WorkerStep
 
     if (field.action === "check" || field.action === "uncheck") {
       if (field.value !== undefined) {
-        throw new Error(`${label} does not take 'value' — check/uncheck only toggle the element itself.`);
+        throw new Error(
+          `${label} does not take 'value' — check/uncheck only toggle the element itself.`
+        );
       }
       return { action: field.action, ref };
     }
@@ -111,7 +113,8 @@ export function formatFillFormSuccess(
     ok: true,
     fields: fields.map((field, index) => {
       const raw = stepResults[index]?.result;
-      const record = typeof raw === "object" && raw !== null ? (raw as Record<string, unknown>) : {};
+      const record =
+        typeof raw === "object" && raw !== null ? (raw as Record<string, unknown>) : {};
       const stepOk = record.ok !== false;
       const hint = typeof record.hint === "string" ? record.hint : undefined;
       const selected = isStringArray(record.selected) ? record.selected : undefined;
@@ -163,8 +166,12 @@ export function formatFillFormFailure(
   const index = failedEvent.step;
   const failedField = fields[index];
   const ref = failedField?.ref ?? "unknown";
-  const action = typeof failedEvent.action === "string" ? failedEvent.action : (failedField?.action ?? "unknown");
-  const errorMessage = typeof failedEvent.error === "string" ? failedEvent.error : "Field action failed";
+  const action =
+    typeof failedEvent.action === "string"
+      ? failedEvent.action
+      : (failedField?.action ?? "unknown");
+  const errorMessage =
+    typeof failedEvent.error === "string" ? failedEvent.error : "Field action failed";
   const completed = fields.slice(0, index).map((f) => ({ ref: f.ref, action: f.action }));
   const remaining = fields.slice(index).map((f) => ({ ref: f.ref, action: f.action }));
 

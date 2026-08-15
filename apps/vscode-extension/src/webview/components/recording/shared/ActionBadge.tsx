@@ -1,29 +1,42 @@
 import { ACTION_META } from "@/lib/recording-constants";
 import type { ActionType } from "@/lib/recording-ui-types";
 import {
-  MousePointerClick, Keyboard, ChevronDown, Navigation,
-  Space, Camera, CheckSquare, Square, ScrollText, MousePointer2, Upload,
-  Move, MousePointer, ExternalLink, ArrowLeftRight, XSquare,
+  MousePointerClick,
+  Keyboard,
+  ChevronDown,
+  Navigation,
+  Space,
+  Camera,
+  CheckSquare,
+  Square,
+  ScrollText,
+  MousePointer2,
+  Upload,
+  Move,
+  MousePointer,
+  ExternalLink,
+  ArrowLeftRight,
+  XSquare
 } from "lucide-react";
 
 const ACTION_ICONS: Record<ActionType, React.ReactElement> = {
-  click:       <MousePointerClick size={11} />,
-  fill:        <Keyboard size={11} />,
-  select:      <ChevronDown size={11} />,
-  navigate:    <Navigation size={11} />,
-  press_key:   <Space size={11} />,
-  snapshot:    <Camera size={11} />,
-  check:       <CheckSquare size={11} />,
-  uncheck:     <Square size={11} />,
-  scroll:      <ScrollText size={11} />,
-  hover:       <MousePointer2 size={11} />,
+  click: <MousePointerClick size={11} />,
+  fill: <Keyboard size={11} />,
+  select: <ChevronDown size={11} />,
+  navigate: <Navigation size={11} />,
+  press_key: <Space size={11} />,
+  snapshot: <Camera size={11} />,
+  check: <CheckSquare size={11} />,
+  uncheck: <Square size={11} />,
+  scroll: <ScrollText size={11} />,
+  hover: <MousePointer2 size={11} />,
   upload_file: <Upload size={11} />,
-  drag:        <Move size={11} />,
-  dblclick:    <MousePointer size={11} />,
-  new_tab:            <ExternalLink size={11} />,
-  switch_tab:         <ArrowLeftRight size={11} />,
-  switch_tab_by_url:  <ArrowLeftRight size={11} />,
-  close_tab:          <XSquare size={11} />,
+  drag: <Move size={11} />,
+  dblclick: <MousePointer size={11} />,
+  new_tab: <ExternalLink size={11} />,
+  switch_tab: <ArrowLeftRight size={11} />,
+  switch_tab_by_url: <ArrowLeftRight size={11} />,
+  close_tab: <XSquare size={11} />
 };
 
 interface ActionBadgeProps {
@@ -40,7 +53,7 @@ export function ActionBadge({ action, navigationTrigger }: ActionBadgeProps) {
           "inline-flex items-center gap-1.5 shrink-0",
           "font-mono text-[9.5px] font-semibold uppercase tracking-[0.08em]",
           "px-2 py-0.5 rounded-md",
-          meta.badgeClasses,
+          meta.badgeClasses
         ].join(" ")}
       >
         {ACTION_ICONS[action]}

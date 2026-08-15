@@ -17,9 +17,26 @@
               "path": "/products",
               "owned_by": "products",
               "elements": [
-                { "ref": "promoClose", "tag": "button", "testid": "promo-close", "testid_attr": "data-testid" },
-                { "ref": "deleteBtn", "tag": "button", "testid": "delete-product-{id}", "testid_attr": "data-testid", "dynamic": [{ "name": "id", "type": "string" }] },
-                { "ref": "rowStatus", "tag": "span", "testid": "row-status-{id}", "testid_attr": "data-testid", "dynamic": [{ "name": "id", "type": "string" }] }
+                {
+                  "ref": "promoClose",
+                  "tag": "button",
+                  "testid": "promo-close",
+                  "testid_attr": "data-testid"
+                },
+                {
+                  "ref": "deleteBtn",
+                  "tag": "button",
+                  "testid": "delete-product-{id}",
+                  "testid_attr": "data-testid",
+                  "dynamic": [{ "name": "id", "type": "string" }]
+                },
+                {
+                  "ref": "rowStatus",
+                  "tag": "span",
+                  "testid": "row-status-{id}",
+                  "testid_attr": "data-testid",
+                  "dynamic": [{ "name": "id", "type": "string" }]
+                }
               ],
               "types": [],
               "steps": [
@@ -48,7 +65,13 @@
                   "jsdoc": "Verify the product row for the given id is gone.",
                   "params": [{ "name": "id", "type": "string" }],
                   "assertions": [
-                    { "subject": "element", "ref": "rowStatus", "refArgs": ["id"], "waitFor": "hidden", "matcher": "toBeHidden" }
+                    {
+                      "subject": "element",
+                      "ref": "rowStatus",
+                      "refArgs": ["id"],
+                      "waitFor": "hidden",
+                      "matcher": "toBeHidden"
+                    }
                   ]
                 }
               ]
@@ -67,8 +90,16 @@
                 "body": [
                   { "fixture": "productsPage", "call": "step_open" },
                   { "fixture": "productsPage", "call": "step_dismiss_promo" },
-                  { "fixture": "productsPage", "call": "step_delete_product", "args": ["expected.seedProductId"] },
-                  { "fixture": "productsPage", "call": "verify_row_removed", "args": ["expected.seedProductId"] }
+                  {
+                    "fixture": "productsPage",
+                    "call": "step_delete_product",
+                    "args": ["expected.seedProductId"]
+                  },
+                  {
+                    "fixture": "productsPage",
+                    "call": "verify_row_removed",
+                    "args": ["expected.seedProductId"]
+                  }
                 ]
               }
             ]
@@ -79,7 +110,11 @@
   ],
   "expect": {
     "ok": true,
-    "filesExist": ["pages/ProductsPage.ts", "tests/products.spec.ts", "support/data/products/expected.json"],
+    "filesExist": [
+      "pages/ProductsPage.ts",
+      "tests/products.spec.ts",
+      "support/data/products/expected.json"
+    ],
     "invariants": ["I1", "I2", "I6", "I9", "I12"],
     "compile": true,
     "golden": true,

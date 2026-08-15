@@ -56,7 +56,11 @@ describe("POST /api-request", () => {
       method: "POST",
       url: "/api-request",
       headers: internalAuthHeaders(),
-      payload: { method: "GET", url: "https://this-host-should-not-resolve.invalid/", timeout_ms: 5000 }
+      payload: {
+        method: "GET",
+        url: "https://this-host-should-not-resolve.invalid/",
+        timeout_ms: 5000
+      }
     });
     expect(res.statusCode).toBe(502);
     const body = JSON.parse(res.body) as { ok: boolean; code: string };

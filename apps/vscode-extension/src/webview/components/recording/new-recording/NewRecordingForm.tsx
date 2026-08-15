@@ -20,10 +20,30 @@ const BROWSERS: { id: BrowserEngine; label: string; disabled?: boolean }[] = [
 ];
 
 const CAPTURE_ITEMS = [
-  { tone: "bg-tone-blue/15 text-tone-blue", icon: <MousePointerClick size={13} />, title: "Clicks & taps", desc: "Interactive targets with selector candidates." },
-  { tone: "bg-tone-violet/15 text-tone-violet", icon: <Keyboard size={13} />, title: "Typing & input", desc: "Field values and the element they were typed into." },
-  { tone: "bg-tone-amber/15 text-tone-amber", icon: <Navigation size={13} />, title: "Navigation", desc: "URL changes and page loads as you move around." },
-  { tone: "bg-tone-emerald/15 text-tone-emerald", icon: <Camera size={13} />, title: "Snapshots", desc: "Full page state, validation errors and alerts." }
+  {
+    tone: "bg-tone-blue/15 text-tone-blue",
+    icon: <MousePointerClick size={13} />,
+    title: "Clicks & taps",
+    desc: "Interactive targets with selector candidates."
+  },
+  {
+    tone: "bg-tone-violet/15 text-tone-violet",
+    icon: <Keyboard size={13} />,
+    title: "Typing & input",
+    desc: "Field values and the element they were typed into."
+  },
+  {
+    tone: "bg-tone-amber/15 text-tone-amber",
+    icon: <Navigation size={13} />,
+    title: "Navigation",
+    desc: "URL changes and page loads as you move around."
+  },
+  {
+    tone: "bg-tone-emerald/15 text-tone-emerald",
+    icon: <Camera size={13} />,
+    title: "Snapshots",
+    desc: "Full page state, validation errors and alerts."
+  }
 ] as const;
 
 export function NewRecordingForm() {
@@ -85,18 +105,27 @@ export function NewRecordingForm() {
 
   return (
     <div className="max-w-[720px] mx-auto px-7 py-7 pb-12">
-      <button type="button" onClick={() => setView("dashboard")} disabled={formLocked} className="mb-5 inline-flex items-center gap-1.5 bg-transparent border-0 cursor-pointer text-ui-base text-vs-text-dim hover:text-vs-text disabled:opacity-50 disabled:cursor-not-allowed">
+      <button
+        type="button"
+        onClick={() => setView("dashboard")}
+        disabled={formLocked}
+        className="mb-5 inline-flex items-center gap-1.5 bg-transparent border-0 cursor-pointer text-ui-base text-vs-text-dim hover:text-vs-text disabled:opacity-50 disabled:cursor-not-allowed"
+      >
         <ArrowLeft size={13} /> All recordings
       </button>
 
       <div className="mb-5">
         <h1 className="text-ui-display font-semibold tracking-tight m-0">Start a new recording</h1>
-        <p className="mt-2 text-ui-md text-vs-text-dim">Vindicate opens a browser and records every step automatically.</p>
+        <p className="mt-2 text-ui-md text-vs-text-dim">
+          Vindicate opens a browser and records every step automatically.
+        </p>
       </div>
 
       <div className="rounded-xl border border-vs-border bg-vs-bg overflow-hidden mb-4">
         <div className="px-4 py-4">
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.1em] text-vs-text-dim">Recording name</label>
+          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.1em] text-vs-text-dim">
+            Recording name
+          </label>
           <input
             type="text"
             value={newForm.name}
@@ -136,7 +165,9 @@ export function NewRecordingForm() {
             readOnly={urlLockedByPrecondition}
             disabled={formLocked}
             onChange={(e) => updateNewForm("url", e.target.value)}
-            aria-describedby={urlLockedByPrecondition ? "recording-url-precondition-hint" : undefined}
+            aria-describedby={
+              urlLockedByPrecondition ? "recording-url-precondition-hint" : undefined
+            }
             className={[
               "w-full rounded-lg border border-vs-border bg-vs-hover px-3 py-2.5 font-mono text-ui-md outline-none",
               formLocked || urlLockedByPrecondition ? "opacity-60 cursor-not-allowed" : ""
@@ -144,15 +175,20 @@ export function NewRecordingForm() {
             placeholder="app.example.com/login"
           />
           {urlLockedByPrecondition && (
-            <p id="recording-url-precondition-hint" className="mt-2 text-[11px] leading-snug text-vs-text-dim">
-              From the start of <span className="text-vs-text">{firstPreconditionName}</span>. Reorder pre-conditions
-              to change this URL.
+            <p
+              id="recording-url-precondition-hint"
+              className="mt-2 text-[11px] leading-snug text-vs-text-dim"
+            >
+              From the start of <span className="text-vs-text">{firstPreconditionName}</span>.
+              Reorder pre-conditions to change this URL.
             </p>
           )}
         </div>
         <div className="h-px bg-vs-border" />
         <div className="px-4 py-4">
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.1em] text-vs-text-dim">Browser engine</label>
+          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.1em] text-vs-text-dim">
+            Browser engine
+          </label>
           <div className="inline-flex gap-0.5 rounded-lg border border-vs-border bg-vs-hover p-0.5">
             {BROWSERS.map((b) => {
               const button = (
@@ -163,7 +199,9 @@ export function NewRecordingForm() {
                   className={[
                     "rounded-md px-3 py-1.5 text-[11.5px] border-0 transition-all",
                     b.disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer",
-                    newForm.browser === b.id ? "bg-vs-bg text-vs-text font-semibold shadow-sm" : "bg-transparent text-vs-text-dim"
+                    newForm.browser === b.id
+                      ? "bg-vs-bg text-vs-text font-semibold shadow-sm"
+                      : "bg-transparent text-vs-text-dim"
                   ].join(" ")}
                 >
                   {b.label}
@@ -194,7 +232,11 @@ export function NewRecordingForm() {
         <div className="grid grid-cols-2 gap-x-5 gap-y-2.5">
           {CAPTURE_ITEMS.map((item) => (
             <div key={item.title} className="flex items-start gap-2.5">
-              <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${item.tone}`}>{item.icon}</span>
+              <span
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${item.tone}`}
+              >
+                {item.icon}
+              </span>
               <div>
                 <p className="text-[11.5px] font-medium">{item.title}</p>
                 <p className="text-[10.5px] text-vs-text-dim">{item.desc}</p>

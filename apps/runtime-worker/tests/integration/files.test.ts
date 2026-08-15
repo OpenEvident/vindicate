@@ -47,7 +47,9 @@ describe("Files service HTTP", () => {
 
     const logger = createVindicateLogger({ service: "runtime-worker-test", level: "silent" });
     const eventBus = new EventBus(20);
-    const disk = new SessionDiskStore(dataDir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+    const disk = new SessionDiskStore(dataDir, new PlaintextSessionCrypto(), {
+      encryptFilenames: false
+    });
     const store = new BrowserSessionStore(disk, logger, 24);
     await store.initializeFromDisk();
     const governor = new FakeResourceGovernor();

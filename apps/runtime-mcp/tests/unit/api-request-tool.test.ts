@@ -11,8 +11,9 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<{
 }>;
 
 function getToolHandler(server: McpServer, name: string): ToolHandler {
-  const tools = (server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> })
-    ._registeredTools;
+  const tools = (
+    server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> }
+  )._registeredTools;
   const tool = tools[name];
   if (tool === undefined) {
     throw new Error(`tool not registered: ${name}`);
@@ -33,7 +34,10 @@ describe("api_request tool", () => {
     });
     registerApiRequestTool(server, { workerClient: worker });
 
-    const result = await getToolHandler(server, "api_request")({
+    const result = await getToolHandler(
+      server,
+      "api_request"
+    )({
       method: "GET",
       url: "https://example.com/posts/1"
     });
@@ -47,10 +51,18 @@ describe("api_request tool", () => {
   it("never marks a 4xx/5xx target response as a tool error — that's a normal result", async () => {
     const server = new McpServer({ name: "test", version: "0" });
     const worker = new FakeWorkerClient();
-    worker.setNextApiRequestResponse({ status: 500, status_text: "Internal Server Error", headers: {}, body: "" });
+    worker.setNextApiRequestResponse({
+      status: 500,
+      status_text: "Internal Server Error",
+      headers: {},
+      body: ""
+    });
     registerApiRequestTool(server, { workerClient: worker });
 
-    const result = await getToolHandler(server, "api_request")({ method: "GET", url: "https://example.com/thing" });
+    const result = await getToolHandler(
+      server,
+      "api_request"
+    )({ method: "GET", url: "https://example.com/thing" });
 
     expect(result.isError).toBeUndefined();
     expect(JSON.parse(result.content[0]?.text ?? "{}")).toMatchObject({ status: 500 });
@@ -59,10 +71,15 @@ describe("api_request tool", () => {
   it("maps an unreachable target host to an error result, without crashing", async () => {
     const server = new McpServer({ name: "test", version: "0" });
     const worker = new FakeWorkerClient();
-    worker.failNextApiRequest(new ApiRequestFailedError("GET https://x.invalid/ failed: getaddrinfo ENOTFOUND"));
+    worker.failNextApiRequest(
+      new ApiRequestFailedError("GET https://x.invalid/ failed: getaddrinfo ENOTFOUND")
+    );
     registerApiRequestTool(server, { workerClient: worker });
 
-    const result = await getToolHandler(server, "api_request")({ method: "GET", url: "https://x.invalid/" });
+    const result = await getToolHandler(
+      server,
+      "api_request"
+    )({ method: "GET", url: "https://x.invalid/" });
 
     expect(result.isError).toBe(true);
     expect(result.content[0]?.text).toContain("could not reach the target API");
@@ -73,7 +90,10 @@ describe("api_request tool", () => {
     const worker = new FakeWorkerClient();
     registerApiRequestTool(server, { workerClient: worker });
 
-    await getToolHandler(server, "api_request")({
+    await getToolHandler(
+      server,
+      "api_request"
+    )({
       method: "POST",
       url: "https://example.com/posts",
       headers: { Authorization: "Bearer tok" },

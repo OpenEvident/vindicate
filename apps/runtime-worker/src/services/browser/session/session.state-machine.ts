@@ -6,13 +6,7 @@ import { InvalidTransitionError } from "../../../shared/errors/worker.errors.js"
 export type SessionState = "active" | "paused" | "dead" | "expired" | "closed";
 
 export type SessionTrigger =
-  | "end"
-  | "crash"
-  | "resume"
-  | "ttl_elapsed"
-  | "pause"
-  | "resume_from_pause"
-  | "paused_ttl_elapsed";
+  "end" | "crash" | "resume" | "ttl_elapsed" | "pause" | "resume_from_pause" | "paused_ttl_elapsed";
 
 const transitions: Readonly<Record<string, SessionState>> = {
   "active:end": "closed",

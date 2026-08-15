@@ -5,7 +5,13 @@
  * and ApiCallSchema's own doc comment.
  */
 import { CodegenStructuralError } from "../shared/errors.js";
-import type { ApiAssertion, ApiCall, ApiFullSchema, ApiTestCase, BuilderDef } from "./api-schema.js";
+import type {
+  ApiAssertion,
+  ApiCall,
+  ApiFullSchema,
+  ApiTestCase,
+  BuilderDef
+} from "./api-schema.js";
 import { hasExpectedData } from "./expected-ref.js";
 
 function assertionSubjectExpression(assertion: ApiAssertion, responseVar: string): string {
@@ -34,7 +40,8 @@ function captureLine(call: ApiCall, responseVar: string): string | undefined {
     return undefined;
   }
   const bodyExpr = `await ${responseVar}.json()`;
-  const valueExpr = call.capture.field !== undefined ? `(${bodyExpr}).${call.capture.field}` : bodyExpr;
+  const valueExpr =
+    call.capture.field !== undefined ? `(${bodyExpr}).${call.capture.field}` : bodyExpr;
   return `    const ${call.capture.as} = ${valueExpr};`;
 }
 

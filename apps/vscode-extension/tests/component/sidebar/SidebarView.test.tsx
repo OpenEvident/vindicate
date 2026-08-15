@@ -32,8 +32,12 @@ describe("SidebarView", () => {
 
   it("overflow menu exposes Open home page and Prompts & Config", () => {
     useOnboardingStore.setState({
-      hasFolder: true, folderName: "p", mode: null, completedSteps: [],
-      screen: "toolSelection", onboardingDone: false,
+      hasFolder: true,
+      folderName: "p",
+      mode: null,
+      completedSteps: [],
+      screen: "toolSelection",
+      onboardingDone: false,
       detectedTools: { cursor: false, vscode: false, claudeCode: false, antigravity: false }
     });
     useHealthStore.setState({ runtime: "up", mcp: "unknown" });
@@ -54,8 +58,12 @@ describe("SidebarView", () => {
 
   it("shows status footer with Runtime, MCP and version", () => {
     useOnboardingStore.setState({
-      hasFolder: true, folderName: "p", mode: null, completedSteps: [],
-      screen: "toolSelection", onboardingDone: false,
+      hasFolder: true,
+      folderName: "p",
+      mode: null,
+      completedSteps: [],
+      screen: "toolSelection",
+      onboardingDone: false,
       detectedTools: { cursor: false, vscode: false, claudeCode: false, antigravity: false }
     });
     useHealthStore.setState({ runtime: "up", mcp: "down" });
@@ -65,5 +73,4 @@ describe("SidebarView", () => {
     expect(screen.getByText("MCP")).toBeInTheDocument();
     expect(screen.getByText(/^v\d+\.\d+\.\d+$/)).toBeInTheDocument();
   });
-
 });

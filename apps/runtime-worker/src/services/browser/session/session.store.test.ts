@@ -54,7 +54,9 @@ describe("BrowserSessionStore", () => {
     await mkdir(dir, { recursive: true });
     tempDirs.push(dir);
     const logger = createVindicateLogger({ service: "test", level: "silent" });
-    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), {
+      encryptFilenames: false
+    });
     const store = new BrowserSessionStore(disk, logger, 24);
     await store.initializeFromDisk();
     const rec = await store.create({
@@ -72,11 +74,17 @@ describe("BrowserSessionStore", () => {
     await mkdir(dir, { recursive: true });
     tempDirs.push(dir);
     const logger = createVindicateLogger({ service: "test", level: "silent" });
-    const inner = new SessionDiskStore(dir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+    const inner = new SessionDiskStore(dir, new PlaintextSessionCrypto(), {
+      encryptFilenames: false
+    });
     const disk = new FailingDiskStore(inner);
     const store = new BrowserSessionStore(disk, logger, 24);
     await store.initializeFromDisk();
-    const rec = await store.create({ name: "t", url: "https://example.com/", project_root: "/tmp" });
+    const rec = await store.create({
+      name: "t",
+      url: "https://example.com/",
+      project_root: "/tmp"
+    });
     await expect(store.applyTrigger(rec.session_id, "pause")).rejects.toThrow("disk full");
     expect(store.get(rec.session_id)?.status).toBe("active");
   });

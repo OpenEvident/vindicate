@@ -38,4 +38,3 @@ export interface IContentService {
   /** Bundled workflow-progress ref (used on orient and first path call). */
   getWorkflowProgressGuide(): string;
 }
-

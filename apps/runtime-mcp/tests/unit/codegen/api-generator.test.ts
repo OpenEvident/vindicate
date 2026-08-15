@@ -3,14 +3,20 @@ import ts from "typescript";
 
 import { runApiGenerator } from "../../../src/codegen/api-generator.js";
 import { CodegenStructuralError } from "../../../src/shared/errors.js";
-import { apiFullSchema, builderDef, clientDef, clientMethod } from "../../shared/codegen-testkit/api-fixtures.js";
+import {
+  apiFullSchema,
+  builderDef,
+  clientDef,
+  clientMethod
+} from "../../shared/codegen-testkit/api-fixtures.js";
 import { compileGeneratedApiProject } from "../../codegen-lab/lib/api-compile-check.js";
 import { expectWritten } from "./helpers/expect-written.js";
 import { createProjectRoot, teardownProjectRoots } from "./helpers/project-root.js";
 
 function assertSyntacticallyValid(source: string, label: string): void {
   const sourceFile = ts.createSourceFile(label, source, ts.ScriptTarget.ESNext, true);
-  const diagnostics = (sourceFile as unknown as { parseDiagnostics?: unknown[] }).parseDiagnostics ?? [];
+  const diagnostics =
+    (sourceFile as unknown as { parseDiagnostics?: unknown[] }).parseDiagnostics ?? [];
   expect(diagnostics, `${label} should parse with no syntax errors`).toEqual([]);
 }
 
@@ -21,7 +27,9 @@ describe("api-generator create_api", () => {
 
   it("A1 — writes the client, spec, and wires client-loader.ts + api.config.ts", async () => {
     const { fs } = await createProjectRoot({ layer: "api" });
-    const result = expectWritten(await runApiGenerator(fs, { mode: "create_api", feature: "widgets", schema: apiFullSchema() }));
+    const result = expectWritten(
+      await runApiGenerator(fs, { mode: "create_api", feature: "widgets", schema: apiFullSchema() })
+    );
     expect(result.filesWritten).toContain("clients/WidgetClient.ts");
     expect(result.filesWritten).toContain("tests/widgets.api.spec.ts");
     expect(result.filesWritten).toContain("support/config/client-loader.ts");
@@ -33,7 +41,9 @@ describe("api-generator create_api", () => {
     const config = await fs.read("support/config/api.config.ts");
     expect(config).toContain("import { WidgetClient } from './client-loader';");
     expect(config).toContain("widgetApi: WidgetClient;");
-    expect(config).toContain("widgetApi: async ({ apiRequest }, use) => { await use(new WidgetClient(apiRequest)); },");
+    expect(config).toContain(
+      "widgetApi: async ({ apiRequest }, use) => { await use(new WidgetClient(apiRequest)); },"
+    );
   });
 
   it("A2 — refuses when the spec already exists without overwrite, succeeds with overwrite:true", async () => {
@@ -134,7 +144,9 @@ describe("api-generator create_api", () => {
       runApiGenerator(fs, {
         mode: "create_api",
         feature: "widgets",
-        schema: apiFullSchema({ clients: [clientDef({ client_class: "WidgetClient", owned_by: "other-feature" })] })
+        schema: apiFullSchema({
+          clients: [clientDef({ client_class: "WidgetClient", owned_by: "other-feature" })]
+        })
       })
     ).rejects.toThrow(CodegenStructuralError);
   });
@@ -163,7 +175,9 @@ describe("api-generator create_api", () => {
     // Nothing from the rejected call should have landed on disk.
     await expect(fs.read("clients/GadgetClient.ts")).rejects.toThrow();
     const config = await fs.read("support/config/api.config.ts");
-    expect(config).toContain("widgetApi: async ({ apiRequest }, use) => { await use(new WidgetClient(apiRequest)); },");
+    expect(config).toContain(
+      "widgetApi: async ({ apiRequest }, use) => { await use(new WidgetClient(apiRequest)); },"
+    );
     expect(config).not.toContain("GadgetClient");
   });
 
@@ -211,7 +225,15 @@ describe("api-generator create_api", () => {
               feature: "user-profile",
               owned_by: "user-profile",
               fixtures: ["widgetApi"],
-              types: [{ name: "Widget", fields: [{ name: "id", type: "number" }, { name: "name", type: "string" }] }],
+              types: [
+                {
+                  name: "Widget",
+                  fields: [
+                    { name: "id", type: "number" },
+                    { name: "name", type: "string" }
+                  ]
+                }
+              ],
               methods: [
                 clientMethod("getAll", { http_method: "get", path: "widgets" }),
                 clientMethod("getByOwner", {
@@ -292,7 +314,14 @@ describe("api-generator create_api", () => {
               owned_by: "pets",
               fixtures: ["petApi"],
               types: [
-                { name: "Pet", fields: [{ name: "id?", type: "number" }, { name: "name", type: "string" }, { name: "status", type: "string" }] }
+                {
+                  name: "Pet",
+                  fields: [
+                    { name: "id?", type: "number" },
+                    { name: "name", type: "string" },
+                    { name: "status", type: "string" }
+                  ]
+                }
               ],
               methods: [
                 clientMethod("addPet", {
@@ -454,7 +483,13 @@ describe("api-generator add_api_test_cases", () => {
             ac_id: "AC-2",
             scenario: "Second Case",
             title: "[AC-2] should also work",
-            calls: [{ fixture: "widgetApi", method: "getAll", assertions: [{ subject: "status", matcher: "toBe", arg: "200" }] }]
+            calls: [
+              {
+                fixture: "widgetApi",
+                method: "getAll",
+                assertions: [{ subject: "status", matcher: "toBe", arg: "200" }]
+              }
+            ]
           }
         ]
       })
@@ -475,7 +510,13 @@ describe("api-generator add_api_test_cases", () => {
             ac_id: "AC-1",
             scenario: "First",
             title: "[AC-1] should work",
-            calls: [{ fixture: "widgetApi", method: "getAll", assertions: [{ subject: "status", matcher: "toBe", arg: "200" }] }]
+            calls: [
+              {
+                fixture: "widgetApi",
+                method: "getAll",
+                assertions: [{ subject: "status", matcher: "toBe", arg: "200" }]
+              }
+            ]
           }
         ]
       })
@@ -490,7 +531,11 @@ describe("api-generator register_client", () => {
 
   async function seedWidgetsProject() {
     const ctx = await createProjectRoot({ layer: "api" });
-    await runApiGenerator(ctx.fs, { mode: "create_api", feature: "widgets", schema: apiFullSchema() });
+    await runApiGenerator(ctx.fs, {
+      mode: "create_api",
+      feature: "widgets",
+      schema: apiFullSchema()
+    });
     return ctx;
   }
 
@@ -504,7 +549,13 @@ describe("api-generator register_client", () => {
 
   it("C1 — writes the client and wires barrel/config", async () => {
     const { fs } = await seedWidgetsProject();
-    const result = expectWritten(await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client: gadgetClient }));
+    const result = expectWritten(
+      await runApiGenerator(fs, {
+        mode: "register_client",
+        feature: "widgets",
+        client: gadgetClient
+      })
+    );
     expect(result.filesWritten).toContain("clients/GadgetClient.ts");
     const loader = await fs.read("support/config/client-loader.ts");
     expect(loader).toContain("export { GadgetClient }");
@@ -514,7 +565,11 @@ describe("api-generator register_client", () => {
 
   it("C2 — refuses when the client file already exists", async () => {
     const { fs } = await seedWidgetsProject();
-    await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client: gadgetClient });
+    await runApiGenerator(fs, {
+      mode: "register_client",
+      feature: "widgets",
+      client: gadgetClient
+    });
     await expect(
       runApiGenerator(fs, { mode: "register_client", feature: "widgets", client: gadgetClient })
     ).rejects.toThrow(CodegenStructuralError);
@@ -522,12 +577,20 @@ describe("api-generator register_client", () => {
 
   it("C3 — idempotent barrel wiring on re-run after delete: no duplicate export/fixture lines", async () => {
     const { fs } = await seedWidgetsProject();
-    await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client: gadgetClient });
+    await runApiGenerator(fs, {
+      mode: "register_client",
+      feature: "widgets",
+      client: gadgetClient
+    });
     // register_client itself refuses a re-run while the client file still exists (C2) — delete it
     // to reach the barrel-wiring idempotency this test actually targets, same as a real recovery
     // from an interrupted run.
     await fs.delete("clients/GadgetClient.ts");
-    await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client: gadgetClient });
+    await runApiGenerator(fs, {
+      mode: "register_client",
+      feature: "widgets",
+      client: gadgetClient
+    });
 
     const loader = await fs.read("support/config/client-loader.ts");
     expect((loader.match(/export \{ GadgetClient \}/g) ?? []).length).toBe(1);
@@ -577,7 +640,9 @@ describe("api-generator register_client", () => {
         })
       ]
     });
-    const result = expectWritten(await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client }));
+    const result = expectWritten(
+      await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client })
+    );
     expect(result.filesWritten).toContain("clients/GadgetClient.ts");
   });
 
@@ -597,7 +662,9 @@ describe("api-generator register_client", () => {
         })
       ]
     });
-    const result = expectWritten(await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client }));
+    const result = expectWritten(
+      await runApiGenerator(fs, { mode: "register_client", feature: "widgets", client })
+    );
     expect(result.filesWritten).toContain("clients/GadgetClient.ts");
   });
 });
@@ -624,7 +691,9 @@ describe("api-generator validate_api", () => {
       mode: "validate_api",
       validateTarget: "create_api",
       feature: "widgets",
-      schema: apiFullSchema({ clients: [clientDef({ client_class: "WidgetClient", owned_by: "other-feature" })] })
+      schema: apiFullSchema({
+        clients: [clientDef({ client_class: "WidgetClient", owned_by: "other-feature" })]
+      })
     });
     expect("errors" in result).toBe(true);
     if ("errors" in result) {

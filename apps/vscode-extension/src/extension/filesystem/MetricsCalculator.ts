@@ -29,7 +29,10 @@ export interface PlaywrightResults {
   total: number;
   durationMs: number;
   lastRunAt: Date;
-  perFeature: Map<string, { passed: number; failed: number; skipped: number; flaky: number; total: number }>;
+  perFeature: Map<
+    string,
+    { passed: number; failed: number; skipped: number; flaky: number; total: number }
+  >;
   failures: FailingTest[];
   slowestTests: SlowTest[];
 }
@@ -51,7 +54,10 @@ export class MetricsCalculator implements IMetricsCalculator {
     } = input;
     const perFeature =
       playwrightResults?.perFeature ??
-      new Map<string, { passed: number; failed: number; skipped: number; flaky: number; total: number }>();
+      new Map<
+        string,
+        { passed: number; failed: number; skipped: number; flaky: number; total: number }
+      >();
     const total = specAnalysis.total;
     const tracedCount = [...traceability.values()].filter(Boolean).length;
 
@@ -82,7 +88,8 @@ export class MetricsCalculator implements IMetricsCalculator {
         ? (playwrightResults.passed / playwrightResults.total) * 100
         : 0;
 
-    const freshnessScore = testFreshnessDays === null ? 0 : Math.max(0, 100 - testFreshnessDays * 7);
+    const freshnessScore =
+      testFreshnessDays === null ? 0 : Math.max(0, 100 - testFreshnessDays * 7);
 
     const healthScore = Math.round(
       specCompleteness * 0.4 + testTraceability * 0.3 + passRate * 0.2 + freshnessScore * 0.1

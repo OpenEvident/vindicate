@@ -107,7 +107,9 @@ describe("McpConfigWriter", () => {
     const t = target("mcpServers", "remove.json");
     await writeFile(
       t.configPath,
-      JSON.stringify({ mcpServers: { Vindicate: { url: "http://127.0.0.1:9223/mcp" }, Other: { url: "x" } } }),
+      JSON.stringify({
+        mcpServers: { Vindicate: { url: "http://127.0.0.1:9223/mcp" }, Other: { url: "x" } }
+      }),
       "utf8"
     );
     const result = await writer.remove(t);

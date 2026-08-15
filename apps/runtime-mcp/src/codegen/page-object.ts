@@ -55,7 +55,10 @@ function quoteTsString(value: string): string {
   return JSON.stringify(value);
 }
 
-function fillOrSelectValue(action: { value?: string | undefined; param?: string | undefined }): string {
+function fillOrSelectValue(action: {
+  value?: string | undefined;
+  param?: string | undefined;
+}): string {
   if (action.param !== undefined) {
     return action.param;
   }
@@ -81,7 +84,9 @@ function actionToTs(action: Action, locate: LocateFn): string {
       // clear_first emits a second statement; the caller only indents the first line of what we
       // return (buildStepMethod prefixes once), so the embedded newline carries its own indent.
       const clear =
-        action.clear_first === true ? `await ${locate(action.ref, action.refArgs)}.clear();\n    ` : "";
+        action.clear_first === true
+          ? `await ${locate(action.ref, action.refArgs)}.clear();\n    `
+          : "";
       return `${clear}await ${locate(action.ref, action.refArgs)}.pressSequentially(${fillOrSelectValue(action)});`;
     }
     case "click":
@@ -127,10 +132,7 @@ function assertionToLines(assertion: Assertion, locate: LocateFn): string[] {
   const loc = locate(assertion.ref, assertion.refArgs);
   const assertLine = `await expect(${loc}).${assertion.matcher}(${arg});`;
   if (assertion.waitFor !== undefined) {
-    return [
-      `await ${loc}.waitFor({ state: '${assertion.waitFor}' });`,
-      assertLine
-    ];
+    return [`await ${loc}.waitFor({ state: '${assertion.waitFor}' });`, assertLine];
   }
   return [assertLine];
 }
@@ -215,10 +217,7 @@ export function buildPageObject(page: PageDef, options?: BuildPageObjectOptions)
         `  }`
       ];
     }
-    return [
-      `  // locator-helper: ${strategy}`,
-      `  private ${fieldName} = ${locator};`
-    ];
+    return [`  // locator-helper: ${strategy}`, `  private ${fieldName} = ${locator};`];
   });
 
   const stepMethods = page.steps.map((s) => buildStepMethod(s, locate, isPanel)).join("\n\n");

@@ -3,7 +3,17 @@ import { useOnboardingStore } from "../../stores/onboardingStore";
 
 function FolderIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
       <path d="M1 4a1 1 0 0 1 1-1h4l2 2h6a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4z" />
     </svg>
   );
@@ -41,7 +51,16 @@ export function FolderPanel() {
           <p className="vindicate-fp-section-label">NO FOLDER OPEN</p>
           <div className="vindicate-fp-open-cta">
             <div className="vindicate-fp-open-icon" aria-hidden>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                 <line x1="12" y1="11" x2="12" y2="17" />
                 <line x1="9" y1="14" x2="15" y2="14" />
@@ -49,7 +68,8 @@ export function FolderPanel() {
             </div>
             <p className="vindicate-fp-open-title">Open a project folder to begin</p>
             <p className="vindicate-fp-open-desc">
-              Vindicate needs a project folder to configure agents, watch for scaffold files, and track your setup progress.
+              Vindicate needs a project folder to configure agents, watch for scaffold files, and
+              track your setup progress.
             </p>
             <button
               type="button"

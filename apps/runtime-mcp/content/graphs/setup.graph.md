@@ -10,7 +10,7 @@ Playwright project and/or wire CI. Satisfies the bootstrap completion gate (C15)
 > `vindicate_workflow(path="bootstrap")` and `vindicate_workflow(path="ci")` both return the whole setup
 > skill (mode-sliced: `bootstrap` runs the full arc, `ci` runs the CI step only). The nodes below are
 > therefore the **internal step sequence the single skill follows** — a structural reference and the
-> source for soft-validation/ordering, *not* separately-served node packs. `understand`/`scaffold`/
+> source for soft-validation/ordering, _not_ separately-served node packs. `understand`/`scaffold`/
 > `install`/`ci-setup`/`smoke`/`audit` map onto the numbered Steps in `setup.md`; `escalate` is the
 > shared stop-and-report outcome.
 
@@ -30,10 +30,10 @@ flowchart TD
 
 ## Entry routing
 
-| Path | Entry node | Why |
-|------|-----------|-----|
-| `bootstrap` | `understand` | full project stand-up |
-| `ci` | `ci-setup` | only add/fix the CI workflow on an existing project |
+| Path        | Entry node   | Why                                                 |
+| ----------- | ------------ | --------------------------------------------------- |
+| `bootstrap` | `understand` | full project stand-up                               |
+| `ci`        | `ci-setup`   | only add/fix the CI workflow on an existing project |
 
 ## Per-node outgoing edges
 
@@ -46,6 +46,7 @@ flowchart TD
 **ci-setup** — user-confirmed CI file written (GitHub: `.github/workflows/vindicate-tests.yml`; Bitbucket: `bitbucket-pipelines.yml`) (C14) → **smoke**
 
 **smoke**
+
 - a reachability test runs green against `BASE_URL` → **audit**
 - the app is unreachable or environment is broken → **escalate**
 
@@ -54,5 +55,6 @@ flowchart TD
 **escalate** — terminal (stop + report).
 
 ## Handoff to `main`
+
 After `setup` completes (audit ✓), day-to-day work uses the [`main`](main.graph.md) graph.
 Bootstrap is a one-time arc; it does not loop.

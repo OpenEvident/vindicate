@@ -20,9 +20,11 @@ const SHARED_TEMPLATES: Record<string, string> = {
     "export default defineConfig({ use: { baseURL: process.env.BASE_URL },\n" +
     "{{BROWSER_USE_BLOCK}}{{PROJECTS_BLOCK}}});",
   ".github/workflows/vindicate-tests.yml": "name: vindicate\n{{envVarsBlock}}\n{{secretVarsBlock}}",
-  "bitbucket-pipelines.yml": "image: node:20\npipelines:\n  default:\n    - step:\n        script:\n          - npm test",
+  "bitbucket-pipelines.yml":
+    "image: node:20\npipelines:\n  default:\n    - step:\n        script:\n          - npm test",
   ".gitlab-ci.yml": "image: node\n{{envVarsBlock}}\n{{secretVarsBlock}}",
-  ".circleci/config.yml": "workflows:\n  vindicate_ci:\n    jobs:\n      - vindicate_playwright_tests\n{{envVarsBlock}}\n{{secretVarsBlock}}",
+  ".circleci/config.yml":
+    "workflows:\n  vindicate_ci:\n    jobs:\n      - vindicate_playwright_tests\n{{envVarsBlock}}\n{{secretVarsBlock}}",
   gitignore: "node_modules/\n"
 };
 
@@ -218,12 +220,14 @@ describe("scaffoldProject", () => {
 
   it("rejects absolute or traversal project_dir", async () => {
     const { fs } = await makeProjectFs();
-    await expect(scaffoldProject(fs, {
-      baseUrl: "https://app.example.com",
-      ciPlatform: "github",
-      target: "ui",
-      projectDir: "../escape"
-    })).rejects.toThrow("Invalid project_dir");
+    await expect(
+      scaffoldProject(fs, {
+        baseUrl: "https://app.example.com",
+        ciPlatform: "github",
+        target: "ui",
+        projectDir: "../escape"
+      })
+    ).rejects.toThrow("Invalid project_dir");
   });
 
   describe("target", () => {
@@ -288,7 +292,11 @@ describe("scaffoldProject", () => {
 
     it("target 'ui' omits the API_BASE_URL hint from .env.example", async () => {
       const { fs } = await makeProjectFs();
-      await scaffoldProject(fs, { baseUrl: "https://app.example.com", ciPlatform: "github", target: "ui" });
+      await scaffoldProject(fs, {
+        baseUrl: "https://app.example.com",
+        ciPlatform: "github",
+        target: "ui"
+      });
       const envExample = await fs.read(".env.example");
       expect(envExample).not.toContain("API_BASE_URL");
     });

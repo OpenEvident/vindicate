@@ -94,7 +94,11 @@ export const AuthSetupSchema = z.object({
   credential_params: z.array(ParamSchema).min(1),
   token_field: z.string().min(1),
   header_name: z.string().min(1).default("Authorization"),
-  header_value_template: z.string().min(1).regex(/\{token\}/, "must contain a {token} placeholder").default("Bearer {token}")
+  header_value_template: z
+    .string()
+    .min(1)
+    .regex(/\{token\}/, "must contain a {token} placeholder")
+    .default("Bearer {token}")
 });
 export type AuthSetup = z.infer<typeof AuthSetupSchema>;
 
@@ -112,7 +116,13 @@ export const API_ASSERTION_MATCHERS = [
 ] as const;
 export type ApiAssertionMatcher = (typeof API_ASSERTION_MATCHERS)[number];
 
-export const API_ASSERTION_SUBJECTS = ["status", "status_text", "body", "body_json", "header"] as const;
+export const API_ASSERTION_SUBJECTS = [
+  "status",
+  "status_text",
+  "body",
+  "body_json",
+  "header"
+] as const;
 export type ApiAssertionSubject = (typeof API_ASSERTION_SUBJECTS)[number];
 
 export const ApiAssertionSchema = z

@@ -51,7 +51,7 @@ function runResult(test_cases: PlaywrightTestCaseResult[]): RunTestsResult {
 
 describe("readFailureContext", () => {
   it("returns the full content when under the budget", async () => {
-    const file = path.join(dir, "error-context.md", );
+    const file = path.join(dir, "error-context.md");
     await writeFile(file, "# Error\n\nsmall context", "utf8");
 
     const result = await readFailureContext(file);
@@ -104,9 +104,7 @@ describe("readFailureContext", () => {
 
 describe("buildRunTestsPayload", () => {
   it("attaches no context or attachments to a passing test", async () => {
-    const payload = await buildRunTestsPayload(
-      runResult([testCase({ status: "passed" })])
-    );
+    const payload = await buildRunTestsPayload(runResult([testCase({ status: "passed" })]));
     const tests = payload.tests as Record<string, unknown>[];
     expect(tests[0]).not.toHaveProperty("context");
     expect(tests[0]).not.toHaveProperty("attachments");
@@ -213,7 +211,9 @@ describe("buildRunTestsPayload", () => {
     for (const t of withoutContext) {
       expect(t.attachments).toBeDefined();
     }
-    expect(payload.context_note).toContain(`${files.length - MAX_TESTS_WITH_INLINE_CONTEXT} more failed`);
+    expect(payload.context_note).toContain(
+      `${files.length - MAX_TESTS_WITH_INLINE_CONTEXT} more failed`
+    );
   });
 
   it("counts every un-inlined failure in context_note, including ones with no error-context attachment at all", async () => {
@@ -226,7 +226,11 @@ describe("buildRunTestsPayload", () => {
 
     const payload = await buildRunTestsPayload(
       runResult([
-        testCase({ title: "inlined", status: "failed", attachments: [{ name: "error-context", path: contextFile }] }),
+        testCase({
+          title: "inlined",
+          status: "failed",
+          attachments: [{ name: "error-context", path: contextFile }]
+        }),
         testCase({ title: "no attachments at all", status: "failed" })
       ])
     );
@@ -249,8 +253,16 @@ describe("buildRunTestsPayload", () => {
 
     const payload = await buildRunTestsPayload(
       runResult([
-        testCase({ title: "inlined", status: "failed", attachments: [{ name: "error-context", path: contextFile }] }),
-        testCase({ title: "not inlined", status: "failed", attachments: [{ name: "error-context", path: contextFile }] })
+        testCase({
+          title: "inlined",
+          status: "failed",
+          attachments: [{ name: "error-context", path: contextFile }]
+        }),
+        testCase({
+          title: "not inlined",
+          status: "failed",
+          attachments: [{ name: "error-context", path: contextFile }]
+        })
       ])
     );
 
@@ -273,7 +285,12 @@ describe("buildRunTestsPayload", () => {
     expect(payload.failed).toBe(1);
     expect(payload.skipped).toBe(0);
     const tests = payload.tests as Record<string, unknown>[];
-    expect(tests[0]).toMatchObject({ title: "ok test", file: "tests/a.spec.ts", status: "passed", durationMs: 250 });
+    expect(tests[0]).toMatchObject({
+      title: "ok test",
+      file: "tests/a.spec.ts",
+      status: "passed",
+      durationMs: 250
+    });
     expect(tests[1]).toMatchObject({ title: "bad test", status: "failed", error: "boom" });
   });
 });

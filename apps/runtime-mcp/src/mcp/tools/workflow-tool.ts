@@ -186,7 +186,7 @@ function buildWorkflowPayload(input: {
     const markdownPanel = formatWorkflowProgressMarkdown({
       phaseLabel: "Choose a path",
       phases: [],
-      nextCall: "Call vindicate_workflow(path:\"write\"|\"fix\"|…, node:<entry>, completed:[])."
+      nextCall: 'Call vindicate_workflow(path:"write"|"fix"|…, node:<entry>, completed:[]).'
     });
     const payload: Record<string, unknown> = {
       view: "workflow-progress",
@@ -208,7 +208,12 @@ function buildWorkflowPayload(input: {
 
   const graph = contentService.getGraph(entry.graphId);
   const activeNode = node ?? entry.nodeId;
-  const effectiveCompleted = resolveEffectiveCompleted(path, activeNode, input.completed, contentService);
+  const effectiveCompleted = resolveEffectiveCompleted(
+    path,
+    activeNode,
+    input.completed,
+    contentService
+  );
 
   const { phases, warnings } = buildWorkflowPhases({
     graph,

@@ -14,7 +14,9 @@ export function toolJson(
   const payload = toolName === undefined ? data : applyResponseBudget(toolName, data);
   const compact = options?.compact === true;
   return {
-    content: [{ type: "text", text: compact ? JSON.stringify(payload) : JSON.stringify(payload, null, 2) }]
+    content: [
+      { type: "text", text: compact ? JSON.stringify(payload) : JSON.stringify(payload, null, 2) }
+    ]
   };
 }
 

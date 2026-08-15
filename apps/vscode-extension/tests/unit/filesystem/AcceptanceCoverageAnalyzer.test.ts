@@ -27,11 +27,7 @@ describe("AcceptanceCoverageAnalyzer", () => {
       "# Acceptance Criteria\n- AC-1: a\n- AC-2: b\n- AC-3: c\n",
       "utf8"
     );
-    await writeFile(
-      checkoutSpecPath,
-      "# Acceptance Criteria\n- AC-1: a\n- AC-2: b\n",
-      "utf8"
-    );
+    await writeFile(checkoutSpecPath, "# Acceptance Criteria\n- AC-1: a\n- AC-2: b\n", "utf8");
 
     await writeFile(
       path.join(testsDir, "auth.spec.ts"),
@@ -52,7 +48,13 @@ describe("AcceptanceCoverageAnalyzer", () => {
         ac: 3,
         acIds: ["AC-1", "AC-2", "AC-3"],
         scenarioAcMap: {},
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: authSpecPath,
         specMtimeMs: 0,
         words: 10
@@ -64,7 +66,13 @@ describe("AcceptanceCoverageAnalyzer", () => {
         ac: 2,
         acIds: ["AC-1", "AC-2"],
         scenarioAcMap: {},
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: checkoutSpecPath,
         specMtimeMs: 0,
         words: 10
@@ -95,7 +103,13 @@ describe("AcceptanceCoverageAnalyzer", () => {
         ac: 2,
         acIds: ["AC-1", "AC-2"],
         scenarioAcMap: {},
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: specPath,
         specMtimeMs: 0,
         words: 5

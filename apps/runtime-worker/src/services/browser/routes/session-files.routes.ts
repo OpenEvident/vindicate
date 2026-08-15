@@ -8,7 +8,11 @@ import type { FastifyBaseLogger, FastifyInstance, RawServerDefault } from "fasti
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { z } from "zod";
 
-import { FilesTooLargeError, SessionNotFoundError, ValidationError } from "../../../shared/errors/worker.errors.js";
+import {
+  FilesTooLargeError,
+  SessionNotFoundError,
+  ValidationError
+} from "../../../shared/errors/worker.errors.js";
 import { resolveProjectPathSecure } from "../../files/path-guard.js";
 import type { ISessionStore } from "../session/session.store.interface.js";
 
@@ -89,7 +93,10 @@ export function registerSessionFilesRoutes<L extends FastifyBaseLogger>(
     }
     if (st.size > maxFileBytes) throw new FilesTooLargeError(maxFileBytes);
     const raw = await readFile(abs, "utf8");
-    return reply.send({ path: parsed.data.path, content: sliceLines(raw, parsed.data.start_line, parsed.data.end_line) });
+    return reply.send({
+      path: parsed.data.path,
+      content: sliceLines(raw, parsed.data.start_line, parsed.data.end_line)
+    });
   });
 
   fastify.put<{ Params: { id: string } }>("/sessions/:id/files/write", async (request, reply) => {
@@ -115,19 +122,22 @@ export function registerSessionFilesRoutes<L extends FastifyBaseLogger>(
     return reply.send({ items });
   });
 
-  fastify.delete<{ Params: { id: string } }>("/sessions/:id/files/delete", async (request, reply) => {
-    const parsed = z.object({ path: z.string().min(1) }).safeParse(request.query);
-    if (!parsed.success) throw new ValidationError("Invalid delete query");
-    const projectRoot = getProjectRoot(request.params.id);
-    const abs = await resolveProjectPathSecure(projectRoot, parsed.data.path);
-    let st;
-    try {
-      st = await stat(abs);
-    } catch {
-      return reply.send({ ok: true as const, message: "already absent" });
+  fastify.delete<{ Params: { id: string } }>(
+    "/sessions/:id/files/delete",
+    async (request, reply) => {
+      const parsed = z.object({ path: z.string().min(1) }).safeParse(request.query);
+      if (!parsed.success) throw new ValidationError("Invalid delete query");
+      const projectRoot = getProjectRoot(request.params.id);
+      const abs = await resolveProjectPathSecure(projectRoot, parsed.data.path);
+      let st;
+      try {
+        st = await stat(abs);
+      } catch {
+        return reply.send({ ok: true as const, message: "already absent" });
+      }
+      if (st.isDirectory()) throw new ValidationError("delete only supports files");
+      await unlink(abs);
+      return reply.send({ ok: true as const });
     }
-    if (st.isDirectory()) throw new ValidationError("delete only supports files");
-    await unlink(abs);
-    return reply.send({ ok: true as const });
-  });
+  );
 }

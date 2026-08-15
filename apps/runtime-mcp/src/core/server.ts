@@ -31,7 +31,10 @@ export async function buildServer(options: BuildServerOptions) {
   await fastify.register(cors, { origin: true });
 
   fastify.get("/health", async (_request, reply) => {
-    const workerOk = await options.workerClient.health().then((h) => h.ok).catch(() => false);
+    const workerOk = await options.workerClient
+      .health()
+      .then((h) => h.ok)
+      .catch(() => false);
     const workerCircuitState = formatCircuitState(
       "circuitState" in (options.workerClient as object)
         ? (options.workerClient as { circuitState?: unknown }).circuitState

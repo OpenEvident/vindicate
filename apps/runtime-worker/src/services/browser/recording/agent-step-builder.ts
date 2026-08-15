@@ -48,7 +48,9 @@ function candidateFromLocator(loc: StructuredLocator): SelectorCandidatePayload 
     // browser_act already verified this locator inside its iframe boundary (see frame-capture.ts) —
     // forward it so an agent recording of a click inside an iframe replays inside that same iframe
     // instead of resolving (or mis-resolving) against the top page.
-    ...(loc.frame_path !== undefined && loc.frame_path.length > 0 ? { frame_path: [...loc.frame_path] } : {}),
+    ...(loc.frame_path !== undefined && loc.frame_path.length > 0
+      ? { frame_path: [...loc.frame_path] }
+      : {}),
     // Forward click-delegate status so a finalized recording — and any codegen schema an agent
     // transcribes from it — still knows this candidate targets a delegate ancestor, not the element
     // its role/name imply. Without this, the signal computed at capture (interactive-capture.evaluate.ts)
@@ -177,6 +179,8 @@ export function buildAgentStepPayload(
     ...(typeof step.value === "string" ? { text: step.value } : {}),
     ...(typeof step.url === "string" ? { url: step.url } : {}),
     ...(typeof step.key === "string" ? { key: step.key } : {}),
-    ...(Array.isArray(step.files) ? { files: step.files.filter((f): f is string => typeof f === "string") } : {})
+    ...(Array.isArray(step.files)
+      ? { files: step.files.filter((f): f is string => typeof f === "string") }
+      : {})
   };
 }

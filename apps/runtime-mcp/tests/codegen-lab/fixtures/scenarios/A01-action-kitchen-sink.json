@@ -16,16 +16,59 @@
               "path": "/kitchen",
               "owned_by": "kitchen",
               "elements": [
-                { "ref": "inputA", "tag": "input", "testid": "input-a", "testid_attr": "data-testid" },
+                {
+                  "ref": "inputA",
+                  "tag": "input",
+                  "testid": "input-a",
+                  "testid_attr": "data-testid"
+                },
                 { "ref": "buttonA", "tag": "button", "role": "button", "name": "Primary" },
-                { "ref": "checkA", "tag": "input", "testid": "check-a", "testid_attr": "data-testid", "type": "checkbox" },
-                { "ref": "selectA", "tag": "select", "testid": "select-a", "testid_attr": "data-testid" },
-                { "ref": "uploadA", "tag": "input", "testid": "upload-a", "testid_attr": "data-testid", "type": "file" },
+                {
+                  "ref": "checkA",
+                  "tag": "input",
+                  "testid": "check-a",
+                  "testid_attr": "data-testid",
+                  "type": "checkbox"
+                },
+                {
+                  "ref": "selectA",
+                  "tag": "select",
+                  "testid": "select-a",
+                  "testid_attr": "data-testid"
+                },
+                {
+                  "ref": "uploadA",
+                  "tag": "input",
+                  "testid": "upload-a",
+                  "testid_attr": "data-testid",
+                  "type": "file"
+                },
                 { "ref": "cardA", "tag": "div", "role": "region", "name": "Main card" },
-                { "ref": "bannerClose", "tag": "button", "testid": "banner-close", "testid_attr": "data-testid" },
-                { "ref": "rangeA", "tag": "input", "testid": "range-a", "testid_attr": "data-testid", "type": "range" },
-                { "ref": "dragSource", "tag": "div", "testid": "drag-source", "testid_attr": "data-testid" },
-                { "ref": "dragTarget", "tag": "div", "testid": "drag-target", "testid_attr": "data-testid" }
+                {
+                  "ref": "bannerClose",
+                  "tag": "button",
+                  "testid": "banner-close",
+                  "testid_attr": "data-testid"
+                },
+                {
+                  "ref": "rangeA",
+                  "tag": "input",
+                  "testid": "range-a",
+                  "testid_attr": "data-testid",
+                  "type": "range"
+                },
+                {
+                  "ref": "dragSource",
+                  "tag": "div",
+                  "testid": "drag-source",
+                  "testid_attr": "data-testid"
+                },
+                {
+                  "ref": "dragTarget",
+                  "tag": "div",
+                  "testid": "drag-target",
+                  "testid_attr": "data-testid"
+                }
               ],
               "types": [],
               "steps": [
@@ -47,10 +90,19 @@
                     { "do": "uncheck", "ref": "checkA" },
                     { "do": "select", "ref": "selectA", "value": "one" },
                     { "do": "press", "key": "Enter" },
-                    { "do": "upload", "ref": "uploadA", "files": ["support/data/kitchen/sample.pdf"] },
+                    {
+                      "do": "upload",
+                      "ref": "uploadA",
+                      "files": ["support/data/kitchen/sample.pdf"]
+                    },
                     { "do": "dblclick", "ref": "buttonA" },
                     { "do": "drag", "ref": "dragSource", "toRef": "dragTarget" },
-                    { "do": "drag", "ref": "dragSource", "toRef": "dragTarget", "strategy": "native" },
+                    {
+                      "do": "drag",
+                      "ref": "dragSource",
+                      "toRef": "dragTarget",
+                      "strategy": "native"
+                    },
                     { "do": "scroll", "ref": "cardA" },
                     { "do": "accept_dialog" },
                     { "do": "dismiss_dialog" }
@@ -62,7 +114,9 @@
                   "name": "verify_done",
                   "jsdoc": "Flow finished",
                   "params": [],
-                  "assertions": [{ "subject": "element", "ref": "buttonA", "matcher": "toBeVisible" }]
+                  "assertions": [
+                    { "subject": "element", "ref": "buttonA", "matcher": "toBeVisible" }
+                  ]
                 }
               ]
             }
@@ -95,9 +149,6 @@
     "invariants": ["I1", "I2", "I6", "I9", "I11", "I12"],
     "compile": true,
     "golden": true,
-    "goldenFiles": [
-      "pages/KitchenPage.ts",
-      "tests/kitchen.spec.ts"
-    ]
+    "goldenFiles": ["pages/KitchenPage.ts", "tests/kitchen.spec.ts"]
   }
 }

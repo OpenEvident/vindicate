@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Eye, Monitor } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { BrowserBar } from "./BrowserBar";
-import { useRecordingStore, getTimelineStepNumber, selectEditorRecordedSteps } from "@/stores/recordingStore";
+import {
+  useRecordingStore,
+  getTimelineStepNumber,
+  selectEditorRecordedSteps
+} from "@/stores/recordingStore";
 import { getTargetLabel, resolvePreviewUrl } from "@/lib/recording-formatters";
 import { ACTION_META } from "@/lib/recording-constants";
 import type { RecordingMode, RecordingStep } from "@/lib/recording-ui-types";
@@ -19,9 +23,9 @@ function previewTitle(target: PreviewTarget, timelineStepNumber: number | null):
 }
 
 function previewHint(target: PreviewTarget, mode: RecordingMode): string {
-  if (mode === "recording")    return "Live view of the page under test.";
+  if (mode === "recording") return "Live view of the page under test.";
   if (target.type === "final") return "Full-page snapshot taken when you stopped recording.";
-  if (target.type === "step")  return "Screenshot captured immediately after this interaction.";
+  if (target.type === "step") return "Screenshot captured immediately after this interaction.";
   return "Select a step or final capture to preview.";
 }
 
@@ -44,47 +48,54 @@ function nonEmptyString(value: unknown): string | null {
 }
 
 export function PreviewPane({ mode }: PreviewPaneProps) {
-  const { previewTarget, screenshotUrl, captionStep, steps, recordedSteps, preconditionCount, targetUrl } =
-    useRecordingStore(
-      useShallow((s): PreviewSlice => {
-        const recorded = selectEditorRecordedSteps(s);
-        const pt = s.previewTarget;
-        if (pt.type === "final") {
-          const finalUrl = nonEmptyString(s.finalScreenshotUrl);
-          return {
-            previewTarget: pt,
-            screenshotUrl: finalUrl,
-            captionStep: undefined,
-            steps: s.steps,
-            recordedSteps: recorded,
-            preconditionCount: s.preconditionRecordings.length,
-            targetUrl: s.targetUrl
-          };
-        }
-        if (pt.type === "step") {
-          const step = s.steps.find((st) => st.seq === pt.seq);
-          const stepUrl = nonEmptyString(step?.screenshotUrl);
-          return {
-            previewTarget: pt,
-            screenshotUrl: stepUrl,
-            captionStep: step,
-            steps: s.steps,
-            recordedSteps: recorded,
-            preconditionCount: s.preconditionRecordings.length,
-            targetUrl: s.targetUrl
-          };
-        }
+  const {
+    previewTarget,
+    screenshotUrl,
+    captionStep,
+    steps,
+    recordedSteps,
+    preconditionCount,
+    targetUrl
+  } = useRecordingStore(
+    useShallow((s): PreviewSlice => {
+      const recorded = selectEditorRecordedSteps(s);
+      const pt = s.previewTarget;
+      if (pt.type === "final") {
+        const finalUrl = nonEmptyString(s.finalScreenshotUrl);
         return {
           previewTarget: pt,
-          screenshotUrl: null,
+          screenshotUrl: finalUrl,
           captionStep: undefined,
           steps: s.steps,
           recordedSteps: recorded,
           preconditionCount: s.preconditionRecordings.length,
           targetUrl: s.targetUrl
         };
-      })
-    );
+      }
+      if (pt.type === "step") {
+        const step = s.steps.find((st) => st.seq === pt.seq);
+        const stepUrl = nonEmptyString(step?.screenshotUrl);
+        return {
+          previewTarget: pt,
+          screenshotUrl: stepUrl,
+          captionStep: step,
+          steps: s.steps,
+          recordedSteps: recorded,
+          preconditionCount: s.preconditionRecordings.length,
+          targetUrl: s.targetUrl
+        };
+      }
+      return {
+        previewTarget: pt,
+        screenshotUrl: null,
+        captionStep: undefined,
+        steps: s.steps,
+        recordedSteps: recorded,
+        preconditionCount: s.preconditionRecordings.length,
+        targetUrl: s.targetUrl
+      };
+    })
+  );
 
   const previewUrl = resolvePreviewUrl(previewTarget, captionStep, steps, targetUrl);
 
@@ -100,11 +111,12 @@ export function PreviewPane({ mode }: PreviewPaneProps) {
       ? getTimelineStepNumber(captionStep.seq, preconditionCount, recordedSteps)
       : null;
 
-  const captionText = captionStep !== undefined
-    ? `Step ${timelineStepNumber} · ${ACTION_META[captionStep.action].label} · ${getTargetLabel(captionStep)}`
-    : previewTarget.type === "final"
-    ? "Final capture · full page snapshot"
-    : null;
+  const captionText =
+    captionStep !== undefined
+      ? `Step ${timelineStepNumber} · ${ACTION_META[captionStep.action].label} · ${getTargetLabel(captionStep)}`
+      : previewTarget.type === "final"
+        ? "Final capture · full page snapshot"
+        : null;
 
   const showEmpty = isLive && previewTarget.type === "none";
 
@@ -115,12 +127,12 @@ export function PreviewPane({ mode }: PreviewPaneProps) {
         <div>
           <div className="flex items-center gap-2 text-[13.5px] font-semibold tracking-tight">
             {previewTitle(previewTarget, timelineStepNumber)}
-            <span className={[
-              "rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em]",
-              isLive
-                ? "bg-tone-red/15 text-tone-red"
-                : "bg-tone-emerald/15 text-tone-emerald",
-            ].join(" ")}>
+            <span
+              className={[
+                "rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em]",
+                isLive ? "bg-tone-red/15 text-tone-red" : "bg-tone-emerald/15 text-tone-emerald"
+              ].join(" ")}
+            >
               {isLive ? "Live" : "Stopped"}
             </span>
           </div>
@@ -142,7 +154,9 @@ export function PreviewPane({ mode }: PreviewPaneProps) {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-vs-hover/50">
                   <Monitor size={22} />
                 </span>
-                <span className="text-ui-md font-medium text-vs-text">Waiting for the first action</span>
+                <span className="text-ui-md font-medium text-vs-text">
+                  Waiting for the first action
+                </span>
                 <span className="max-w-[280px] text-[11.5px] leading-relaxed">
                   Interact with the browser. Actions show up here as you go.
                 </span>
@@ -150,9 +164,7 @@ export function PreviewPane({ mode }: PreviewPaneProps) {
             ) : screenshotUrl !== null && !imageFailed ? (
               <>
                 {/* Shimmer skeleton — visible until image finishes loading */}
-                {!imageLoaded && (
-                  <div className="absolute inset-0 animate-shimmer bg-vs-hover" />
-                )}
+                {!imageLoaded && <div className="absolute inset-0 animate-shimmer bg-vs-hover" />}
                 <img
                   src={screenshotUrl}
                   alt={captionText ?? "Step screenshot"}
@@ -164,7 +176,7 @@ export function PreviewPane({ mode }: PreviewPaneProps) {
                   className={[
                     "max-h-full max-w-full object-contain",
                     "transition-opacity duration-300",
-                    imageLoaded ? "opacity-100" : "opacity-0",
+                    imageLoaded ? "opacity-100" : "opacity-0"
                   ].join(" ")}
                 />
               </>
@@ -173,8 +185,8 @@ export function PreviewPane({ mode }: PreviewPaneProps) {
                 {previewTarget.type === "step"
                   ? "This step has no screenshot."
                   : previewTarget.type === "final"
-                  ? "Final screenshot not available."
-                  : "No preview yet"}
+                    ? "Final screenshot not available."
+                    : "No preview yet"}
               </div>
             )}
           </div>

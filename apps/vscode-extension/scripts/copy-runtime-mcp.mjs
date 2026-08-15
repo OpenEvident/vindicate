@@ -35,4 +35,6 @@ if (!existsSync(runtimeContentDir)) {
 }
 cpSync(runtimeContentDir, path.join(mcpOutputDir, "content"), { recursive: true });
 
-console.log("Copied runtime-mcp bundle, content, and vindicate-ui.html into dist/bundled/runtime-mcp/");
+console.log(
+  "Copied runtime-mcp bundle, content, and vindicate-ui.html into dist/bundled/runtime-mcp/"
+);

@@ -13,7 +13,10 @@ import type {
   SetStorageStep
 } from "./storage.params.js";
 
-export async function handleGetCookies(page: Page, step: GetCookiesStep): Promise<{ cookies: unknown[] }> {
+export async function handleGetCookies(
+  page: Page,
+  step: GetCookiesStep
+): Promise<{ cookies: unknown[] }> {
   const cookies = await page.context().cookies(step.url);
   return { cookies };
 }
@@ -34,7 +37,10 @@ export async function handleSetCookies(page: Page, step: SetCookiesStep): Promis
   return { ok: true as const };
 }
 
-export async function handleClearCookies(page: Page, step: ClearCookiesStep): Promise<{ ok: true }> {
+export async function handleClearCookies(
+  page: Page,
+  step: ClearCookiesStep
+): Promise<{ ok: true }> {
   await page.context().clearCookies();
   if (step.url !== undefined) {
     void step.url;
@@ -42,7 +48,10 @@ export async function handleClearCookies(page: Page, step: ClearCookiesStep): Pr
   return { ok: true as const };
 }
 
-export async function handleGetStorage(page: Page, step: GetStorageStep): Promise<{ entries: Record<string, string> }> {
+export async function handleGetStorage(
+  page: Page,
+  step: GetStorageStep
+): Promise<{ entries: Record<string, string> }> {
   const entries = await page.evaluate(
     ({ origin, type, key }) => {
       /* __VINDICATE_EVAL__:get_storage__ */
@@ -78,7 +87,10 @@ export async function handleSetStorage(page: Page, step: SetStorageStep): Promis
   return { ok: true as const };
 }
 
-export async function handleClearStorage(page: Page, step: ClearStorageStep): Promise<{ ok: true }> {
+export async function handleClearStorage(
+  page: Page,
+  step: ClearStorageStep
+): Promise<{ ok: true }> {
   await page.evaluate(
     ({ type }) => {
       /* __VINDICATE_EVAL__:clear_storage__ */

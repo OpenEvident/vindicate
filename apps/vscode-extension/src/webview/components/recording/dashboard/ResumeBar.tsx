@@ -16,12 +16,14 @@ export function ResumeBar({ session, onResume, onPreview }: ResumeBarProps) {
       className={[
         "grid grid-cols-[auto_1fr_auto] gap-4 items-center",
         "rounded-xl border border-tone-amber/40 px-4 py-3.5 mb-5",
-        "bg-gradient-to-r from-[color-mix(in_oklab,var(--color-tone-amber)_12%,var(--color-vs-bg))] to-vs-bg",
+        "bg-gradient-to-r from-[color-mix(in_oklab,var(--color-tone-amber)_12%,var(--color-vs-bg))] to-vs-bg"
       ].join(" ")}
     >
       {/* Thumbnail */}
       <div className="relative w-[92px] h-[62px] rounded-lg overflow-hidden border border-vs-border shrink-0">
-        <SessionThumb {...(session.thumbnailUrl !== undefined ? { thumbnailUrl: session.thumbnailUrl } : {})} />
+        <SessionThumb
+          {...(session.thumbnailUrl !== undefined ? { thumbnailUrl: session.thumbnailUrl } : {})}
+        />
       </div>
 
       {/* Body */}
@@ -41,7 +43,9 @@ export function ResumeBar({ session, onResume, onPreview }: ResumeBarProps) {
 
       {/* Actions */}
       <div className="flex items-center gap-2 shrink-0">
-        <Button variant="ghost" size="sm" onClick={onPreview}>Preview</Button>
+        <Button variant="ghost" size="sm" onClick={onPreview}>
+          Preview
+        </Button>
         <Button variant="primary" size="sm" onClick={onResume}>
           <ArrowRight size={13} />
           Resume review

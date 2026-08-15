@@ -23,7 +23,9 @@ export function StepNode({ seq, action, hasScreenshot, selected, isLast }: StepN
           "transition-all duration-150",
           meta.nodeColorClass,
           meta.nodeBorderClass,
-          selected ? "shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-vs-accent)_18%,transparent)]" : "",
+          selected
+            ? "shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-vs-accent)_18%,transparent)]"
+            : ""
         ].join(" ")}
       >
         {seq}
@@ -40,7 +42,8 @@ export function StepNode({ seq, action, hasScreenshot, selected, isLast }: StepN
         <div
           className="w-0.5 flex-1 min-h-[12px]"
           style={{
-            background: "linear-gradient(to bottom, var(--color-vs-border), color-mix(in oklab, var(--color-vs-border) 50%, transparent))",
+            background:
+              "linear-gradient(to bottom, var(--color-vs-border), color-mix(in oklab, var(--color-vs-border) 50%, transparent))"
           }}
         />
       )}

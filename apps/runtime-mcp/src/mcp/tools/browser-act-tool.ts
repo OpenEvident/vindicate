@@ -160,12 +160,17 @@ export function registerBrowserActTool(server: McpServer, workerClient: ICommand
     },
     async (args) => {
       try {
-        logger.info(redactBrowserActLogArgs(args as Record<string, unknown>), "[browser_act] request");
+        logger.info(
+          redactBrowserActLogArgs(args as Record<string, unknown>),
+          "[browser_act] request"
+        );
 
         if (args.action === "wait_for_response") {
           if (args.url_pattern === undefined || args.url_pattern.length === 0) {
             return toMcpToolError(
-              new Error("browser_act wait_for_response requires url_pattern — substring to match in response URL")
+              new Error(
+                "browser_act wait_for_response requires url_pattern — substring to match in response URL"
+              )
             );
           }
           const step: WorkerStep = {
@@ -230,7 +235,9 @@ export function registerBrowserActTool(server: McpServer, workerClient: ICommand
         }
 
         if (args.action === "fill" && args.value === undefined) {
-          return toMcpToolError(new Error("browser_act fill requires value — the value to set on the element"));
+          return toMcpToolError(
+            new Error("browser_act fill requires value — the value to set on the element")
+          );
         }
 
         if (
@@ -265,7 +272,15 @@ export function registerBrowserActTool(server: McpServer, workerClient: ICommand
         const runOptions =
           args.timeout_ms !== undefined ? { timeoutMs: args.timeout_ms + 10_000 } : undefined;
         const result = await workerClient.runStep(args.session_id, step, runOptions);
-        logger.info({ session_id: args.session_id, action: args.action, ref: resolvedRef, result: result.result }, "[browser_act] response");
+        logger.info(
+          {
+            session_id: args.session_id,
+            action: args.action,
+            ref: resolvedRef,
+            result: result.result
+          },
+          "[browser_act] response"
+        );
         return toolJson(result.result, "browser_act");
       } catch (err: unknown) {
         return toMcpToolError(err);

@@ -3,7 +3,10 @@ import { describe, expect, it, vi } from "vitest";
 
 import { dragLocatorTo } from "./drag-locator.js";
 
-function fakeLocator(box: { x: number; y: number; width: number; height: number } | null, dragTo = vi.fn()) {
+function fakeLocator(
+  box: { x: number; y: number; width: number; height: number } | null,
+  dragTo = vi.fn()
+) {
   return {
     boundingBox: vi.fn().mockResolvedValue(box),
     scrollIntoViewIfNeeded: vi.fn().mockResolvedValue(undefined),

@@ -70,7 +70,10 @@ export class ActionTimeoutError extends Error {
 
 export class ElementNotFoundError extends Error {
   override readonly name = "ElementNotFoundError";
-  constructor(readonly ref?: string, detail?: string) {
+  constructor(
+    readonly ref?: string,
+    detail?: string
+  ) {
     super(
       detail !== undefined && detail.length > 0
         ? detail

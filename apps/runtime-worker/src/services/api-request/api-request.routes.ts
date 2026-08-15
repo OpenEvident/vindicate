@@ -40,7 +40,9 @@ export function registerApiRequestRoutes<L extends FastifyBaseLogger>(
   fastify.post("/api-request", async (request, reply) => {
     const parsed = ApiRequestBodySchema.safeParse(request.body);
     if (!parsed.success) {
-      const details = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join(", ");
+      const details = parsed.error.issues
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
+        .join(", ");
       throw new ValidationError(`Invalid api_request body — ${details}`);
     }
 

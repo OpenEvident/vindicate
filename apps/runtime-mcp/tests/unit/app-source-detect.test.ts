@@ -25,11 +25,7 @@ async function writeVindicateHarness(root: string): Promise<void> {
   await mkdir(path.join(root, "support", "config"), { recursive: true });
   await mkdir(path.join(root, "support", "data", "auth"), { recursive: true });
   await writeFile(path.join(root, "playwright.config.ts"), "export default {};\n", "utf8");
-  await writeFile(
-    path.join(root, "pages", "BasePage.ts"),
-    "export class BasePage {}\n",
-    "utf8"
-  );
+  await writeFile(path.join(root, "pages", "BasePage.ts"), "export class BasePage {}\n", "utf8");
   await writeFile(
     path.join(root, "support", "config", "page.config.ts"),
     "export const pages = {};\n",

@@ -141,7 +141,7 @@ describe("page.evaluate serialization", () => {
     const el = capture(["data-testid"]).elements[0];
     expect(el?.locator?.strategy).toBe("role_name");
     expect(el?.locator?.name).toBe(long); // locator-grade name is full
-    expect((el?.name.length ?? 0)).toBeLessThan(long.length); // display name is truncated
+    expect(el?.name.length ?? 0).toBeLessThan(long.length); // display name is truncated
   });
 
   it("falls back to a low-confidence positional locator when nothing unique exists", () => {
@@ -178,7 +178,11 @@ describe("page.evaluate serialization", () => {
     // pre-existing h1-only path) displayed role "generic" instead of "heading" — cosmetic, but real:
     // it also meant a heading's role_name locator strategy never got credit for being a heading.
     expect(heading?.role).toBe("heading");
-    expect(heading?.locator).toMatchObject({ strategy: "role_name", role: "heading", name: "Your Cart" });
+    expect(heading?.locator).toMatchObject({
+      strategy: "role_name",
+      role: "heading",
+      name: "Your Cart"
+    });
   });
 
   it("does not capture headings when includeVerifiable is false", () => {
@@ -212,7 +216,7 @@ describe("page.evaluate serialization", () => {
       }
     });
 
-    it("does not treat aria-haspopup=\"false\" or a garbage value as interactive", () => {
+    it('does not treat aria-haspopup="false" or a garbage value as interactive', () => {
       // No testid/role/onclick/tabindex on either div, so inclusion depends solely on isInteractive —
       // these must stay uncaptured, unlike the valid-token cases above.
       document.body.innerHTML = `
@@ -308,7 +312,11 @@ describe("page.evaluate serialization", () => {
         scopeCss: "#cart"
       });
       const el = result.elements.find((e) => e.name === "Subtotal");
-      expect(el?.locator).toMatchObject({ strategy: "text", confidence: "high", value: "Subtotal" });
+      expect(el?.locator).toMatchObject({
+        strategy: "text",
+        confidence: "high",
+        value: "Subtotal"
+      });
     });
 
     it("does not capture a wrapping non-leaf ancestor, only the actual text-bearing leaf", () => {
@@ -340,7 +348,9 @@ describe("structured locator — XPath tiers", () => {
     originalEvaluate = (document as unknown as Record<string, unknown>).evaluate;
     originalXPathResult = (globalThis as unknown as Record<string, unknown>).XPathResult;
     (document as unknown as Record<string, unknown>).evaluate = evalSpy;
-    (globalThis as unknown as Record<string, unknown>).XPathResult = { ORDERED_NODE_SNAPSHOT_TYPE: 7 };
+    (globalThis as unknown as Record<string, unknown>).XPathResult = {
+      ORDERED_NODE_SNAPSHOT_TYPE: 7
+    };
   });
 
   afterEach(() => {

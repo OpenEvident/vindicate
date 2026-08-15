@@ -76,11 +76,7 @@
   ],
   "expect": {
     "ok": true,
-    "filesExist": [
-      "pages/LoginPage.ts",
-      "support/data/auth/expected.json",
-      "tests/auth.spec.ts"
-    ],
+    "filesExist": ["pages/LoginPage.ts", "support/data/auth/expected.json", "tests/auth.spec.ts"],
     "mustContain": {
       "pages/LoginPage.ts": [
         "import { authExpected as expected } from '@config/page-loader';",

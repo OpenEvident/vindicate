@@ -5,7 +5,9 @@ import { mapRecordingError, WorkerRecordingError } from "../../src/worker/record
 describe("mapRecordingError", () => {
   it("maps session_not_active to actionable guidance", () => {
     expect(
-      mapRecordingError(new WorkerRecordingError("session_not_active", 400, '{"error":"session_not_active"}'))
+      mapRecordingError(
+        new WorkerRecordingError("session_not_active", 400, '{"error":"session_not_active"}')
+      )
     ).toEqual({
       error: "session_not_active",
       message: "The session isn't active. Resume or recreate it before recording."

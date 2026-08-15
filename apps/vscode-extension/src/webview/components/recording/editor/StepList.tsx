@@ -17,7 +17,7 @@ export function StepList({ mode }: StepListProps) {
   const recordedSteps = useRecordingStore(useShallow(selectEditorRecordedSteps));
   const previewTarget = useRecordingStore((s) => s.previewTarget);
   const openLocatorSeq = useRecordingStore((s) => s.openLocatorSeq);
-  const listRef      = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const prevCountRef = useRef(0);
   const hasPreconditions = preconditionRecordings.length > 0;
 
@@ -48,7 +48,10 @@ export function StepList({ mode }: StepListProps) {
       )}
 
       {preconditionRecordings.map((name, index) => {
-        const showConnector = index < preconditionRecordings.length - 1 || recordedSteps.length > 0 || mode === "recording";
+        const showConnector =
+          index < preconditionRecordings.length - 1 ||
+          recordedSteps.length > 0 ||
+          mode === "recording";
         return (
           <PreconditionReplayStep
             key={`precondition-${name}-${index}`}
@@ -60,7 +63,7 @@ export function StepList({ mode }: StepListProps) {
       })}
 
       {recordedSteps.map((step, index) => {
-        const isLast   = index === recordedSteps.length - 1;
+        const isLast = index === recordedSteps.length - 1;
         const selected = previewTarget.type === "step" && previewTarget.seq === step.seq;
         const displaySeq = hasPreconditions ? preconditionRecordings.length + index + 1 : step.seq;
 

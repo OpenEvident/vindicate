@@ -90,20 +90,26 @@ cpSync(runtimeWorkerChromiumBidi, chromiumBidiOut, {
   dereference: true
 });
 
-const chromiumBidiMapperShim = path.join(chromiumBidiOut, "lib", "cjs", "bidiMapper", "BidiMapper.js");
+const chromiumBidiMapperShim = path.join(
+  chromiumBidiOut,
+  "lib",
+  "cjs",
+  "bidiMapper",
+  "BidiMapper.js"
+);
 const chromiumCdpShim = path.join(chromiumBidiOut, "lib", "cjs", "cdp", "CdpConnection.js");
 mkdirSync(path.dirname(chromiumBidiMapperShim), { recursive: true });
 mkdirSync(path.dirname(chromiumCdpShim), { recursive: true });
-writeFileSync(chromiumBidiMapperShim, "module.exports = require('../../bidiMapper/BidiMapper.js');\n");
+writeFileSync(
+  chromiumBidiMapperShim,
+  "module.exports = require('../../bidiMapper/BidiMapper.js');\n"
+);
 writeFileSync(chromiumCdpShim, "module.exports = require('../../cdp/CdpConnection.js');\n");
 
 const bundledDir = path.resolve(extensionRoot, "dist", "bundled");
 mkdirSync(bundledDir, { recursive: true });
 
-copyFileSync(
-  runtimeWorkerPlaywrightBrowsersJson,
-  path.resolve(bundledDir, "browsers.json")
-);
+copyFileSync(runtimeWorkerPlaywrightBrowsersJson, path.resolve(bundledDir, "browsers.json"));
 
 // playwright-core resolves packageRoot as dirname(bundle.mjs)/.. and requires package.json there.
 writeFileSync(

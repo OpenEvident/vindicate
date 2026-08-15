@@ -27,7 +27,9 @@ describe("RecordingsIndexService", () => {
   const tempDirs: string[] = [];
 
   afterEach(async () => {
-    await Promise.all(tempDirs.splice(0).map((dir) => fs.rm(dir, { recursive: true, force: true })));
+    await Promise.all(
+      tempDirs.splice(0).map((dir) => fs.rm(dir, { recursive: true, force: true }))
+    );
   });
 
   async function makeProjectRoot(): Promise<string> {

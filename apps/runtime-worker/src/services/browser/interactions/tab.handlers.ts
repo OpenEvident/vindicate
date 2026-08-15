@@ -1,12 +1,7 @@
 import type { BrowserContext, Page } from "playwright-core";
 
 import { ValidationError } from "../../../shared/errors/worker.errors.js";
-import type {
-  CloseTabStep,
-  HandleDialogStep,
-  NewTabStep,
-  SwitchTabStep
-} from "./tab.params.js";
+import type { CloseTabStep, HandleDialogStep, NewTabStep, SwitchTabStep } from "./tab.params.js";
 
 export interface TabSessionState {
   activePageIndex: number;
@@ -130,7 +125,9 @@ export async function handleHandleDialog(
   timeoutMs: number
 ): Promise<{ handled: true; type: "alert" | "confirm" | "prompt" }> {
   const page = resolvePage(context, state);
-  const dialog = await page.waitForEvent("dialog", { timeout: Math.min(timeoutMs, 5_000) }).catch(() => null);
+  const dialog = await page
+    .waitForEvent("dialog", { timeout: Math.min(timeoutMs, 5_000) })
+    .catch(() => null);
   if (dialog === null) {
     const client = await context.newCDPSession(page);
     await client.send("Page.handleJavaScriptDialog", {

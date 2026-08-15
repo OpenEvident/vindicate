@@ -33,7 +33,10 @@ describe("toMcpToolError", () => {
     [new BrowserCrashError(), "browser_session"],
     [new FileOutsideRootError("x"), "outside the project root"],
     [new FileTooLargeError(1), "maximum size"],
-    [new ApiRequestFailedError("GET https://x.invalid/ failed: getaddrinfo ENOTFOUND"), "didn't respond"],
+    [
+      new ApiRequestFailedError("GET https://x.invalid/ failed: getaddrinfo ENOTFOUND"),
+      "didn't respond"
+    ],
     [new Error("secret stack"), "unexpected"]
   ];
 
@@ -62,7 +65,9 @@ describe("toMcpToolError", () => {
     // Regression guard: api.request_failed also carries HTTP 502 on the wire, same as a genuinely
     // down worker — this must map to ApiRequestFailedError specifically, never WorkerUnavailableError,
     // which instructs the agent to stop calling all Vindicate tools entirely.
-    const result = toMcpToolError(new ApiRequestFailedError("GET https://x.invalid/ failed: timeout"));
+    const result = toMcpToolError(
+      new ApiRequestFailedError("GET https://x.invalid/ failed: timeout")
+    );
     const first = result.content[0];
     const text = first !== undefined && first.type === "text" ? first.text : "";
     expect(text).not.toContain("Vindicate runtime worker is temporarily unavailable");
@@ -84,7 +89,11 @@ describe("toMcpToolError", () => {
   describe("codegen errors", () => {
     it("maps CodegenValidationError to structured schema_validation JSON", () => {
       const result = toMcpToolError(
-        new CodegenValidationError("pages.0.steps.0.actions.0.do", "Unknown action 'clck'", "Did you mean 'click'?")
+        new CodegenValidationError(
+          "pages.0.steps.0.actions.0.do",
+          "Unknown action 'clck'",
+          "Did you mean 'click'?"
+        )
       );
       const payload = JSON.parse(
         result.content[0]?.type === "text" ? result.content[0].text : "{}"

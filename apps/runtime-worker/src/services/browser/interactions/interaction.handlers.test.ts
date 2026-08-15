@@ -64,7 +64,12 @@ describe("handleNavigate", () => {
     const goto = vi.fn().mockResolvedValue(undefined);
     const waitForLoadState = vi.fn().mockResolvedValue(undefined);
     const page = { goto, waitForLoadState } as unknown as Page;
-    await handleNavigate(page, { action: "navigate", url: "https://example.com/" }, 30_000, SETTLE_CFG);
+    await handleNavigate(
+      page,
+      { action: "navigate", url: "https://example.com/" },
+      30_000,
+      SETTLE_CFG
+    );
     expect(goto).toHaveBeenCalledWith("https://example.com/", {
       waitUntil: "load",
       timeout: 30_000
@@ -75,7 +80,12 @@ describe("handleNavigate", () => {
     const goto = vi.fn().mockResolvedValue(undefined);
     const waitForLoadState = vi.fn().mockResolvedValue(undefined);
     const page = { goto, waitForLoadState } as unknown as Page;
-    await handleNavigate(page, { action: "navigate", url: "https://example.com/" }, 30_000, SETTLE_CFG);
+    await handleNavigate(
+      page,
+      { action: "navigate", url: "https://example.com/" },
+      30_000,
+      SETTLE_CFG
+    );
     expect(waitForLoadState).toHaveBeenCalledTimes(1);
     const [state, opts] = waitForLoadState.mock.calls[0] as [string, { timeout: number }];
     expect(state).toBe("networkidle");
@@ -183,7 +193,11 @@ describe("handleFill", () => {
     const page = fakePage(locator);
     const ctx = { actionTimeoutMs: 3_000, getDescriptor: () => descriptor };
 
-    const result = await handleFill(page, { action: "fill", ref: "ref-00000001", value: "Product-abc" }, ctx);
+    const result = await handleFill(
+      page,
+      { action: "fill", ref: "ref-00000001", value: "Product-abc" },
+      ctx
+    );
 
     expect(result.ok).toBe(true);
     expect(result.hint).toMatch(/type/);
@@ -195,7 +209,11 @@ describe("handleFill", () => {
     const page = fakePage(locator);
     const ctx = { actionTimeoutMs: 3_000, getDescriptor: () => descriptor };
 
-    const result = await handleFill(page, { action: "fill", ref: "ref-00000001", value: "Product-abc" }, ctx);
+    const result = await handleFill(
+      page,
+      { action: "fill", ref: "ref-00000001", value: "Product-abc" },
+      ctx
+    );
 
     expect(result).toEqual({ ok: true });
   });
@@ -218,7 +236,11 @@ describe("handleFill", () => {
     const page = fakePage(locator);
     const ctx = { actionTimeoutMs: 3_000, getDescriptor: () => descriptor };
 
-    const result = await handleFill(page, { action: "fill", ref: "ref-00000001", value: "42" }, ctx);
+    const result = await handleFill(
+      page,
+      { action: "fill", ref: "ref-00000001", value: "42" },
+      ctx
+    );
 
     expect(result).toEqual({ ok: true });
   });
@@ -351,11 +373,7 @@ describe("handleDrag", () => {
       getDescriptor: () => descriptor
     };
 
-    await handleDrag(
-      page,
-      { action: "drag", ref: "ref-00000001", to_ref: "ref-00000002" },
-      ctx
-    );
+    await handleDrag(page, { action: "drag", ref: "ref-00000001", to_ref: "ref-00000002" }, ctx);
 
     expect(down).toHaveBeenCalledOnce();
     expect(up).toHaveBeenCalledOnce();

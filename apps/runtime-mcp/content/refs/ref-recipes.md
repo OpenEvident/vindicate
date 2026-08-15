@@ -1,7 +1,8 @@
 ---
 ref: ref-recipes
 pulled_into: [generate]
-note: Worked patterns for the cases plain create/add_test_cases don't cover head-on — optional/ad-hoc
+note:
+  Worked patterns for the cases plain create/add_test_cases don't cover head-on — optional/ad-hoc
   UI, runtime-parameterized locators, and advanced widgets (date pickers/calendars). Codegen handles
   the locator + conditional primitives; the multi-step orchestration (loops, runtime capture, relative
   dates) is direct `.ts` edit. Each recipe says which half is which.
@@ -19,18 +20,22 @@ Elements that appear only sometimes must never be clicked unconditionally. Use t
 action (codegen) → it calls the `clickIfVisible(locator, timeout = 2000)` helper on `BasePage`/`BasePanel`.
 
 Schema (inside a `step_*`):
+
 ```json
 { "do": "click_if_visible", "ref": "cookieAccept", "timeout": 3000 }
 ```
+
 Emits:
+
 ```ts
 async step_dismiss_banners(): Promise<this> {
   await this.clickIfVisible(this.cookieAcceptButton, 3000);
   return this;
 }
 ```
+
 Put it as the first step of a flow (or in `before_each`) so later steps aren't blocked. For an optional
-element whose *presence decides a branch*, write the `if` inside the page-object method — never the spec.
+element whose _presence decides a branch_, write the `if` inside the page-object method — never the spec.
 
 ## 2. Dynamic locators from runtime data (CRUD: edit/delete the row you created)
 
@@ -39,15 +44,27 @@ declare the element `dynamic` with a `{param}` placeholder. Codegen emits a loca
 pass the value via `refArgs` (sourced from a step param).
 
 Element + step (codegen):
+
 ```json
-{ "ref": "deleteBtn", "tag": "button", "testid": "delete-product-{id}",
-  "testid_attr": "data-testid", "dynamic": [{ "name": "id", "type": "string" }] }
+{
+  "ref": "deleteBtn",
+  "tag": "button",
+  "testid": "delete-product-{id}",
+  "testid_attr": "data-testid",
+  "dynamic": [{ "name": "id", "type": "string" }]
+}
 ```
+
 ```json
-{ "name": "step_delete_product", "params": [{ "name": "id", "type": "string" }],
-  "actions": [{ "do": "click", "ref": "deleteBtn", "refArgs": ["id"] }] }
+{
+  "name": "step_delete_product",
+  "params": [{ "name": "id", "type": "string" }],
+  "actions": [{ "do": "click", "ref": "deleteBtn", "refArgs": ["id"] }]
+}
 ```
+
 Emits:
+
 ```ts
 private deleteProductButton(id: string): Locator {
   return this.page.locator(`//*[@data-testid="delete-product-${id}"]`);
@@ -59,15 +76,16 @@ async step_delete_product(id: string): Promise<this> {
 ```
 
 **Where the id comes from:**
-- *Seeded / known value* → pass through the spec as `expected.<key>` or `process.env.X!`. Fully
+
+- _Seeded / known value_ → pass through the spec as `expected.<key>` or `process.env.X!`. Fully
   `create`-able.
-- *Captured during the test* (you created the product, the app returned its id) → add a getter
+- _Captured during the test_ (you created the product, the app returned its id) → add a getter
   `async get_lastCreatedId(): Promise<string>` (returns a value; exempt from `Promise<this>`), then in
   the spec **direct-edit** to capture and pass it. `create`'s spec writer only emits flat calls, so write
   this by hand:
   ```ts
   // tests/products.spec.ts — direct edit
-  test('[AC-3] should delete the product it created', async ({ productsPage }) => {
+  test("[AC-3] should delete the product it created", async ({ productsPage }) => {
     await productsPage.step_create_product(expected.newProduct);
     const id = await productsPage.get_lastCreatedId();
     await productsPage.step_delete_product(id);
@@ -84,15 +102,16 @@ month-paging loop as a **direct edit** (codegen can't emit loops); the day cell 
 
 `panels/CalendarPanel.ts` (direct edit — `register_page` with `is_panel:true` can scaffold the static
 locators first, then hand-edit in the loop):
+
 ```ts
-import { BasePanel } from './BasePanel';
-import { Locator } from '@playwright/test';
+import { BasePanel } from "./BasePanel";
+import { Locator } from "@playwright/test";
 
 export class CalendarPanel extends BasePanel {
   // locator-helper: testid
-  private monthLabel = this.page.getByTestId('calendar-month');
+  private monthLabel = this.page.getByTestId("calendar-month");
   // locator-helper: testid
-  private nextMonthButton = this.page.getByTestId('calendar-next');
+  private nextMonthButton = this.page.getByTestId("calendar-next");
   // locator-helper: dyn_param
   private dayCell(date: string): Locator {
     return this.page.locator(`//td[@data-date="${date}"]`);
@@ -106,7 +125,7 @@ export class CalendarPanel extends BasePanel {
   async step_pick_date(date: string): Promise<this> {
     const targetMonth = date.slice(0, 7); // 'YYYY-MM'
     for (let i = 0; i < 24; i++) {
-      const shown = (await this.monthLabel.getAttribute('data-month')) ?? '';
+      const shown = (await this.monthLabel.getAttribute("data-month")) ?? "";
       if (shown === targetMonth) break;
       await this.nextMonthButton.click();
     }
@@ -118,6 +137,7 @@ export class CalendarPanel extends BasePanel {
 
 `pages/BookingPage.ts` composes the panel and computes **relative** dates (so tests never go stale).
 Date math lives in the page method — never the spec:
+
 ```ts
 readonly calendar = new CalendarPanel(this.page);
 
@@ -138,6 +158,7 @@ async step_book_stay(checkinInDays: number, nights: number): Promise<this> {
   return this;
 }
 ```
+
 Spec stays declarative: `await bookingPage.step_book_stay(1, 3);` (check in tomorrow, 3 nights).
 
 > Same shape applies to other advanced widgets (steppers, sliders, autocompletes): static controls are
@@ -190,7 +211,7 @@ worker; the worker resolves its local `assets/samples/` path. No project files o
 paths:
 
 ```ts
-await this.attachmentInput.setInputFiles(['support/data/kitchen/invoice.pdf']);
+await this.attachmentInput.setInputFiles(["support/data/kitchen/invoice.pdf"]);
 ```
 
 Paths resolve from the Playwright project root in CI. Never hardcode absolute paths in generated code.

@@ -16,15 +16,30 @@
               "path": "/reports",
               "owned_by": "reports",
               "elements": [
-                { "ref": "startDate", "tag": "input", "testid": "start-date", "testid_attr": "data-testid" },
+                {
+                  "ref": "startDate",
+                  "tag": "input",
+                  "testid": "start-date",
+                  "testid_attr": "data-testid"
+                },
                 { "ref": "statusBanner", "tag": "div", "role": "status", "name": "Report ready" },
                 { "ref": "runButton", "tag": "button", "role": "button", "name": "Run report" },
                 { "ref": "heading", "tag": "h1", "name": "Reports" }
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open reports", "params": [], "actions": [{ "do": "navigate" }] },
-                { "name": "step_run", "jsdoc": "Run report", "params": [], "actions": [{ "do": "click", "ref": "runButton" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open reports",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
+                {
+                  "name": "step_run",
+                  "jsdoc": "Run report",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "runButton" }]
+                }
               ],
               "verifies": [
                 {
@@ -32,7 +47,13 @@
                   "jsdoc": "Report ready",
                   "params": [],
                   "assertions": [
-                    { "subject": "element", "ref": "statusBanner", "waitFor": "visible", "matcher": "toContainText", "arg": "expected.reportReadyText" },
+                    {
+                      "subject": "element",
+                      "ref": "statusBanner",
+                      "waitFor": "visible",
+                      "matcher": "toContainText",
+                      "arg": "expected.reportReadyText"
+                    },
                     { "subject": "element", "ref": "heading", "matcher": "toBeVisible" }
                   ]
                 }
@@ -68,7 +89,12 @@
     "ok": true,
     "filesExist": ["pages/ReportsPage.ts", "tests/reports.spec.ts"],
     "mustContain": {
-      "pages/ReportsPage.ts": ["locator-helper: testid", "locator-helper: role_name", "locator-helper: text", "waitFor({ state: 'visible' });"]
+      "pages/ReportsPage.ts": [
+        "locator-helper: testid",
+        "locator-helper: role_name",
+        "locator-helper: text",
+        "waitFor({ state: 'visible' });"
+      ]
     },
     "invariants": ["I1", "I2", "I3", "I4", "I6", "I9"],
     "compile": true

@@ -252,10 +252,7 @@ function validateFeatureSection(
   }
 }
 
-function extractSection(
-  body: string,
-  title: string
-): { lines: string[]; startLine: number } {
+function extractSection(body: string, title: string): { lines: string[]; startLine: number } {
   const lines = body.split("\n");
   let inSection = false;
   let startLine = 0;

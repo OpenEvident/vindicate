@@ -51,12 +51,10 @@ describe("WorkerManager", () => {
     });
 
     const manager = new WorkerManager(logger, extensionPath);
-    const outcome = await manager
-      .start({ VINDICATE_INTERNAL_KEY: "b".repeat(32) })
-      .then(
-        () => ({ kind: "resolved" as const }),
-        (error: unknown) => ({ kind: "rejected" as const, error })
-      );
+    const outcome = await manager.start({ VINDICATE_INTERNAL_KEY: "b".repeat(32) }).then(
+      () => ({ kind: "resolved" as const }),
+      (error: unknown) => ({ kind: "rejected" as const, error })
+    );
 
     expect(outcome.kind).toBe("rejected");
     if (outcome.kind === "rejected") {
@@ -69,12 +67,10 @@ describe("WorkerManager", () => {
     fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({ ok: false } as Response);
 
     const manager = new WorkerManager(logger, extensionPath);
-    const outcome = await manager
-      .start({ VINDICATE_INTERNAL_KEY: "c".repeat(32) })
-      .then(
-        () => ({ kind: "resolved" as const, state: manager.currentState }),
-        (error: unknown) => ({ kind: "rejected" as const, error })
-      );
+    const outcome = await manager.start({ VINDICATE_INTERNAL_KEY: "c".repeat(32) }).then(
+      () => ({ kind: "resolved" as const, state: manager.currentState }),
+      (error: unknown) => ({ kind: "rejected" as const, error })
+    );
 
     expect(outcome.kind).toBe("rejected");
     if (outcome.kind === "rejected") {
@@ -100,7 +96,9 @@ describe("WorkerManager", () => {
 
     // Port is free (health down) and the bundle is missing in this temp dir,
     // so our own spawn attempt fails immediately — this manager "lost".
-    await expect(manager.start({ VINDICATE_INTERNAL_KEY: key })).rejects.toThrow("Runtime not built");
+    await expect(manager.start({ VINDICATE_INTERNAL_KEY: key })).rejects.toThrow(
+      "Runtime not built"
+    );
     expect(manager.currentState).toBe("error");
 
     // The other editor's worker is now up and accepts the shared key.

@@ -53,8 +53,12 @@ export class SessionActionLog {
       duration_ms: input.duration_ms,
       timestamp_ms: Date.now(),
       ...(input.error_code !== undefined ? { error_code: input.error_code } : {}),
-      ...(input.snapshot_id_before !== undefined ? { snapshot_id_before: input.snapshot_id_before } : {}),
-      ...(input.snapshot_id_after !== undefined ? { snapshot_id_after: input.snapshot_id_after } : {})
+      ...(input.snapshot_id_before !== undefined
+        ? { snapshot_id_before: input.snapshot_id_before }
+        : {}),
+      ...(input.snapshot_id_after !== undefined
+        ? { snapshot_id_after: input.snapshot_id_after }
+        : {})
     };
     state.buffer.push(entry);
     return entry;

@@ -3,7 +3,11 @@ import React from "react";
 type Props = {
   readonly children: React.ReactNode;
   readonly surface: "sidebar" | "editor" | "panel" | "recording";
-  readonly onError: (payload: { source: "react-boundary"; message: string; stack?: string }) => void;
+  readonly onError: (payload: {
+    source: "react-boundary";
+    message: string;
+    stack?: string;
+  }) => void;
 };
 
 type State = {
@@ -64,7 +68,8 @@ export class WebviewErrorBoundary extends React.Component<Props, State> {
       >
         <h2 style={{ marginTop: 0, marginBottom: "8px" }}>Recording UI encountered an error</h2>
         <p style={{ marginTop: 0, opacity: 0.85 }}>
-          Please close and reopen this recording view. If it happens again, check the extension logs.
+          Please close and reopen this recording view. If it happens again, check the extension
+          logs.
         </p>
         <p style={{ marginTop: "8px", marginBottom: "8px", opacity: 0.75 }}>
           Surface: <strong>{this.props.surface}</strong>

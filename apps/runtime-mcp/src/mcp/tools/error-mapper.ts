@@ -41,15 +41,15 @@ export function toMcpToolError(err: unknown): CallToolResult {
   if (err instanceof WorkerUnavailableError) {
     return errorText(
       "The Vindicate runtime worker is temporarily unavailable. " +
-      "Do not call any further Vindicate tools. " +
-      "Tell the user the worker is offline and ask them to check the Vindicate: Runtime Worker output channel."
+        "Do not call any further Vindicate tools. " +
+        "Tell the user the worker is offline and ask them to check the Vindicate: Runtime Worker output channel."
     );
   }
   if (err instanceof WorkerShuttingDownError) {
     return errorText(
       "The Vindicate runtime worker is shutting down. " +
-      "Do not call any further Vindicate tools. " +
-      "Tell the user the worker is restarting and to try again in a moment."
+        "Do not call any further Vindicate tools. " +
+        "Tell the user the worker is restarting and to try again in a moment."
     );
   }
 
@@ -91,8 +91,8 @@ export function toMcpToolError(err: unknown): CallToolResult {
   if (err instanceof NavigationFailedError) {
     return errorText(
       `Navigation failed: ${err.message} ` +
-      "Take a snapshot to check the current page state. " +
-      "If the page loaded, continue. If not, report the failure to the user and stop."
+        "Take a snapshot to check the current page state. " +
+        "If the page loaded, continue. If not, report the failure to the user and stop."
     );
   }
   if (err instanceof ActionTimeoutError) {
@@ -100,16 +100,16 @@ export function toMcpToolError(err: unknown): CallToolResult {
       err.message.startsWith("Worker command")
         ? err.message
         : `Action timed out: ${err.message} ` +
-          "The element may be slow to appear or covered by an overlay — call browser_diagnose to see the page, " +
-          "raise timeout_ms, or call browser_read for a fresh snapshot. " +
-          "If it then resolves, retry once; otherwise report to the user and stop."
+            "The element may be slow to appear or covered by an overlay — call browser_diagnose to see the page, " +
+            "raise timeout_ms, or call browser_read for a fresh snapshot. " +
+            "If it then resolves, retry once; otherwise report to the user and stop."
     );
   }
   if (err instanceof Error && err.name === "AbortError") {
     return errorText(
       "The browser command was aborted before completing. " +
-      "Take a snapshot to check the current page state before attempting any further interaction. " +
-      "Do not retry the aborted action without first confirming the page state."
+        "Take a snapshot to check the current page state before attempting any further interaction. " +
+        "Do not retry the aborted action without first confirming the page state."
     );
   }
   if (err instanceof ElementNotFoundError) {
@@ -121,7 +121,9 @@ export function toMcpToolError(err: unknown): CallToolResult {
     if (!detail.toLowerCase().includes("browser_read")) {
       parts.push("Call browser_read for a fresh snapshot and use a valid ref.");
     }
-    parts.push("If the element may be covered by an overlay, call browser_diagnose to see the page.");
+    parts.push(
+      "If the element may be covered by an overlay, call browser_diagnose to see the page."
+    );
     return errorText(parts.join(" "));
   }
   if (err instanceof StateDriftError) {
@@ -135,10 +137,10 @@ export function toMcpToolError(err: unknown): CallToolResult {
   if (err instanceof ApiRequestFailedError) {
     return errorText(
       `api_request could not reach the target API: ${err.message} ` +
-      "This means the URL/host didn't respond (DNS, connection, or timeout) — it does not mean " +
-      "the Vindicate worker is unavailable, and other Vindicate tools are unaffected. " +
-      "Double-check the URL and network reachability before retrying; if it keeps failing, report it " +
-      "to the user rather than guessing at the API's shape."
+        "This means the URL/host didn't respond (DNS, connection, or timeout) — it does not mean " +
+        "the Vindicate worker is unavailable, and other Vindicate tools are unaffected. " +
+        "Double-check the URL and network reachability before retrying; if it keeps failing, report it " +
+        "to the user rather than guessing at the API's shape."
     );
   }
 
@@ -149,19 +151,18 @@ export function toMcpToolError(err: unknown): CallToolResult {
   if (err instanceof FileTooLargeError) {
     return errorText(
       "File exceeds the maximum size limit. " +
-      "Read a smaller portion using the offset and limit parameters instead of reading the whole file."
+        "Read a smaller portion using the offset and limit parameters instead of reading the whole file."
     );
   }
   if (err instanceof FileNotFoundError) {
     return errorText(
-      `File not found: ${err.relativePath} ` +
-      "Verify the path exists before retrying."
+      `File not found: ${err.relativePath} ` + "Verify the path exists before retrying."
     );
   }
   if (err instanceof StringNotFoundError) {
     return errorText(
       `Text to replace was not found in ${err.relativePath}. ` +
-      "Read the file first to get the exact current content, then retry with the correct string."
+        "Read the file first to get the exact current content, then retry with the correct string."
     );
   }
 
@@ -250,8 +251,8 @@ export function toMcpToolError(err: unknown): CallToolResult {
   console.error("[toMcpToolError] Unhandled error:", err);
   return errorText(
     "An unexpected error occurred. " +
-    "Do not retry this tool call with the same arguments. " +
-    "Tell the user what happened, suggest they check the Vindicate output channel for the underlying cause, " +
-    "and wait for their instruction."
+      "Do not retry this tool call with the same arguments. " +
+      "Tell the user what happened, suggest they check the Vindicate output channel for the underlying cause, " +
+      "and wait for their instruction."
   );
 }

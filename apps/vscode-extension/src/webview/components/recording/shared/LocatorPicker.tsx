@@ -16,7 +16,13 @@ interface LocatorPickerProps {
 }
 
 export function LocatorPicker({
-  candidates, chosen, disabled, isOpen, onToggle, onClose, onChange,
+  candidates,
+  chosen,
+  disabled,
+  isOpen,
+  onToggle,
+  onClose,
+  onChange
 }: LocatorPickerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +47,9 @@ export function LocatorPicker({
   }, [isOpen, onClose]);
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => { if (e.key === "Escape") onClose(); },
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
     [onClose]
   );
 
@@ -84,7 +92,7 @@ export function LocatorPicker({
           "disabled:cursor-not-allowed disabled:opacity-60",
           isOpen
             ? "border-vs-accent shadow-[0_0_0_2px_color-mix(in_oklab,var(--color-vs-accent)_16%,transparent)]"
-            : "border-vs-border hover:border-vs-accent/40",
+            : "border-vs-border hover:border-vs-accent/40"
         ].join(" ")}
       >
         {resolved !== null && (
@@ -96,13 +104,15 @@ export function LocatorPicker({
           {resolved?.value ?? "Select locator"}
         </span>
         {resolved !== null && (
-          <StrengthMeter {...(resolved.strength !== undefined ? { strength: resolved.strength } : {})} />
+          <StrengthMeter
+            {...(resolved.strength !== undefined ? { strength: resolved.strength } : {})}
+          />
         )}
         <ChevronDown
           size={13}
           className={[
             "shrink-0 text-vs-text-dim transition-transform duration-150",
-            isOpen ? "rotate-180" : "",
+            isOpen ? "rotate-180" : ""
           ].join(" ")}
         />
       </button>
@@ -115,7 +125,7 @@ export function LocatorPicker({
             "absolute left-0 right-0 top-[calc(100%+4px)] z-40",
             "rounded-lg border border-vs-accent bg-vs-bg py-1",
             "shadow-[0_18px_44px_-12px_rgba(0,0,0,0.6)]",
-            "animate-pop",
+            "animate-pop"
           ].join(" ")}
         >
           {candidates.map((candidate) => {
@@ -131,7 +141,7 @@ export function LocatorPicker({
                   className={[
                     "flex w-full items-center gap-2.5 px-2.5 py-2 text-left",
                     "transition-colors duration-100",
-                    isSelected ? "bg-vs-accent/15" : "hover:bg-vs-hover",
+                    isSelected ? "bg-vs-accent/15" : "hover:bg-vs-hover"
                   ].join(" ")}
                   onClick={() => onChange(candidate)}
                 >
@@ -146,7 +156,9 @@ export function LocatorPicker({
                       Recommended
                     </span>
                   )}
-                  <StrengthMeter {...(candidate.strength !== undefined ? { strength: candidate.strength } : {})} />
+                  <StrengthMeter
+                    {...(candidate.strength !== undefined ? { strength: candidate.strength } : {})}
+                  />
                   {isSelected && <Check size={12} className="shrink-0 text-vs-accent" />}
                 </button>
               </li>

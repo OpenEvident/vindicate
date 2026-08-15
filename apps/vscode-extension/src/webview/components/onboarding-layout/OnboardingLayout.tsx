@@ -11,20 +11,28 @@ type ActivePanel = "toolSelection" | "modeSelection" | "scaffold" | "folder";
 
 function deriveActivePanel(opts: { effectiveScreen: Screen }): ActivePanel {
   switch (opts.effectiveScreen) {
-    case "toolSelection": return "toolSelection";
-    case "modeSelection": return "modeSelection";
+    case "toolSelection":
+      return "toolSelection";
+    case "modeSelection":
+      return "modeSelection";
     case "scaffold":
-    case "gettingStarted": return "scaffold";
-    default: return "folder";
+    case "gettingStarted":
+      return "scaffold";
+    default:
+      return "folder";
   }
 }
 
 function RightPanel({ panel }: { panel: ActivePanel }) {
   switch (panel) {
-    case "toolSelection": return <ToolSelectionPanel />;
-    case "modeSelection": return <ModeSelectionPanel />;
-    case "scaffold": return <ScaffoldPanel />;
-    default: return <FolderPanel />;
+    case "toolSelection":
+      return <ToolSelectionPanel />;
+    case "modeSelection":
+      return <ModeSelectionPanel />;
+    case "scaffold":
+      return <ScaffoldPanel />;
+    default:
+      return <FolderPanel />;
   }
 }
 

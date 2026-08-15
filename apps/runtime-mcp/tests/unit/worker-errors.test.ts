@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { ApiRequestFailedError, WorkerUnavailableError, WorkerValidationError } from "../../src/shared/errors.js";
+import {
+  ApiRequestFailedError,
+  WorkerUnavailableError,
+  WorkerValidationError
+} from "../../src/shared/errors.js";
 import { throwFromWorkerResponse } from "../../src/worker/worker-errors.js";
 
 function fakeResponse(body: unknown, status: number): Response {
@@ -25,7 +29,10 @@ describe("throwFromWorkerResponse", () => {
   });
 
   it("maps validation.invalid_params to WorkerValidationError", async () => {
-    const res = fakeResponse({ ok: false, error: "bad body", code: "validation.invalid_params" }, 400);
+    const res = fakeResponse(
+      { ok: false, error: "bad body", code: "validation.invalid_params" },
+      400
+    );
     await expect(throwFromWorkerResponse(res)).rejects.toBeInstanceOf(WorkerValidationError);
   });
 });

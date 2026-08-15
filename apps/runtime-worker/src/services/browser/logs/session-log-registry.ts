@@ -87,7 +87,11 @@ export class SessionLogRegistry {
         }
         const level = msg.type() as ConsoleLogLevel;
         const normalized: ConsoleLogLevel =
-          level === "log" || level === "info" || level === "warn" || level === "error" || level === "debug"
+          level === "log" ||
+          level === "info" ||
+          level === "warn" ||
+          level === "error" ||
+          level === "debug"
             ? level
             : "log";
         this.pushConsole(sessionId, {
@@ -104,7 +108,8 @@ export class SessionLogRegistry {
           return;
         }
         const started = Date.now();
-        req.response()
+        req
+          .response()
           .then((res) => {
             this.pushNetwork(sessionId, {
               method: req.method(),

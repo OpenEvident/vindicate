@@ -131,7 +131,9 @@ function filterDescriptorsByScope(
   }
   if (needle.startsWith("ref-")) {
     const hit = descriptors.get(needle);
-    return hit === undefined ? new Map<string, ElementDescriptor>() : new Map<string, ElementDescriptor>([[needle, hit]]);
+    return hit === undefined
+      ? new Map<string, ElementDescriptor>()
+      : new Map<string, ElementDescriptor>([[needle, hit]]);
   }
 
   return new Map<string, ElementDescriptor>(
@@ -212,7 +214,10 @@ async function emitSettleActionResult(
   page: Page,
   urlBefore: string,
   urlTrail: readonly string[] | undefined,
-  config: Pick<CommandExecutorDeps["config"], "VINDICATE_SETTLE_NETWORK_MS" | "VINDICATE_SETTLE_TIMEOUT_MS">,
+  config: Pick<
+    CommandExecutorDeps["config"],
+    "VINDICATE_SETTLE_NETWORK_MS" | "VINDICATE_SETTLE_TIMEOUT_MS"
+  >,
   emit: (payload: ActionResultPayload) => void
 ): Promise<ActionResultPayload> {
   const settle = await runSettle(page, {
@@ -236,7 +241,10 @@ function pushDistinctUrl(urlTrail: string[], url: string): void {
   urlTrail.push(url);
 }
 
-function startNavigationTrail(page: Page, urlBefore: string): {
+function startNavigationTrail(
+  page: Page,
+  urlBefore: string
+): {
   collect: (urlAfter: string) => readonly string[];
   stop: () => void;
 } {
@@ -341,7 +349,12 @@ export async function executeCommandSteps(
               result = await deps.snapshotEngine.takeSnapshot(sessionId, page, snapParsed.data);
 
               const session = deps.store.get(sessionId);
-              if (step.highlight === true && page !== undefined && session !== undefined && !session.headless) {
+              if (
+                step.highlight === true &&
+                page !== undefined &&
+                session !== undefined &&
+                !session.headless
+              ) {
                 const highlightPage = page;
                 const snap = result as SnapshotResultWire;
                 const viewportDescriptors = (snap.elements ?? [])
@@ -414,7 +427,9 @@ export async function executeCommandSteps(
             case "select_option": {
               const parsed = SelectOptionStepSchema.safeParse(step);
               if (!parsed.success) {
-                throw new ValidationError("Invalid select_option step — requires value, label, or index");
+                throw new ValidationError(
+                  "Invalid select_option step — requires value, label, or index"
+                );
               }
               result = await handleSelectOption(page, parsed.data, handlerCtx);
               break;
@@ -489,7 +504,9 @@ export async function executeCommandSteps(
               break;
             }
             case "assert": {
-              const snap = await deps.snapshotEngine.takeSnapshot(sessionId, page, { mode: "interactive" });
+              const snap = await deps.snapshotEngine.takeSnapshot(sessionId, page, {
+                mode: "interactive"
+              });
               const alerts = snap.alerts ?? [];
               let passed: boolean | undefined;
               let failReason: string | undefined;
@@ -503,7 +520,11 @@ export async function executeCommandSteps(
                 }
               }
               let extracted: Record<string, unknown> | undefined;
-              if (step.extract !== undefined && step.extract !== null && typeof step.extract === "object") {
+              if (
+                step.extract !== undefined &&
+                step.extract !== null &&
+                typeof step.extract === "object"
+              ) {
                 extracted = {};
                 const elements = snap.elements ?? [];
                 for (const [key] of Object.entries(step.extract as Record<string, string>)) {
@@ -513,7 +534,9 @@ export async function executeCommandSteps(
                 }
               }
               result = {
-                ...(passed !== undefined ? { passed, ...(failReason !== undefined ? { fail_reason: failReason } : {}) } : {}),
+                ...(passed !== undefined
+                  ? { passed, ...(failReason !== undefined ? { fail_reason: failReason } : {}) }
+                  : {}),
                 alerts,
                 ...(extracted !== undefined ? { extracted } : {})
               };
@@ -587,7 +610,11 @@ export async function executeCommandSteps(
                 throw new ValidationError("Invalid switch_tab step — requires index");
               }
               const tabState = deps.bridge.getTabState(sessionId);
-              result = await handleSwitchTab(deps.bridge.getContext(sessionId), tabState, parsed.data);
+              result = await handleSwitchTab(
+                deps.bridge.getContext(sessionId),
+                tabState,
+                parsed.data
+              );
               break;
             }
             case "switch_tab_by_url": {
@@ -610,7 +637,11 @@ export async function executeCommandSteps(
               if (!parsed.success) {
                 throw new ValidationError("Invalid wait_for_load_state step");
               }
-              result = await handleWaitForLoadState(page, parsed.data, deps.config.VINDICATE_ACTION_TIMEOUT_MS);
+              result = await handleWaitForLoadState(
+                page,
+                parsed.data,
+                deps.config.VINDICATE_ACTION_TIMEOUT_MS
+              );
               break;
             }
             case "wait_for_response": {
@@ -618,7 +649,11 @@ export async function executeCommandSteps(
               if (!parsed.success) {
                 throw new ValidationError("Invalid wait_for_response step");
               }
-              result = await handleWaitForResponse(page, parsed.data, deps.config.VINDICATE_ACTION_TIMEOUT_MS);
+              result = await handleWaitForResponse(
+                page,
+                parsed.data,
+                deps.config.VINDICATE_ACTION_TIMEOUT_MS
+              );
               break;
             }
             case "close_tab": {
@@ -627,7 +662,11 @@ export async function executeCommandSteps(
                 throw new ValidationError("Invalid close_tab step");
               }
               const tabState = deps.bridge.getTabState(sessionId);
-              result = await handleCloseTab(deps.bridge.getContext(sessionId), tabState, parsed.data);
+              result = await handleCloseTab(
+                deps.bridge.getContext(sessionId),
+                tabState,
+                parsed.data
+              );
               break;
             }
             case "handle_dialog": {
@@ -652,7 +691,11 @@ export async function executeCommandSteps(
             err instanceof Error &&
             (err.constructor.name === "TimeoutError" || err.message.includes("Timeout"))
           ) {
-            throw new ActionTimeoutError(action, actionTimeoutMs, extractTimeoutReason(err.message));
+            throw new ActionTimeoutError(
+              action,
+              actionTimeoutMs,
+              extractTimeoutReason(err.message)
+            );
           }
           if (err instanceof Error && err.message.includes("strict mode violation")) {
             throw new ValidationError(
@@ -669,9 +712,15 @@ export async function executeCommandSteps(
       }
 
       if (page !== undefined && SETTLE_AFTER_ACTIONS.has(action)) {
-        settleActionResult = await emitSettleActionResult(page, urlBefore, urlTrail, deps.config, (payload) => {
-          emit(payload);
-        });
+        settleActionResult = await emitSettleActionResult(
+          page,
+          urlBefore,
+          urlTrail,
+          deps.config,
+          (payload) => {
+            emit(payload);
+          }
+        );
       }
 
       const recordingState = deps.recordingService?.getState(sessionId);
@@ -710,7 +759,10 @@ export async function executeCommandSteps(
       if (action === "snapshot") {
         stepResults.push({ action: "snapshot", ...(result as Record<string, unknown>) });
       } else {
-        const stepResult: Record<string, unknown> = { action, ...(result as Record<string, unknown>) };
+        const stepResult: Record<string, unknown> = {
+          action,
+          ...(result as Record<string, unknown>)
+        };
         if (
           settleActionResult !== undefined &&
           action === "click" &&
@@ -719,9 +771,15 @@ export async function executeCommandSteps(
           Object.assign(stepResult, {
             page_change: settleActionResult.page_change,
             recommendation: settleActionResult.recommendation,
-            ...(settleActionResult.url_before !== undefined ? { url_before: settleActionResult.url_before } : {}),
-            ...(settleActionResult.url_after !== undefined ? { url_after: settleActionResult.url_after } : {}),
-            ...(settleActionResult.url_trail !== undefined ? { url_trail: settleActionResult.url_trail } : {}),
+            ...(settleActionResult.url_before !== undefined
+              ? { url_before: settleActionResult.url_before }
+              : {}),
+            ...(settleActionResult.url_after !== undefined
+              ? { url_after: settleActionResult.url_after }
+              : {}),
+            ...(settleActionResult.url_trail !== undefined
+              ? { url_trail: settleActionResult.url_trail }
+              : {}),
             ...(settleActionResult.hint !== undefined ? { hint: settleActionResult.hint } : {}),
             ...(settleActionResult.settle_timed_out !== undefined
               ? { settle_timed_out: settleActionResult.settle_timed_out }

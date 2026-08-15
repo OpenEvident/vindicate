@@ -18,11 +18,22 @@
               "elements": [
                 { "ref": "box", "tag": "div", "role": "region", "name": "Box" },
                 { "ref": "field", "tag": "input", "testid": "field", "testid_attr": "data-testid" },
-                { "ref": "toggle", "tag": "input", "testid": "toggle", "testid_attr": "data-testid", "type": "checkbox" }
+                {
+                  "ref": "toggle",
+                  "tag": "input",
+                  "testid": "toggle",
+                  "testid_attr": "data-testid",
+                  "type": "checkbox"
+                }
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open matcher page", "params": [], "actions": [{ "do": "navigate" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open matcher page",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
               ],
               "verifies": [
                 {
@@ -37,16 +48,51 @@
                     { "subject": "element", "ref": "field", "matcher": "toBeDisabled" },
                     { "subject": "element", "ref": "field", "matcher": "toBeEnabled" },
                     { "subject": "element", "ref": "toggle", "matcher": "toBeChecked" },
-                    { "subject": "element", "ref": "box", "matcher": "toContainText", "arg": "expected.readyText" },
-                    { "subject": "element", "ref": "box", "matcher": "toHaveText", "arg": "expected.readyText" },
-                    { "subject": "element", "ref": "field", "matcher": "toHaveValue", "arg": "expected.helloValue" },
+                    {
+                      "subject": "element",
+                      "ref": "box",
+                      "matcher": "toContainText",
+                      "arg": "expected.readyText"
+                    },
+                    {
+                      "subject": "element",
+                      "ref": "box",
+                      "matcher": "toHaveText",
+                      "arg": "expected.readyText"
+                    },
+                    {
+                      "subject": "element",
+                      "ref": "field",
+                      "matcher": "toHaveValue",
+                      "arg": "expected.helloValue"
+                    },
                     { "subject": "element", "ref": "box", "matcher": "toHaveCount", "arg": "1" },
-                    { "subject": "element", "ref": "box", "matcher": "toHaveAttribute", "arg": "'data-testid', 'box'" },
-                    { "subject": "element", "ref": "box", "matcher": "toHaveClass", "arg": "expected.loadedClass" },
-                    { "subject": "element", "ref": "box", "matcher": "toHaveCSS", "arg": "'display', 'block'" },
+                    {
+                      "subject": "element",
+                      "ref": "box",
+                      "matcher": "toHaveAttribute",
+                      "arg": "'data-testid', 'box'"
+                    },
+                    {
+                      "subject": "element",
+                      "ref": "box",
+                      "matcher": "toHaveClass",
+                      "arg": "expected.loadedClass"
+                    },
+                    {
+                      "subject": "element",
+                      "ref": "box",
+                      "matcher": "toHaveCSS",
+                      "arg": "'display', 'block'"
+                    },
                     { "subject": "element", "ref": "field", "matcher": "toBeEmpty" },
                     { "subject": "element", "ref": "field", "matcher": "toBeFocused" },
-                    { "subject": "element", "ref": "box", "waitFor": "visible", "matcher": "toBeVisible" }
+                    {
+                      "subject": "element",
+                      "ref": "box",
+                      "waitFor": "visible",
+                      "matcher": "toBeVisible"
+                    }
                   ]
                 }
               ]
@@ -83,7 +129,13 @@
     "ok": true,
     "filesExist": ["pages/MatcherPage.ts"],
     "mustContain": {
-      "pages/MatcherPage.ts": ["toHaveURL('/matchers')", "toHaveTitle(expected.pageTitle)", "toHaveAttribute('data-testid', 'box')", "toHaveCSS('display', 'block')", "waitFor({ state: 'visible' });"]
+      "pages/MatcherPage.ts": [
+        "toHaveURL('/matchers')",
+        "toHaveTitle(expected.pageTitle)",
+        "toHaveAttribute('data-testid', 'box')",
+        "toHaveCSS('display', 'block')",
+        "waitFor({ state: 'visible' });"
+      ]
     },
     "invariants": ["I1", "I2", "I4", "I6", "I9"],
     "compile": true

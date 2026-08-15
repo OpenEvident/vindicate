@@ -21,8 +21,18 @@
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open search", "params": [], "actions": [{ "do": "navigate" }] },
-                { "name": "step_submit", "jsdoc": "Submit query", "params": [], "actions": [{ "do": "click", "ref": "submit" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open search",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
+                {
+                  "name": "step_submit",
+                  "jsdoc": "Submit query",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "submit" }]
+                }
               ],
               "verifies": [
                 {
@@ -59,7 +69,11 @@
     "ok": true,
     "filesExist": ["tests/search.spec.ts", "pages/SearchPage.ts"],
     "mustContain": {
-      "tests/search.spec.ts": ["test.beforeEach(async ({ searchPage }) => {", "await searchPage.step_navigate();", "await searchPage.verify_searchReady();"]
+      "tests/search.spec.ts": [
+        "test.beforeEach(async ({ searchPage }) => {",
+        "await searchPage.step_navigate();",
+        "await searchPage.verify_searchReady();"
+      ]
     },
     "invariants": ["I1", "I2", "I6", "I10"],
     "compile": true

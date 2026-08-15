@@ -48,7 +48,7 @@ Vindicate tools.
 - **Serialize browser tools.** One `browser_*` call at a time per `session_id` — wait for each result; parallel calls fail as session busy.
 - **Never invent a selector.** Ground every locator with `browser_read` against the live page (or a
   recording). XPath-first. If still stuck after a scoped re-read, use `browser_diagnose` once to see
-  *why* — never to author selectors.
+  _why_ — never to author selectors.
 - **New feature → `vindicate_generate_code` `create` (once).** New page → `register_page`. New `test()`
   → `add_test_cases`. Everything else → **edit the `.ts` files directly**. The files are the source of
   truth; `npm run audit` is the gate.
@@ -66,6 +66,7 @@ Prefer **`fill`** for value-set (text, number, range). Use **`type`** only for k
 
 Follow the full communication guide ([`refs/communication.md`](../refs/communication.md), appended to
 this skill). The essentials:
+
 - **Findings-first:** show what you found before asking anything — never a bare question.
 - Narrate progress in plain language with light per-node markers (🔍 ground · 📝 understand · 📐 design
   · ⚙️ generate · ▶️ execute · 🩺 heal · 📊 coverage · ✅ audit) — one short line per major step.

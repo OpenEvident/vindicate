@@ -5,7 +5,9 @@ import { formatNavigationFailure } from "./navigation-error.js";
 describe("formatNavigationFailure", () => {
   it("parses HTTP status from Playwright-style messages", () => {
     const details = formatNavigationFailure(
-      new Error('page.goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at https://example.com/ — Response: 404 Not Found')
+      new Error(
+        "page.goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at https://example.com/ — Response: 404 Not Found"
+      )
     );
     expect(details.status).toBe(404);
     expect(details.message).toContain("404");

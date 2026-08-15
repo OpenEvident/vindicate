@@ -9,15 +9,7 @@ import { expectWritten } from "./helpers/expect-written.js";
 import { createProjectRoot, teardownProjectRoots } from "./helpers/project-root.js";
 
 const SCAFFOLD_PAGE_CONFIG = readFileSync(
-  path.join(
-    process.cwd(),
-    "content",
-    "templates",
-    "ui",
-    "support",
-    "config",
-    "page.config.ts"
-  ),
+  path.join(process.cwd(), "content", "templates", "ui", "support", "config", "page.config.ts"),
   "utf8"
 );
 
@@ -54,18 +46,22 @@ describe("generator create", () => {
       ]
     });
 
-    const result = expectWritten(await runGenerator(fs, { mode: "create", feature: "login", schema }));
+    const result = expectWritten(
+      await runGenerator(fs, { mode: "create", feature: "login", schema })
+    );
     expect(result.filesWritten).toContain("pages/LoginPage.ts");
     expect(result.filesWritten).not.toContain("pages/DashboardPage.ts");
   });
 
   it("G2 — filesWritten lists only files actually written", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema()
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema()
+      })
+    );
     for (const path of result.filesWritten) {
       await expect(fs.read(path)).resolves.toBeTypeOf("string");
     }
@@ -73,11 +69,13 @@ describe("generator create", () => {
 
   it("G3 — does not persist schema to .vindicate/schemas/", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema()
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema()
+      })
+    );
     expect(result.filesWritten).not.toContain(".vindicate/schemas/login.json");
     await expect(fs.read(".vindicate/schemas/login.json")).rejects.toThrow();
   });
@@ -93,42 +91,50 @@ describe("generator create", () => {
   it("G3c — create with overwrite:true regenerates feature files", async () => {
     const { fs } = await createProjectRoot();
     await runGenerator(fs, { mode: "create", feature: "login", schema: fullSchema() });
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema(),
-      overwrite: true
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema(),
+        overwrite: true
+      })
+    );
     expect(result.filesWritten).toContain("tests/login.spec.ts");
   });
 
   it("G4 — page object path is pages/<PageClass>.ts", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema()
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema()
+      })
+    );
     expect(result.filesWritten).toContain("pages/LoginPage.ts");
   });
 
   it("G5 — spec written to tests/<feature>.spec.ts", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema()
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema()
+      })
+    );
     expect(result.filesWritten).toContain("tests/login.spec.ts");
   });
 
   it("G6 — expected block writes support/data/<feature>/expected.json and barrel export", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema({ expected: { pageTitle: "Welcome" } })
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema({ expected: { pageTitle: "Welcome" } })
+      })
+    );
     expect(result.filesWritten).toContain("support/data/login/expected.json");
     const loader = await fs.read("support/config/page-loader.ts");
     expect(loader).toContain("loginExpected");
@@ -136,11 +142,13 @@ describe("generator create", () => {
 
   it("G7 — no expected block skips data file and barrel export", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema()
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema()
+      })
+    );
     expect(result.filesWritten).not.toContain("support/data/login/expected.json");
     const loader = await fs.read("support/config/page-loader.ts");
     expect(loader).not.toContain("loginExpected");
@@ -178,43 +186,49 @@ describe("generator create", () => {
         ]
       }
     });
-    const result = expectWritten(await runGenerator(fs, { mode: "create", feature: "dash", schema }));
+    const result = expectWritten(
+      await runGenerator(fs, { mode: "create", feature: "dash", schema })
+    );
     expect(result.filesWritten).not.toContain("support/data/dash/expected.json");
   });
 
   it("G9 — generates_storage_state populates GeneratorResult.notice", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema({
-        spec: {
-          suite: "App - Login",
-          generates_storage_state: "playwright/.auth/user.json",
-          storage_state: null,
-          before_each: null,
-          cases: [
-            {
-              ac_id: "AC-1",
-              scenario: "Auth",
-              title: "[AC-1] should authenticate",
-              body: [{ fixture: "loginPage", call: "step_navigate" }]
-            }
-          ]
-        }
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema({
+          spec: {
+            suite: "App - Login",
+            generates_storage_state: "playwright/.auth/user.json",
+            storage_state: null,
+            before_each: null,
+            cases: [
+              {
+                ac_id: "AC-1",
+                scenario: "Auth",
+                title: "[AC-1] should authenticate",
+                body: [{ fixture: "loginPage", call: "step_navigate" }]
+              }
+            ]
+          }
+        })
       })
-    }));
+    );
     expect(result.notice).toContain("playwright.config.ts");
     expect(result.filesWritten).toContain("auth.setup.ts");
   });
 
   it("G10 — no generates_storage_state leaves notice undefined", async () => {
     const { fs } = await createProjectRoot();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "create",
-      feature: "login",
-      schema: fullSchema()
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "create",
+        feature: "login",
+        schema: fullSchema()
+      })
+    );
     expect(result.notice).toBeUndefined();
   });
 

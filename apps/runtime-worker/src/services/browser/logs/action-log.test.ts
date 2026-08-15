@@ -29,9 +29,24 @@ describe("redactActionParams", () => {
 describe("SessionActionLog", () => {
   it("evicts oldest entries when capacity is exceeded", () => {
     const log = new SessionActionLog(2);
-    log.append("s1", { action: "click", params: { ref: "ref-00000001" }, result: "success", duration_ms: 1 });
-    log.append("s1", { action: "type", params: { ref: "ref-00000002" }, result: "success", duration_ms: 2 });
-    log.append("s1", { action: "navigate", params: { url: "https://example.com" }, result: "success", duration_ms: 3 });
+    log.append("s1", {
+      action: "click",
+      params: { ref: "ref-00000001" },
+      result: "success",
+      duration_ms: 1
+    });
+    log.append("s1", {
+      action: "type",
+      params: { ref: "ref-00000002" },
+      result: "success",
+      duration_ms: 2
+    });
+    log.append("s1", {
+      action: "navigate",
+      params: { url: "https://example.com" },
+      result: "success",
+      duration_ms: 3
+    });
     const entries = log.query("s1", {});
     expect(entries).toHaveLength(2);
     expect(entries[0]?.action).toBe("type");

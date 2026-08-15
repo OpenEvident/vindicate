@@ -1,773 +1,1181 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--
   PROTOTYPE — Vindicate panel previews. Not part of the build.
   Open in any browser: file:///…/apps/vindicate-ui/previews/panels.html
 -->
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vindicate — Panel Previews</title>
-  <style>
-    /* ── Design tokens (copied from index.html) ─────────────────── */
-    :root {
-      --bg: #ffffff;
-      --bg-subtle: #f7f8fa;
-      --bg-hover: #f0f2f5;
-      --border: #e2e5ea;
-      --border-strong: #c9cdd4;
-      --text: #111318;
-      --text-secondary: #5a6070;
-      --text-muted: #8c95a3;
-      --accent: #5c6ac4;
-      --accent-hover: #4b59b3;
-      --accent-fg: #ffffff;
-      --success: #1a7f4b;
-      --success-bg: #edf7f2;
-      --warning: #b45309;
-      --danger: #c0392b;
-      --danger-bg: #fef2f2;
-      --danger-border: #fecaca;
-      --radius: 8px;
-      --radius-sm: 5px;
-      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vindicate — Panel Previews</title>
+    <style>
+      /* ── Design tokens (copied from index.html) ─────────────────── */
+      :root {
+        --bg: #ffffff;
+        --bg-subtle: #f7f8fa;
+        --bg-hover: #f0f2f5;
+        --border: #e2e5ea;
+        --border-strong: #c9cdd4;
+        --text: #111318;
+        --text-secondary: #5a6070;
+        --text-muted: #8c95a3;
+        --accent: #5c6ac4;
+        --accent-hover: #4b59b3;
+        --accent-fg: #ffffff;
+        --success: #1a7f4b;
+        --success-bg: #edf7f2;
+        --warning: #b45309;
+        --danger: #c0392b;
+        --danger-bg: #fef2f2;
+        --danger-border: #fecaca;
+        --radius: 8px;
+        --radius-sm: 5px;
+        --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      }
 
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      font-family: var(--font);
-      font-size: 13px;
-      line-height: 1.5;
-      margin: 0;
-      background: #f1f3f7;
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-    }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font);
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0;
+        background: #f1f3f7;
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
 
-    /* ── Panel chrome (matches production) ──────────────────────── */
-    .panel-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 14px 10px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-    }
-    .panel-logo {
-      width: 18px; height: 18px;
-      background: var(--accent);
-      border-radius: 4px;
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 9px; font-weight: 800; letter-spacing: -0.5px;
-    }
-    .panel-title {
-      font-size: 11.5px; font-weight: 600;
-      color: var(--text-secondary);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    .panel-phase {
-      margin-left: auto;
-      font-size: 11px; font-weight: 500;
-      color: var(--text-muted);
-      background: var(--bg-subtle);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2px 9px;
-      text-transform: capitalize;
-    }
-    .panel-phase-running { background: #eef0fb; color: var(--accent); border-color: transparent; }
-    .panel-phase-done    { background: var(--success-bg); color: var(--success); border-color: transparent; }
-    .panel-body { padding: 18px 14px; background: var(--bg); }
+      /* ── Panel chrome (matches production) ──────────────────────── */
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 14px 10px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+      }
+      .panel-logo {
+        width: 18px;
+        height: 18px;
+        background: var(--accent);
+        border-radius: 4px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .panel-title {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .panel-phase {
+        margin-left: auto;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2px 9px;
+        text-transform: capitalize;
+      }
+      .panel-phase-running {
+        background: #eef0fb;
+        color: var(--accent);
+        border-color: transparent;
+      }
+      .panel-phase-done {
+        background: var(--success-bg);
+        color: var(--success);
+        border-color: transparent;
+      }
+      .panel-body {
+        padding: 18px 14px;
+        background: var(--bg);
+      }
 
-    /* ── Typography ──────────────────────────────────────────────── */
-    h2 { font-size: 14px; font-weight: 600; margin: 0 0 3px; color: var(--text); }
-    h3 { font-size: 13px; font-weight: 600; margin: 0 0 6px; color: var(--text); }
-    .panel-subtitle { font-size: 12px; color: var(--text-muted); margin: 0 0 18px; }
-    p { margin: 0 0 10px; font-size: 12.5px; }
-    ul { margin: 0 0 10px; padding-left: 18px; font-size: 12.5px; }
-    li { margin-bottom: 3px; }
-    hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+      /* ── Typography ──────────────────────────────────────────────── */
+      h2 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 3px;
+        color: var(--text);
+      }
+      h3 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 6px;
+        color: var(--text);
+      }
+      .panel-subtitle {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin: 0 0 18px;
+      }
+      p {
+        margin: 0 0 10px;
+        font-size: 12.5px;
+      }
+      ul {
+        margin: 0 0 10px;
+        padding-left: 18px;
+        font-size: 12.5px;
+      }
+      li {
+        margin-bottom: 3px;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 16px 0;
+      }
 
-    /* ── Phase list ──────────────────────────────────────────────── */
-    .phase-list { display: flex; flex-direction: column; gap: 1px; margin-bottom: 18px; }
-    .phase-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 7px 10px; border-radius: var(--radius-sm);
-    }
-    .phase-row.is-done   { color: var(--success); }
-    .phase-row.is-active { background: #eef0fb; color: var(--accent); font-weight: 500; }
-    .phase-row.is-pending{ color: var(--text-muted); }
-    .phase-icon {
-      width: 20px; height: 20px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; flex-shrink: 0; font-weight: 700;
-    }
-    .is-done   .phase-icon { background: var(--success-bg); color: var(--success); }
-    .is-active .phase-icon { background: var(--accent); color: #fff; }
-    .is-pending .phase-icon {
-      background: var(--bg-subtle); color: var(--border-strong);
-      border: 1px solid var(--border);
-    }
-    .phase-label { font-size: 13px; text-transform: capitalize; flex: 1; }
-    .phase-running-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent);
-      animation: blink 1.4s infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+      /* ── Phase list ──────────────────────────────────────────────── */
+      .phase-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        margin-bottom: 18px;
+      }
+      .phase-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 10px;
+        border-radius: var(--radius-sm);
+      }
+      .phase-row.is-done {
+        color: var(--success);
+      }
+      .phase-row.is-active {
+        background: #eef0fb;
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .phase-row.is-pending {
+        color: var(--text-muted);
+      }
+      .phase-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        flex-shrink: 0;
+        font-weight: 700;
+      }
+      .is-done .phase-icon {
+        background: var(--success-bg);
+        color: var(--success);
+      }
+      .is-active .phase-icon {
+        background: var(--accent);
+        color: #fff;
+      }
+      .is-pending .phase-icon {
+        background: var(--bg-subtle);
+        color: var(--border-strong);
+        border: 1px solid var(--border);
+      }
+      .phase-label {
+        font-size: 13px;
+        text-transform: capitalize;
+        flex: 1;
+      }
+      .phase-running-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: blink 1.4s infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.25;
+        }
+      }
 
-    /* ── Buttons ─────────────────────────────────────────────────── */
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      font: inherit; font-size: 13px; font-weight: 500;
-      padding: 8px 14px; border-radius: var(--radius-sm);
-      border: 1px solid transparent; cursor: pointer;
-      transition: background 0.12s; width: 100%;
-    }
-    .btn-primary   { background: var(--accent); color: var(--accent-fg); margin-top: 4px; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-secondary {
-      background: var(--bg-subtle); color: var(--text-secondary);
-      border-color: var(--border-strong); margin-top: 4px;
-    }
-    .btn-secondary:hover { background: var(--bg-hover); }
-    .btn-danger    { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
-    .btn-danger:hover { background: #fee2e2; }
-    .btn-sm { padding: 4px 9px; font-size: 11.5px; width: auto; }
-    .btn:disabled { opacity: .45; cursor: not-allowed; }
+      /* ── Buttons ─────────────────────────────────────────────────── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: background 0.12s;
+        width: 100%;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: var(--accent-fg);
+        margin-top: 4px;
+      }
+      .btn-primary:hover {
+        background: var(--accent-hover);
+      }
+      .btn-secondary {
+        background: var(--bg-subtle);
+        color: var(--text-secondary);
+        border-color: var(--border-strong);
+        margin-top: 4px;
+      }
+      .btn-secondary:hover {
+        background: var(--bg-hover);
+      }
+      .btn-danger {
+        background: var(--danger-bg);
+        color: var(--danger);
+        border-color: var(--danger-border);
+      }
+      .btn-danger:hover {
+        background: #fee2e2;
+      }
+      .btn-sm {
+        padding: 4px 9px;
+        font-size: 11.5px;
+        width: auto;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
 
-    /* ── Metric cards ────────────────────────────────────────────── */
-    .metric-grid {
-      display: grid; grid-template-columns: repeat(2,1fr);
-      gap: 10px; margin-bottom: 18px;
-    }
-    .metric-row {
-      display: flex; gap: 10px; margin-bottom: 18px;
-    }
-    .metric-row .metric-card { flex: 1; }
-    .metric-card {
-      background: var(--bg-subtle); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 12px;
-    }
-    .metric-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.1; }
-    .metric-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+      /* ── Metric cards ────────────────────────────────────────────── */
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .metric-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .metric-row .metric-card {
+        flex: 1;
+      }
+      .metric-card {
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px;
+      }
+      .metric-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.1;
+      }
+      .metric-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
 
-    /* ── Badges ──────────────────────────────────────────────────── */
-    .badge {
-      display: inline-block; padding: 2px 7px;
-      border-radius: 20px; font-size: 11px; font-weight: 600;
-    }
-    .badge-pass    { background: var(--success-bg); color: var(--success); }
-    .badge-fail    { background: var(--danger-bg);  color: var(--danger); }
-    .badge-skip    { background: var(--bg-subtle);  color: var(--text-muted); }
+      /* ── Badges ──────────────────────────────────────────────────── */
+      .badge {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-pass {
+        background: var(--success-bg);
+        color: var(--success);
+      }
+      .badge-fail {
+        background: var(--danger-bg);
+        color: var(--danger);
+      }
+      .badge-skip {
+        background: var(--bg-subtle);
+        color: var(--text-muted);
+      }
 
-    /* ── Tables ──────────────────────────────────────────────────── */
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th {
-      text-align: left; font-weight: 600; font-size: 11px;
-      text-transform: uppercase; letter-spacing: .04em;
-      color: var(--text-muted); padding: 6px 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: var(--bg-hover); }
-    .data-table { margin-top: 8px; }
+      /* ── Tables ──────────────────────────────────────────────────── */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      th {
+        text-align: left;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: var(--bg-hover);
+      }
+      .data-table {
+        margin-top: 8px;
+      }
 
-    /* ── Coverage status cells ───────────────────────────────────── */
-    .status-covered { color: var(--success); font-weight: 600; }
-    .status-partial { color: var(--warning); font-weight: 600; }
-    .status-none    { color: var(--danger);  font-weight: 600; }
+      /* ── Coverage status cells ───────────────────────────────────── */
+      .status-covered {
+        color: var(--success);
+        font-weight: 600;
+      }
+      .status-partial {
+        color: var(--warning);
+        font-weight: 600;
+      }
+      .status-none {
+        color: var(--danger);
+        font-weight: 600;
+      }
 
-    /* ── Design approval ─────────────────────────────────────────── */
-    .suite-block {
-      background: var(--bg-subtle); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 12px 14px;
-      margin-bottom: 10px;
-    }
-    .suite-block h3 { margin: 0 0 8px; }
-    .suite-actions { display: flex; gap: 6px; margin-bottom: 10px; }
-    .suite-actions .btn { width: auto; }
-    .case-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 5px 0; font-size: 12.5px;
-      border-top: 1px solid var(--border);
-    }
-    .case-row:first-of-type { border-top: none; }
-    .panel-actions {
-      display: flex; flex-direction: column; gap: 6px;
-      padding-top: 8px; border-top: 1px solid var(--border);
-      margin-top: 6px;
-    }
+      /* ── Design approval ─────────────────────────────────────────── */
+      .suite-block {
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        margin-bottom: 10px;
+      }
+      .suite-block h3 {
+        margin: 0 0 8px;
+      }
+      .suite-actions {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      .suite-actions .btn {
+        width: auto;
+      }
+      .case-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 0;
+        font-size: 12.5px;
+        border-top: 1px solid var(--border);
+      }
+      .case-row:first-of-type {
+        border-top: none;
+      }
+      .panel-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+        margin-top: 6px;
+      }
 
-    /* ── Test failure detail ─────────────────────────────────────── */
-    .failure-card {
-      background: var(--danger-bg); border: 1px solid var(--danger-border);
-      border-radius: var(--radius); padding: 11px 13px;
-      margin-bottom: 8px;
-    }
-    .failure-card strong { display: block; margin-bottom: 5px; font-size: 12.5px; }
-    .failure-error {
-      font-family: "Menlo","Consolas",monospace; font-size: 11px;
-      color: var(--danger); background: none;
-      margin: 0; white-space: pre-wrap; word-break: break-all;
-    }
-    .retry-badge {
-      display: inline-block; margin-top: 6px;
-      padding: 2px 7px; border-radius: 20px;
-      font-size: 11px; font-weight: 600;
-      background: #fff7ed; color: var(--warning);
-    }
+      /* ── Test failure detail ─────────────────────────────────────── */
+      .failure-card {
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-border);
+        border-radius: var(--radius);
+        padding: 11px 13px;
+        margin-bottom: 8px;
+      }
+      .failure-card strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 12.5px;
+      }
+      .failure-error {
+        font-family: "Menlo", "Consolas", monospace;
+        font-size: 11px;
+        color: var(--danger);
+        background: none;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      .retry-badge {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 7px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #fff7ed;
+        color: var(--warning);
+      }
 
-    /* ── Workflow complete ───────────────────────────────────────── */
-    .done-banner {
-      display: flex; align-items: flex-start; gap: 12px;
-      background: var(--success-bg); border: 1px solid #bbf7d0;
-      border-radius: var(--radius); padding: 14px; margin-bottom: 14px;
-    }
-    .done-icon {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--success); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700; flex-shrink: 0;
-    }
-    .done-title { font-size: 13px; font-weight: 600; color: var(--success); margin-bottom: 2px; }
-    .done-sub   { font-size: 12px; color: var(--text-secondary); }
+      /* ── Workflow complete ───────────────────────────────────────── */
+      .done-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--success-bg);
+        border: 1px solid #bbf7d0;
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 14px;
+      }
+      .done-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--success);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .done-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--success);
+        margin-bottom: 2px;
+      }
+      .done-sub {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
 
-    /* ── Preview shell ───────────────────────────────────────────── */
-    .preview-header {
-      position: sticky; top: 0; z-index: 100;
-      background: #1e2027; color: #fff;
-      padding: 0 20px;
-      display: flex; align-items: center; gap: 16px;
-      border-bottom: 1px solid #2e3038;
-    }
-    .preview-wordmark {
-      font-size: 13px; font-weight: 700;
-      color: #fff; letter-spacing: .02em;
-      padding: 14px 0;
-      flex-shrink: 0;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .preview-wordmark-o {
-      width: 18px; height: 18px;
-      background: var(--accent); border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 9px; font-weight: 800;
-    }
-    .preview-nav {
-      display: flex; gap: 2px;
-      overflow-x: auto; padding: 10px 0;
-    }
-    .preview-nav button {
-      background: none; border: none; cursor: pointer;
-      padding: 5px 12px; border-radius: 6px;
-      font: inherit; font-size: 12px; font-weight: 500;
-      color: #9ca3b0; white-space: nowrap;
-      transition: background .12s, color .12s;
-    }
-    .preview-nav button:hover { background: #2e3038; color: #fff; }
-    .preview-nav button.active { background: var(--accent); color: #fff; }
+      /* ── Preview shell ───────────────────────────────────────────── */
+      .preview-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #1e2027;
+        color: #fff;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border-bottom: 1px solid #2e3038;
+      }
+      .preview-wordmark {
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.02em;
+        padding: 14px 0;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .preview-wordmark-o {
+        width: 18px;
+        height: 18px;
+        background: var(--accent);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+      }
+      .preview-nav {
+        display: flex;
+        gap: 2px;
+        overflow-x: auto;
+        padding: 10px 0;
+      }
+      .preview-nav button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        color: #9ca3b0;
+        white-space: nowrap;
+        transition:
+          background 0.12s,
+          color 0.12s;
+      }
+      .preview-nav button:hover {
+        background: #2e3038;
+        color: #fff;
+      }
+      .preview-nav button.active {
+        background: var(--accent);
+        color: #fff;
+      }
 
-    .preview-content { padding: 28px 24px; }
-    .view-section { display: none; }
-    .view-section.active { display: block; }
+      .preview-content {
+        padding: 28px 24px;
+      }
+      .view-section {
+        display: none;
+      }
+      .view-section.active {
+        display: block;
+      }
 
-    .scenarios {
-      display: flex; flex-wrap: wrap; gap: 24px;
-      align-items: flex-start;
-    }
-    .scenario {
-      flex: 0 0 340px;
-    }
-    .scenario-label {
-      font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .05em;
-      color: var(--text-muted); margin-bottom: 8px;
-      padding-left: 2px;
-    }
-    .panel-frame {
-      width: 340px;
-      background: var(--bg);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,.08), 0 0 0 1px var(--border);
-    }
-  </style>
-</head>
-<body>
+      .scenarios {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      .scenario {
+        flex: 0 0 340px;
+      }
+      .scenario-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        padding-left: 2px;
+      }
+      .panel-frame {
+        width: 340px;
+        background: var(--bg);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow:
+          0 1px 4px rgba(0, 0, 0, 0.08),
+          0 0 0 1px var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="preview-header">
+      <div class="preview-wordmark">
+        <div class="preview-wordmark-o">O</div>
+        Panel Previews
+      </div>
+      <nav class="preview-nav" id="nav"></nav>
+    </div>
 
-<div class="preview-header">
-  <div class="preview-wordmark">
-    <div class="preview-wordmark-o">O</div>
-    Panel Previews
-  </div>
-  <nav class="preview-nav" id="nav"></nav>
-</div>
+    <div class="preview-content" id="content"></div>
 
-<div class="preview-content" id="content"></div>
+    <script>
+      // ── Mock app (buttons log instead of calling MCP) ─────────────────
+      const mockApp = {
+        callServerTool: (opts) => {
+          console.log("[mock] callServerTool", opts);
+          return Promise.resolve(null);
+        }
+      };
 
-<script>
-// ── Mock app (buttons log instead of calling MCP) ─────────────────
-const mockApp = {
-  callServerTool: (opts) => {
-    console.log('[mock] callServerTool', opts);
-    return Promise.resolve(null);
-  }
-};
+      // ── Shared phase list for grow_tests ─────────────────────────────
+      const GROW_PHASES = [
+        "intake",
+        "discover",
+        "duplicate_check",
+        "explore",
+        "design",
+        "code",
+        "execute",
+        "heal",
+        "audit"
+      ];
+      const PHASE_LABELS = {
+        intake: "Gathering requirements",
+        discover: "Understanding your app",
+        explore: "Exploring your app",
+        design: "Designing tests",
+        code: "Writing tests",
+        execute: "Running tests",
+        execute_test: "Running tests",
+        heal: "Fixing failures",
+        audit: "Quality check",
+        analyse: "Analysing",
+        validate: "Validating",
+        scaffold: "Setting up",
+        install: "Installing",
+        duplicate_check: "Checking duplicates"
+      };
+      function labelFor(p) {
+        return PHASE_LABELS[p] ?? p.replace(/_/g, " ");
+      }
 
-// ── Shared phase list for grow_tests ─────────────────────────────
-const GROW_PHASES = [
-  "intake","discover","duplicate_check","explore","design","code","execute","heal","audit"
-];
-const PHASE_LABELS = {
-  intake:"Gathering requirements", discover:"Understanding your app",
-  explore:"Exploring your app", design:"Designing tests",
-  code:"Writing tests", execute:"Running tests", execute_test:"Running tests",
-  heal:"Fixing failures", audit:"Quality check", analyse:"Analysing",
-  validate:"Validating", scaffold:"Setting up", install:"Installing",
-  duplicate_check:"Checking duplicates"
-};
-function labelFor(p){ return PHASE_LABELS[p] ?? p.replace(/_/g,' '); }
+      function makePhases(activeIdx) {
+        return GROW_PHASES.map((p, i) => ({
+          label: p,
+          status: i < activeIdx ? "done" : i === activeIdx ? "active" : "pending"
+        }));
+      }
 
-function makePhases(activeIdx){
-  return GROW_PHASES.map((p,i)=>({
-    label:p,
-    status: i < activeIdx ? 'done' : i===activeIdx ? 'active' : 'pending'
-  }));
-}
+      // ── Render helpers ────────────────────────────────────────────────
+      function el(tag, cls, inner) {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (inner !== undefined) e.innerHTML = inner;
+        return e;
+      }
+      function esc(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
 
-// ── Render helpers ────────────────────────────────────────────────
-function el(tag, cls, inner){
-  const e = document.createElement(tag);
-  if(cls) e.className = cls;
-  if(inner !== undefined) e.innerHTML = inner;
-  return e;
-}
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      // ── VIEWS ─────────────────────────────────────────────────────────
 
-// ── VIEWS ─────────────────────────────────────────────────────────
-
-function renderWorkflowProgress(root, data){
-  const phase = String(data.phase ?? 'active');
-  const phases = data.phases ?? [];
-  root.appendChild(el('div','panel-header',
-    `<div class="panel-logo">V</div>
+      function renderWorkflowProgress(root, data) {
+        const phase = String(data.phase ?? "active");
+        const phases = data.phases ?? [];
+        root.appendChild(
+          el(
+            "div",
+            "panel-header",
+            `<div class="panel-logo">V</div>
      <span class="panel-title">Vindicate</span>
-     <span class="panel-phase">${labelFor(phase)}</span>`));
-  const body = el('div','panel-body');
-  body.appendChild(el('h2',null,'In progress'));
-  if(phases.length){
-    const list = el('div','phase-list');
-    phases.forEach((p,i)=>{
-      const cls = p.status==='done' ? 'is-done' : p.status==='active' ? 'is-active' : 'is-pending';
-      const row = el('div',`phase-row ${cls}`);
-      const icon = el('div','phase-icon'); icon.textContent = p.status==='done' ? '✓' : String(i+1);
-      const lbl = el('span','phase-label'); lbl.textContent = labelFor(p.label);
-      row.appendChild(icon); row.appendChild(lbl);
-      if(p.status==='active') row.appendChild(el('div','phase-running-dot'));
-      list.appendChild(row);
-    });
-    body.appendChild(list);
-  }
-  root.appendChild(body);
-}
+     <span class="panel-phase">${labelFor(phase)}</span>`
+          )
+        );
+        const body = el("div", "panel-body");
+        body.appendChild(el("h2", null, "In progress"));
+        if (phases.length) {
+          const list = el("div", "phase-list");
+          phases.forEach((p, i) => {
+            const cls =
+              p.status === "done" ? "is-done" : p.status === "active" ? "is-active" : "is-pending";
+            const row = el("div", `phase-row ${cls}`);
+            const icon = el("div", "phase-icon");
+            icon.textContent = p.status === "done" ? "✓" : String(i + 1);
+            const lbl = el("span", "phase-label");
+            lbl.textContent = labelFor(p.label);
+            row.appendChild(icon);
+            row.appendChild(lbl);
+            if (p.status === "active") row.appendChild(el("div", "phase-running-dot"));
+            list.appendChild(row);
+          });
+          body.appendChild(list);
+        }
+        root.appendChild(body);
+      }
 
-function renderWorkflowComplete(root, data){
-  const verdict = String(data.verdict ?? 'pass');
-  const testsWritten = data.tests_written;
-  const files = data.files_touched ?? [];
-  const next = String(data.next_action ?? '');
-  root.appendChild(el('div','panel-header',
-    `<div class="panel-logo">V</div><span class="panel-title">Complete</span>
-     <span class="panel-phase panel-phase-done">Done</span>`));
-  const body = el('div','panel-body');
-  const banner = el('div','done-banner');
-  const icon = el('div','done-icon'); icon.textContent = '✓';
-  const tw = el('div');
-  tw.appendChild(el('div','done-title','Workflow complete'));
-  tw.appendChild(el('div','done-sub',`Verdict: <strong>${esc(verdict)}</strong>`));
-  banner.appendChild(icon); banner.appendChild(tw);
-  body.appendChild(banner);
-  const tp = el('p'); tp.innerHTML = `<strong>Tests written:</strong> ${testsWritten ?? '—'}`;
-  body.appendChild(tp);
-  if(files.length){
-    body.appendChild(el('p',null,'<strong>Files touched:</strong>'));
-    const ul = el('ul');
-    files.forEach(f=>{ const li=el('li'); li.textContent=f; ul.appendChild(li); });
-    body.appendChild(ul);
-  }
-  if(next){ const n=el('p','panel-subtitle'); n.innerHTML=`<strong>Next:</strong> ${esc(next)}`; body.appendChild(n); }
-  root.appendChild(body);
-}
+      function renderWorkflowComplete(root, data) {
+        const verdict = String(data.verdict ?? "pass");
+        const testsWritten = data.tests_written;
+        const files = data.files_touched ?? [];
+        const next = String(data.next_action ?? "");
+        root.appendChild(
+          el(
+            "div",
+            "panel-header",
+            `<div class="panel-logo">V</div><span class="panel-title">Complete</span>
+     <span class="panel-phase panel-phase-done">Done</span>`
+          )
+        );
+        const body = el("div", "panel-body");
+        const banner = el("div", "done-banner");
+        const icon = el("div", "done-icon");
+        icon.textContent = "✓";
+        const tw = el("div");
+        tw.appendChild(el("div", "done-title", "Workflow complete"));
+        tw.appendChild(el("div", "done-sub", `Verdict: <strong>${esc(verdict)}</strong>`));
+        banner.appendChild(icon);
+        banner.appendChild(tw);
+        body.appendChild(banner);
+        const tp = el("p");
+        tp.innerHTML = `<strong>Tests written:</strong> ${testsWritten ?? "—"}`;
+        body.appendChild(tp);
+        if (files.length) {
+          body.appendChild(el("p", null, "<strong>Files touched:</strong>"));
+          const ul = el("ul");
+          files.forEach((f) => {
+            const li = el("li");
+            li.textContent = f;
+            ul.appendChild(li);
+          });
+          body.appendChild(ul);
+        }
+        if (next) {
+          const n = el("p", "panel-subtitle");
+          n.innerHTML = `<strong>Next:</strong> ${esc(next)}`;
+          body.appendChild(n);
+        }
+        root.appendChild(body);
+      }
 
-function renderDesignApproval(root, data){
-  const writePlan = String(data.write_plan ?? '');
-  const suites = data.suites ?? [];
-  const badges = data.badges ?? {};
+      function renderDesignApproval(root, data) {
+        const writePlan = String(data.write_plan ?? "");
+        const suites = data.suites ?? [];
+        const badges = data.badges ?? {};
 
-  root.appendChild(el('div','panel-header',
-    `<div class="panel-logo">V</div><span class="panel-title">Vindicate</span>
-     <span class="panel-phase">Design Review</span>`));
-  const body = el('div','panel-body');
-  body.appendChild(el('p','panel-subtitle','Read-only preview. Approve or edit the design in chat with the agent.'));
-  if(writePlan){ const p=el('p','panel-subtitle'); p.textContent=writePlan; body.appendChild(p); }
+        root.appendChild(
+          el(
+            "div",
+            "panel-header",
+            `<div class="panel-logo">V</div><span class="panel-title">Vindicate</span>
+     <span class="panel-phase">Design Review</span>`
+          )
+        );
+        const body = el("div", "panel-body");
+        body.appendChild(
+          el(
+            "p",
+            "panel-subtitle",
+            "Read-only preview. Approve or edit the design in chat with the agent."
+          )
+        );
+        if (writePlan) {
+          const p = el("p", "panel-subtitle");
+          p.textContent = writePlan;
+          body.appendChild(p);
+        }
 
-  suites.forEach(suite=>{
-    const block = el('div','suite-block');
-    block.appendChild(el('h3',null,suite.title));
-    suite.cases.forEach(c=>{
-      const row = el('div','case-row');
-      const badge = badges[c.title];
-      const bmark = badge==='added'?'✅ ':badge==='modified'?'✏️ ':badge==='removed'?'🗑️ ':'';
-      const lbl = el('span'); lbl.textContent = bmark+c.title;
-      row.appendChild(lbl);
-      block.appendChild(row);
-    });
-    body.appendChild(block);
-  });
-  root.appendChild(body);
-}
-function renderCoverage(root, data){
-  const total = data.total_tests;
-  const suites = data.suite_count;
-  const gaps = data.coverage_gaps;
-  const features = data.features ?? [];
-  root.appendChild(el('div','panel-header',
-    `<div class="panel-logo">V</div><span class="panel-title">Coverage</span>`));
-  const body = el('div','panel-body');
-  const row = el('div','metric-row');
-  [['Tests',total],['Suites',suites],['Gaps',gaps]].forEach(([lbl,val])=>{
-    const card = el('div','metric-card');
-    card.appendChild(el('div','metric-value',val!==undefined?String(val):'—'));
-    card.appendChild(el('div','metric-label',lbl));
-    row.appendChild(card);
-  });
-  body.appendChild(row);
-  const tbl = el('table','data-table');
-  tbl.innerHTML='<thead><tr><th>Feature</th><th>Status</th><th>Tests</th></tr></thead>';
-  const tbody = el('tbody');
-  features.forEach(f=>{
-    const tr=el('tr');
-    tr.innerHTML=`<td>${esc(f.name)}</td><td class="status-${f.status}">${f.status}</td><td>${f.test_count}</td>`;
-    tbody.appendChild(tr);
-  });
-  tbl.appendChild(tbody);
-  body.appendChild(tbl);
-  root.appendChild(body);
-}
+        suites.forEach((suite) => {
+          const block = el("div", "suite-block");
+          block.appendChild(el("h3", null, suite.title));
+          suite.cases.forEach((c) => {
+            const row = el("div", "case-row");
+            const badge = badges[c.title];
+            const bmark =
+              badge === "added"
+                ? "✅ "
+                : badge === "modified"
+                  ? "✏️ "
+                  : badge === "removed"
+                    ? "🗑️ "
+                    : "";
+            const lbl = el("span");
+            lbl.textContent = bmark + c.title;
+            row.appendChild(lbl);
+            block.appendChild(row);
+          });
+          body.appendChild(block);
+        });
+        root.appendChild(body);
+      }
+      function renderCoverage(root, data) {
+        const total = data.total_tests;
+        const suites = data.suite_count;
+        const gaps = data.coverage_gaps;
+        const features = data.features ?? [];
+        root.appendChild(
+          el(
+            "div",
+            "panel-header",
+            `<div class="panel-logo">V</div><span class="panel-title">Coverage</span>`
+          )
+        );
+        const body = el("div", "panel-body");
+        const row = el("div", "metric-row");
+        [
+          ["Tests", total],
+          ["Suites", suites],
+          ["Gaps", gaps]
+        ].forEach(([lbl, val]) => {
+          const card = el("div", "metric-card");
+          card.appendChild(el("div", "metric-value", val !== undefined ? String(val) : "—"));
+          card.appendChild(el("div", "metric-label", lbl));
+          row.appendChild(card);
+        });
+        body.appendChild(row);
+        const tbl = el("table", "data-table");
+        tbl.innerHTML = "<thead><tr><th>Feature</th><th>Status</th><th>Tests</th></tr></thead>";
+        const tbody = el("tbody");
+        features.forEach((f) => {
+          const tr = el("tr");
+          tr.innerHTML = `<td>${esc(f.name)}</td><td class="status-${f.status}">${f.status}</td><td>${f.test_count}</td>`;
+          tbody.appendChild(tr);
+        });
+        tbl.appendChild(tbody);
+        body.appendChild(tbl);
+        root.appendChild(body);
+      }
 
-function renderRefactorMetrics(root, data){
-  const cards=[
-    ['Files changed',data.files_changed],
-    ['Duplicates removed',data.duplication_removed],
-    ['Lines saved',data.lines_saved],
-    ['Tests (no change)',data.test_count]
-  ];
-  root.appendChild(el('div','panel-header',
-    `<div class="panel-logo">V</div><span class="panel-title">Refactor</span>`));
-  const body = el('div','panel-body');
-  body.appendChild(el('h2',null,'Refactor metrics'));
-  const grid = el('div','metric-grid');
-  cards.forEach(([lbl,val])=>{
-    const card=el('div','metric-card');
-    card.appendChild(el('div','metric-value',val!==undefined?String(val):'—'));
-    card.appendChild(el('div','metric-label',lbl));
-    grid.appendChild(card);
-  });
-  body.appendChild(grid);
-  root.appendChild(body);
-}
+      function renderRefactorMetrics(root, data) {
+        const cards = [
+          ["Files changed", data.files_changed],
+          ["Duplicates removed", data.duplication_removed],
+          ["Lines saved", data.lines_saved],
+          ["Tests (no change)", data.test_count]
+        ];
+        root.appendChild(
+          el(
+            "div",
+            "panel-header",
+            `<div class="panel-logo">V</div><span class="panel-title">Refactor</span>`
+          )
+        );
+        const body = el("div", "panel-body");
+        body.appendChild(el("h2", null, "Refactor metrics"));
+        const grid = el("div", "metric-grid");
+        cards.forEach(([lbl, val]) => {
+          const card = el("div", "metric-card");
+          card.appendChild(el("div", "metric-value", val !== undefined ? String(val) : "—"));
+          card.appendChild(el("div", "metric-label", lbl));
+          grid.appendChild(card);
+        });
+        body.appendChild(grid);
+        root.appendChild(body);
+      }
 
-function renderTestRunLive(root, data){
-  const tests = data.tests ?? [];
-  const running = data.running === true;
-  const passed = tests.filter(t=>t.status==='passed').length;
-  const failed = tests.filter(t=>t.status==='failed').length;
-  root.appendChild(el('div','panel-header',
-    `<div class="panel-logo">V</div><span class="panel-title">Vindicate</span>
-     <span class="panel-phase${running?' panel-phase-running':' panel-phase-done'}">${running?'Running':'Complete'}</span>`));
-  const body = el('div','panel-body');
-  body.appendChild(el('h2',null,'Test run'));
-  if(tests.length){
-    const grid = el('div','metric-grid');
-    grid.innerHTML=`
+      function renderTestRunLive(root, data) {
+        const tests = data.tests ?? [];
+        const running = data.running === true;
+        const passed = tests.filter((t) => t.status === "passed").length;
+        const failed = tests.filter((t) => t.status === "failed").length;
+        root.appendChild(
+          el(
+            "div",
+            "panel-header",
+            `<div class="panel-logo">V</div><span class="panel-title">Vindicate</span>
+     <span class="panel-phase${running ? " panel-phase-running" : " panel-phase-done"}">${running ? "Running" : "Complete"}</span>`
+          )
+        );
+        const body = el("div", "panel-body");
+        body.appendChild(el("h2", null, "Test run"));
+        if (tests.length) {
+          const grid = el("div", "metric-grid");
+          grid.innerHTML = `
       <div class="metric-card"><div class="metric-value" style="color:var(--success)">${passed}</div><div class="metric-label">Passed</div></div>
       <div class="metric-card"><div class="metric-value" style="color:var(--danger)">${failed}</div><div class="metric-label">Failed</div></div>`;
-    body.appendChild(grid);
-    const tbl = el('table');
-    tbl.innerHTML='<thead><tr><th>Test</th><th>Status</th></tr></thead>';
-    const tbody = el('tbody');
-    tests.forEach(t=>{
-      const sc=t.status==='passed'?'badge-pass':t.status==='failed'?'badge-fail':'badge-skip';
-      const sl=t.status==='passed'?'Pass':t.status==='failed'?'Fail':running?'Running…':'Skip';
-      const tr=el('tr');
-      tr.innerHTML=`<td>${esc(t.title)}</td><td><span class="badge ${sc}">${sl}</span></td>`;
-      tbody.appendChild(tr);
-    });
-    tbl.appendChild(tbody);
-    body.appendChild(tbl);
-  } else if(running){
-    body.appendChild(el('p','panel-subtitle','Waiting for test results…'));
-  }
-  root.appendChild(body);
-}
+          body.appendChild(grid);
+          const tbl = el("table");
+          tbl.innerHTML = "<thead><tr><th>Test</th><th>Status</th></tr></thead>";
+          const tbody = el("tbody");
+          tests.forEach((t) => {
+            const sc =
+              t.status === "passed"
+                ? "badge-pass"
+                : t.status === "failed"
+                  ? "badge-fail"
+                  : "badge-skip";
+            const sl =
+              t.status === "passed"
+                ? "Pass"
+                : t.status === "failed"
+                  ? "Fail"
+                  : running
+                    ? "Running…"
+                    : "Skip";
+            const tr = el("tr");
+            tr.innerHTML = `<td>${esc(t.title)}</td><td><span class="badge ${sc}">${sl}</span></td>`;
+            tbody.appendChild(tr);
+          });
+          tbl.appendChild(tbody);
+          body.appendChild(tbl);
+        } else if (running) {
+          body.appendChild(el("p", "panel-subtitle", "Waiting for test results…"));
+        }
+        root.appendChild(body);
+      }
 
-// ── ALL SCENARIOS ──────────────────────────────────────────────────
-const VIEWS = [
-  {
-    id: 'progress',
-    label: 'Workflow Progress',
-    render: renderWorkflowProgress,
-    scenarios: [
-      {
-        label: 'Just started — intake active',
-        data: { phase:'intake', phases: makePhases(0) }
-      },
-      {
-        label: 'Mid-flow — design active (4 done)',
-        data: { phase:'design', phases: makePhases(4) }
-      },
-      {
-        label: 'Final phase — audit active',
-        data: { phase:'audit', phases: makePhases(8) }
-      }
-    ]
-  },
-  {
-    id: 'complete',
-    label: 'Workflow Complete',
-    render: renderWorkflowComplete,
-    scenarios: [
-      {
-        label: 'Pass — tests written',
-        data: {
-          verdict:'pass', tests_written:5,
-          files_touched:['tests/login.spec.ts','pages/LoginPage.ts'],
-          next_action:'Run the full suite to confirm everything passes.'
-        }
-      },
-      {
-        label: 'Dry-run — no files changed',
-        data: {
-          verdict:'pass', tests_written:0,
-          files_touched:[],
-          next_action:'Dry-run complete. Click "Approve all →" to write the tests for real.'
-        }
-      },
-      {
-        label: 'Fail — blocked by app bug',
-        data: {
-          verdict:'fail', tests_written:2,
-          files_touched:['features/checkout.spec.ts'],
-          next_action:'Fix the app bug on /checkout/confirm before re-running.'
-        }
-      }
-    ]
-  },
-  {
-    id: 'design',
-    label: 'Design Approval',
-    render: renderDesignApproval,
-    scenarios: [
-      {
-        label: 'Fresh design — 2 suites, all new',
-        data: {
-          job_id: '00000000-0000-4000-8000-000000000001',
-          write_plan: '📁 Will append to features/login.spec.ts (3 new tests)',
-          suites: [
-            { title:'Login - Auth', cases:[{title:'should sign in with valid credentials'},{title:'should show error on bad password'},{title:'should redirect to dashboard after login'}] },
-            { title:'Login - Lockout', cases:[{title:'should lock account after 5 failed attempts'}] }
-          ],
-          badges: {
-            'should sign in with valid credentials':'added',
-            'should show error on bad password':'added',
-            'should redirect to dashboard after login':'added',
-            'should lock account after 5 failed attempts':'added'
-          }
-        }
-      },
-      {
-        label: 'Edited — mixed add/modify/remove badges',
-        data: {
-          job_id: '00000000-0000-4000-8000-000000000002',
-          write_plan: '📁 Will append to features/checkout.spec.ts (2 new tests)',
-          suites: [
+      // ── ALL SCENARIOS ──────────────────────────────────────────────────
+      const VIEWS = [
+        {
+          id: "progress",
+          label: "Workflow Progress",
+          render: renderWorkflowProgress,
+          scenarios: [
             {
-              title:'Checkout - Cart',
-              cases:[
-                {title:'should add item to cart'},
-                {title:'should update quantity in cart'},
-                {title:'should show updated total after promo code'}
-              ]
+              label: "Just started — intake active",
+              data: { phase: "intake", phases: makePhases(0) }
+            },
+            {
+              label: "Mid-flow — design active (4 done)",
+              data: { phase: "design", phases: makePhases(4) }
+            },
+            {
+              label: "Final phase — audit active",
+              data: { phase: "audit", phases: makePhases(8) }
             }
-          ],
-          badges: {
-            'should add item to cart':'added',
-            'should update quantity in cart':'modified',
-            'should show updated total after promo code':'added'
-          }
-        }
-      },
-      {
-        label: 'Single suite — minimal, no job_id (read-only)',
-        data: {
-          write_plan: '📁 Will create features/password-reset.spec.ts',
-          suites: [
-            { title:'Password Reset', cases:[{title:'should send reset email'},{title:'should expire link after 24h'}] }
-          ],
-          badges: {}
-        }
-      }
-    ]
-  },
-  {
-    id: 'coverage',
-    label: 'Coverage',
-    render: renderCoverage,
-    scenarios: [
-      {
-        label: 'Good coverage — mostly green',
-        data: {
-          total_tests: 34,
-          suite_count: 6,
-          coverage_gaps: 2,
-          features: [
-            {name:'Login',           status:'covered', test_count:8},
-            {name:'Checkout',        status:'covered', test_count:10},
-            {name:'Product listing', status:'covered', test_count:6},
-            {name:'User profile',    status:'partial',  test_count:4},
-            {name:'Admin panel',     status:'none',     test_count:0},
-            {name:'Payment gateway', status:'covered', test_count:6}
+          ]
+        },
+        {
+          id: "complete",
+          label: "Workflow Complete",
+          render: renderWorkflowComplete,
+          scenarios: [
+            {
+              label: "Pass — tests written",
+              data: {
+                verdict: "pass",
+                tests_written: 5,
+                files_touched: ["tests/login.spec.ts", "pages/LoginPage.ts"],
+                next_action: "Run the full suite to confirm everything passes."
+              }
+            },
+            {
+              label: "Dry-run — no files changed",
+              data: {
+                verdict: "pass",
+                tests_written: 0,
+                files_touched: [],
+                next_action: 'Dry-run complete. Click "Approve all →" to write the tests for real.'
+              }
+            },
+            {
+              label: "Fail — blocked by app bug",
+              data: {
+                verdict: "fail",
+                tests_written: 2,
+                files_touched: ["features/checkout.spec.ts"],
+                next_action: "Fix the app bug on /checkout/confirm before re-running."
+              }
+            }
+          ]
+        },
+        {
+          id: "design",
+          label: "Design Approval",
+          render: renderDesignApproval,
+          scenarios: [
+            {
+              label: "Fresh design — 2 suites, all new",
+              data: {
+                job_id: "00000000-0000-4000-8000-000000000001",
+                write_plan: "📁 Will append to features/login.spec.ts (3 new tests)",
+                suites: [
+                  {
+                    title: "Login - Auth",
+                    cases: [
+                      { title: "should sign in with valid credentials" },
+                      { title: "should show error on bad password" },
+                      { title: "should redirect to dashboard after login" }
+                    ]
+                  },
+                  {
+                    title: "Login - Lockout",
+                    cases: [{ title: "should lock account after 5 failed attempts" }]
+                  }
+                ],
+                badges: {
+                  "should sign in with valid credentials": "added",
+                  "should show error on bad password": "added",
+                  "should redirect to dashboard after login": "added",
+                  "should lock account after 5 failed attempts": "added"
+                }
+              }
+            },
+            {
+              label: "Edited — mixed add/modify/remove badges",
+              data: {
+                job_id: "00000000-0000-4000-8000-000000000002",
+                write_plan: "📁 Will append to features/checkout.spec.ts (2 new tests)",
+                suites: [
+                  {
+                    title: "Checkout - Cart",
+                    cases: [
+                      { title: "should add item to cart" },
+                      { title: "should update quantity in cart" },
+                      { title: "should show updated total after promo code" }
+                    ]
+                  }
+                ],
+                badges: {
+                  "should add item to cart": "added",
+                  "should update quantity in cart": "modified",
+                  "should show updated total after promo code": "added"
+                }
+              }
+            },
+            {
+              label: "Single suite — minimal, no job_id (read-only)",
+              data: {
+                write_plan: "📁 Will create features/password-reset.spec.ts",
+                suites: [
+                  {
+                    title: "Password Reset",
+                    cases: [
+                      { title: "should send reset email" },
+                      { title: "should expire link after 24h" }
+                    ]
+                  }
+                ],
+                badges: {}
+              }
+            }
+          ]
+        },
+        {
+          id: "coverage",
+          label: "Coverage",
+          render: renderCoverage,
+          scenarios: [
+            {
+              label: "Good coverage — mostly green",
+              data: {
+                total_tests: 34,
+                suite_count: 6,
+                coverage_gaps: 2,
+                features: [
+                  { name: "Login", status: "covered", test_count: 8 },
+                  { name: "Checkout", status: "covered", test_count: 10 },
+                  { name: "Product listing", status: "covered", test_count: 6 },
+                  { name: "User profile", status: "partial", test_count: 4 },
+                  { name: "Admin panel", status: "none", test_count: 0 },
+                  { name: "Payment gateway", status: "covered", test_count: 6 }
+                ]
+              }
+            },
+            {
+              label: "Many gaps — needs attention",
+              data: {
+                total_tests: 11,
+                suite_count: 2,
+                coverage_gaps: 5,
+                features: [
+                  { name: "Login", status: "covered", test_count: 5 },
+                  { name: "Checkout", status: "partial", test_count: 6 },
+                  { name: "Product listing", status: "none", test_count: 0 },
+                  { name: "User profile", status: "none", test_count: 0 },
+                  { name: "Admin panel", status: "none", test_count: 0 },
+                  { name: "Payment gateway", status: "partial", test_count: 0 },
+                  { name: "Reports", status: "none", test_count: 0 }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          id: "refactor",
+          label: "Refactor Metrics",
+          render: renderRefactorMetrics,
+          scenarios: [
+            {
+              label: "Full run — all metrics populated",
+              data: { files_changed: 7, duplication_removed: 14, lines_saved: 212, test_count: 38 }
+            },
+            {
+              label: "Minimal run — some metrics missing",
+              data: {
+                files_changed: 2,
+                duplication_removed: undefined,
+                lines_saved: 44,
+                test_count: undefined
+              }
+            }
+          ]
+        },
+        {
+          id: "test-run",
+          label: "Test Results (run_tests)",
+          render: renderTestRunLive,
+          scenarios: [
+            {
+              label: "All pass",
+              data: {
+                view: "test-run",
+                outcome: "pass",
+                passed: 5,
+                failed: 0,
+                skipped: 0,
+                summary: "✅ 5 passed  ❌ 0 failed  ⏱️ 12.4s",
+                tests: [
+                  { title: "should sign in with valid credentials", status: "passed" },
+                  { title: "should show error on bad password", status: "passed" },
+                  { title: "should redirect to dashboard", status: "passed" },
+                  { title: "should add item to cart", status: "passed" },
+                  { title: "should update quantity in cart", status: "passed" }
+                ]
+              }
+            },
+            {
+              label: "Failures with errors",
+              data: {
+                view: "test-run",
+                outcome: "fail",
+                passed: 3,
+                failed: 2,
+                skipped: 0,
+                summary: "✅ 3 passed  ❌ 2 failed  ⏱️ 18.2s",
+                tests: [
+                  { title: "should sign in with valid credentials", status: "passed" },
+                  {
+                    title: "should apply promo code",
+                    status: "failed",
+                    error: 'Expected "10%" to equal "15%"'
+                  },
+                  {
+                    title: "should complete checkout",
+                    status: "failed",
+                    error: "Timeout waiting for selector [data-testid=checkout-btn]"
+                  },
+                  { title: "should show order confirmation", status: "passed" },
+                  { title: "should update quantity in cart", status: "passed" }
+                ]
+              }
+            },
+            {
+              label: "Parse error — no JSON",
+              data: {
+                view: "test-run",
+                outcome: "error",
+                passed: 0,
+                failed: 0,
+                skipped: 0,
+                summary: "Test run failed — no JSON output captured.",
+                tests: [],
+                raw_output: "Error: playwright.config.ts not found"
+              }
+            }
           ]
         }
-      },
-      {
-        label: 'Many gaps — needs attention',
-        data: {
-          total_tests: 11,
-          suite_count: 2,
-          coverage_gaps: 5,
-          features: [
-            {name:'Login',           status:'covered', test_count:5},
-            {name:'Checkout',        status:'partial',  test_count:6},
-            {name:'Product listing', status:'none',     test_count:0},
-            {name:'User profile',    status:'none',     test_count:0},
-            {name:'Admin panel',     status:'none',     test_count:0},
-            {name:'Payment gateway', status:'partial',  test_count:0},
-            {name:'Reports',         status:'none',     test_count:0}
-          ]
-        }
-      }
-    ]
-  },
-  {
-    id: 'refactor',
-    label: 'Refactor Metrics',
-    render: renderRefactorMetrics,
-    scenarios: [
-      {
-        label: 'Full run — all metrics populated',
-        data: { files_changed:7, duplication_removed:14, lines_saved:212, test_count:38 }
-      },
-      {
-        label: 'Minimal run — some metrics missing',
-        data: { files_changed:2, duplication_removed:undefined, lines_saved:44, test_count:undefined }
-      }
-    ]
-  },
-  {
-    id: 'test-run',
-    label: 'Test Results (run_tests)',
-    render: renderTestRunLive,
-    scenarios: [
-      {
-        label: 'All pass',
-        data: {
-          view: 'test-run',
-          outcome: 'pass',
-          passed: 5,
-          failed: 0,
-          skipped: 0,
-          summary: '✅ 5 passed  ❌ 0 failed  ⏱️ 12.4s',
-          tests: [
-            {title:'should sign in with valid credentials', status:'passed'},
-            {title:'should show error on bad password',     status:'passed'},
-            {title:'should redirect to dashboard',          status:'passed'},
-            {title:'should add item to cart',               status:'passed'},
-            {title:'should update quantity in cart',        status:'passed'}
-          ]
-        }
-      },
-      {
-        label: 'Failures with errors',
-        data: {
-          view: 'test-run',
-          outcome: 'fail',
-          passed: 3,
-          failed: 2,
-          skipped: 0,
-          summary: '✅ 3 passed  ❌ 2 failed  ⏱️ 18.2s',
-          tests: [
-            {title:'should sign in with valid credentials', status:'passed'},
-            {title:'should apply promo code', status:'failed', error: 'Expected "10%" to equal "15%"'},
-            {title:'should complete checkout', status:'failed', error: 'Timeout waiting for selector [data-testid=checkout-btn]'},
-            {title:'should show order confirmation', status:'passed'},
-            {title:'should update quantity in cart', status:'passed'}
-          ]
-        }
-      },
-      {
-        label: 'Parse error — no JSON',
-        data: {
-          view: 'test-run',
-          outcome: 'error',
-          passed: 0,
-          failed: 0,
-          skipped: 0,
-          summary: 'Test run failed — no JSON output captured.',
-          tests: [],
-          raw_output: 'Error: playwright.config.ts not found'
-        }
-      }
-    ]
-  }
-];
+      ];
 
-// ── Build the page ─────────────────────────────────────────────────
-const nav = document.getElementById('nav');
-const content = document.getElementById('content');
+      // ── Build the page ─────────────────────────────────────────────────
+      const nav = document.getElementById("nav");
+      const content = document.getElementById("content");
 
-VIEWS.forEach((view, vi) => {
-  // nav pill
-  const btn = el('button', vi===0?'active':'');
-  btn.textContent = view.label;
-  btn.onclick = () => {
-    document.querySelectorAll('.preview-nav button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.view-section').forEach(s=>s.classList.remove('active'));
-    document.getElementById('view-'+view.id).classList.add('active');
-  };
-  nav.appendChild(btn);
+      VIEWS.forEach((view, vi) => {
+        // nav pill
+        const btn = el("button", vi === 0 ? "active" : "");
+        btn.textContent = view.label;
+        btn.onclick = () => {
+          document
+            .querySelectorAll(".preview-nav button")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          document.querySelectorAll(".view-section").forEach((s) => s.classList.remove("active"));
+          document.getElementById("view-" + view.id).classList.add("active");
+        };
+        nav.appendChild(btn);
 
-  // section
-  const section = el('div', 'view-section'+(vi===0?' active':''));
-  section.id = 'view-'+view.id;
-  const scenarios = el('div','scenarios');
-  view.scenarios.forEach(s=>{
-    const wrap = el('div','scenario');
-    const lbl = el('div','scenario-label'); lbl.textContent = s.label;
-    const frame = el('div','panel-frame');
-    view.render(frame, s.data, mockApp);
-    wrap.appendChild(lbl);
-    wrap.appendChild(frame);
-    scenarios.appendChild(wrap);
-  });
-  section.appendChild(scenarios);
-  content.appendChild(section);
-});
-</script>
-</body>
+        // section
+        const section = el("div", "view-section" + (vi === 0 ? " active" : ""));
+        section.id = "view-" + view.id;
+        const scenarios = el("div", "scenarios");
+        view.scenarios.forEach((s) => {
+          const wrap = el("div", "scenario");
+          const lbl = el("div", "scenario-label");
+          lbl.textContent = s.label;
+          const frame = el("div", "panel-frame");
+          view.render(frame, s.data, mockApp);
+          wrap.appendChild(lbl);
+          wrap.appendChild(frame);
+          scenarios.appendChild(wrap);
+        });
+        section.appendChild(scenarios);
+        content.appendChild(section);
+      });
+    </script>
+  </body>
 </html>

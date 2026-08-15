@@ -5,8 +5,14 @@ import { LocatorPicker } from "@/components/recording/shared/LocatorPicker";
 import type { LocatorCandidate } from "@/lib/recording-ui-types";
 
 const candidates: LocatorCandidate[] = [
-  { strategy: "testid", value: "email", attr: "data-testid", recommended: true, strength: "strong" },
-  { strategy: "role+name", value: 'input[name="E-mail address"]', strength: "medium" },
+  {
+    strategy: "testid",
+    value: "email",
+    attr: "data-testid",
+    recommended: true,
+    strength: "strong"
+  },
+  { strategy: "role+name", value: 'input[name="E-mail address"]', strength: "medium" }
 ];
 
 describe("LocatorPicker", () => {

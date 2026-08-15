@@ -104,7 +104,10 @@ describe("WorkerClient command timeout", () => {
     });
 
     await expect(
-      client.runStep("e7d09d77-ba85-4239-bcd1-a6625393e382", { action: "navigate", url: "https://example.com" })
+      client.runStep("e7d09d77-ba85-4239-bcd1-a6625393e382", {
+        action: "navigate",
+        url: "https://example.com"
+      })
     ).rejects.toBeInstanceOf(ActionTimeoutError);
 
     expect(commandAttempts).toBe(1);

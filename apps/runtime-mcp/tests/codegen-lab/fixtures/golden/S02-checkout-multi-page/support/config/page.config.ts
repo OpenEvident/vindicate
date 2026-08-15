@@ -1,8 +1,8 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect } from "@playwright/test";
 
-import { LoginPage } from './page-loader';
-import { CartPage } from './page-loader';
-import { CheckoutPage } from './page-loader';
+import { LoginPage } from "./page-loader";
+import { CartPage } from "./page-loader";
+import { CheckoutPage } from "./page-loader";
 // grow_tests appends one import line per new page class above this comment.
 // Imports come from './page-loader' (the barrel) — not direct page class paths.
 // example: import { LoginPage } from './page-loader';
@@ -15,9 +15,15 @@ const test = base.extend<{
   // example: loginPage fixture → LoginPage class
 }>({
   // fixture-impls: grow_tests appends one fixture entry per feature below this line
-  checkoutPage: async ({ page }, use) => { await use(new CheckoutPage(page)); },
-  cartPage: async ({ page }, use) => { await use(new CartPage(page)); },
-  loginPage: async ({ page }, use) => { await use(new LoginPage(page)); },
+  checkoutPage: async ({ page }, use) => {
+    await use(new CheckoutPage(page));
+  },
+  cartPage: async ({ page }, use) => {
+    await use(new CartPage(page));
+  },
+  loginPage: async ({ page }, use) => {
+    await use(new LoginPage(page));
+  }
   // example: loginPage async fixture wrapping new LoginPage(page)
 });
 

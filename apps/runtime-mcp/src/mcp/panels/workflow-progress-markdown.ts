@@ -29,7 +29,10 @@ export function formatWorkflowProgressMarkdown(input: {
   }
 
   if (input.terminal === true) {
-    lines.push("", "**Workflow spine complete.** Render audit summary via vindicate_show_panel if not already.");
+    lines.push(
+      "",
+      "**Workflow spine complete.** Render audit summary via vindicate_show_panel if not already."
+    );
   }
 
   return lines.join("\n");

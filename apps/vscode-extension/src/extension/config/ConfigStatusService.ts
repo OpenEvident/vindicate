@@ -47,7 +47,9 @@ export class ConfigStatusService implements IConfigStatusService {
       cursorRule: folderPath ? await this.ruleWriter.isConfigured(folderPath) : false,
       agentMd: folderPath ? await this.claudeMdWriter.isConfigured(folderPath) : false,
       copilotInstructions: folderPath ? await this.copilotWriter.isConfigured(folderPath) : false,
-      antigravityRule: folderPath ? await this.antigravityAgentsMdWriter.isConfigured(folderPath) : false,
+      antigravityRule: folderPath
+        ? await this.antigravityAgentsMdWriter.isConfigured(folderPath)
+        : false,
       agentSkill: folderPath ? await this.isAnySkillConfigured(folderPath) : false
     };
   }

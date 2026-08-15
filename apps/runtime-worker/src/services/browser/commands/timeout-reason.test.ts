@@ -30,7 +30,7 @@ describe("extractTimeoutReason", () => {
       "locator.click: Timeout 3000ms exceeded.",
       "Call log:",
       dim("  - waiting for locator('//button[@type=\"submit\"]')"),
-      dim("    - locator resolved to <button disabled type=\"submit\"></button>"),
+      dim('    - locator resolved to <button disabled type="submit"></button>'),
       dim("  - attempting click action"),
       dim("    2 × waiting for element to be visible, enabled and stable"),
       dim("      - element is not visible"),
@@ -42,7 +42,9 @@ describe("extractTimeoutReason", () => {
   });
 
   it("falls back to the last raw log line when every line is noise", () => {
-    const message = ["Timeout exceeded.", "Call log:", "  - waiting for locator('button')"].join("\n");
+    const message = ["Timeout exceeded.", "Call log:", "  - waiting for locator('button')"].join(
+      "\n"
+    );
 
     expect(extractTimeoutReason(message)).toBe("waiting for locator('button')");
   });

@@ -13,7 +13,11 @@ export type ProtocolChangeLevel = "patch" | "minor" | "major";
  *
  * @throws {Error} When the string is not a valid three-part semver.
  */
-export function parseProtocolVersion(version: string): { major: number; minor: number; patch: number } {
+export function parseProtocolVersion(version: string): {
+  major: number;
+  minor: number;
+  patch: number;
+} {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version.trim());
   if (!match) {
     throw new Error(`Invalid protocol version: ${version}`);
@@ -28,7 +32,10 @@ export function parseProtocolVersion(version: string): { major: number; minor: n
 /**
  * Client is compatible when major matches and client minor is not newer than the server.
  */
-export function isCompatibleProtocolVersion(clientVersion: string, serverVersion = PROTOCOL_VERSION): boolean {
+export function isCompatibleProtocolVersion(
+  clientVersion: string,
+  serverVersion = PROTOCOL_VERSION
+): boolean {
   const client = parseProtocolVersion(clientVersion);
   const server = parseProtocolVersion(serverVersion);
   return client.major === server.major && client.minor <= server.minor;

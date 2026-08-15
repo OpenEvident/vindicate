@@ -8,7 +8,10 @@ import { startIdleShutdownMonitor } from "./core/idle-shutdown.js";
 import { logger } from "./core/logger.js";
 import { buildServer } from "./core/server.js";
 import { requestGracefulShutdown } from "./core/shutdown.js";
-import { KeyringSessionCrypto, PlaintextSessionCrypto } from "./infrastructure/crypto/session-crypto.js";
+import {
+  KeyringSessionCrypto,
+  PlaintextSessionCrypto
+} from "./infrastructure/crypto/session-crypto.js";
 import { SessionDiskStore } from "./infrastructure/persistence/session-disk-store.js";
 import { PlaywrightBridge } from "./infrastructure/browser/playwright-bridge.js";
 import { HighlightService } from "./services/browser/highlight/highlight-service.js";
@@ -56,10 +59,16 @@ async function main(): Promise<void> {
   const sessionDisk = new SessionDiskStore(SessionDiskStore.defaultDir(), sessionCrypto, {
     encryptFilenames: config.VINDICATE_SESSION_ENCRYPT
   });
-  const sessionStore = new BrowserSessionStore(sessionDisk, logger, config.VINDICATE_SESSION_TTL_HOURS);
+  const sessionStore = new BrowserSessionStore(
+    sessionDisk,
+    logger,
+    config.VINDICATE_SESSION_TTL_HOURS
+  );
   await sessionStore.initializeFromDisk();
   const workerReady = true;
-  const stopSessionCleanup = sessionStore.startPeriodicCleanup(config.VINDICATE_SESSION_CLEANUP_INTERVAL_MS);
+  const stopSessionCleanup = sessionStore.startPeriodicCleanup(
+    config.VINDICATE_SESSION_CLEANUP_INTERVAL_MS
+  );
 
   const sessionLogs = new SessionLogRegistry({
     consoleBufferSize: config.VINDICATE_CONSOLE_BUFFER_SIZE,

@@ -21,8 +21,18 @@
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open orders", "params": [], "actions": [{ "do": "navigate" }] },
-                { "name": "step_refresh", "jsdoc": "Refresh data", "params": [], "actions": [{ "do": "click", "ref": "refresh" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open orders",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
+                {
+                  "name": "step_refresh",
+                  "jsdoc": "Refresh data",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "refresh" }]
+                }
               ],
               "verifies": [
                 {

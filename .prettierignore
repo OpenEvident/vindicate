@@ -4,3 +4,8 @@ build
 coverage
 .turbo
 pnpm-lock.yaml
+
+# Scaffold text shipped to end-user projects, not this repo's own source. Contains unquoted
+# {{PLACEHOLDER}} tokens that aren't valid syntax in their file's language (same reason it's
+# excluded from CodeQL — see .github/codeql/codeql-config.yml).
+apps/runtime-mcp/content/templates

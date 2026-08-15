@@ -12,7 +12,7 @@ import {
   isStepEnvVar,
   normalizeRecordingStep,
   renumberSteps,
-  resolvePreviewUrl,
+  resolvePreviewUrl
 } from "../../../src/webview/lib/recording-formatters";
 import type { RecordingStep } from "../../../src/webview/lib/recording-ui-types";
 
@@ -48,7 +48,7 @@ describe("recording-formatters", () => {
       timestamp: new Date().toISOString(),
       element: { name: "Login", tag: "button" },
       candidates: [],
-      chosen: null,
+      chosen: null
     };
     expect(getTargetLabel(step)).toBe('"Login" button');
   });
@@ -56,15 +56,29 @@ describe("recording-formatters", () => {
   it("renumberSteps reassigns seq from 1", () => {
     const steps: RecordingStep[] = [
       { seq: 5, action: "click", timestamp: "", candidates: [], chosen: null },
-      { seq: 9, action: "fill", timestamp: "", candidates: [], chosen: null },
+      { seq: 9, action: "fill", timestamp: "", candidates: [], chosen: null }
     ];
     expect(renumberSteps(steps).map((s) => s.seq)).toEqual([1, 2]);
   });
 
   it("resolvePreviewUrl prefers selected step url", () => {
     const steps: RecordingStep[] = [
-      { seq: 1, action: "navigate", timestamp: "", url: "https://a.example/login", candidates: [], chosen: null },
-      { seq: 2, action: "click", timestamp: "", url: "https://a.example/dashboard", candidates: [], chosen: null },
+      {
+        seq: 1,
+        action: "navigate",
+        timestamp: "",
+        url: "https://a.example/login",
+        candidates: [],
+        chosen: null
+      },
+      {
+        seq: 2,
+        action: "click",
+        timestamp: "",
+        url: "https://a.example/dashboard",
+        candidates: [],
+        chosen: null
+      }
     ];
     expect(
       resolvePreviewUrl({ type: "step", seq: 2 }, steps[1], steps, "https://fallback.example")
@@ -80,8 +94,22 @@ describe("recording-formatters", () => {
 
   it("deriveTargetUrlFromSteps uses latest step url", () => {
     const steps: RecordingStep[] = [
-      { seq: 1, action: "navigate", timestamp: "", url: "https://old.example", candidates: [], chosen: null },
-      { seq: 2, action: "click", timestamp: "", url: "https://new.example", candidates: [], chosen: null },
+      {
+        seq: 1,
+        action: "navigate",
+        timestamp: "",
+        url: "https://old.example",
+        candidates: [],
+        chosen: null
+      },
+      {
+        seq: 2,
+        action: "click",
+        timestamp: "",
+        url: "https://new.example",
+        candidates: [],
+        chosen: null
+      }
     ];
     expect(deriveTargetUrlFromSteps(steps)).toBe("https://new.example");
   });
@@ -96,9 +124,18 @@ describe("recording-formatters", () => {
       page_snapshot: {
         url: "https://app.example/login",
         title: "Login",
-        elements: [{ ref: "e1", role: "button", name: "Sign in", tag: "button", candidates: [], chosen: null }],
-        alerts: ["Invalid credentials"],
-      },
+        elements: [
+          {
+            ref: "e1",
+            role: "button",
+            name: "Sign in",
+            tag: "button",
+            candidates: [],
+            chosen: null
+          }
+        ],
+        alerts: ["Invalid credentials"]
+      }
     };
     expect(getStepPageSnapshot(step)?.title).toBe("Login");
     expect(formatSnapshotSummary(getStepPageSnapshot(step))).toBe("1 element · 1 alert");
@@ -114,7 +151,7 @@ describe("recording-formatters", () => {
       candidates: [],
       chosen: null,
       env_var: true,
-      env_var_name: "PASSWORD",
+      env_var_name: "PASSWORD"
     };
     expect(isStepEnvVar(step)).toBe(true);
     expect(formatStepEnvVarLabel(step)).toBe("Env var · PASSWORD");
@@ -128,7 +165,7 @@ describe("recording-formatters", () => {
       url: "https://app.example/dashboard",
       candidates: [],
       chosen: null,
-      navigation_trigger: "implicit" as const,
+      navigation_trigger: "implicit" as const
     };
     expect(getNavigationTrigger(step)).toBe("implicit");
     expect(normalizeRecordingStep(step).navigationTrigger).toBe("implicit");
@@ -143,7 +180,7 @@ describe("recording-formatters", () => {
         url: "https://app.example/dashboard",
         candidates: [],
         chosen: null,
-        navigationTrigger: "implicit",
+        navigationTrigger: "implicit"
       })
     ).toContain("step 3");
 
@@ -155,7 +192,7 @@ describe("recording-formatters", () => {
         url: "https://app.example/login",
         candidates: [],
         chosen: null,
-        navigationTrigger: "explicit",
+        navigationTrigger: "explicit"
       })
     ).toContain("Manual");
   });
@@ -168,16 +205,30 @@ describe("recording-formatters", () => {
         timestamp: "",
         url: "https://checkout.klarna.com/session/abc",
         candidates: [],
-        chosen: null,
+        chosen: null
       })
     ).toBe("Switched to tab: https://checkout.klarna.com/session/abc");
 
     expect(
-      getTargetLabel({ seq: 2, action: "new_tab", timestamp: "", url: "https://example.com", candidates: [], chosen: null })
+      getTargetLabel({
+        seq: 2,
+        action: "new_tab",
+        timestamp: "",
+        url: "https://example.com",
+        candidates: [],
+        chosen: null
+      })
     ).toBe("Opened tab: https://example.com");
 
     expect(
-      getTargetLabel({ seq: 3, action: "switch_tab", timestamp: "", index: 0, candidates: [], chosen: null })
+      getTargetLabel({
+        seq: 3,
+        action: "switch_tab",
+        timestamp: "",
+        index: 0,
+        candidates: [],
+        chosen: null
+      })
     ).toBe("Switched to tab: #0");
 
     expect(
@@ -196,8 +247,8 @@ describe("recording-formatters", () => {
         url: "https://app.example/dashboard",
         candidates: [],
         chosen: null,
-        navigationTrigger: "implicit",
-      },
+        navigationTrigger: "implicit"
+      }
     ];
     expect(formatNavigationStepSummary(steps[2]!, steps)).toContain("step 7");
   });

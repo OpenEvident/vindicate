@@ -33,8 +33,10 @@ import type { CodegenRunResult, GeneratorResult } from "./generator.js";
 const CLIENT_LOADER_ANCHOR = "// ── Resource Clients ────────────────────────────────────────";
 const CONFIG_IMPORT_ANCHOR =
   "// grow_tests appends one import line per new resource client above this comment.";
-const CONFIG_TYPE_ANCHOR = "// fixture-types: grow_tests appends one type entry per feature below this line";
-const CONFIG_IMPL_ANCHOR = "// fixture-impls: grow_tests appends one fixture entry per feature below this line";
+const CONFIG_TYPE_ANCHOR =
+  "// fixture-types: grow_tests appends one type entry per feature below this line";
+const CONFIG_IMPL_ANCHOR =
+  "// fixture-impls: grow_tests appends one fixture entry per feature below this line";
 
 function clientPath(client: ClientDef): string {
   return `clients/${client.client_class}.ts`;
@@ -45,7 +47,10 @@ function builderPath(builder: BuilderDef): string {
 }
 
 function isClientImportRegistered(content: string, clientClass: string): boolean {
-  const pattern = new RegExp(`^import\\s*\\{\\s*${escapeRegExp(clientClass)}\\s*\\}\\s*from\\s*['"]\\./client-loader['"];`, "m");
+  const pattern = new RegExp(
+    `^import\\s*\\{\\s*${escapeRegExp(clientClass)}\\s*\\}\\s*from\\s*['"]\\./client-loader['"];`,
+    "m"
+  );
   return pattern.test(content);
 }
 
@@ -104,9 +109,11 @@ function clientFixtureImplLine(client: ClientDef, fixture: string): string {
 }
 
 function authSetupTypeEntries(): string {
-  return ["  authApiRequest: APIRequestContext;", "  authToken: string;", "  authenticatedRequest: APIRequestContext;"].join(
-    "\n"
-  );
+  return [
+    "  authApiRequest: APIRequestContext;",
+    "  authToken: string;",
+    "  authenticatedRequest: APIRequestContext;"
+  ].join("\n");
 }
 
 /** Uppercase, with every run of non-alphanumeric characters (hyphens, underscores) collapsed to a
@@ -171,25 +178,46 @@ function authSetupImplEntries(authSetup: AuthSetup, feature: string): string {
   ].join("\n");
 }
 
-function applyApiConfigUpdates(content: string, clients: ClientDef[], authSetup: AuthSetup | null, feature: string): string {
+function applyApiConfigUpdates(
+  content: string,
+  clients: ClientDef[],
+  authSetup: AuthSetup | null,
+  feature: string
+): string {
   let current = content;
 
   for (const client of clients) {
     if (!isClientImportRegistered(current, client.client_class)) {
-      current = insertBeforeAnchor(current, CONFIG_IMPORT_ANCHOR, `import { ${client.client_class} } from './client-loader';`);
+      current = insertBeforeAnchor(
+        current,
+        CONFIG_IMPORT_ANCHOR,
+        `import { ${client.client_class} } from './client-loader';`
+      );
     }
     for (const fixture of client.fixtures) {
       if (isConfigFixtureRegistered(current, fixture)) {
         continue;
       }
-      current = insertAfterAnchor(current, CONFIG_TYPE_ANCHOR, `  ${fixture}: ${client.client_class};`);
-      current = insertAfterAnchor(current, CONFIG_IMPL_ANCHOR, clientFixtureImplLine(client, fixture));
+      current = insertAfterAnchor(
+        current,
+        CONFIG_TYPE_ANCHOR,
+        `  ${fixture}: ${client.client_class};`
+      );
+      current = insertAfterAnchor(
+        current,
+        CONFIG_IMPL_ANCHOR,
+        clientFixtureImplLine(client, fixture)
+      );
     }
   }
 
   if (authSetup !== null && !isConfigFixtureRegistered(current, "authApiRequest")) {
     current = insertAfterAnchor(current, CONFIG_TYPE_ANCHOR, authSetupTypeEntries());
-    current = insertAfterAnchor(current, CONFIG_IMPL_ANCHOR, authSetupImplEntries(authSetup, feature));
+    current = insertAfterAnchor(
+      current,
+      CONFIG_IMPL_ANCHOR,
+      authSetupImplEntries(authSetup, feature)
+    );
   }
 
   return current;
@@ -265,7 +293,12 @@ async function runCreateApi(
   assertNoFixtureCollision(apiConfigContent, schema.clients);
   writes.push({
     path: "support/config/api.config.ts",
-    content: applyApiConfigUpdates(apiConfigContent, schema.clients, schema.spec.auth_setup, feature)
+    content: applyApiConfigUpdates(
+      apiConfigContent,
+      schema.clients,
+      schema.spec.auth_setup,
+      feature
+    )
   });
 
   writes.push({ path: `tests/${feature}.api.spec.ts`, content: buildNewApiSpec(schema, feature) });
@@ -280,7 +313,11 @@ async function runCreateApi(
   return { filesWritten: await flushWrites(fs, writes) };
 }
 
-async function runAddApiTestCases(fs: ProjectFs, feature: string, cases: ApiTestCase[]): Promise<GeneratorResult> {
+async function runAddApiTestCases(
+  fs: ProjectFs,
+  feature: string,
+  cases: ApiTestCase[]
+): Promise<GeneratorResult> {
   let existingSpec: string;
   try {
     existingSpec = await fs.read(`tests/${feature}.api.spec.ts`);
@@ -297,7 +334,9 @@ async function runAddApiTestCases(fs: ProjectFs, feature: string, cases: ApiTest
   const newSpecContent = appendApiTestCases(existingSpec, cases);
 
   return {
-    filesWritten: await flushWrites(fs, [{ path: `tests/${feature}.api.spec.ts`, content: newSpecContent }])
+    filesWritten: await flushWrites(fs, [
+      { path: `tests/${feature}.api.spec.ts`, content: newSpecContent }
+    ])
   };
 }
 
@@ -321,7 +360,10 @@ function validateRegisterClient(client: ClientDef, feature: string): void {
   // Dummy args matching firstMethod's real param count (path_params then body_param) — otherwise
   // any client whose first method takes params would always fail client_method_arg_count here,
   // even though register_client isn't actually validating a real call.
-  const dummyArgs = [...(firstMethod.path_params ?? []).map(() => "1"), ...(firstMethod.body_param !== undefined ? ["{}"] : [])];
+  const dummyArgs = [
+    ...(firstMethod.path_params ?? []).map(() => "1"),
+    ...(firstMethod.body_param !== undefined ? ["{}"] : [])
+  ];
 
   const syntheticSchema: ApiFullSchema = {
     clients: [client],
@@ -348,7 +390,11 @@ function validateRegisterClient(client: ClientDef, feature: string): void {
   runStructuralChecks(syntheticSchema, { feature });
 }
 
-async function runRegisterClient(fs: ProjectFs, feature: string, client: ClientDef): Promise<GeneratorResult> {
+async function runRegisterClient(
+  fs: ProjectFs,
+  feature: string,
+  client: ClientDef
+): Promise<GeneratorResult> {
   validateRegisterClient(client, feature);
 
   const targetPath = clientPath(client);

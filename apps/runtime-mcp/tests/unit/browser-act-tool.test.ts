@@ -74,9 +74,7 @@ describe("buildWorkerStep", () => {
   });
 
   it("maps upload with sample through to worker (no path resolution on MCP)", () => {
-    expect(
-      buildWorkerStepForTest("upload_file", "ref-00000001", { sample: "pdf" })
-    ).toEqual({
+    expect(buildWorkerStepForTest("upload_file", "ref-00000001", { sample: "pdf" })).toEqual({
       action: "upload_file",
       ref: "ref-00000001",
       sample: "pdf"
@@ -93,8 +91,8 @@ describe("buildWorkerStep", () => {
 
   it("normalizes bare hex refs", () => {
     expect(buildWorkerStepForTest("fill", "00000001", { value: "x" }).ref).toBe("ref-00000001");
-    expect(
-      buildWorkerStepForTest("drag", "00000001", { to_ref: "00000002" }).to_ref
-    ).toBe("ref-00000002");
+    expect(buildWorkerStepForTest("drag", "00000001", { to_ref: "00000002" }).to_ref).toBe(
+      "ref-00000002"
+    );
   });
 });

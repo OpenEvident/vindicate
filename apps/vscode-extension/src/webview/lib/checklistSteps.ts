@@ -31,14 +31,7 @@ function toolSubtitle(tools: SelectedTools | null, detected: SelectedTools): str
 }
 
 export function deriveChecklistSteps(params: DeriveParams): ChecklistStep[] {
-  const {
-    screen,
-    mode,
-    confirmedTools,
-    detectedTools,
-    onboardingDone,
-    extensionVersion
-  } = params;
+  const { screen, mode, confirmedTools, detectedTools, onboardingDone, extensionVersion } = params;
 
   const toolsConfirmed =
     screen === "modeSelection" ||
@@ -48,7 +41,8 @@ export function deriveChecklistSteps(params: DeriveParams): ChecklistStep[] {
     onboardingDone;
 
   const modeConfirmed =
-    (mode !== null && (screen === "scaffold" || screen === "gettingStarted" || screen === "dashboard")) ||
+    (mode !== null &&
+      (screen === "scaffold" || screen === "gettingStarted" || screen === "dashboard")) ||
     onboardingDone;
 
   const step1: ChecklistStep = {
@@ -72,7 +66,10 @@ export function deriveChecklistSteps(params: DeriveParams): ChecklistStep[] {
   const step3: ChecklistStep = {
     index: 3,
     title: "Tell Vindicate where you're starting",
-    subtitle: modeConfirmed && mode ? `${mode.charAt(0).toUpperCase()}${mode.slice(1)} mode` : "Build · Fix · Structure · Bridge",
+    subtitle:
+      modeConfirmed && mode
+        ? `${mode.charAt(0).toUpperCase()}${mode.slice(1)} mode`
+        : "Build · Fix · Structure · Bridge",
     status: modeConfirmed ? "done" : toolsConfirmed ? "active" : "locked",
     clickable: modeConfirmed
   };

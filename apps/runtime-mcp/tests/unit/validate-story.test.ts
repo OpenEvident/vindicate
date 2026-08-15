@@ -145,7 +145,9 @@ AC-1: first
 
 ## Duplicate tags [AC-1] [AC-1]
 `);
-    expect(result.errors.filter((error) => error.field === "testcase").length).toBeGreaterThanOrEqual(2);
+    expect(
+      result.errors.filter((error) => error.field === "testcase").length
+    ).toBeGreaterThanOrEqual(2);
   });
 
   it("requires testcase AC tags to exist in Acceptance Criteria (from approved onward)", () => {
@@ -251,7 +253,9 @@ AC-1: first
     const draftResult = validateStoryContent(draftContent);
     expect(draftResult.errors.filter((error) => error.field === "testcase")).toEqual([]);
 
-    const approvedResult = validateStoryContent(draftContent.replace("status: draft", "status: approved"));
+    const approvedResult = validateStoryContent(
+      draftContent.replace("status: draft", "status: approved")
+    );
     expect(approvedResult.errors.some((error) => error.field === "testcase")).toBe(true);
   });
 

@@ -91,7 +91,10 @@ describe("locator-derive", () => {
 
     it("a 'text' locator with a real value still renders correctly (no false-positive regression)", () => {
       const locator = deriveLocator(
-        el("ref-text-ok", { tag: "div", locator: { strategy: "text", confidence: "high", value: "Subtotal" } })
+        el("ref-text-ok", {
+          tag: "div",
+          locator: { strategy: "text", confidence: "high", value: "Subtotal" }
+        })
       );
       expect(locator).toBe(`this.page.getByText('Subtotal', { exact: true })`);
     });
@@ -105,7 +108,14 @@ describe("locator-derive", () => {
             confidence: "high",
             role: "textbox",
             name: "Email address",
-            frame_path: [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe", xpath: '//*[@id="klarna-checkout-iframe"]' }]
+            frame_path: [
+              {
+                strategy: "dom_id",
+                confidence: "high",
+                value: "klarna-checkout-iframe",
+                xpath: '//*[@id="klarna-checkout-iframe"]'
+              }
+            ]
           }
         })
       );
@@ -124,7 +134,12 @@ describe("locator-derive", () => {
             role: "button",
             name: "Pay with Klarna",
             frame_path: [
-              { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe", xpath: '//*[@id="klarna-checkout-iframe"]' },
+              {
+                strategy: "dom_id",
+                confidence: "high",
+                value: "klarna-checkout-iframe",
+                xpath: '//*[@id="klarna-checkout-iframe"]'
+              },
               { strategy: "nth", confidence: "low", xpath: "/html/body/iframe[1]" }
             ]
           }
@@ -144,11 +159,20 @@ describe("locator-derive", () => {
             confidence: "high",
             value: "target",
             xpath: '//*[@id="target"]',
-            frame_path: [{ strategy: "testid", confidence: "high", attr: "data-testid", value: "payment-frame" }]
+            frame_path: [
+              {
+                strategy: "testid",
+                confidence: "high",
+                attr: "data-testid",
+                value: "payment-frame"
+              }
+            ]
           }
         })
       );
-      expect(locator).toBe(`this.page.frameLocator('xpath=//*[@data-testid="payment-frame"]').locator('//*[@id="target"]')`);
+      expect(locator).toBe(
+        `this.page.frameLocator('xpath=//*[@data-testid="payment-frame"]').locator('//*[@id="target"]')`
+      );
     });
 
     it("frame_path — an xpath tier (e.g. dom_id) also renders scoped inside a frame", () => {
@@ -160,11 +184,20 @@ describe("locator-derive", () => {
             confidence: "high",
             value: "billing-email",
             xpath: '//*[@id="billing-email"]',
-            frame_path: [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe", xpath: '//*[@id="klarna-checkout-iframe"]' }]
+            frame_path: [
+              {
+                strategy: "dom_id",
+                confidence: "high",
+                value: "klarna-checkout-iframe",
+                xpath: '//*[@id="klarna-checkout-iframe"]'
+              }
+            ]
           }
         })
       );
-      expect(locator).toBe(`this.page.frameLocator('xpath=//*[@id="klarna-checkout-iframe"]').locator('//*[@id="billing-email"]')`);
+      expect(locator).toBe(
+        `this.page.frameLocator('xpath=//*[@id="klarna-checkout-iframe"]').locator('//*[@id="billing-email"]')`
+      );
     });
 
     it("L6 — testid without testid_attr falls through to role logic", () => {
@@ -204,7 +237,12 @@ describe("locator-derive", () => {
           tag: "button",
           testid: "ignored",
           testid_attr: "data-testid",
-          locator: { strategy: "dom_id", confidence: "high", value: "save", xpath: '//*[@id="save"]' }
+          locator: {
+            strategy: "dom_id",
+            confidence: "high",
+            value: "save",
+            xpath: '//*[@id="save"]'
+          }
         })
       );
       expect(locator).toBe(`this.page.locator('//*[@id="save"]')`);
@@ -218,7 +256,8 @@ describe("locator-derive", () => {
             strategy: "sibling_text",
             confidence: "high",
             value: "GAY EVENT",
-            xpath: '//input[preceding-sibling::*[normalize-space()="GAY EVENT"] or following-sibling::*[normalize-space()="GAY EVENT"]]'
+            xpath:
+              '//input[preceding-sibling::*[normalize-space()="GAY EVENT"] or following-sibling::*[normalize-space()="GAY EVENT"]]'
           }
         })
       );
@@ -240,9 +279,9 @@ describe("locator-derive", () => {
     });
 
     it("S3 — role + name resolves to role_name", () => {
-      expect(
-        deriveLocatorStrategy(el("e1", { tag: "button", role: "button", name: "Go" }))
-      ).toBe("role_name");
+      expect(deriveLocatorStrategy(el("e1", { tag: "button", role: "button", name: "Go" }))).toBe(
+        "role_name"
+      );
     });
 
     it("S4 — name only resolves to text", () => {
@@ -317,15 +356,19 @@ describe("locator-derive", () => {
           }
         })
       );
-      expect(comment).toBe(`sibling_text (no accessible name — matched via sibling text: "GAY EVENT")`);
+      expect(comment).toBe(
+        `sibling_text (no accessible name — matched via sibling text: "GAY EVENT")`
+      );
     });
 
     it("H2 — every other strategy renders as the plain strategy code (no parenthetical)", () => {
-      expect(deriveLocatorHelperComment(el("e1", { tag: "button", role: "button", name: "Save" }))).toBe(
-        "role_name"
-      );
       expect(
-        deriveLocatorHelperComment(el("e1", { tag: "input", testid: "email", testid_attr: "data-testid" }))
+        deriveLocatorHelperComment(el("e1", { tag: "button", role: "button", name: "Save" }))
+      ).toBe("role_name");
+      expect(
+        deriveLocatorHelperComment(
+          el("e1", { tag: "input", testid: "email", testid_attr: "data-testid" })
+        )
       ).toBe("testid");
     });
 
@@ -341,9 +384,7 @@ describe("locator-derive", () => {
           }
         })
       );
-      expect(comment).toBe(
-        "text — click-delegate ancestor: click only, check/uncheck unsupported"
-      );
+      expect(comment).toBe("text — click-delegate ancestor: click only, check/uncheck unsupported");
     });
 
     it("H2c — click_delegate combines with the sibling_text parenthetical rather than replacing it", () => {
@@ -437,7 +478,9 @@ describe("locator-derive", () => {
     });
 
     it("F2 — name drives field name when testid absent", () => {
-      expect(deriveFieldName(el("e1", { tag: "input", name: "user-email" }))).toBe("userEmailInput");
+      expect(deriveFieldName(el("e1", { tag: "input", name: "user-email" }))).toBe(
+        "userEmailInput"
+      );
     });
 
     it("F3 — role drives field name when testid and name absent", () => {
@@ -449,9 +492,9 @@ describe("locator-derive", () => {
     });
 
     it("F5 — hyphens underscores and spaces become camelCase", () => {
-      expect(
-        deriveFieldName(el("e1", { tag: "input", testid: "user_email field" }))
-      ).toBe("userEmailFieldInput");
+      expect(deriveFieldName(el("e1", { tag: "input", testid: "user_email field" }))).toBe(
+        "userEmailFieldInput"
+      );
     });
 
     it("F6 — unknown tag suffix defaults to Element", () => {
@@ -459,9 +502,9 @@ describe("locator-derive", () => {
     });
 
     it("F7 — camelCase ref used for live-region role when testid and name absent", () => {
-      expect(
-        deriveFieldName(el("errorMessage", { tag: "div", role: "alert" }))
-      ).toBe("errorMessage");
+      expect(deriveFieldName(el("errorMessage", { tag: "div", role: "alert" }))).toBe(
+        "errorMessage"
+      );
     });
 
     it("F8 — generic ref e1 still uses role when testid and name absent", () => {

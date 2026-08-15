@@ -10,10 +10,12 @@ export function BrowserBar({ url, mode }: BrowserBarProps) {
   const isLive = mode === "recording";
 
   return (
-    <div className={[
-      "flex items-center gap-2.5 px-3 py-2 border-b border-vs-border",
-      "bg-[color-mix(in_oklab,var(--color-vs-sidebar)_70%,var(--color-vs-bg))]",
-    ].join(" ")}>
+    <div
+      className={[
+        "flex items-center gap-2.5 px-3 py-2 border-b border-vs-border",
+        "bg-[color-mix(in_oklab,var(--color-vs-sidebar)_70%,var(--color-vs-bg))]"
+      ].join(" ")}
+    >
       {/* Traffic lights */}
       <div className="flex items-center gap-1.5 shrink-0">
         <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
@@ -32,15 +34,15 @@ export function BrowserBar({ url, mode }: BrowserBarProps) {
         className={[
           "inline-flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1",
           "font-mono text-[9.5px] tracking-[0.06em]",
-          isLive
-            ? "bg-tone-red text-white"
-            : "bg-vs-bg/90 text-vs-text",
+          isLive ? "bg-tone-red text-white" : "bg-vs-bg/90 text-vs-text"
         ].join(" ")}
       >
-        <span className={[
-          "w-1.5 h-1.5 rounded-full",
-          isLive ? "bg-white animate-pulse-dot" : "bg-tone-emerald",
-        ].join(" ")} />
+        <span
+          className={[
+            "w-1.5 h-1.5 rounded-full",
+            isLive ? "bg-white animate-pulse-dot" : "bg-tone-emerald"
+          ].join(" ")}
+        />
         {isLive ? "Recording" : "Stopped"}
       </span>
     </div>

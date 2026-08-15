@@ -23,7 +23,11 @@ function headingRow(label: string, ok: boolean) {
 
 function SpecCard({ feature, required }: { feature: FeatureStatus; required: string[] }) {
   const status =
-    feature.specStatus === "complete" ? "Complete" : feature.specStatus === "partial" ? "Partial" : "Missing";
+    feature.specStatus === "complete"
+      ? "Complete"
+      : feature.specStatus === "partial"
+        ? "Partial"
+        : "Missing";
   const statusColor =
     feature.specStatus === "complete"
       ? "var(--ord-emerald)"
@@ -44,7 +48,11 @@ function SpecCard({ feature, required }: { feature: FeatureStatus; required: str
         <div className="flex items-center gap-2">
           <span
             className={`dot ${
-              feature.specStatus === "complete" ? "emerald" : feature.specStatus === "partial" ? "amber" : "red"
+              feature.specStatus === "complete"
+                ? "emerald"
+                : feature.specStatus === "partial"
+                  ? "amber"
+                  : "red"
             }`}
           />
           <span className="text-[13px] font-semibold text-[var(--vs-text)]">{feature.name}</span>
@@ -122,7 +130,10 @@ export function SpecsTab({ metrics }: { metrics: DashboardMetrics }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {metrics.specSchema.required.map((heading) => (
-            <span key={heading} className="rounded bg-[rgba(127,127,127,.1)] px-2 py-1 text-[11px] text-[var(--vs-text)]">
+            <span
+              key={heading}
+              className="rounded bg-[rgba(127,127,127,.1)] px-2 py-1 text-[11px] text-[var(--vs-text)]"
+            >
               ## {heading}
             </span>
           ))}

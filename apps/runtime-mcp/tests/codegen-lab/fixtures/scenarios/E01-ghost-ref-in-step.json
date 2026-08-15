@@ -15,9 +15,18 @@
               "page_class": "EdgePage",
               "path": "/edge",
               "owned_by": "edge1",
-              "elements": [{ "ref": "present", "tag": "button", "role": "button", "name": "Present" }],
+              "elements": [
+                { "ref": "present", "tag": "button", "role": "button", "name": "Present" }
+              ],
               "types": [],
-              "steps": [{ "name": "step_clickGhost", "jsdoc": "Click missing ref", "params": [], "actions": [{ "do": "click", "ref": "missing" }] }],
+              "steps": [
+                {
+                  "name": "step_clickGhost",
+                  "jsdoc": "Click missing ref",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "missing" }]
+                }
+              ],
               "verifies": []
             }
           ],
@@ -26,7 +35,14 @@
             "generates_storage_state": null,
             "storage_state": null,
             "before_each": null,
-            "cases": [{ "ac_id": "AC-1", "scenario": "ghost ref", "title": "[AC-1] should fail", "body": [{ "fixture": "edgePage", "call": "step_clickGhost" }] }]
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "ghost ref",
+                "title": "[AC-1] should fail",
+                "body": [{ "fixture": "edgePage", "call": "step_clickGhost" }]
+              }
+            ]
           }
         }
       }

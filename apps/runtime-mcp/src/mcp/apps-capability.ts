@@ -2,10 +2,7 @@
  * @file MCP Apps client capability detection.
  */
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  getUiCapability,
-  RESOURCE_MIME_TYPE
-} from "@modelcontextprotocol/ext-apps/server";
+import { getUiCapability, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 
 type UiCapabilityInput = Parameters<typeof getUiCapability>[0];
 

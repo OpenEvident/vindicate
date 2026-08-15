@@ -92,7 +92,7 @@ export function registerScaffoldTools(server: McpServer, projectFs: ProjectFs): 
           "## Project scaffolded",
           "",
           "**Files created:**",
-          ...result.filesCreated.map((f: string) => `- \`${f}\``),
+          ...result.filesCreated.map((f: string) => `- \`${f}\``)
         ];
         if (result.skipped.length > 0) {
           lines.push("", "**Skipped (already exist):**");

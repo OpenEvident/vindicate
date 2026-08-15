@@ -16,11 +16,21 @@
               "path": "/notifications",
               "owned_by": "notifications",
               "elements": [
-                { "ref": "toggle", "tag": "button", "role": "button", "name": "Enable notifications" }
+                {
+                  "ref": "toggle",
+                  "tag": "button",
+                  "role": "button",
+                  "name": "Enable notifications"
+                }
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open notifications", "params": [], "actions": [{ "do": "navigate" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open notifications",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
               ],
               "verifies": []
             }
@@ -61,10 +71,7 @@
               "name": "step_enableNotifications",
               "jsdoc": "Enable notifications",
               "params": [],
-              "actions": [
-                { "do": "click", "ref": "toggle" },
-                { "do": "waitForPageLoad" }
-              ]
+              "actions": [{ "do": "click", "ref": "toggle" }, { "do": "waitForPageLoad" }]
             }
           ],
           "verifies": [
@@ -72,9 +79,7 @@
               "name": "verify_savedToast",
               "jsdoc": "Saved toast appears",
               "params": [],
-              "assertions": [
-                { "subject": "element", "ref": "toast", "matcher": "toBeVisible" }
-              ]
+              "assertions": [{ "subject": "element", "ref": "toast", "matcher": "toBeVisible" }]
             }
           ]
         }
@@ -106,7 +111,10 @@
       "tests/notifications.spec.ts"
     ],
     "mustContain": {
-      "pages/NotificationsSettingsPage.ts": ["async step_enableNotifications(", "async verify_savedToast("],
+      "pages/NotificationsSettingsPage.ts": [
+        "async step_enableNotifications(",
+        "async verify_savedToast("
+      ],
       "tests/notifications.spec.ts": ["[AC-2] should enable notifications"]
     },
     "invariants": ["I1", "I2", "I3", "I4", "I6", "I8", "I9"],

@@ -3,13 +3,31 @@ import type { StructuredLocator } from "@vindicate/protocol";
 import type { Frame, Page } from "playwright-core";
 
 import { ValidationError } from "../../../shared/errors/worker.errors.js";
-import { computeDelta, computeSupersedes, type ChangeDetail, type RefSnapshotForDelta } from "./delta-computer.js";
+import {
+  computeDelta,
+  computeSupersedes,
+  type ChangeDetail,
+  type RefSnapshotForDelta
+} from "./delta-computer.js";
 import type { ElementDescriptor } from "./element-descriptor.js";
-import { captureChildFrames, disambiguateDuplicateRefs, resolveFrameForPath, withFramePath } from "./frame-capture.js";
-import { captureInteractiveSnapshot, type InteractiveCaptureOpts } from "./interactive-capture.evaluate.js";
+import {
+  captureChildFrames,
+  disambiguateDuplicateRefs,
+  resolveFrameForPath,
+  withFramePath
+} from "./frame-capture.js";
+import {
+  captureInteractiveSnapshot,
+  type InteractiveCaptureOpts
+} from "./interactive-capture.evaluate.js";
 import type { SnapshotMemoryTable } from "./snapshot-memory.js";
 import type { SnapshotParams } from "./snapshot.params.js";
-import type { ChangeDetailWire, InteractiveElementWire, OtherTabsWire, SnapshotResultWire } from "./snapshot.types.js";
+import type {
+  ChangeDetailWire,
+  InteractiveElementWire,
+  OtherTabsWire,
+  SnapshotResultWire
+} from "./snapshot.types.js";
 
 /** Caps the URL list surfaced in the banner — `count` still reflects the true total either way. */
 const OTHER_TABS_URL_CAP = 5;
@@ -40,7 +58,9 @@ export interface SnapshotEngineConfigSlice {
   readonly VINDICATE_READ_SETTLE_MS: number;
 }
 
-function buildRefMap(elements: readonly InteractiveElementWire[]): Record<string, RefSnapshotForDelta> {
+function buildRefMap(
+  elements: readonly InteractiveElementWire[]
+): Record<string, RefSnapshotForDelta> {
   const m: Record<string, RefSnapshotForDelta> = {};
   for (const e of elements) {
     const row: RefSnapshotForDelta = {
@@ -151,20 +171,30 @@ export class SnapshotEngine {
     return this.refDescriptors.get(sessionId) ?? new Map<string, ElementDescriptor>();
   }
 
-  async takeSnapshot(sessionId: string, page: Page, params: SnapshotParams): Promise<SnapshotResultWire> {
-    const testidCandidates = this.sessionOptions.get(sessionId)?.testidCandidates ?? [...DEFAULT_TESTID_CANDIDATES];
+  async takeSnapshot(
+    sessionId: string,
+    page: Page,
+    params: SnapshotParams
+  ): Promise<SnapshotResultWire> {
+    const testidCandidates = this.sessionOptions.get(sessionId)?.testidCandidates ?? [
+      ...DEFAULT_TESTID_CANDIDATES
+    ];
     const maxNodes = params.max_nodes ?? this.cfg.VINDICATE_SNAPSHOT_MAX_NODES;
     const collapse = params.collapse !== false;
     const viewportOnly = params.viewport_only === true;
-    const scopeRef = params.scope !== undefined && "ref" in params.scope ? params.scope.ref : undefined;
-    const scopeCss = params.scope !== undefined && "css" in params.scope ? params.scope.css : undefined;
+    const scopeRef =
+      params.scope !== undefined && "ref" in params.scope ? params.scope.ref : undefined;
+    const scopeCss =
+      params.scope !== undefined && "css" in params.scope ? params.scope.css : undefined;
     let scopeDescriptor: InteractiveCaptureOpts["scopeDescriptor"];
     let scopeFramePath: readonly StructuredLocator[] | undefined;
     const url = page.url();
     if (scopeRef !== undefined) {
       const desc = this.refDescriptors.get(sessionId)?.get(scopeRef);
       if (desc === undefined) {
-        throw new ValidationError(`snapshot scope ref '${scopeRef}' not found — take a fresh snapshot first`);
+        throw new ValidationError(
+          `snapshot scope ref '${scopeRef}' not found — take a fresh snapshot first`
+        );
       }
       if (desc.snapshotUrl !== url) {
         throw new ValidationError(
@@ -228,7 +258,9 @@ export class SnapshotEngine {
     // Confirm button just revealed inside a folded dialog) would resolve against the top page instead of
     // the frame it actually lives in, and fail exactly the same way the original scope lookup did.
     const scopedElements =
-      evalTarget !== page ? ir.elements.map((el) => withFramePath(el, scopeFramePath ?? [])) : ir.elements;
+      evalTarget !== page
+        ? ir.elements.map((el) => withFramePath(el, scopeFramePath ?? []))
+        : ir.elements;
 
     // Iframe content (same-origin or cross-origin) is invisible to the top-level page.evaluate() above —
     // a separate pass. Skipped for scoped reads (scopeRef/scopeCss): a scoped read is a narrow, deliberate
@@ -236,7 +268,9 @@ export class SnapshotEngine {
     // as it was before this capability existed (zero risk). Best-effort: never throws, never affects the
     // top-level elements/truncation computed above.
     const frameElements =
-      scopeRef === undefined && scopeCss === undefined ? await captureChildFrames(page, evalOpts) : [];
+      scopeRef === undefined && scopeCss === undefined
+        ? await captureChildFrames(page, evalOpts)
+        : [];
 
     // Two distinct elements can still land on the same ref within one document (a structurally
     // identical repeating control whose accessible name wasn't distinguishing enough, and that isn't
@@ -314,7 +348,8 @@ export class SnapshotEngine {
     // replacement (a third-party SDK swapping one iframe-hosted control for another as page state
     // changes) rather than an unrelated coincidence — see computeSupersedes. Only meaningful once a
     // real delta exists (added !== undefined); a first-ever read has nothing to diff against.
-    const supersedes = added !== undefined && added.length > 0 ? computeSupersedes(elements, added) : undefined;
+    const supersedes =
+      added !== undefined && added.length > 0 ? computeSupersedes(elements, added) : undefined;
     const elementsForResponse =
       supersedes !== undefined && supersedes.size > 0
         ? elements.map((el) => {

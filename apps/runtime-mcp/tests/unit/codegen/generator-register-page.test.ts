@@ -18,7 +18,9 @@ describe("generator register_page", () => {
     path: "/home",
     elements: [el("dash", { tag: "a", role: "link", name: "Dashboard" })],
     steps: [step("step_navigate", [{ do: "navigate" }])],
-    verifies: [verify("verify_logged_in", [{ subject: "element", ref: "dash", matcher: "toBeVisible" }])]
+    verifies: [
+      verify("verify_logged_in", [{ subject: "element", ref: "dash", matcher: "toBeVisible" }])
+    ]
   });
 
   async function seedAuthProject() {
@@ -60,11 +62,13 @@ describe("generator register_page", () => {
 
   it("RP1 — writes page object and wires barrel/config", async () => {
     const { fs } = await seedAuthProject();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "register_page",
-      feature: "auth",
-      page: homePage
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "register_page",
+        feature: "auth",
+        page: homePage
+      })
+    );
     expect(result.filesWritten).toContain("pages/HomePage.ts");
     expect(result.filesWritten).toContain("support/config/page-loader.ts");
     expect(result.filesWritten).toContain("support/config/page.config.ts");
@@ -115,7 +119,9 @@ describe("generator register_page", () => {
       ],
       verifies: [verify("verify_ok", [{ subject: "element", ref: "q", matcher: "toBeVisible" }])]
     });
-    const result = expectWritten(await runGenerator(fs, { mode: "register_page", feature: "auth", page: searchPage }));
+    const result = expectWritten(
+      await runGenerator(fs, { mode: "register_page", feature: "auth", page: searchPage })
+    );
     expect(result.filesWritten).toContain("pages/SearchPage.ts");
   });
 
@@ -128,12 +134,18 @@ describe("generator register_page", () => {
       elements: [el("items", { tag: "li", role: "listitem", name: "Item" })],
       steps: [],
       verifies: [
-        verify("verify_count", [{ subject: "element", ref: "items", matcher: "toHaveCount", arg: "count" }], {
-          params: [{ name: "count", type: "number" }]
-        })
+        verify(
+          "verify_count",
+          [{ subject: "element", ref: "items", matcher: "toHaveCount", arg: "count" }],
+          {
+            params: [{ name: "count", type: "number" }]
+          }
+        )
       ]
     });
-    const result = expectWritten(await runGenerator(fs, { mode: "register_page", feature: "auth", page: countPage }));
+    const result = expectWritten(
+      await runGenerator(fs, { mode: "register_page", feature: "auth", page: countPage })
+    );
     expect(result.filesWritten).toContain("pages/CountPage.ts");
   });
 });

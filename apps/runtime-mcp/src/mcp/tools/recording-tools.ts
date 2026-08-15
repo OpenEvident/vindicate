@@ -60,7 +60,10 @@ function formatIndexMarkdown(
   if (entries.length === 0) {
     return "No finalized recordings found for this project.";
   }
-  const lines = ["| Name | Steps | Started by | Summary | Pre-conditions | Post-conditions | Pages | Depends on |", "| --- | ---: | --- | --- | --- | --- | --- | --- |"];
+  const lines = [
+    "| Name | Steps | Started by | Summary | Pre-conditions | Post-conditions | Pages | Depends on |",
+    "| --- | ---: | --- | --- | --- | --- | --- | --- |"
+  ];
   for (const entry of entries) {
     lines.push(
       `| ${entry.name} | ${entry.step_count} | ${entry.started_by} | ${entry.summary || "—"} | ${entry.pre_conditions.join("; ") || "—"} | ${entry.post_conditions.join("; ") || "—"} | ${entry.pages_covered.join(", ") || "—"} | ${entry.depends_on.join(", ") || "—"} |`
@@ -236,11 +239,17 @@ export function registerRecordingTools(server: McpServer, deps: RecordingToolDep
       const root = project_root ?? sessionRoot;
       const safeName = await resolveSafeName(workerClient, root, name);
       if (safeName === undefined) {
-        return toolJson({ error: "recording_not_found", message: `No recording named "${name}" found.` });
+        return toolJson({
+          error: "recording_not_found",
+          message: `No recording named "${name}" found.`
+        });
       }
       const artifact = await workerClient.readRecording(root, safeName);
       if (artifact === undefined) {
-        return toolJson({ error: "recording_not_found", message: `Recording artifact for "${name}" not found.` });
+        return toolJson({
+          error: "recording_not_found",
+          message: `Recording artifact for "${name}" not found.`
+        });
       }
       return toolMarkdown(formatRecordingForAi(artifact));
     }
@@ -264,7 +273,10 @@ export function registerRecordingTools(server: McpServer, deps: RecordingToolDep
       const root = project_root ?? sessionRoot;
       const safeName = await resolveSafeName(workerClient, root, name);
       if (safeName === undefined) {
-        return toolJson({ error: "recording_not_found", message: `No recording named "${name}" found.` });
+        return toolJson({
+          error: "recording_not_found",
+          message: `No recording named "${name}" found.`
+        });
       }
       await workerClient.annotateRecording(root, safeName, {
         pre_conditions,
@@ -289,7 +301,12 @@ export function registerRecordingTools(server: McpServer, deps: RecordingToolDep
     },
     async ({ name, project_root }) => {
       const safeName = sanitizeRecordingName(name);
-      const artifactPath = path.join(project_root ?? sessionRoot, ".vindicate", "recordings", `${safeName}.json`);
+      const artifactPath = path.join(
+        project_root ?? sessionRoot,
+        ".vindicate",
+        "recordings",
+        `${safeName}.json`
+      );
       try {
         const content = await fs.readFile(artifactPath, "utf-8");
         const parsed = RecordingArtifactSchema.safeParse(JSON.parse(content));

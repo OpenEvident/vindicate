@@ -32,9 +32,10 @@ export function OnboardingHeader() {
 
       {/* Description */}
       <p className="vindicate-ob-description">
-        Autonomous quality for AI-native development teams. Vindicate closes the gap between AI-generated
-        code and verified behaviour by generating tests that trace back to{" "}
-        <em>intent</em>, not implementation, with full traceability from requirement to passing test.
+        Autonomous quality for AI-native development teams. Vindicate closes the gap between
+        AI-generated code and verified behaviour by generating tests that trace back to{" "}
+        <em>intent</em>, not implementation, with full traceability from requirement to passing
+        test.
       </p>
     </header>
   );

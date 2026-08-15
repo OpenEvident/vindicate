@@ -9,11 +9,36 @@ const mainGraph: GraphDoc = {
   loop: ["understand", "ground", "design", "generate", "execute", "heal", "audit"],
   entryPoints: { write: "understand", fix: "heal", smoke: "execute" },
   nodes: {
-    understand: { label: "Understand", terminal: false, modes: [], edges: [{ to: "ground", when: "story approved" }] },
-    ground: { label: "Ground", terminal: false, modes: [], edges: [{ to: "design", when: "elements captured" }] },
-    design: { label: "Design", terminal: false, modes: [], edges: [{ to: "generate", when: "plan approved" }] },
-    generate: { label: "Generate", terminal: false, modes: [], edges: [{ to: "execute", when: "audit clean" }] },
-    execute: { label: "Execute", terminal: false, modes: [], edges: [{ to: "audit", when: "tests pass" }] },
+    understand: {
+      label: "Understand",
+      terminal: false,
+      modes: [],
+      edges: [{ to: "ground", when: "story approved" }]
+    },
+    ground: {
+      label: "Ground",
+      terminal: false,
+      modes: [],
+      edges: [{ to: "design", when: "elements captured" }]
+    },
+    design: {
+      label: "Design",
+      terminal: false,
+      modes: [],
+      edges: [{ to: "generate", when: "plan approved" }]
+    },
+    generate: {
+      label: "Generate",
+      terminal: false,
+      modes: [],
+      edges: [{ to: "execute", when: "audit clean" }]
+    },
+    execute: {
+      label: "Execute",
+      terminal: false,
+      modes: [],
+      edges: [{ to: "audit", when: "tests pass" }]
+    },
     heal: { label: "Heal", terminal: false, modes: [], edges: [{ to: "ground", when: "drift" }] },
     audit: { label: "Audit", terminal: true, modes: [], edges: [] }
   }
@@ -48,9 +73,7 @@ describe("workflow-phases", () => {
       activeNode: "requirements",
       completed: []
     });
-    expect(phases).toEqual([
-      { id: "requirements", label: "Requirements", status: "active" }
-    ]);
+    expect(phases).toEqual([{ id: "requirements", label: "Requirements", status: "active" }]);
   });
 
   it("marks completed and active phases", () => {

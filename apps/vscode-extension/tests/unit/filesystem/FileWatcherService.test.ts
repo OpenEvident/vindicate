@@ -201,7 +201,10 @@ describe("FileWatcherService", () => {
         }
         return { type: 1 };
       }
-      if (normalized.endsWith(".vindicate/context.md") || normalized.endsWith(".vindicate/stories")) {
+      if (
+        normalized.endsWith(".vindicate/context.md") ||
+        normalized.endsWith(".vindicate/stories")
+      ) {
         return { type: 1 };
       }
       throw Object.assign(new Error("ENOENT"), { code: "FileNotFound" });
@@ -260,7 +263,10 @@ describe("FileWatcherService", () => {
         }
         return { type: 1 };
       }
-      if (normalized.endsWith(".vindicate/context.md") || normalized.endsWith(".vindicate/stories")) {
+      if (
+        normalized.endsWith(".vindicate/context.md") ||
+        normalized.endsWith(".vindicate/stories")
+      ) {
         return { type: 1 };
       }
       throw Object.assign(new Error("ENOENT"), { code: "FileNotFound" });
@@ -302,7 +308,10 @@ describe("FileWatcherService", () => {
         }
         return { type: 1 };
       }
-      if (normalized.endsWith(".vindicate/context.md") || normalized.endsWith(".vindicate/stories")) {
+      if (
+        normalized.endsWith(".vindicate/context.md") ||
+        normalized.endsWith(".vindicate/stories")
+      ) {
         return { type: 1 };
       }
       throw Object.assign(new Error("ENOENT"), { code: "FileNotFound" });

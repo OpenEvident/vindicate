@@ -29,14 +29,11 @@ function buildTestBlock(tc: TestCase): string {
 export function buildNewSpec(schema: FullSchema, feature: string): string {
   const spec = schema.spec;
   const featureCamel = feature.replace(/-(.)/g, (_, c: string) => c.toUpperCase());
-  const expectedImport =
-    hasExpectedData(schema.expected)
-      ? `import { ${featureCamel}Expected as expected } from '@config/page-loader';`
-      : undefined;
+  const expectedImport = hasExpectedData(schema.expected)
+    ? `import { ${featureCamel}Expected as expected } from '@config/page-loader';`
+    : undefined;
   const storageStateLine =
-    spec.storage_state !== null
-      ? `\ntest.use({ storageState: '${spec.storage_state}' });\n`
-      : "";
+    spec.storage_state !== null ? `\ntest.use({ storageState: '${spec.storage_state}' });\n` : "";
 
   const beforeEachBlock =
     spec.before_each !== null && spec.before_each.length > 0
@@ -88,17 +85,16 @@ export function buildAuthSetup(schema: FullSchema, feature: string): string {
     return `  await ${b.fixture}.${b.call}(${args});`;
   });
 
-  const fixtureImports = [...new Set(firstCase.body.map((b) => b.fixture))]
-    .map((fixture) => {
-      const page = schema.pages.find((p) => fixtureNameFromClass(p.page_class) === fixture);
-      if (page === undefined) {
-        throw new CodegenStructuralError(
-          `auth setup fixture '${fixture}' not found in pages for feature '${feature}'`,
-          `Ensure fixture '${fixture}' maps to a page_class in the feature's page objects`
-        );
-      }
-      return { fixture, pageClass: page.page_class };
-    });
+  const fixtureImports = [...new Set(firstCase.body.map((b) => b.fixture))].map((fixture) => {
+    const page = schema.pages.find((p) => fixtureNameFromClass(p.page_class) === fixture);
+    if (page === undefined) {
+      throw new CodegenStructuralError(
+        `auth setup fixture '${fixture}' not found in pages for feature '${feature}'`,
+        `Ensure fixture '${fixture}' maps to a page_class in the feature's page objects`
+      );
+    }
+    return { fixture, pageClass: page.page_class };
+  });
 
   const importClasses = fixtureImports.map((f) => f.pageClass).join(", ");
   const fixtureInitLines = fixtureImports.map(
@@ -144,4 +140,3 @@ export function appendTestCases(existingContent: string, newCases: TestCase[]): 
     existingContent.slice(insertionPoint)
   );
 }
-

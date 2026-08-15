@@ -43,7 +43,9 @@ describe("executeCommandSteps", () => {
     tempDirs.push(dir);
 
     const logger = createVindicateLogger({ service: "test", level: "silent" });
-    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), {
+      encryptFilenames: false
+    });
     const store = new BrowserSessionStore(disk, logger, 24);
     const bridge = new FakeBrowserBridge();
     const sessionLogs = new SessionLogRegistry({ consoleBufferSize: 20, networkBufferSize: 20 });
@@ -90,7 +92,12 @@ describe("executeCommandSteps", () => {
     const { deps, sessionId } = await createDeps(governor);
 
     await expect(
-      executeCommandSteps(deps, sessionId, [{ action: "navigate", url: "https://example.com/" }], () => {})
+      executeCommandSteps(
+        deps,
+        sessionId,
+        [{ action: "navigate", url: "https://example.com/" }],
+        () => {}
+      )
     ).rejects.toBeInstanceOf(WorkerThrottledError);
   });
 
@@ -103,7 +110,9 @@ describe("executeCommandSteps", () => {
     });
 
     expect(result.streamFailed).toBe(true);
-    expect(events.some((e) => (e as { code?: string }).code === "validation.invalid_params")).toBe(true);
+    expect(events.some((e) => (e as { code?: string }).code === "validation.invalid_params")).toBe(
+      true
+    );
   });
 
   it("executes navigate and emits step lifecycle events", async () => {
@@ -144,7 +153,12 @@ describe("executeCommandSteps", () => {
             }
           }
         : undefined;
-    const result = await executeCommandSteps(deps, sessionId, [{ action: "click", ref: "ref-00000001" }], () => {});
+    const result = await executeCommandSteps(
+      deps,
+      sessionId,
+      [{ action: "click", ref: "ref-00000001" }],
+      () => {}
+    );
 
     expect(result.streamFailed).toBe(false);
     expect(result.stepResults[0]).toMatchObject({
@@ -179,11 +193,25 @@ describe("executeCommandSteps", () => {
     const descriptors = new Map<string, ElementDescriptor>([
       [
         "ref-00000001",
-        { testidAttr: "data-testid", tag: "button", role: "button", name: "Save", context: "main", snapshotUrl: "https://example.com/" }
+        {
+          testidAttr: "data-testid",
+          tag: "button",
+          role: "button",
+          name: "Save",
+          context: "main",
+          snapshotUrl: "https://example.com/"
+        }
       ],
       [
         "ref-00000002",
-        { testidAttr: "data-testid", tag: "button", role: "button", name: "Save", context: "nav", snapshotUrl: "https://example.com/" }
+        {
+          testidAttr: "data-testid",
+          tag: "button",
+          role: "button",
+          name: "Save",
+          context: "nav",
+          snapshotUrl: "https://example.com/"
+        }
       ]
     ]);
     deps.snapshotEngine.getAllDescriptors = () => descriptors;
@@ -242,7 +270,21 @@ describe("executeCommandSteps", () => {
     const { deps, sessionId } = await createDeps();
     deps.snapshotEngine.getDescriptor = (_sessionId: string, ref: string) => {
       if (ref === "ref-00000001") {
-        return { testidAttr: "data-testid", tag: "button", role: "button", name: "Save", context: "main", testid: "save-btn", snapshotUrl: "https://example.com/", locator: { strategy: "testid", confidence: "high", attr: "data-testid", value: "save-btn" } };
+        return {
+          testidAttr: "data-testid",
+          tag: "button",
+          role: "button",
+          name: "Save",
+          context: "main",
+          testid: "save-btn",
+          snapshotUrl: "https://example.com/",
+          locator: {
+            strategy: "testid",
+            confidence: "high",
+            attr: "data-testid",
+            value: "save-btn"
+          }
+        };
       }
       return undefined;
     };
@@ -255,7 +297,9 @@ describe("executeCommandSteps", () => {
     );
 
     expect(result.streamFailed).toBe(false);
-    expect((result.stepResults[0] as Record<string, unknown>).scope_applied).toBe("ref:ref-00000001");
+    expect((result.stepResults[0] as Record<string, unknown>).scope_applied).toBe(
+      "ref:ref-00000001"
+    );
   });
 
   it("screenshot invalid ref fails with ElementNotFoundError", async () => {
@@ -273,9 +317,11 @@ describe("executeCommandSteps", () => {
 
     expect(result.streamFailed).toBe(true);
     expect(result.failedAction).toBe("screenshot");
-    expect(events.some((e) => (e as { code?: string }).code === new ElementNotFoundError("ref-00000001", "").code)).toBe(
-      true
-    );
+    expect(
+      events.some(
+        (e) => (e as { code?: string }).code === new ElementNotFoundError("ref-00000001", "").code
+      )
+    ).toBe(true);
   });
 
   // A real batch (steps.length > 1) — every browser_act call today sends a 1-element steps array, so
@@ -290,7 +336,12 @@ describe("executeCommandSteps", () => {
         name,
         context: "main",
         snapshotUrl: "https://example.com/",
-        locator: { strategy: "testid" as const, confidence: "high" as const, attr: "data-testid", value: name }
+        locator: {
+          strategy: "testid" as const,
+          confidence: "high" as const,
+          attr: "data-testid",
+          value: name
+        }
       };
     }
 
@@ -363,8 +414,7 @@ describe("executeCommandSteps", () => {
       expect(startedSteps).toEqual([0, 1, 2]);
 
       const failedEvent = events.find((e) => (e as { event?: string }).event === "failed") as
-        | { step: number; action: string; error: string; code: string }
-        | undefined;
+        { step: number; action: string; error: string; code: string } | undefined;
       expect(failedEvent?.step).toBe(2);
       expect(failedEvent?.action).toBe("click");
     });

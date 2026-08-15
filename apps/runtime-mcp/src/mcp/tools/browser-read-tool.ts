@@ -277,7 +277,9 @@ function locatorBadge(
     // guessing — see frameHopLabel.
     const chain = frameChainLabel(framePath);
     parts.push(
-      framePath.length === 1 ? `in iframe: ${chain}` : `in nested iframe ×${framePath.length}: ${chain}`
+      framePath.length === 1
+        ? `in iframe: ${chain}`
+        : `in nested iframe ×${framePath.length}: ${chain}`
     );
   }
   if (LIVE_REGION_ROLES.has(el.role)) {
@@ -314,7 +316,8 @@ function formatElementLine(
   const testidBadge = testidShown ? ` [${el.testid_attr ?? "testid"}=${el.testid}]` : "";
   // Surfaced only for non-default input types (email/password/tel/...) — a plain "text" input is
   // already implied by role="textbox" and would just add noise to every read.
-  const typeBadge = el.type !== undefined && el.type.length > 0 && el.type !== "text" ? ` (type=${el.type})` : "";
+  const typeBadge =
+    el.type !== undefined && el.type.length > 0 && el.type !== "text" ? ` (type=${el.type})` : "";
   const valueBadge = el.value !== undefined && el.value.length > 0 ? ` (${el.value})` : "";
   const flagBadge = flags.length > 0 ? ` [${flags.join(", ")}]` : "";
 
@@ -400,9 +403,7 @@ function isSnapshotWire(value: unknown): value is SnapshotWire {
   }
   const r = value as Record<string, unknown>;
   return (
-    typeof r.snapshot_id === "number" &&
-    typeof r.url === "string" &&
-    typeof r.title === "string"
+    typeof r.snapshot_id === "number" && typeof r.url === "string" && typeof r.title === "string"
   );
 }
 
@@ -415,12 +416,16 @@ function unwrapSnapshot(result: unknown): SnapshotWire {
     const rest = { ...record };
     delete rest.action;
     if (!isSnapshotWire(rest)) {
-      throw new Error("browser_read snapshot missing snapshot_id, url, or title — retry browser_read");
+      throw new Error(
+        "browser_read snapshot missing snapshot_id, url, or title — retry browser_read"
+      );
     }
     return rest;
   }
   if (!isSnapshotWire(record)) {
-    throw new Error("browser_read snapshot missing snapshot_id, url, or title — retry browser_read");
+    throw new Error(
+      "browser_read snapshot missing snapshot_id, url, or title — retry browser_read"
+    );
   }
   return record;
 }
@@ -441,9 +446,7 @@ export function registerBrowserReadTool(server: McpServer, deps: BrowserReadTool
         session_id: UuidSchema,
         delta: z.boolean().optional(),
         viewport_only: z.boolean().optional(),
-        scope: z
-          .union([z.object({ ref: z.string() }), z.object({ css: z.string() })])
-          .optional(),
+        scope: z.union([z.object({ ref: z.string() }), z.object({ css: z.string() })]).optional(),
         include_verifiable: z.boolean().optional(),
         include_console_logs: z.boolean().optional(),
         include_network_errors: z.boolean().optional(),

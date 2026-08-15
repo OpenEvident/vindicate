@@ -1,8 +1,8 @@
 import { useRecordingStore } from "@/stores/recordingStore";
 
 export function FinalCaptureCard() {
-  const previewTarget       = useRecordingStore((s) => s.previewTarget);
-  const finalScreenshotUrl  = useRecordingStore((s) => s.finalScreenshotUrl);
+  const previewTarget = useRecordingStore((s) => s.previewTarget);
+  const finalScreenshotUrl = useRecordingStore((s) => s.finalScreenshotUrl);
   const selectPreviewTarget = useRecordingStore((s) => s.selectPreviewTarget);
 
   const selected = previewTarget.type === "final";
@@ -20,7 +20,7 @@ export function FinalCaptureCard() {
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vs-accent",
         selected
           ? "border-vs-accent bg-vs-accent/5 shadow-[0_8px_26px_-12px_color-mix(in_oklab,var(--color-vs-accent)_55%,transparent)]"
-          : "border-[color-mix(in_oklab,var(--color-vs-accent)_42%,var(--color-vs-border))] bg-vs-accent/5 hover:border-vs-accent",
+          : "border-[color-mix(in_oklab,var(--color-vs-accent)_42%,var(--color-vs-border))] bg-vs-accent/5 hover:border-vs-accent"
       ].join(" ")}
     >
       {/* Thumbnail */}
@@ -33,7 +33,9 @@ export function FinalCaptureCard() {
             className="h-full w-full object-cover object-top"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-[10px] text-vs-text-dim">—</div>
+          <div className="flex h-full items-center justify-center text-[10px] text-vs-text-dim">
+            —
+          </div>
         )}
       </div>
 

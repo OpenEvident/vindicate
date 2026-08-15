@@ -36,7 +36,9 @@
                   "name": "verify_results",
                   "jsdoc": "Verify expected count",
                   "params": [{ "name": "expectedCount", "type": "number" }],
-                  "assertions": [{ "subject": "element", "ref": "search", "matcher": "toBeVisible" }]
+                  "assertions": [
+                    { "subject": "element", "ref": "search", "matcher": "toBeVisible" }
+                  ]
                 }
               ]
             }
@@ -55,7 +57,11 @@
                 "scenario": "Params compile",
                 "title": "[AC-70] should expose typed params",
                 "body": [
-                  { "fixture": "paramsPage", "call": "step_search", "args": ["expected.searchTerm"] },
+                  {
+                    "fixture": "paramsPage",
+                    "call": "step_search",
+                    "args": ["expected.searchTerm"]
+                  },
                   { "fixture": "paramsPage", "call": "verify_results", "args": ["5"] }
                 ]
               }
@@ -74,7 +80,10 @@
         "await this.queryInput.fill(term);",
         "async verify_results(expectedCount: number): Promise<this>"
       ],
-      "tests/params.spec.ts": ["await paramsPage.step_search(expected.searchTerm);", "await paramsPage.verify_results(5);"]
+      "tests/params.spec.ts": [
+        "await paramsPage.step_search(expected.searchTerm);",
+        "await paramsPage.verify_results(5);"
+      ]
     },
     "invariants": ["I1", "I2", "I6", "I9"],
     "compile": true

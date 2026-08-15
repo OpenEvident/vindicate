@@ -17,12 +17,22 @@
               "owned_by": "auth",
               "elements": [
                 { "ref": "email", "tag": "input", "testid": "email", "testid_attr": "data-testid" },
-                { "ref": "password", "tag": "input", "testid": "password", "testid_attr": "data-testid" },
+                {
+                  "ref": "password",
+                  "tag": "input",
+                  "testid": "password",
+                  "testid_attr": "data-testid"
+                },
                 { "ref": "submit", "tag": "button", "role": "button", "name": "Sign in" }
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open login", "params": [], "actions": [{ "do": "navigate" }] },
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open login",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
                 {
                   "name": "step_login",
                   "jsdoc": "Log in user",
@@ -42,7 +52,9 @@
                   "name": "verify_loggedIn",
                   "jsdoc": "User sees dashboard",
                   "params": [],
-                  "assertions": [{ "subject": "page", "matcher": "toHaveURL", "arg": "'/dashboard'" }]
+                  "assertions": [
+                    { "subject": "page", "matcher": "toHaveURL", "arg": "'/dashboard'" }
+                  ]
                 }
               ]
             }
@@ -81,7 +93,11 @@
     "ok": true,
     "filesExist": ["auth.setup.ts", "tests/auth.spec.ts"],
     "mustContain": {
-      "auth.setup.ts": ["import { test as setup } from '@playwright/test';", "import { LoginPage } from '@config/page-loader';", "playwright/.auth/user.json"],
+      "auth.setup.ts": [
+        "import { test as setup } from '@playwright/test';",
+        "import { LoginPage } from '@config/page-loader';",
+        "playwright/.auth/user.json"
+      ],
       "tests/auth.spec.ts": ["App - Auth"]
     },
     "invariants": ["I1", "I2", "I6", "I9"],

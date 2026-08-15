@@ -11,7 +11,8 @@ export const BrowserCreateSessionBodySchema = z.object({
   url: UrlSchema,
   project_root: z.string().min(1),
   testid_attr: z.string().min(1).optional(),
-  viewport: z.object({
+  viewport: z
+    .object({
       width: z.number().int().positive().max(7680),
       height: z.number().int().positive().max(4320)
     })

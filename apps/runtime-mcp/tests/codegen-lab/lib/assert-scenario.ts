@@ -27,9 +27,14 @@ function assertErrorExpectation(result: ScenarioRunResult): void {
   }
   const err = result.error as { name?: string; message?: string; fix?: string };
   if (err.name !== expected.type) {
-    throw new Error(`Scenario ${result.scenario.id} expected error '${expected.type}' but got '${err.name}'`);
+    throw new Error(
+      `Scenario ${result.scenario.id} expected error '${expected.type}' but got '${err.name}'`
+    );
   }
-  if (expected.messageIncludes !== undefined && !String(err.message ?? "").includes(expected.messageIncludes)) {
+  if (
+    expected.messageIncludes !== undefined &&
+    !String(err.message ?? "").includes(expected.messageIncludes)
+  ) {
     throw new Error(
       `Scenario ${result.scenario.id} expected error message to include '${expected.messageIncludes}' but got '${err.message}'`
     );
@@ -65,7 +70,9 @@ async function assertGolden(result: ScenarioRunResult): Promise<void> {
   const goldenDir = path.resolve(RUNTIME_MCP_ROOT, "tests/codegen-lab/fixtures/golden", scenarioId);
   const goldenFiles = result.scenario.expect.goldenFiles ?? [];
   if (goldenFiles.length === 0) {
-    throw new Error(`Golden check failed for ${scenarioId}: golden=true requires non-empty goldenFiles`);
+    throw new Error(
+      `Golden check failed for ${scenarioId}: golden=true requires non-empty goldenFiles`
+    );
   }
 
   for (const rel of goldenFiles) {
@@ -79,7 +86,9 @@ async function assertGolden(result: ScenarioRunResult): Promise<void> {
     }
     const expected = await readFile(goldenPath, "utf8");
     if (actual !== expected) {
-      throw new Error(`Golden check failed for ${scenarioId}: '${rel}' differs from golden snapshot`);
+      throw new Error(
+        `Golden check failed for ${scenarioId}: '${rel}' differs from golden snapshot`
+      );
     }
   }
 }
@@ -108,7 +117,9 @@ function assertValidateExpectation(
   if (expected.codesInclude !== undefined) {
     for (const code of expected.codesInclude) {
       if (!validation.errors.some((e) => e.code === code)) {
-        throw new Error(`Scenario ${result.scenario.id}: expected error code '${code}' in validation.errors`);
+        throw new Error(
+          `Scenario ${result.scenario.id}: expected error code '${code}' in validation.errors`
+        );
       }
     }
   }
@@ -166,7 +177,9 @@ export async function assertScenario(result: ScenarioRunResult): Promise<void> {
 
   for (const rel of expectSpec.filesWrittenExcludes ?? []) {
     if (result.filesWritten.includes(rel)) {
-      throw new Error(`Scenario ${result.scenario.id}: filesWritten unexpectedly includes '${rel}'`);
+      throw new Error(
+        `Scenario ${result.scenario.id}: filesWritten unexpectedly includes '${rel}'`
+      );
     }
   }
 
@@ -180,7 +193,9 @@ export async function assertScenario(result: ScenarioRunResult): Promise<void> {
   if (expectSpec.validate !== undefined) {
     const validation = result.lastValidation;
     if (validation === undefined) {
-      throw new Error(`Scenario ${result.scenario.id}: expected validate step but no validation result found`);
+      throw new Error(
+        `Scenario ${result.scenario.id}: expected validate step but no validation result found`
+      );
     }
     assertValidateExpectation(result, validation, expectSpec.validate);
   }

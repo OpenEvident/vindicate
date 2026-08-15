@@ -36,7 +36,8 @@ export function GenerateTestModal({
               Generate test
             </h2>
             <p className="mt-1 text-ui-sm text-vs-text-dim">
-              Copy this prompt into your agent chat to generate a Playwright test from this recording.
+              Copy this prompt into your agent chat to generate a Playwright test from this
+              recording.
             </p>
           </div>
           <button

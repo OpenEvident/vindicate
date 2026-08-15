@@ -9,7 +9,10 @@ import type { RecordingEventSource } from "../../../infrastructure/browser/brows
 import type { IEventBus } from "../../../core/events/event-bus.interface.js";
 import type { ISessionStore } from "../session/session.store.interface.js";
 
-type OnEvent = (payload: Record<string, unknown>, source: RecordingEventSource) => void | Promise<void>;
+type OnEvent = (
+  payload: Record<string, unknown>,
+  source: RecordingEventSource
+) => void | Promise<void>;
 
 function fakeLogger(): Logger {
   return { warn: vi.fn(), info: vi.fn(), error: vi.fn() } as unknown as Logger;
@@ -58,7 +61,9 @@ function fakePage(url: string): Page {
     once: vi.fn(),
     mainFrame: () => ({}) as Frame,
     frames: () => [],
-    evaluate: vi.fn().mockResolvedValue({ elements: [], truncated: false, collapsed_count: 0, alerts: [] })
+    evaluate: vi
+      .fn()
+      .mockResolvedValue({ elements: [], truncated: false, collapsed_count: 0, alerts: [] })
   } as unknown as Page;
 }
 
@@ -108,10 +113,23 @@ const settleCfg = { VINDICATE_SETTLE_NETWORK_MS: 10, VINDICATE_SETTLE_TIMEOUT_MS
 describe("RecordingService frame_path attachment", () => {
   it("attaches frame_path to candidates for a click event sourced from a nested frame", async () => {
     const harness = makeHarness();
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-1", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-1", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
 
-    const hostLocator: StructuredLocator = { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" };
+    const hostLocator: StructuredLocator = {
+      strategy: "dom_id",
+      confidence: "high",
+      value: "klarna-checkout-iframe"
+    };
     const iframeHandle = { evaluate: vi.fn().mockResolvedValue(hostLocator) };
     const mainFrame = { parentFrame: vi.fn().mockReturnValue(null) };
     const leafFrame = {
@@ -138,8 +156,17 @@ describe("RecordingService frame_path attachment", () => {
 
   it("omits frame_path for a top-frame event (no regression)", async () => {
     const harness = makeHarness();
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-2", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-2", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
 
     const mainFrame = { parentFrame: vi.fn().mockReturnValue(null) } as unknown as Frame;
 
@@ -175,8 +202,17 @@ describe("RecordingService popup tracking (per-event page attribution)", () => {
   it("does not synthesize a switch step for the very first attributed event (baseline, not a switch)", async () => {
     const mainPage = fakePage("https://app.test/");
     const harness = makeHarness([mainPage]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-1", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-1", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
 
     await harness.getOnEvent()(clickPayload("first-btn"), { page: mainPage, frame: TOP_FRAME });
 
@@ -189,8 +225,17 @@ describe("RecordingService popup tracking (per-event page attribution)", () => {
     const mainPage = fakePage("https://app.test/");
     const popupPage = fakePage("https://checkout.klarna.com/session/abc");
     const harness = makeHarness([mainPage, popupPage]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-2", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-2", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
     await harness.getOnEvent()(clickPayload("first-btn"), { page: mainPage, frame: TOP_FRAME });
 
     harness.getPageOpenHandler()(popupPage);
@@ -209,11 +254,26 @@ describe("RecordingService popup tracking (per-event page attribution)", () => {
     const mainPage = fakePage("https://app.test/");
     const popupPage = fakePage("https://checkout.klarna.com/session/abc");
     const harness = makeHarness([mainPage, popupPage]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-3", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
-    await harness.getOnEvent()(clickPayload("open-popup-btn"), { page: mainPage, frame: TOP_FRAME });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-3", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
+    await harness.getOnEvent()(clickPayload("open-popup-btn"), {
+      page: mainPage,
+      frame: TOP_FRAME
+    });
 
-    await harness.getOnEvent()(clickPayload("card-number-field"), { page: popupPage, frame: TOP_FRAME });
+    await harness.getOnEvent()(clickPayload("card-number-field"), {
+      page: popupPage,
+      frame: TOP_FRAME
+    });
 
     expect(harness.tabState.activePageIndex).toBe(1);
     const state = service.getState("sess-3");
@@ -227,9 +287,21 @@ describe("RecordingService popup tracking (per-event page attribution)", () => {
     const mainPage = fakePage("https://app.test/");
     const popupPage = fakePage("https://checkout.klarna.com/session/abc");
     const harness = makeHarness([mainPage, popupPage]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-4", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
-    await harness.getOnEvent()(clickPayload("open-popup-btn"), { page: mainPage, frame: TOP_FRAME });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-4", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
+    await harness.getOnEvent()(clickPayload("open-popup-btn"), {
+      page: mainPage,
+      frame: TOP_FRAME
+    });
     await harness.getOnEvent()(clickPayload("pay-btn"), { page: popupPage, frame: TOP_FRAME });
 
     // Popup is never closed here — the human just refocuses the main page and clicks something.
@@ -248,28 +320,55 @@ describe("RecordingService popup tracking (per-event page attribution)", () => {
     const popupA = fakePage("https://a.example.com/");
     const popupB = fakePage("https://b.example.com/");
     const harness = makeHarness([mainPage, popupA, popupB]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-5", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-5", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
     await harness.getOnEvent()(clickPayload("open-a-btn"), { page: mainPage, frame: TOP_FRAME });
 
     await harness.getOnEvent()(clickPayload("a-field"), { page: popupA, frame: TOP_FRAME });
     await harness.getOnEvent()(clickPayload("b-field"), { page: popupB, frame: TOP_FRAME });
     // Popup A "closes" first (out of open order — B is more recent) with no explicit close signal at all;
     // the next real interaction is back on the main page.
-    await harness.getOnEvent()(clickPayload("main-continue-btn"), { page: mainPage, frame: TOP_FRAME });
+    await harness.getOnEvent()(clickPayload("main-continue-btn"), {
+      page: mainPage,
+      frame: TOP_FRAME
+    });
 
     expect(harness.tabState.activePageIndex).toBe(0);
     const state = service.getState("sess-5");
-    const switchSteps = state?.steps.filter((s) => s.action === "switch_tab_by_url").map((s) => s.url);
-    expect(switchSteps).toEqual(["https://a.example.com/", "https://b.example.com/", "https://app.test/"]);
+    const switchSteps = state?.steps
+      .filter((s) => s.action === "switch_tab_by_url")
+      .map((s) => s.url);
+    expect(switchSteps).toEqual([
+      "https://a.example.com/",
+      "https://b.example.com/",
+      "https://app.test/"
+    ]);
   });
 
   it("does not attribute or sync tab state for agent-driven recordings (agent uses its own explicit tab actions)", async () => {
     const mainPage = fakePage("https://app.test/");
     const popupPage = fakePage("https://checkout.klarna.com/session/abc");
     const harness = makeHarness([mainPage, popupPage]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-6", "flow", "/tmp/project", { started_by: "agent", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-6", "flow", "/tmp/project", {
+      started_by: "agent",
+      skip_entry_navigate: true
+    });
 
     harness.getPageOpenHandler()(popupPage);
     await Promise.resolve();
@@ -286,14 +385,27 @@ describe("RecordingService pause-state broadcast", () => {
     const mainPage = fakePage("https://app.test/");
     const popupPage = fakePage("https://checkout.klarna.com/session/abc");
     const harness = makeHarness([mainPage, popupPage]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-7", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-7", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
 
-    await harness.getOnEvent()({ event: "__paused", paused: true }, { page: popupPage, frame: TOP_FRAME });
+    await harness.getOnEvent()(
+      { event: "__paused", paused: true },
+      { page: popupPage, frame: TOP_FRAME }
+    );
 
     const applyOn = (page: Page): unknown[] | undefined =>
       (page.evaluate as ReturnType<typeof vi.fn>).mock.calls.find(
-        (call: unknown[]) => typeof call[0] === "function" && String(call[0]).includes("__vindicateApplyPausedState")
+        (call: unknown[]) =>
+          typeof call[0] === "function" && String(call[0]).includes("__vindicateApplyPausedState")
       );
 
     expect(applyOn(mainPage)).toBeDefined();
@@ -305,14 +417,27 @@ describe("RecordingService pause-state broadcast", () => {
   it("never calls __vindicateSetRecorderPaused for the broadcast (would re-emit and loop)", async () => {
     const mainPage = fakePage("https://app.test/");
     const harness = makeHarness([mainPage]);
-    const service = new RecordingService(harness.bridge, fakeSessionStore(), fakeEventBus(), fakeLogger(), settleCfg);
-    await service.start("sess-8", "flow", "/tmp/project", { started_by: "human", skip_entry_navigate: true });
+    const service = new RecordingService(
+      harness.bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+    await service.start("sess-8", "flow", "/tmp/project", {
+      started_by: "human",
+      skip_entry_navigate: true
+    });
 
-    await harness.getOnEvent()({ event: "__paused", paused: true }, { page: mainPage, frame: TOP_FRAME });
+    await harness.getOnEvent()(
+      { event: "__paused", paused: true },
+      { page: mainPage, frame: TOP_FRAME }
+    );
 
     const calls = (mainPage.evaluate as ReturnType<typeof vi.fn>).mock.calls;
     const usesSetter = calls.some(
-      (call: unknown[]) => typeof call[0] === "function" && String(call[0]).includes("__vindicateSetRecorderPaused")
+      (call: unknown[]) =>
+        typeof call[0] === "function" && String(call[0]).includes("__vindicateSetRecorderPaused")
     );
     expect(usesSetter).toBe(false);
   });

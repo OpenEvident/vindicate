@@ -49,7 +49,9 @@ async function waitForFrameToLeaveBlank(frame: Frame): Promise<void> {
   if (frame.url() !== "about:blank") {
     return;
   }
-  await frame.waitForURL((url) => url.href !== "about:blank", { timeout: FRAME_READY_TIMEOUT_MS }).catch(() => {});
+  await frame
+    .waitForURL((url) => url.href !== "about:blank", { timeout: FRAME_READY_TIMEOUT_MS })
+    .catch(() => {});
 }
 
 /** Matches an `ariaSnapshot({mode:'ai'})` iframe node that has nested content (the trailing `:`) —
@@ -81,7 +83,10 @@ function fnv1aRef(salt: string): string {
 /** FNV-1a over the ref plus its frame_path, so elements that happen to hash identically to a same-
  * shaped element in a sibling frame (or the top frame) never collide — same digest algorithm
  * `captureInteractiveSnapshot` itself uses, just salted with frame identity. */
-export function rehashRefForFrame(originalRef: string, framePath: readonly StructuredLocator[]): string {
+export function rehashRefForFrame(
+  originalRef: string,
+  framePath: readonly StructuredLocator[]
+): string {
   return fnv1aRef(`${originalRef}|${JSON.stringify(framePath)}`);
 }
 
@@ -155,7 +160,9 @@ async function captureFramesBreadthFirst(
 
       let bodySnap: string;
       try {
-        bodySnap = await entry.scope.locator("body").ariaSnapshot({ mode: "ai", timeout: ARIA_SNAPSHOT_TIMEOUT_MS });
+        bodySnap = await entry.scope
+          .locator("body")
+          .ariaSnapshot({ mode: "ai", timeout: ARIA_SNAPSHOT_TIMEOUT_MS });
       } catch {
         // Best-effort discovery — a frame mid-navigation or a body that never settles must never fail
         // the overall browser_read; the caller already has the (unaffected) top-level snapshot.
@@ -168,7 +175,9 @@ async function captureFramesBreadthFirst(
 
         let handle: ElementHandle | null;
         try {
-          handle = await entry.scope.locator(`aria-ref=${ref}`).elementHandle({ timeout: ARIA_SNAPSHOT_TIMEOUT_MS });
+          handle = await entry.scope
+            .locator(`aria-ref=${ref}`)
+            .elementHandle({ timeout: ARIA_SNAPSHOT_TIMEOUT_MS });
         } catch {
           continue;
         }
@@ -199,7 +208,10 @@ async function captureFramesBreadthFirst(
         let childFrame: Frame | null;
         try {
           [hostLocator, childFrame] = await Promise.all([
-            handle.evaluate(deriveIframeHostLocator, { testidCandidates: evalOpts.testidCandidates, projectTestidAttr }),
+            handle.evaluate(deriveIframeHostLocator, {
+              testidCandidates: evalOpts.testidCandidates,
+              projectTestidAttr
+            }),
             handle.contentFrame()
           ]);
         } catch {

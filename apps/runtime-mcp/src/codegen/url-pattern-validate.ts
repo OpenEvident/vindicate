@@ -72,7 +72,7 @@ export function tryDetectMalformedUrlPattern(
     "malformed_url_glob",
     path,
     `${context}: URL pattern '${pattern}' is not a valid Playwright glob (trailing '**' after a path segment is invalid).`,
-    "Use an exact path string (\"'/dashboard/index'\"), a regex (\"/dashboard\\/index/\"), or a valid glob prefix (\"**/dashboard/index\") — never wrap the path with '**' on both sides.",
+    'Use an exact path string ("\'/dashboard/index\'"), a regex ("/dashboard\\/index/"), or a valid glob prefix ("**/dashboard/index") — never wrap the path with \'**\' on both sides.',
     "'/web/index.php/dashboard/index' or /dashboard\\/index/"
   );
 }

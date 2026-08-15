@@ -5,25 +5,22 @@ interface StatsRowProps {
 }
 
 export function StatsRow({ sessions }: StatsRowProps) {
-  const total     = sessions.length;
+  const total = sessions.length;
   const finalized = sessions.filter((s) => s.status === "finalized").length;
-  const review    = sessions.filter((s) => s.status === "review").length;
+  const review = sessions.filter((s) => s.status === "review").length;
   const totalSteps = sessions.reduce((n, s) => n + s.stepCount, 0);
 
   const stats = [
-    { value: String(total),      unit: undefined,  label: "Total sessions" },
-    { value: String(finalized),  unit: undefined,  label: "Finalized",     dot: "bg-tone-emerald" },
-    { value: String(review),     unit: undefined,  label: "Needs review",  dot: "bg-tone-amber" },
-    { value: String(totalSteps), unit: "steps",    label: "Captured total" },
+    { value: String(total), unit: undefined, label: "Total sessions" },
+    { value: String(finalized), unit: undefined, label: "Finalized", dot: "bg-tone-emerald" },
+    { value: String(review), unit: undefined, label: "Needs review", dot: "bg-tone-amber" },
+    { value: String(totalSteps), unit: "steps", label: "Captured total" }
   ] as const;
 
   return (
     <div className="grid grid-cols-4 gap-3 mb-5">
       {stats.map((s) => (
-        <div
-          key={s.label}
-          className="rounded-xl border border-vs-border bg-vs-bg px-4 py-3.5"
-        >
+        <div key={s.label} className="rounded-xl border border-vs-border bg-vs-bg px-4 py-3.5">
           <div className="flex items-baseline gap-1.5 text-[25px] font-semibold tracking-tight leading-none">
             {s.value}
             {s.unit !== undefined && (

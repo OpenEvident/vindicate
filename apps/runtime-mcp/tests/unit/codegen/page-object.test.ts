@@ -69,9 +69,7 @@ describe("page-object", () => {
           elements: [baseElements[1]!],
           steps: [step("step_navigate", [{ do: "navigate" }])],
           verifies: [
-            verify("verify_ok", [
-              { subject: "element", ref: "roleBtn", matcher: "toBeVisible" }
-            ])
+            verify("verify_ok", [{ subject: "element", ref: "roleBtn", matcher: "toBeVisible" }])
           ]
         })
       );
@@ -100,7 +98,8 @@ describe("page-object", () => {
           strategy: "sibling_text",
           confidence: "high",
           value: "GAY EVENT",
-          xpath: '//input[preceding-sibling::*[normalize-space()="GAY EVENT"] or following-sibling::*[normalize-space()="GAY EVENT"]]'
+          xpath:
+            '//input[preceding-sibling::*[normalize-space()="GAY EVENT"] or following-sibling::*[normalize-space()="GAY EVENT"]]'
         }
       });
       const content = buildPageObject(
@@ -110,7 +109,9 @@ describe("page-object", () => {
           elements: [siblingEl],
           steps: [step("step_navigate", [{ do: "navigate" }])],
           verifies: [
-            verify("verify_ok", [{ subject: "element", ref: "eventTypeGay", matcher: "toBeVisible" }])
+            verify("verify_ok", [
+              { subject: "element", ref: "eventTypeGay", matcher: "toBeVisible" }
+            ])
           ]
         })
       );
@@ -138,9 +139,7 @@ describe("page-object", () => {
         step("step_click", [{ do: "click", ref: "submit" }]),
         step("step_check", [{ do: "check", ref: "agree" }]),
         step("step_uncheck", [{ do: "uncheck", ref: "agree" }]),
-        step("step_wait_response", [
-          { do: "waitForResponse", urlPattern: "/api/login" }
-        ])
+        step("step_wait_response", [{ do: "waitForResponse", urlPattern: "/api/login" }])
       ],
       verifies: [
         verify("verify_ok", [{ subject: "element", ref: "email", matcher: "toBeVisible" }])
@@ -164,7 +163,7 @@ describe("page-object", () => {
     });
 
     it("P8 — fill emits field fill call", () => {
-      expect(buildPageObject(pageWithSteps)).toContain("await this.emailInput.fill(\"a@b.com\");");
+      expect(buildPageObject(pageWithSteps)).toContain('await this.emailInput.fill("a@b.com");');
     });
 
     it("P8b — type emits pressSequentially, not fill (React-controlled inputs need real keystrokes)", () => {
@@ -176,7 +175,9 @@ describe("page-object", () => {
         ]
       });
       expect(content).toContain('await this.emailInput.pressSequentially("a@b.com");');
-      expect(content).not.toContain('await this.emailInput.fill("a@b.com");await this.emailInput.pressSequentially');
+      expect(content).not.toContain(
+        'await this.emailInput.fill("a@b.com");await this.emailInput.pressSequentially'
+      );
     });
 
     it("P8c — type with clear_first emits a .clear() call before pressSequentially, both correctly indented", () => {
@@ -189,7 +190,7 @@ describe("page-object", () => {
         ]
       });
       expect(content).toContain(
-        "    await this.emailInput.clear();\n    await this.emailInput.pressSequentially(\"a@b.com\");"
+        '    await this.emailInput.clear();\n    await this.emailInput.pressSequentially("a@b.com");'
       );
     });
 
@@ -247,9 +248,7 @@ describe("page-object", () => {
           elements: [el("email", { tag: "input", testid: "email", testid_attr: "data-testid" })],
           steps: [step("step_navigate", [{ do: "navigate" }])],
           verifies: [
-            verify("verify_visible", [
-              { subject: "element", ref: "email", matcher: "toBeVisible" }
-            ])
+            verify("verify_visible", [{ subject: "element", ref: "email", matcher: "toBeVisible" }])
           ]
         })
       );
@@ -309,9 +308,7 @@ describe("page-object", () => {
           elements: [el("email", { tag: "input", testid: "email", testid_attr: "data-testid" })],
           steps: [step("step_navigate", [{ do: "navigate" }])],
           verifies: [
-            verify("verify_visible", [
-              { subject: "element", ref: "email", matcher: "toBeVisible" }
-            ])
+            verify("verify_visible", [{ subject: "element", ref: "email", matcher: "toBeVisible" }])
           ]
         })
       );
@@ -414,9 +411,7 @@ describe("page-object", () => {
           elements: [el("email", { tag: "input", testid: "email", testid_attr: "data-testid" })],
           steps: [step("step_navigate", [{ do: "navigate" }])],
           verifies: [
-            verify("verify_visible", [
-              { subject: "element", ref: "email", matcher: "toBeVisible" }
-            ])
+            verify("verify_visible", [{ subject: "element", ref: "email", matcher: "toBeVisible" }])
           ]
         })
       );
@@ -430,13 +425,9 @@ describe("page-object", () => {
           page_class: "LoginPage",
           elements: [el("email", { tag: "input", testid: "email", testid_attr: "data-testid" })],
           steps: [
-            step(
-              "step_fillEmail",
-              [
-                { do: "fill", ref: "email", param: "email" }
-              ],
-              { params: [{ name: "email", type: "string" }] }
-            )
+            step("step_fillEmail", [{ do: "fill", ref: "email", param: "email" }], {
+              params: [{ name: "email", type: "string" }]
+            })
           ],
           verifies: []
         })
@@ -490,7 +481,15 @@ describe("page-object", () => {
           verifies: [
             verify(
               "verify_row_removed",
-              [{ subject: "element", ref: "rowStatus", refArgs: ["id"], waitFor: "hidden", matcher: "toBeHidden" }],
+              [
+                {
+                  subject: "element",
+                  ref: "rowStatus",
+                  refArgs: ["id"],
+                  waitFor: "hidden",
+                  matcher: "toBeHidden"
+                }
+              ],
               { params: [{ name: "id", type: "string" }] }
             )
           ]
@@ -505,7 +504,9 @@ describe("page-object", () => {
         pageDef({
           feature: "shop",
           page_class: "ShopPage",
-          elements: [el("promo", { tag: "button", testid: "promo-close", testid_attr: "data-testid" })],
+          elements: [
+            el("promo", { tag: "button", testid: "promo-close", testid_attr: "data-testid" })
+          ],
           steps: [step("step_dismiss", [{ do: "click_if_visible", ref: "promo" }])],
           verifies: []
         })
@@ -518,7 +519,9 @@ describe("page-object", () => {
         pageDef({
           feature: "shop",
           page_class: "ShopPage",
-          elements: [el("promo", { tag: "button", testid: "promo-close", testid_attr: "data-testid" })],
+          elements: [
+            el("promo", { tag: "button", testid: "promo-close", testid_attr: "data-testid" })
+          ],
           steps: [step("step_dismiss", [{ do: "click_if_visible", ref: "promo", timeout: 5000 }])],
           verifies: []
         })
@@ -559,9 +562,7 @@ describe("page-object", () => {
         }),
         { expectedBarrelExport: "authExpected" }
       );
-      expect(content).toContain(
-        "import { authExpected as expected } from '@config/page-loader';"
-      );
+      expect(content).toContain("import { authExpected as expected } from '@config/page-loader';");
       expect(content).toContain("toContainText(expected.invalidLoginMessage)");
     });
 

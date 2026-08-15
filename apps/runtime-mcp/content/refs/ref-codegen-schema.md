@@ -28,12 +28,12 @@ page objects are present) unless you pass `overwrite: true` — so a stray `crea
 hand-edited files. Add a page → `register_page`; add tests → `add_test_cases`; anything else → direct
 `.ts` edit.
 
-| Op | Input | Effect | Re-runnable? |
-|----|-------|--------|--------------|
-| `create` | inline `schema` (pages + spec + optional `expected`) | Generates the whole feature fresh: page objects, `page-loader.ts` exports, `page.config.ts` fixtures, spec, `expected.json`, `auth.setup.ts` | **No** — once per feature; re-running clobbers hand edits |
-| `add_test_cases` | `cases[]` | Appends new `test()` blocks before the describe close (does not regenerate) | Yes |
-| `register_page` | one `page` def | Generates that one page object + wires **only** its `page-loader.ts` / `page.config.ts` lines (anchor-insertion); never rewrites existing files | Yes (additive) |
-| `validate` | `validateTarget:'create'` + the `create` schema | Dry-run for `create` only; returns `errors[]`, writes nothing | Yes |
+| Op               | Input                                                | Effect                                                                                                                                          | Re-runnable?                                              |
+| ---------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `create`         | inline `schema` (pages + spec + optional `expected`) | Generates the whole feature fresh: page objects, `page-loader.ts` exports, `page.config.ts` fixtures, spec, `expected.json`, `auth.setup.ts`    | **No** — once per feature; re-running clobbers hand edits |
+| `add_test_cases` | `cases[]`                                            | Appends new `test()` blocks before the describe close (does not regenerate)                                                                     | Yes                                                       |
+| `register_page`  | one `page` def                                       | Generates that one page object + wires **only** its `page-loader.ts` / `page.config.ts` lines (anchor-insertion); never rewrites existing files | Yes (additive)                                            |
+| `validate`       | `validateTarget:'create'` + the `create` schema      | Dry-run for `create` only; returns `errors[]`, writes nothing                                                                                   | Yes                                                       |
 
 > Everything else (change a locator/step/assertion, delete a test, refactor) is a **direct `.ts`
 > edit** — not a codegen op. `npm run audit` (`tsc --noEmit`) + the audit node are the backstop.
@@ -120,11 +120,11 @@ compile error with the exact location).
 - `BodyCall`: `{ fixture, call, args? }`
 - `BodyCall.args` are **TS expression strings pasted verbatim** into the generated spec call.
 
-| Intent | Schema `args[]` entry | Generated code |
-|--------|----------------------|----------------|
-| Env var (secrets / happy-path creds) | `"process.env.AUTH_EMAIL!"` | `process.env.AUTH_EMAIL!` |
-| Expected test data (invalid creds, error text, shared regex) | `"expected.invalidEmail"` | `expected.invalidEmail` (requires matching key in top-level `expected`) |
-| Rare one-off literal (no `expected` block) | `"'/only-used-once'"` | `'/only-used-once'` |
+| Intent                                                       | Schema `args[]` entry       | Generated code                                                          |
+| ------------------------------------------------------------ | --------------------------- | ----------------------------------------------------------------------- |
+| Env var (secrets / happy-path creds)                         | `"process.env.AUTH_EMAIL!"` | `process.env.AUTH_EMAIL!`                                               |
+| Expected test data (invalid creds, error text, shared regex) | `"expected.invalidEmail"`   | `expected.invalidEmail` (requires matching key in top-level `expected`) |
+| Rare one-off literal (no `expected` block)                   | `"'/only-used-once'"`       | `'/only-used-once'`                                                     |
 
 **Expected data policy:** Auth features with AC-1 (valid env login) + AC-2 (invalid login) → define
 `expected.invalidEmail`, `expected.invalidPassword`, and assertion keys like `expected.authErrorPattern`;
@@ -132,6 +132,7 @@ reference them in `BodyCall.args` and `assertions[].arg`. Do **not** use `"'inva
 when `expected` applies.
 
 Common mistakes:
+
 - `'process.env.VAR'` in args — valid TS but wrong semantics (`quoted_env_var_arg`); use bare
   `process.env.VAR!`.
 - Credentials in step `fill`/`select` `value` — use `param` + spec `BodyCall.args` instead
@@ -168,7 +169,7 @@ Common mistakes:
   - **Exactly one** of `value` or `param` is required per fill/type/select action.
 - `fill` vs `type`: `fill` sets the DOM value directly (`locator.fill(...)`) — fast, and correct for
   ordinary `<input>`/`<textarea>` fields. `type` (`{ "do": "type", "ref": ..., "value"/"param": ...,
-  "clear_first"?: true }`) sends real per-character key events (`locator.pressSequentially(...)`) —
+"clear_first"?: true }`) sends real per-character key events (`locator.pressSequentially(...)`) —
   use it when `fill` leaves the field empty or stale after a real `browser_act` `fill` in grounding
   didn't stick. Confirmed live: a React-controlled input whose state updates off `onKeyDown`/`onInput`
   (rather than the native value setter) never observes `fill`'s programmatic value change — the field
@@ -176,11 +177,11 @@ Common mistakes:
   and only switch to `type` for fields you've confirmed need it.
 - `{ "do": "waitForPageLoad" }` — emits `await this.waitForPageLoad();` (`BasePage` →
   `page.waitForLoadState('domcontentloaded')`). **Use only after `navigate`**, typically in
-  `step_navigate`. Not sufficient after submit — see *Submit timing*.
+  `step_navigate`. Not sufficient after submit — see _Submit timing_.
 - `waitForURL.pattern` is emitted as a quoted string literal by the generator
   (`page.waitForURL(pattern, { timeout: 15000 })`). Use a path from ground, or a valid glob prefix
   (`**/dashboard/index`). Trailing `**` after a path segment is invalid (`malformed_url_glob`).
-- `waitForResponse.urlPattern` is matched by **substring** against the request URL — emitted as `page.waitForResponse(r => r.url().includes('<urlPattern>'))`. Use it after a submit that fires an XHR (see *Submit timing* below). The pattern must appear in top-level `observed_endpoints` from `ground`.
+- `waitForResponse.urlPattern` is matched by **substring** against the request URL — emitted as `page.waitForResponse(r => r.url().includes('<urlPattern>'))`. Use it after a submit that fires an XHR (see _Submit timing_ below). The pattern must appear in top-level `observed_endpoints` from `ground`.
 
 ## Fixture naming
 
@@ -190,6 +191,7 @@ Multi-page feature ⇒ one fixture per page class.
 ## Locator descriptor mapping
 
 From capture/memory to a schema element:
+
 - `ref`: stable logical id inside the schema
 - `tag`: html tag
 - `testid` + `testid_attr`: strongest anchor — rendered as `getByTestId` (project attr) or `//*[@attr]`
@@ -276,13 +278,17 @@ a **locator method** (returning `Locator`) instead of a static field.
 
 ```json
 {
-  "ref": "deleteBtn", "tag": "button",
-  "testid": "delete-product-{id}", "testid_attr": "data-testid",
+  "ref": "deleteBtn",
+  "tag": "button",
+  "testid": "delete-product-{id}",
+  "testid_attr": "data-testid",
   "dynamic": [{ "name": "id", "type": "string" }]
 }
 ```
+
 With a step `{ "name": "step_delete_product", "params": [{ "name": "id", "type": "string" }],
 "actions": [{ "do": "click", "ref": "deleteBtn", "refArgs": ["id"] }] }` this emits:
+
 ```ts
 private deleteProductButton(id: string): Locator {
   return this.page.locator(`//*[@data-testid="delete-product-${id}"]`);
@@ -292,6 +298,7 @@ async step_delete_product(id: string): Promise<this> {
   return this;
 }
 ```
+
 > Capturing the id earlier in the same test (e.g. `const id = await page.get_lastCreatedId()`) is a
 > **direct `.ts` edit** in the spec — codegen specs emit only flat `await fixture.call(...)` lines, so
 > seed the value via `expected`/`.env` when using `create`, or hand-edit the spec for runtime capture.
@@ -326,7 +333,7 @@ await this.waitForPageLoad();
 ```
 
 `waitForPageLoad` does **not** wait for network requests or URL changes. Do **not** use it after a submit
-click — use *Submit timing* waits instead.
+click — use _Submit timing_ waits instead.
 
 ## Submit timing (async submits — any flow, not login-specific)
 
@@ -337,11 +344,11 @@ do not default every login or every form to `waitForResponse`.
 
 Add **one** explicit wait **inside the page-object step**, right after the submit click:
 
-| What ground saw on submit | Schema wait | `observed_endpoints` |
-|---------------------------|-------------|----------------------|
+| What ground saw on submit                           | Schema wait                                                     | `observed_endpoints`                                           |
+| --------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------- |
 | **XHR/fetch** in `url_trail` or `wait_for_response` | `{ "do": "waitForResponse", "urlPattern": "<path substring>" }` | **Required** — list every distinct submit XHR the step may hit |
-| **Redirect only** (URL changes, no submit XHR) | `{ "do": "waitForURL", "pattern": "<route>" }` | Omit — use path from `url_after` / `url_trail` |
-| **Neither** (sync submit, same page) | No extra wait | Omit |
+| **Redirect only** (URL changes, no submit XHR)      | `{ "do": "waitForURL", "pattern": "<route>" }`                  | Omit — use path from `url_after` / `url_trail`                 |
+| **Neither** (sync submit, same page)                | No extra wait                                                   | Omit                                                           |
 
 - `waitForResponse.urlPattern` — substring match on the request URL. Use only when ground captured that
   endpoint. Works for happy **and** negative paths when the same XHR fires (e.g. failed login still
@@ -372,41 +379,52 @@ path. The submit step ends with `waitForResponse` because this app fires an auth
     "invalidPassword": "WrongPass123!",
     "authErrorPattern": "/invalid|incorrect|error/i"
   },
-  "pages": [{
-    "feature": "auth",
-    "page_class": "AuthPage",
-    "owned_by": "auth",
-    "path": "/auth/login",
-    "types": [],
-    "elements": [
-      { "ref": "emailInput", "tag": "input", "name": "email", "type": "email" },
-      { "ref": "passwordInput", "tag": "input", "name": "password", "type": "password" },
-      { "ref": "loginButton", "tag": "button", "role": "button", "name": "Sign in" },
-      { "ref": "authError", "tag": "div", "role": "alert" }
-    ],
-    "steps": [{
-      "name": "step_submit_credentials",
-      "jsdoc": "Fills credentials and submits the login form.",
-      "params": [{ "name": "email", "type": "string" }, { "name": "password", "type": "string" }],
-      "actions": [
-        { "do": "fill", "ref": "emailInput", "param": "email" },
-        { "do": "fill", "ref": "passwordInput", "param": "password" },
-        { "do": "click", "ref": "loginButton" },
-        { "do": "waitForResponse", "urlPattern": "/web/index.php/auth/validate" }
+  "pages": [
+    {
+      "feature": "auth",
+      "page_class": "AuthPage",
+      "owned_by": "auth",
+      "path": "/auth/login",
+      "types": [],
+      "elements": [
+        { "ref": "emailInput", "tag": "input", "name": "email", "type": "email" },
+        { "ref": "passwordInput", "tag": "input", "name": "password", "type": "password" },
+        { "ref": "loginButton", "tag": "button", "role": "button", "name": "Sign in" },
+        { "ref": "authError", "tag": "div", "role": "alert" }
+      ],
+      "steps": [
+        {
+          "name": "step_submit_credentials",
+          "jsdoc": "Fills credentials and submits the login form.",
+          "params": [
+            { "name": "email", "type": "string" },
+            { "name": "password", "type": "string" }
+          ],
+          "actions": [
+            { "do": "fill", "ref": "emailInput", "param": "email" },
+            { "do": "fill", "ref": "passwordInput", "param": "password" },
+            { "do": "click", "ref": "loginButton" },
+            { "do": "waitForResponse", "urlPattern": "/web/index.php/auth/validate" }
+          ]
+        }
+      ],
+      "verifies": [
+        {
+          "name": "verify_auth_error_visible",
+          "jsdoc": "Verifies the auth error alert matches the expected pattern.",
+          "params": [],
+          "assertions": [
+            {
+              "subject": "element",
+              "ref": "authError",
+              "matcher": "toContainText",
+              "arg": "expected.authErrorPattern"
+            }
+          ]
+        }
       ]
-    }],
-    "verifies": [{
-      "name": "verify_auth_error_visible",
-      "jsdoc": "Verifies the auth error alert matches the expected pattern.",
-      "params": [],
-      "assertions": [{
-        "subject": "element",
-        "ref": "authError",
-        "matcher": "toContainText",
-        "arg": "expected.authErrorPattern"
-      }]
-    }]
-  }],
+    }
+  ],
   "spec": {
     "suite": "Acme - Auth",
     "generates_storage_state": null,
@@ -417,11 +435,13 @@ path. The submit step ends with `waitForResponse` because this app fires an auth
         "ac_id": "AC-1",
         "scenario": "Happy path login",
         "title": "[AC-1] should log in with valid credentials",
-        "body": [{
-          "fixture": "authPage",
-          "call": "step_submit_credentials",
-          "args": ["process.env.AUTH_EMAIL!", "process.env.AUTH_PASSWORD!"]
-        }]
+        "body": [
+          {
+            "fixture": "authPage",
+            "call": "step_submit_credentials",
+            "args": ["process.env.AUTH_EMAIL!", "process.env.AUTH_PASSWORD!"]
+          }
+        ]
       },
       {
         "ac_id": "AC-2",
@@ -448,6 +468,7 @@ path. The submit step ends with `waitForResponse` because this app fires an auth
 ## Progressive build (large / multi-page features)
 
 Build incrementally when the feature is large (3+ pages or 20+ elements):
+
 1. `create` a minimal shell — first page + one smoke case (`validate` with `validateTarget:'create'` first).
 2. Per additional page → `register_page` (additive; `npm run audit` after).
 3. `add_test_cases` last; `npm run audit` confirms the case bodies compile against the page objects.
@@ -455,7 +476,7 @@ Build incrementally when the feature is large (3+ pages or 20+ elements):
 ## Safety rules
 
 - Do **not** hand-write a brand-new spec/page object that codegen should create — use `create` so the
-  barrel + config wiring is correct. (Surgical edits to *existing* generated files are expected and
+  barrel + config wiring is correct. (Surgical edits to _existing_ generated files are expected and
   fine — that's the files-as-truth model.)
 - `create` once per feature; `register_page` for new pages; `add_test_cases` for new cases; everything
   else is a direct `.ts` edit.

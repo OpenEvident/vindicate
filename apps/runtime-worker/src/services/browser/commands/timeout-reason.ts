@@ -20,7 +20,10 @@ const MAX_REASON_LENGTH = 200;
  * fails the plain `startsWith("- ")` check below. */
 function stripAnsi(s: string): string {
   const ESC = String.fromCharCode(27);
-  return s.split(ESC).join("").replace(/\[[0-9;]*m/g, "");
+  return s
+    .split(ESC)
+    .join("")
+    .replace(/\[[0-9;]*m/g, "");
 }
 
 export function extractTimeoutReason(message: string): string | undefined {
@@ -35,7 +38,8 @@ export function extractTimeoutReason(message: string): string | undefined {
   }
 
   const meaningful = logLines.filter((line) => !NOISE_PATTERNS.some((re) => re.test(line)));
-  const pick = meaningful.length > 0 ? meaningful[meaningful.length - 1] : logLines[logLines.length - 1];
+  const pick =
+    meaningful.length > 0 ? meaningful[meaningful.length - 1] : logLines[logLines.length - 1];
 
   if (pick === undefined || pick.length === 0) {
     return undefined;

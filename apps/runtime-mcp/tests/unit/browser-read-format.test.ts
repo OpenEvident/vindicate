@@ -33,7 +33,7 @@ describe("formatSnapshot", () => {
       alerts: ["Name is required"]
     });
 
-    expect(text).toContain('page: New Product — https://app.com/new');
+    expect(text).toContain("page: New Product — https://app.com/new");
     expect(text).toContain('button "Save" @ref-a1b2c3d4 [testid=save-btn]');
     expect(text).toContain('textbox "Product name" (Headphones) @ref-e5f6a7b8 [required]');
     expect(text).toContain('⚠️ 1 alert(s): "Name is required"');
@@ -81,7 +81,9 @@ describe("formatSnapshot", () => {
     });
 
     expect(text).toContain('button "Login" @ref-btn [via role+name]');
-    expect(text).toContain('alert "Invalid credentials" @ref-alert [via role — assert text with toContainText]');
+    expect(text).toContain(
+      'alert "Invalid credentials" @ref-alert [via role — assert text with toContainText]'
+    );
     expect(text).toContain('button "Delete" @ref-row [via nth, low confidence]');
   });
 
@@ -176,12 +178,19 @@ describe("formatSnapshot", () => {
           aria_checked: null,
           aria_invalid: null,
           visible: false,
-          locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number" }
+          locator: {
+            strategy: "role_name",
+            confidence: "high",
+            role: "textbox",
+            name: "Card number"
+          }
         }
       ]
     });
 
-    expect(text).toContain('textbox "Card number" @ref-stale-card-number [via role+name — not visible]');
+    expect(text).toContain(
+      'textbox "Card number" @ref-stale-card-number [via role+name — not visible]'
+    );
   });
 
   it("omits the 'not visible' badge when visible is absent (the common case)", () => {
@@ -198,7 +207,12 @@ describe("formatSnapshot", () => {
           aria_expanded: null,
           aria_checked: null,
           aria_invalid: null,
-          locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number" }
+          locator: {
+            strategy: "role_name",
+            confidence: "high",
+            role: "textbox",
+            name: "Card number"
+          }
         }
       ]
     });
@@ -208,7 +222,14 @@ describe("formatSnapshot", () => {
 
   it("distinguishes two structurally-identical elements — one hidden, one live — via the badge", () => {
     // The actual duplicate-iframe scenario: same role/name/frame_path shape, only visibility differs.
-    const framePath = [{ strategy: "dom_id" as const, confidence: "high" as const, value: "klarna-checkout-iframe", xpath: '//*[@id="klarna-checkout-iframe"]' }];
+    const framePath = [
+      {
+        strategy: "dom_id" as const,
+        confidence: "high" as const,
+        value: "klarna-checkout-iframe",
+        xpath: '//*[@id="klarna-checkout-iframe"]'
+      }
+    ];
     const text = formatSnapshot({
       snapshot_id: 13,
       url: "https://demo.kustom.co/checkout/",
@@ -223,7 +244,13 @@ describe("formatSnapshot", () => {
           aria_checked: null,
           aria_invalid: null,
           visible: false,
-          locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number", frame_path: framePath }
+          locator: {
+            strategy: "role_name",
+            confidence: "high",
+            role: "textbox",
+            name: "Card number",
+            frame_path: framePath
+          }
         },
         {
           ref: "ref-live",
@@ -233,13 +260,21 @@ describe("formatSnapshot", () => {
           aria_expanded: null,
           aria_checked: null,
           aria_invalid: null,
-          locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number", frame_path: framePath }
+          locator: {
+            strategy: "role_name",
+            confidence: "high",
+            role: "textbox",
+            name: "Card number",
+            frame_path: framePath
+          }
         }
       ]
     });
 
-    expect(text).toContain('@ref-stale [via role+name — not visible — in iframe: id=klarna-checkout-iframe]');
-    expect(text).toContain('@ref-live [via role+name — in iframe: id=klarna-checkout-iframe]');
+    expect(text).toContain(
+      "@ref-stale [via role+name — not visible — in iframe: id=klarna-checkout-iframe]"
+    );
+    expect(text).toContain("@ref-live [via role+name — in iframe: id=klarna-checkout-iframe]");
   });
 
   it("shows a 'replaces' badge for an element flagged supersedes_ref", () => {
@@ -257,7 +292,12 @@ describe("formatSnapshot", () => {
           aria_checked: null,
           aria_invalid: null,
           supersedes_ref: "ref-old-card-number",
-          locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number" }
+          locator: {
+            strategy: "role_name",
+            confidence: "high",
+            role: "textbox",
+            name: "Card number"
+          }
         }
       ]
     });
@@ -281,7 +321,12 @@ describe("formatSnapshot", () => {
           aria_expanded: null,
           aria_checked: null,
           aria_invalid: null,
-          locator: { strategy: "role_name", confidence: "high", role: "textbox", name: "Card number" }
+          locator: {
+            strategy: "role_name",
+            confidence: "high",
+            role: "textbox",
+            name: "Card number"
+          }
         }
       ]
     });
@@ -427,7 +472,9 @@ describe("formatSnapshot", () => {
       ]
     });
 
-    expect(text).toContain("same name as @ref-button (button), @ref-tab (tab) — verify which is the real target");
+    expect(text).toContain(
+      "same name as @ref-button (button), @ref-tab (tab) — verify which is the real target"
+    );
   });
 
   it("shows an 'in iframe' hint for an element resolved through one frame_path hop", () => {
@@ -449,7 +496,9 @@ describe("formatSnapshot", () => {
             confidence: "high",
             role: "textbox",
             name: "Email address",
-            frame_path: [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }]
+            frame_path: [
+              { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }
+            ]
           }
         }
       ]
@@ -519,7 +568,11 @@ describe("formatSnapshot", () => {
             name: "Card number",
             frame_path: [
               { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" },
-              { strategy: "attr_combo", confidence: "high", xpath: '//iframe[@title="Secure payment input frame"]' }
+              {
+                strategy: "attr_combo",
+                confidence: "high",
+                xpath: '//iframe[@title="Secure payment input frame"]'
+              }
             ]
           }
         }
@@ -618,7 +671,12 @@ describe("formatSnapshot", () => {
           aria_expanded: null,
           aria_checked: null,
           aria_invalid: null,
-          locator: { strategy: "testid", confidence: "high", attr: "data-testid", value: "save-btn" }
+          locator: {
+            strategy: "testid",
+            confidence: "high",
+            attr: "data-testid",
+            value: "save-btn"
+          }
         }
       ]
     });
@@ -642,12 +700,19 @@ describe("formatSnapshot", () => {
           aria_expanded: null,
           aria_checked: null,
           aria_invalid: null,
-          locator: { strategy: "testid", confidence: "high", attr: "data-testid", value: "save-status" }
+          locator: {
+            strategy: "testid",
+            confidence: "high",
+            attr: "data-testid",
+            value: "save-status"
+          }
         }
       ]
     });
 
-    expect(text).toContain('status "Saved" @ref-status [testid=save-status] [assert text with toContainText]');
+    expect(text).toContain(
+      'status "Saved" @ref-status [testid=save-status] [assert text with toContainText]'
+    );
     expect(text).not.toContain("via testid");
   });
 
@@ -706,7 +771,9 @@ describe("formatSnapshot", () => {
       elements: []
     });
 
-    expect(text).toContain('⚠️ overlay open: menu "Account" @ref-menu — scope into it or dismiss it, then re-read');
+    expect(text).toContain(
+      '⚠️ overlay open: menu "Account" @ref-menu — scope into it or dismiss it, then re-read'
+    );
   });
 
   it("uses blocking guidance when overlay is marked modal", () => {
@@ -714,11 +781,18 @@ describe("formatSnapshot", () => {
       snapshot_id: 12,
       url: "https://app.com/",
       title: "App",
-      overlay_active: { ref: "ref-alert", role: "alertdialog", name: "Session timeout warning", modal: true },
+      overlay_active: {
+        ref: "ref-alert",
+        role: "alertdialog",
+        name: "Session timeout warning",
+        modal: true
+      },
       elements: []
     });
 
-    expect(text).toContain('⚠️ modal open: alertdialog "Session timeout warning" @ref-alert — page is blocked; act inside it or dismiss it, then re-read');
+    expect(text).toContain(
+      '⚠️ modal open: alertdialog "Session timeout warning" @ref-alert — page is blocked; act inside it or dismiss it, then re-read'
+    );
   });
 
   it("announces other open tabs as an early banner — a payment/login popup a click just opened", () => {
@@ -732,7 +806,9 @@ describe("formatSnapshot", () => {
 
     const lines = text.split("\n");
     expect(lines[0]).toBe("page: Checkout — https://demo.kustom.co/checkout/");
-    expect(lines[1]).toContain('⚠️ 1 other tab(s) open: "https://login.klarna.com/oauth2/auth?x=1"');
+    expect(lines[1]).toContain(
+      '⚠️ 1 other tab(s) open: "https://login.klarna.com/oauth2/auth?x=1"'
+    );
     expect(lines[1]).toContain("browser_navigate switch_to_url:");
   });
 
@@ -745,7 +821,9 @@ describe("formatSnapshot", () => {
       elements: []
     });
 
-    expect(text).toContain('⚠️ 8 other tab(s) open: "https://app.com/a", "https://app.com/b" (+6 more)');
+    expect(text).toContain(
+      '⚠️ 8 other tab(s) open: "https://app.com/a", "https://app.com/b" (+6 more)'
+    );
   });
 
   it("shows both the modal and other-tabs banners together, modal first", () => {
@@ -769,7 +847,17 @@ describe("formatSnapshot", () => {
       url: "https://app.com/",
       title: "Big",
       truncation_warning: "⚠️ page has 600 interactive nodes — showing top 500",
-      elements: [{ ref: "ref-00000001", role: "button", name: "OK", aria_required: null, aria_expanded: null, aria_checked: null, aria_invalid: null }]
+      elements: [
+        {
+          ref: "ref-00000001",
+          role: "button",
+          name: "OK",
+          aria_required: null,
+          aria_expanded: null,
+          aria_checked: null,
+          aria_invalid: null
+        }
+      ]
     });
     expect(text).toContain("600 interactive nodes");
     expect(text).not.toContain("showing 1 of 1 elements");

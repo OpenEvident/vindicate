@@ -44,10 +44,7 @@ const SETUP_PATH_SPINES: Record<string, readonly string[]> = {
 const SIDE_LOOP_NODES = new Set(["heal", "escalate"]);
 
 export function spineForPath(graphId: GraphId, path: string, graph: GraphDoc): string[] {
-  const mapped =
-    graphId === "setup"
-      ? SETUP_PATH_SPINES[path]
-      : MAIN_PATH_SPINES[path];
+  const mapped = graphId === "setup" ? SETUP_PATH_SPINES[path] : MAIN_PATH_SPINES[path];
   if (mapped !== undefined) {
     return [...mapped];
   }
@@ -127,7 +124,9 @@ export function buildWorkflowPhases(input: BuildWorkflowPhasesInput): BuildWorkf
   }
 
   if (activeNode !== undefined && completedSet.has(activeNode)) {
-    warnings.push(`active node '${activeNode}' is also listed in completed — remove it from completed`);
+    warnings.push(
+      `active node '${activeNode}' is also listed in completed — remove it from completed`
+    );
   }
 
   const phases: WorkflowPhaseRow[] = spine.map((id) => {

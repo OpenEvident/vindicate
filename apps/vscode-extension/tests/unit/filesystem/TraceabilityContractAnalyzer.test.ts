@@ -36,7 +36,13 @@ test("[AC-2] extra test", async () => {});
         ac: 1,
         acIds: ["AC-1"],
         scenarioAcMap: { "Happy Path": "AC-1" },
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/auth.story.md",
         specMtimeMs: Date.now(),
         words: 10
@@ -65,7 +71,13 @@ test("[AC-1] should allow login", async () => {});
         ac: 1,
         acIds: ["AC-1"],
         scenarioAcMap: { "Happy Path": "AC-1" },
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/auth.story.md",
         specMtimeMs: Date.now(),
         words: 10
@@ -93,7 +105,13 @@ test("should allow login [AC-1]", async () => {});
         ac: 1,
         acIds: ["AC-1"],
         scenarioAcMap: { "Happy Path": "AC-1" },
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/auth.story.md",
         specMtimeMs: Date.now(),
         words: 10
@@ -121,7 +139,13 @@ test("[AC-1][AC-2] should allow login", async () => {});
         ac: 2,
         acIds: ["AC-1", "AC-2"],
         scenarioAcMap: { "Happy Path": "AC-1" },
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/auth.story.md",
         specMtimeMs: Date.now(),
         words: 10
@@ -149,7 +173,13 @@ test("[AC-1] should allow login", async () => {});
         ac: 2,
         acIds: ["AC-1", "AC-2"],
         scenarioAcMap: { "Happy Path": "AC-1", "Edge Case: invalid": "AC-2" },
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/auth.story.md",
         specMtimeMs: Date.now(),
         words: 10
@@ -178,7 +208,13 @@ test("[AC-99] stale tag", async () => {});
         ac: 1,
         acIds: ["AC-1"],
         scenarioAcMap: {},
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/auth.story.md",
         specMtimeMs: Date.now(),
         words: 10
@@ -216,7 +252,13 @@ test("search works", async () => {});
         ac: 2,
         acIds: ["AC-1", "AC-2"],
         scenarioAcMap: { "Happy Path": "AC-1" },
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/auth.story.md",
         specMtimeMs: Date.now(),
         words: 12
@@ -228,7 +270,13 @@ test("search works", async () => {});
         ac: 1,
         acIds: ["AC-1"],
         scenarioAcMap: {},
-        headings: { feature: true, persona: true, acceptanceCriteria: true, testcases: true, outOfScope: true },
+        headings: {
+          feature: true,
+          persona: true,
+          acceptanceCriteria: true,
+          testcases: true,
+          outOfScope: true
+        },
         specFile: ".vindicate/stories/search.story.md",
         specMtimeMs: Date.now(),
         words: 10

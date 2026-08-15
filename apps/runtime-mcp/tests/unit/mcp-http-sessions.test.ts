@@ -7,21 +7,33 @@ import { config } from "../../src/core/config.js";
 import { createMcpHttpSessionManager } from "../../src/mcp/mcp-http-sessions.js";
 import { FakeWorkerClient } from "../fakes/fake-worker-client.js";
 
-vi.mock("../../src/mcp/tools/browser-session-tool.js", () => ({ registerBrowserSessionTool: vi.fn() }));
-vi.mock("../../src/mcp/tools/browser-navigate-tool.js", () => ({ registerBrowserNavigateTool: vi.fn() }));
+vi.mock("../../src/mcp/tools/browser-session-tool.js", () => ({
+  registerBrowserSessionTool: vi.fn()
+}));
+vi.mock("../../src/mcp/tools/browser-navigate-tool.js", () => ({
+  registerBrowserNavigateTool: vi.fn()
+}));
 vi.mock("../../src/mcp/tools/browser-act-tool.js", () => ({ registerBrowserActTool: vi.fn() }));
 vi.mock("../../src/mcp/tools/browser-read-tool.js", () => ({ registerBrowserReadTool: vi.fn() }));
-vi.mock("../../src/mcp/tools/browser-assert-tool.js", () => ({ registerBrowserAssertTool: vi.fn() }));
+vi.mock("../../src/mcp/tools/browser-assert-tool.js", () => ({
+  registerBrowserAssertTool: vi.fn()
+}));
 vi.mock("../../src/mcp/tools/generate-code-tool.js", () => ({ registerGenerateCodeTool: vi.fn() }));
-vi.mock("../../src/mcp/tools/validate-story-tool.js", () => ({ registerValidateStoryTool: vi.fn() }));
+vi.mock("../../src/mcp/tools/validate-story-tool.js", () => ({
+  registerValidateStoryTool: vi.fn()
+}));
 vi.mock("../../src/mcp/tools/test-tool.js", () => ({ registerTestTool: vi.fn() }));
 vi.mock("../../src/mcp/tools/scaffold-tools.js", () => ({ registerScaffoldTools: vi.fn() }));
 vi.mock("../../src/mcp/tools/recording-tools.js", () => ({ registerRecordingTools: vi.fn() }));
 vi.mock("../../src/mcp/tools/ask-user-tool.js", () => ({ registerAskUserTool: vi.fn() }));
 vi.mock("../../src/mcp/tools/design-tool.js", () => ({ registerDesignTool: vi.fn() }));
 vi.mock("../../src/mcp/tools/show-panel-tool.js", () => ({ registerShowPanelTool: vi.fn() }));
-vi.mock("../../src/mcp/resources/elicitation-resources.js", () => ({ registerElicitationResources: vi.fn() }));
-vi.mock("../../src/mcp/resources/vindicate-app-resource.js", () => ({ registerVindicateAppResource: vi.fn() }));
+vi.mock("../../src/mcp/resources/elicitation-resources.js", () => ({
+  registerElicitationResources: vi.fn()
+}));
+vi.mock("../../src/mcp/resources/vindicate-app-resource.js", () => ({
+  registerVindicateAppResource: vi.fn()
+}));
 vi.mock("../../src/mcp/tools/workflow-tool.js", () => ({ registerWorkflowTool: vi.fn() }));
 
 const initializeBody = {
@@ -45,7 +57,10 @@ function createManager() {
   return { manager, makeContentService };
 }
 
-async function postInitialize(port: number, opts: { query?: string; headers?: Record<string, string> } = {}): Promise<{ status: number; sessionId: string | null; body: string }> {
+async function postInitialize(
+  port: number,
+  opts: { query?: string; headers?: Record<string, string> } = {}
+): Promise<{ status: number; sessionId: string | null; body: string }> {
   const response = await fetch(`http://127.0.0.1:${port}/mcp${opts.query ?? ""}`, {
     method: "POST",
     headers: {
@@ -145,7 +160,9 @@ describe("createMcpHttpSessionManager", () => {
 
     try {
       const viaQuery = await postInitialize(port, { query: "?project_root=%2Ftmp%2Fwindow-a" });
-      const viaHeader = await postInitialize(port, { headers: { "x-vindicate-project-root": "/tmp/window-b" } });
+      const viaHeader = await postInitialize(port, {
+        headers: { "x-vindicate-project-root": "/tmp/window-b" }
+      });
       const viaNeither = await postInitialize(port);
 
       expect(viaQuery.status).toBe(200);

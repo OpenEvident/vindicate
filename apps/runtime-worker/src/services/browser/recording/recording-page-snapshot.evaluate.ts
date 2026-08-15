@@ -97,9 +97,8 @@ export function captureRecordingPageSnapshot(
       }
     }
     const htmlEl = el as HTMLElement;
-    const maybeLabels = (
-      htmlEl as HTMLElement & { labels?: NodeListOf<HTMLLabelElement> | null }
-    ).labels;
+    const maybeLabels = (htmlEl as HTMLElement & { labels?: NodeListOf<HTMLLabelElement> | null })
+      .labels;
     if (maybeLabels !== undefined && maybeLabels !== null && maybeLabels.length > 0) {
       return maybeLabels[0]?.textContent?.trim() ?? "";
     }
@@ -139,9 +138,8 @@ export function captureRecordingPageSnapshot(
       }
     }
     const htmlEl = el as HTMLElement;
-    const maybeLabels = (
-      htmlEl as HTMLElement & { labels?: NodeListOf<HTMLLabelElement> | null }
-    ).labels;
+    const maybeLabels = (htmlEl as HTMLElement & { labels?: NodeListOf<HTMLLabelElement> | null })
+      .labels;
     if (maybeLabels !== undefined && maybeLabels !== null && maybeLabels.length > 0) {
       return maybeLabels[0]?.textContent?.trim() ?? "";
     }
@@ -251,7 +249,13 @@ export function captureRecordingPageSnapshot(
       while (current !== null) {
         const tag = current.tagName.toLowerCase();
         const role = current.getAttribute("role");
-        if (tag === "tr" || tag === "li" || role === "row" || role === "listitem" || role === "gridcell") {
+        if (
+          tag === "tr" ||
+          tag === "li" ||
+          role === "row" ||
+          role === "listitem" ||
+          role === "gridcell"
+        ) {
           if (role === "gridcell") {
             return current.closest("[role=row], tr") ?? current;
           }
@@ -336,7 +340,12 @@ export function captureRecordingPageSnapshot(
     const candidates: SelectorCandidatePayload[] = [];
     const foundTestid = findTestid(el, TESTID_CANDIDATES);
     if (foundTestid !== null) {
-      candidates.push({ strategy: "testid", value: foundTestid.value, attr: foundTestid.attr, strength: "strong" });
+      candidates.push({
+        strategy: "testid",
+        value: foundTestid.value,
+        attr: foundTestid.attr,
+        strength: "strong"
+      });
     }
     const scoped = buildScopedCandidate(el);
     if (scoped !== null) {
@@ -351,7 +360,26 @@ export function captureRecordingPageSnapshot(
     // name (any role), or descendant text on a name-from-content role. alert/status text in a child is
     // not the element's accessible name — skip it and let attr_combo/nth carry the locator.
     // Canonical home + drift guard: snapshot/name-from-content.ts (pinned by name-from-content.test.ts).
-    const ROLE_NAME_FROM_CONTENT = ["button","link","heading","menuitem","menuitemcheckbox","menuitemradio","option","radio","checkbox","switch","tab","treeitem","cell","gridcell","columnheader","rowheader","row","tooltip"];
+    const ROLE_NAME_FROM_CONTENT = [
+      "button",
+      "link",
+      "heading",
+      "menuitem",
+      "menuitemcheckbox",
+      "menuitemradio",
+      "option",
+      "radio",
+      "checkbox",
+      "switch",
+      "tab",
+      "treeitem",
+      "cell",
+      "gridcell",
+      "columnheader",
+      "rowheader",
+      "row",
+      "tooltip"
+    ];
     const labels = (el as HTMLElement & { labels?: NodeListOf<HTMLLabelElement> | null }).labels;
     const authorName =
       (el.getAttribute("aria-label") ?? "").length > 0 ||
@@ -360,7 +388,11 @@ export function captureRecordingPageSnapshot(
       (labels !== undefined && labels !== null && labels.length > 0) ||
       (el.getAttribute("placeholder") ?? "").length > 0;
     if (name.length > 0 && (ROLE_NAME_FROM_CONTENT.indexOf(role) !== -1 || authorName)) {
-      candidates.push({ strategy: "role_name", value: `${role}[name="${name}"]`, strength: "strong" });
+      candidates.push({
+        strategy: "role_name",
+        value: `${role}[name="${name}"]`,
+        strength: "strong"
+      });
     }
     // Role-less container (no explicit role attribute, not a form-control tag with its own name
     // semantics) with real text — e.g. a custom multi-select row div whose own text is its label.
@@ -380,7 +412,11 @@ export function captureRecordingPageSnapshot(
     if (typeAttr !== null && typeAttr.length > 0) attrParts.push(`@type="${typeAttr}"`);
     if (nameAttr !== null && nameAttr.length > 0) attrParts.push(`@name="${nameAttr}"`);
     if (attrParts.length > 0) {
-      candidates.push({ strategy: "attr_combo", value: `//${tag}[${attrParts.join(" and ")}]`, strength: "medium" });
+      candidates.push({
+        strategy: "attr_combo",
+        value: `//${tag}[${attrParts.join(" and ")}]`,
+        strength: "medium"
+      });
     }
     if (name.length === 0) {
       const siblingText = buildSiblingTextCandidate(el);
@@ -441,10 +477,21 @@ export function captureRecordingPageSnapshot(
     return undefined;
   }
 
-  function chooseBestCandidate(candidates: SelectorCandidatePayload[]): SelectorCandidatePayload | null {
+  function chooseBestCandidate(
+    candidates: SelectorCandidatePayload[]
+  ): SelectorCandidatePayload | null {
     const nonDynamic = candidates.filter((c) => c.dynamic !== true);
     const pool = nonDynamic.length > 0 ? nonDynamic : candidates;
-    for (const strategy of ["testid", "scoped", "dom_id", "role_name", "text", "attr_combo", "sibling_text", "nth"] as const) {
+    for (const strategy of [
+      "testid",
+      "scoped",
+      "dom_id",
+      "role_name",
+      "text",
+      "attr_combo",
+      "sibling_text",
+      "nth"
+    ] as const) {
       const hit = pool.find((c) => c.strategy === strategy);
       if (hit !== undefined) {
         return hit;

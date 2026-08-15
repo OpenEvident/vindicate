@@ -32,7 +32,12 @@ const CombinedGenerateCodeInputSchema = z.discriminatedUnion("mode", [
   ...GenerateApiCodeInputSchema.options
 ]);
 
-const API_MODES = new Set<string>(["validate_api", "create_api", "add_api_test_cases", "register_client"]);
+const API_MODES = new Set<string>([
+  "validate_api",
+  "create_api",
+  "add_api_test_cases",
+  "register_client"
+]);
 
 function isApiInput(
   data: z.infer<typeof GenerateCodeInputSchema> | GenerateApiCodeInput
@@ -69,23 +74,40 @@ export function registerGenerateCodeTool(server: McpServer, projectFs: ProjectFs
         validateTarget: z
           .enum(["create", "create_api"])
           .optional()
-          .describe("Required for mode 'validate'/'validate_api' only — which real op this is a dry-run for. Always 'create' or 'create_api', never any other mode."),
+          .describe(
+            "Required for mode 'validate'/'validate_api' only — which real op this is a dry-run for. Always 'create' or 'create_api', never any other mode."
+          ),
         feature: z
           .string()
           .min(1)
           .optional()
-          .describe("The feature slug (lowercase noun). Required for every mode except 'validate'/'validate_api', where it's still recommended so the 'feature already exists' guard can be dry-run too."),
+          .describe(
+            "The feature slug (lowercase noun). Required for every mode except 'validate'/'validate_api', where it's still recommended so the 'feature already exists' guard can be dry-run too."
+          ),
         schema: z
           .union([FullSchemaSchema, ApiFullSchemaSchema])
           .optional()
-          .describe("Required for 'validate'/'create' (UI: FullSchema) or 'validate_api'/'create_api' (API: ApiFullSchema). The full inline schema object — see ref-codegen-schema.md / ref-api-codegen-schema.md."),
-        overwrite: z.boolean().optional().describe("Only honored by 'create'/'create_api' — allows re-running create against a feature that already has files. Omit/false is the safe default."),
+          .describe(
+            "Required for 'validate'/'create' (UI: FullSchema) or 'validate_api'/'create_api' (API: ApiFullSchema). The full inline schema object — see ref-codegen-schema.md / ref-api-codegen-schema.md."
+          ),
+        overwrite: z
+          .boolean()
+          .optional()
+          .describe(
+            "Only honored by 'create'/'create_api' — allows re-running create against a feature that already has files. Omit/false is the safe default."
+          ),
         cases: z
           .union([z.array(TestCaseSchema), z.array(ApiTestCaseSchema)])
           .optional()
-          .describe("Required for 'add_test_cases' (TestCase[]) / 'add_api_test_cases' (ApiTestCase[]) — the new test case(s) to append."),
-        page: PageDefSchema.optional().describe("Required for 'register_page' — one page object definition (same shape as one entry in schema.pages[])."),
-        client: ClientDefSchema.optional().describe("Required for 'register_client' — one resource client definition (same shape as one entry in schema.clients[]).")
+          .describe(
+            "Required for 'add_test_cases' (TestCase[]) / 'add_api_test_cases' (ApiTestCase[]) — the new test case(s) to append."
+          ),
+        page: PageDefSchema.optional().describe(
+          "Required for 'register_page' — one page object definition (same shape as one entry in schema.pages[])."
+        ),
+        client: ClientDefSchema.optional().describe(
+          "Required for 'register_client' — one resource client definition (same shape as one entry in schema.clients[])."
+        )
       },
       annotations: { destructiveHint: true }
     },
@@ -215,4 +237,3 @@ export function registerGenerateCodeTool(server: McpServer, projectFs: ProjectFs
     }
   );
 }
-

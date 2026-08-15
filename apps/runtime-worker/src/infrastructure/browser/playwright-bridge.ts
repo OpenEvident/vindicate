@@ -9,7 +9,11 @@ import { chromium, type Browser, type BrowserContext, type Page } from "playwrig
 import { BrowserCrashError, BrowserUnavailableError } from "../../shared/errors/worker.errors.js";
 import type { HighlightService } from "../../services/browser/highlight/highlight-service.js";
 import type { IBrowserBridge } from "./browser-bridge.interface.js";
-import type { CreateContextOptions, CreateContextResult, RecordingEventSource } from "./browser-bridge.types.js";
+import type {
+  CreateContextOptions,
+  CreateContextResult,
+  RecordingEventSource
+} from "./browser-bridge.types.js";
 import type { SessionBrowserState } from "./session-browser-state.js";
 
 export class PlaywrightBridge implements IBrowserBridge {
@@ -133,11 +137,17 @@ export class PlaywrightBridge implements IBrowserBridge {
     this.logger.info({ headless }, "no sessions left — shutting down browser process");
     await browser.close().catch((err: unknown) => {
       this.intentionalBrowserClose.delete(headless);
-      this.logger.warn({ err, headless }, "browser close after last session failed — process may linger");
+      this.logger.warn(
+        { err, headless },
+        "browser close after last session failed — process may linger"
+      );
     });
   }
 
-  async createContext(sessionId: string, options?: CreateContextOptions): Promise<CreateContextResult> {
+  async createContext(
+    sessionId: string,
+    options?: CreateContextOptions
+  ): Promise<CreateContextResult> {
     if (this.sessions.has(sessionId)) {
       this.logger.warn({ sessionId }, "createContext called but context already exists — reusing");
       return { created: false };
@@ -154,7 +164,9 @@ export class PlaywrightBridge implements IBrowserBridge {
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      throw new BrowserUnavailableError(`Failed to create browser context for session ${sessionId}: ${msg}`);
+      throw new BrowserUnavailableError(
+        `Failed to create browser context for session ${sessionId}: ${msg}`
+      );
     }
 
     const state: SessionBrowserState = { headless, context, closing: false, activePageIndex: 0 };
@@ -181,7 +193,10 @@ export class PlaywrightBridge implements IBrowserBridge {
     return { created: true };
   }
 
-  async ensureHealthyContext(sessionId: string, options?: CreateContextOptions): Promise<CreateContextResult> {
+  async ensureHealthyContext(
+    sessionId: string,
+    options?: CreateContextOptions
+  ): Promise<CreateContextResult> {
     const state = this.getSession(sessionId);
     if (state === undefined) {
       return this.createContext(sessionId, options);
@@ -198,7 +213,10 @@ export class PlaywrightBridge implements IBrowserBridge {
       await openPages[0]!.waitForLoadState("domcontentloaded", { timeout: 5000 });
       return { created: false };
     } catch (err: unknown) {
-      this.logger.warn({ err, sessionId }, "ensureHealthyContext: page health check failed — recreating context");
+      this.logger.warn(
+        { err, sessionId },
+        "ensureHealthyContext: page health check failed — recreating context"
+      );
       await this.destroyContext(sessionId);
       return this.createContext(sessionId, options);
     }
@@ -271,7 +289,10 @@ export class PlaywrightBridge implements IBrowserBridge {
 
   async setupRecording(
     sessionId: string,
-    onEvent: (payload: Record<string, unknown>, source: RecordingEventSource) => void | Promise<void>
+    onEvent: (
+      payload: Record<string, unknown>,
+      source: RecordingEventSource
+    ) => void | Promise<void>
   ): Promise<void> {
     if (this.recordingSetupSessions.has(sessionId)) {
       return;
@@ -296,7 +317,9 @@ export class PlaywrightBridge implements IBrowserBridge {
       }
     });
     await state.context.exposeBinding("__vindicateStopRecording", async (source) => {
-      await Promise.resolve(onEvent({ event: "__stop_requested" }, { page: source.page, frame: source.frame }));
+      await Promise.resolve(
+        onEvent({ event: "__stop_requested" }, { page: source.page, frame: source.frame })
+      );
     });
     this.recordingSetupSessions.add(sessionId);
   }
@@ -313,5 +336,4 @@ export class PlaywrightBridge implements IBrowserBridge {
       }
     }
   }
-
 }

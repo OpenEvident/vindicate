@@ -14,7 +14,10 @@ const here = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z
 
 const INLINE_COPIES: ReadonlyArray<{ label: string; file: string }> = [
   { label: "interactive-capture", file: path.join(here, "interactive-capture.evaluate.ts") },
-  { label: "recording-capture", file: path.join(here, "..", "recording", "recording-capture.evaluate.ts") },
+  {
+    label: "recording-capture",
+    file: path.join(here, "..", "recording", "recording-capture.evaluate.ts")
+  },
   {
     label: "recording-page-snapshot",
     file: path.join(here, "..", "recording", "recording-page-snapshot.evaluate.ts")
@@ -37,13 +40,10 @@ describe("name-from-content rule", () => {
     expect(roleTakesNameFromContent("status")).toBe(false);
   });
 
-  it.each(INLINE_COPIES)(
-    "$label inline copy matches the canonical allowlist",
-    ({ file }) => {
-      const inline = extractAllowlist(readFileSync(file, "utf8"));
-      // Order is irrelevant; membership is the contract.
-      expect(new Set(inline)).toEqual(new Set(ROLE_NAME_FROM_CONTENT));
-      expect(inline.length).toBe(ROLE_NAME_FROM_CONTENT.length);
-    }
-  );
+  it.each(INLINE_COPIES)("$label inline copy matches the canonical allowlist", ({ file }) => {
+    const inline = extractAllowlist(readFileSync(file, "utf8"));
+    // Order is irrelevant; membership is the contract.
+    expect(new Set(inline)).toEqual(new Set(ROLE_NAME_FROM_CONTENT));
+    expect(inline.length).toBe(ROLE_NAME_FROM_CONTENT.length);
+  });
 });

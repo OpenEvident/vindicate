@@ -2,10 +2,7 @@ import { describe, expect, it } from "vitest";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 
-import {
-  buildProgressDisplay,
-  checkAppsCapability
-} from "../../src/mcp/apps-capability.js";
+import { buildProgressDisplay, checkAppsCapability } from "../../src/mcp/apps-capability.js";
 
 function stubClientCaps(server: McpServer, caps: unknown): void {
   (server.server as { getClientCapabilities?: () => unknown }).getClientCapabilities = () => caps;

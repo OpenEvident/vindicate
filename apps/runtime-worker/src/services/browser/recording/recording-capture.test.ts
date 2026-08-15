@@ -149,7 +149,9 @@ describe("buildRecorderScript", () => {
     // Gated on no explicit role attribute, so a real <button>'s own text never gets a redundant/wrong
     // text candidate alongside its role_name one.
     const textTierIdx = script.indexOf("isFormControlTag");
-    expect(script.slice(textTierIdx, textTierIdx + 300)).toContain("el.getAttribute('role') === null");
+    expect(script.slice(textTierIdx, textTierIdx + 300)).toContain(
+      "el.getAttribute('role') === null"
+    );
   });
 
   it("uses the ARIA implicit role, never the raw tag name, for role_name and scoped candidates", () => {

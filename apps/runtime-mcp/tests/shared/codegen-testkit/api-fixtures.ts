@@ -20,11 +20,15 @@ export function clientMethod(name: string, overrides?: Partial<ClientMethod>): C
 }
 
 function defaultFixtureName(clientClass: string): string {
-  const resource = clientClass.endsWith("Client") ? clientClass.slice(0, -"Client".length) : clientClass;
+  const resource = clientClass.endsWith("Client")
+    ? clientClass.slice(0, -"Client".length)
+    : clientClass;
   return `${resource.charAt(0).toLowerCase()}${resource.slice(1)}Api`;
 }
 
-export function clientDef(overrides: Partial<ClientDef> & Pick<ClientDef, "client_class">): ClientDef {
+export function clientDef(
+  overrides: Partial<ClientDef> & Pick<ClientDef, "client_class">
+): ClientDef {
   const feature = overrides.feature ?? "widgets";
   return {
     feature,
@@ -36,7 +40,9 @@ export function clientDef(overrides: Partial<ClientDef> & Pick<ClientDef, "clien
   };
 }
 
-export function builderDef(overrides: Partial<BuilderDef> & Pick<BuilderDef, "builder_class" | "target_type">): BuilderDef {
+export function builderDef(
+  overrides: Partial<BuilderDef> & Pick<BuilderDef, "builder_class" | "target_type">
+): BuilderDef {
   return {
     fields: [{ name: "name", type: "string", default: "'widget'" }],
     ...overrides

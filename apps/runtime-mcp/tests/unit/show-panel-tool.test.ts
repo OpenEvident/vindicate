@@ -9,8 +9,9 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<{
 }>;
 
 function getToolHandler(server: McpServer, name: string): ToolHandler {
-  const tools = (server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> })
-    ._registeredTools;
+  const tools = (
+    server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> }
+  )._registeredTools;
   const tool = tools[name];
   if (tool === undefined) {
     throw new Error(`tool not registered: ${name}`);
@@ -28,7 +29,10 @@ describe("show-panel-tool", () => {
     const server = new McpServer({ name: "test", version: "0" });
     registerShowPanelTool(server);
 
-    const result = await getToolHandler(server, "vindicate_show_panel")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_show_panel"
+    )({
       panel_type: "coverage",
       data: {
         total_tests: 12,
@@ -52,7 +56,10 @@ describe("show-panel-tool", () => {
     const server = new McpServer({ name: "test", version: "0" });
     registerShowPanelTool(server);
 
-    const result = await getToolHandler(server, "vindicate_show_panel")({
+    const result = await getToolHandler(
+      server,
+      "vindicate_show_panel"
+    )({
       panel_type: "workflow-complete",
       data: {
         verdict: "pass",

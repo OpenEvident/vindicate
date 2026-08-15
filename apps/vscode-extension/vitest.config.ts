@@ -7,8 +7,8 @@ export default defineConfig({
   resolve: {
     alias: {
       vscode: path.resolve(__dirname, "tests/mocks/vscode.ts"),
-      "@": path.resolve(__dirname, "src/webview"),
-    },
+      "@": path.resolve(__dirname, "src/webview")
+    }
   },
   test: {
     globals: true,

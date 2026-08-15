@@ -50,7 +50,11 @@ export const browserPlugin: FastifyPluginCallback<BrowserPluginOptions> = (fasti
     actionLog: opts.actionLog,
     recordingService: opts.recordingService
   });
-  registerLogRoutes(fastify, { store: opts.store, logs: opts.sessionLogs, actionLog: opts.actionLog });
+  registerLogRoutes(fastify, {
+    store: opts.store,
+    logs: opts.sessionLogs,
+    actionLog: opts.actionLog
+  });
   registerSessionFilesRoutes(fastify, { store: opts.store, maxFileBytes: opts.maxFileBytes });
   done();
 };

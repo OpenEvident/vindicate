@@ -10,17 +10,17 @@ Internal build notes for this extension. **Not shown on the Marketplace** — us
 
 ## Scripts
 
-| Script | What it does |
-|--------|----------------|
-| `pnpm run build` | Bundle worker + MCP, build extension host (`esbuild`) and webview (`vite`). |
-| `pnpm run build:extension` | Extension host only (assumes runtime bundles already copied). |
-| `pnpm run watch` / `dev` | Watch mode for extension + webview during development. |
-| `pnpm run package` | Full release build: `build` → `vsce package`. |
-| `pnpm run package:vsix` | Alias for `package`. |
-| `pnpm run clean` | Remove `dist/`. |
-| `pnpm run verify` | Typecheck, lint, unit tests. |
-| `pnpm run verify:bundle` | Assert worker/MCP/webview outputs and all six keyring `.node` files (after `build`). |
-| `pnpm run test:e2e` | Build + VS Code extension tests. |
+| Script                     | What it does                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------ |
+| `pnpm run build`           | Bundle worker + MCP, build extension host (`esbuild`) and webview (`vite`).          |
+| `pnpm run build:extension` | Extension host only (assumes runtime bundles already copied).                        |
+| `pnpm run watch` / `dev`   | Watch mode for extension + webview during development.                               |
+| `pnpm run package`         | Full release build: `build` → `vsce package`.                                        |
+| `pnpm run package:vsix`    | Alias for `package`.                                                                 |
+| `pnpm run clean`           | Remove `dist/`.                                                                      |
+| `pnpm run verify`          | Typecheck, lint, unit tests.                                                         |
+| `pnpm run verify:bundle`   | Assert worker/MCP/webview outputs and all six keyring `.node` files (after `build`). |
+| `pnpm run test:e2e`        | Build + VS Code extension tests.                                                     |
 
 From the **repo root**:
 
@@ -60,15 +60,15 @@ Or in VS Code / Cursor: **Extensions** → `...` → **Install from VSIX...**
 
 ## What goes inside the VSIX
 
-| Path in extension | Source |
-|-------------------|--------|
-| `dist/extension.js` | Extension activation / orchestration |
-| `dist/bundled/runtime-worker/` | Worker `bundle.mjs`, `@napi-rs` (all platforms), `chromium-bidi` |
-| `dist/bundled/package.json` | Stub package root required by playwright-core inside the worker bundle |
-| `dist/bundled/browsers.json` | Playwright browser revision metadata |
-| `dist/bundled/runtime-mcp/bundle.mjs` | MCP server bundle |
-| `dist/webview/main.js`, `main.css` | Sidebar / panel UI |
-| `resources/` | Icons and brand assets |
+| Path in extension                     | Source                                                                 |
+| ------------------------------------- | ---------------------------------------------------------------------- |
+| `dist/extension.js`                   | Extension activation / orchestration                                   |
+| `dist/bundled/runtime-worker/`        | Worker `bundle.mjs`, `@napi-rs` (all platforms), `chromium-bidi`       |
+| `dist/bundled/package.json`           | Stub package root required by playwright-core inside the worker bundle |
+| `dist/bundled/browsers.json`          | Playwright browser revision metadata                                   |
+| `dist/bundled/runtime-mcp/bundle.mjs` | MCP server bundle                                                      |
+| `dist/webview/main.js`, `main.css`    | Sidebar / panel UI                                                     |
+| `resources/`                          | Icons and brand assets                                                 |
 
 Cross-platform native modules: `scripts/ensure-keyring-platforms.mjs` downloads all six `@napi-rs/keyring-*` platform packages during `pnpm run build` (Linux CI friendly). `pnpm run verify:bundle` asserts every `.node` is present before release packaging.
 
@@ -78,8 +78,8 @@ Workflow: `.github/workflows/vscode-extension-release.yml` (`workflow_dispatch` 
 
 Inputs:
 
-| Input | Purpose |
-|-------|---------|
+| Input  | Purpose                                                            |
+| ------ | ------------------------------------------------------------------ |
 | `bump` | patch / minor / major on `apps/vscode-extension/package.json` only |
 
 Pipeline: bump → commit → tag `vscode-vX.Y.Z` → build on Ubuntu → `verify:bundle` → VSIX + SHA256 → GitHub Release artifact.
@@ -113,11 +113,11 @@ pnpm run package:vsix
 
 ## Troubleshooting
 
-| Issue | What to try |
-|-------|-------------|
-| `Missing dist/bundled/...` | Run `pnpm run build` before `package:vsix`. |
-| `Runtime not built` at runtime | Run `pnpm run build` in this package. |
-| VSIX missing after command | Confirm cwd is `apps/vscode-extension`; VSIX name is `vindicate-<version>.vsix`. |
-| `not compatible with VS Code 1.105.x` on install | Editor is older than `engines.vscode`. Keep `engines.vscode` and `@types/vscode` on the same version (e.g. `^1.105.0`), rebuild the VSIX, or upgrade the editor. |
-| `vsce`: `@types/vscode` greater than `engines.vscode` | Bump `engines.vscode` to match `@types/vscode`, or lower `@types/vscode` to match the editor you target. |
+| Issue                                                               | What to try                                                                                                                                                                                                                        |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Missing dist/bundled/...`                                          | Run `pnpm run build` before `package:vsix`.                                                                                                                                                                                        |
+| `Runtime not built` at runtime                                      | Run `pnpm run build` in this package.                                                                                                                                                                                              |
+| VSIX missing after command                                          | Confirm cwd is `apps/vscode-extension`; VSIX name is `vindicate-<version>.vsix`.                                                                                                                                                   |
+| `not compatible with VS Code 1.105.x` on install                    | Editor is older than `engines.vscode`. Keep `engines.vscode` and `@types/vscode` on the same version (e.g. `^1.105.0`), rebuild the VSIX, or upgrade the editor.                                                                   |
+| `vsce`: `@types/vscode` greater than `engines.vscode`               | Bump `engines.vscode` to match `@types/vscode`, or lower `@types/vscode` to match the editor you target.                                                                                                                           |
 | Mac: `Cannot find native binding` / `@napi-rs/keyring-darwin-arm64` | VSIX was built without all platform keyring binaries. Rebuild with current packaging scripts (`ensure-keyring-platforms.mjs` downloads darwin/linux/win32 `.node` files during `pnpm run build`). Requires network on first build. |

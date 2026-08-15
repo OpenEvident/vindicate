@@ -66,7 +66,10 @@ export function PreconditionSelectModal({
       >
         <div className="flex items-start justify-between gap-4 border-b border-vs-border px-5 py-4">
           <div className="min-w-0">
-            <h2 id="precondition-modal-title" className="text-ui-lg font-semibold tracking-tight m-0">
+            <h2
+              id="precondition-modal-title"
+              className="text-ui-lg font-semibold tracking-tight m-0"
+            >
               Add pre-condition recordings
             </h2>
             <p className="mt-1 text-[12px] leading-relaxed text-vs-text-dim">

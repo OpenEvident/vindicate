@@ -153,9 +153,4 @@ export type WebviewMessage =
     };
 
 export type Screen =
-  | "toolSelection"
-  | "modeSelection"
-  | "scaffold"
-  | "gettingStarted"
-  | "dashboard"
-  | "noFolder";
+  "toolSelection" | "modeSelection" | "scaffold" | "gettingStarted" | "dashboard" | "noFolder";

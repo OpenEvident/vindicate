@@ -61,12 +61,13 @@
   ],
   "expect": {
     "ok": true,
-    "filesExist": [
-      "panels/SettingsPanel.ts",
-      "tests/settings.spec.ts"
-    ],
+    "filesExist": ["panels/SettingsPanel.ts", "tests/settings.spec.ts"],
     "mustContain": {
-      "panels/SettingsPanel.ts": ["extends BasePanel", "async step_save(", "async verify_panelVisible("],
+      "panels/SettingsPanel.ts": [
+        "extends BasePanel",
+        "async step_save(",
+        "async verify_panelVisible("
+      ],
       "tests/settings.spec.ts": ["await settingsPanel.step_save();"]
     },
     "mustNotContain": {

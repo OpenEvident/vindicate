@@ -46,12 +46,17 @@ export class ProgressBridge {
       // rejects when the client disconnects mid-command (closed transport), and
       // an unhandled rejection kills the whole MCP process. Log once — every
       // subsequent step event would fail the same way.
-      this.mapEvent(event, opts.progressToken!, opts.totalSteps, stepIndex).catch((err: unknown) => {
-        if (!this.notifyFailureLogged) {
-          this.notifyFailureLogged = true;
-          logger.warn({ err }, "progress notification failed (client likely disconnected) — further failures for this call won't be logged");
+      this.mapEvent(event, opts.progressToken!, opts.totalSteps, stepIndex).catch(
+        (err: unknown) => {
+          if (!this.notifyFailureLogged) {
+            this.notifyFailureLogged = true;
+            logger.warn(
+              { err },
+              "progress notification failed (client likely disconnected) — further failures for this call won't be logged"
+            );
+          }
         }
-      });
+      );
     };
 
     try {
@@ -82,15 +87,30 @@ export class ProgressBridge {
       const step = typeof event.step === "number" ? event.step : currentStep;
       const action = typeof event.action === "string" ? event.action : "step";
       const duration = typeof event.duration_ms === "number" ? event.duration_ms : 0;
-      await this.notify({ progressToken, progress: step + 1, ...total, message: `✓ ${action} (${duration}ms)` });
+      await this.notify({
+        progressToken,
+        progress: step + 1,
+        ...total,
+        message: `✓ ${action} (${duration}ms)`
+      });
     } else if (ev === "step_progress") {
       const message = typeof event.message === "string" ? event.message : "";
       await this.notify({ progressToken, progress: currentStep, ...total, message });
     } else if (ev === "action_result") {
-      await this.notify({ progressToken, progress: currentStep, ...total, message: "✓ Action complete" });
+      await this.notify({
+        progressToken,
+        progress: currentStep,
+        ...total,
+        message: "✓ Action complete"
+      });
     } else if (ev === "test_started") {
       const title = typeof event.title === "string" ? event.title : "test";
-      await this.notify({ progressToken, progress: currentStep, ...total, message: `Running: ${title}` });
+      await this.notify({
+        progressToken,
+        progress: currentStep,
+        ...total,
+        message: `Running: ${title}`
+      });
     } else if (ev === "test_passed") {
       const title = typeof event.title === "string" ? event.title : "test";
       await this.notify({ progressToken, progress: currentStep, ...total, message: `✓ ${title}` });

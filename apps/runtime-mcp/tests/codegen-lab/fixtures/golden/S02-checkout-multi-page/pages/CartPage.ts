@@ -1,14 +1,13 @@
 // AUTO-GENERATED — edit this file directly; use vindicate_generate_code create/register_page for structural changes
-import { BasePage } from './BasePage';
-import { expect } from '@playwright/test';
-
+import { BasePage } from "./BasePage";
+import { expect } from "@playwright/test";
 
 export class CartPage extends BasePage {
-  readonly path = '/cart';
+  readonly path = "/cart";
 
   // ── Locators ──────────────────────────────────────────────────────────
   // locator-helper: role_name
-  private checkoutButton = this.page.getByRole('button', { name: 'Checkout', exact: true });
+  private checkoutButton = this.page.getByRole("button", { name: "Checkout", exact: true });
 
   // ── Steps ──────────────────────────────────────────────────────────────
   /**

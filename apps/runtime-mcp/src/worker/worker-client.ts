@@ -120,7 +120,9 @@ export class WorkerClient implements IWorkerClient {
       status: typeof body.status === "string" ? body.status : "ok",
       ...(typeof body.service === "string" ? { service: body.service } : {}),
       ...(typeof body.version === "string" ? { version: body.version } : {}),
-      ...(typeof body.protocolVersion === "string" ? { protocolVersion: body.protocolVersion } : {}),
+      ...(typeof body.protocolVersion === "string"
+        ? { protocolVersion: body.protocolVersion }
+        : {}),
       ...(typeof body.disk_free_mb === "number" ? { disk_free_mb: body.disk_free_mb } : {})
     };
   }
@@ -189,8 +191,7 @@ export class WorkerClient implements IWorkerClient {
     sessionId: string,
     opts?: { include_snapshot?: boolean }
   ): Promise<SessionRecord> {
-    const q =
-      opts?.include_snapshot === true ? "?include_snapshot=true" : "";
+    const q = opts?.include_snapshot === true ? "?include_snapshot=true" : "";
     const data = await this.requestJson<{
       session_id: string;
       status: string;
@@ -324,11 +325,14 @@ export class WorkerClient implements IWorkerClient {
       throw new SessionDeadError(sessionId);
     }
     if (Date.now() < this.throttledUntil) {
-      throw new WorkerUnavailableError("Worker is throttled due to resource pressure. Retry shortly.");
+      throw new WorkerUnavailableError(
+        "Worker is throttled due to resource pressure. Retry shortly."
+      );
     }
     return this.withCircuitBreaker(async () => {
       options?.onStreamOpen?.();
-      const baseTimeout = this.state === "degraded" ? this.cfg.retryTimeoutMs * 2 : this.cfg.retryTimeoutMs;
+      const baseTimeout =
+        this.state === "degraded" ? this.cfg.retryTimeoutMs * 2 : this.cfg.retryTimeoutMs;
       const timeoutMs = options?.timeoutMs ?? baseTimeout;
       const stepSummary = summarizeSteps(steps);
       const controller = new AbortController();
@@ -341,16 +345,19 @@ export class WorkerClient implements IWorkerClient {
       }, timeoutMs);
 
       try {
-        const res = await this.fetchFn(`${this.cfg.baseUrl}/browser/sessions/${sessionId}/commands`, {
-          method: "POST",
-          headers: {
-            ...this.headers(),
-            "Content-Type": "application/json",
-            Accept: "text/event-stream"
-          },
-          body: JSON.stringify({ steps }),
-          signal: controller.signal
-        });
+        const res = await this.fetchFn(
+          `${this.cfg.baseUrl}/browser/sessions/${sessionId}/commands`,
+          {
+            method: "POST",
+            headers: {
+              ...this.headers(),
+              "Content-Type": "application/json",
+              Accept: "text/event-stream"
+            },
+            body: JSON.stringify({ steps }),
+            signal: controller.signal
+          }
+        );
 
         if (!res.ok) {
           await throwFromWorkerResponse(res, sessionId);
@@ -633,10 +640,7 @@ export class WorkerClient implements IWorkerClient {
       } catch {
         /* probe failed */
       }
-      const backoffMs = Math.min(
-        this.cfg.healthProbeMs * 2 ** attempt,
-        this.cfg.healthProbeMs * 8
-      );
+      const backoffMs = Math.min(this.cfg.healthProbeMs * 2 ** attempt, this.cfg.healthProbeMs * 8);
       attempt += 1;
       await new Promise((r) => setTimeout(r, backoffMs));
     }

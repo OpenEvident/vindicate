@@ -151,10 +151,7 @@ export interface NewRecordingForm {
   preconditionRecordings: string[];
 }
 
-export type PreviewTarget =
-  | { type: "none" }
-  | { type: "step"; seq: number }
-  | { type: "final" };
+export type PreviewTarget = { type: "none" } | { type: "step"; seq: number } | { type: "final" };
 
 export type PlaybackState =
   | { status: "idle" }

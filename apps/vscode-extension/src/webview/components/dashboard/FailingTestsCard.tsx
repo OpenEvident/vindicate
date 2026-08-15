@@ -40,7 +40,9 @@ export function FailingTestsCard({ failures }: { failures: FailingTest[] }) {
                 >
                   {failure.ac}
                 </span>
-                <span className="font-mono text-[10.5px] text-[var(--vs-text-dim)]">{failure.feature}</span>
+                <span className="font-mono text-[10.5px] text-[var(--vs-text-dim)]">
+                  {failure.feature}
+                </span>
                 {failure.flaky && <span className="run-pill flak">flaky</span>}
                 <span className="run-pill">{failure.duration}</span>
               </div>
@@ -55,7 +57,9 @@ export function FailingTestsCard({ failures }: { failures: FailingTest[] }) {
             </div>
             <div className="text-[12.5px] text-[var(--vs-text)]">{failure.title}</div>
             <div className="mt-1 flex items-center justify-between gap-2">
-              <div className="font-mono text-[10.5px] text-[var(--vs-text-dim)]">{failure.file}</div>
+              <div className="font-mono text-[10.5px] text-[var(--vs-text-dim)]">
+                {failure.file}
+              </div>
               <button
                 type="button"
                 className="vbtn"
@@ -63,7 +67,15 @@ export function FailingTestsCard({ failures }: { failures: FailingTest[] }) {
                 title="Open file"
                 onClick={() => openFailureFile(failure.file)}
               >
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  aria-hidden
+                >
                   <path d="M6 3H3.5A1.5 1.5 0 0 0 2 4.5v8A1.5 1.5 0 0 0 3.5 14h8a1.5 1.5 0 0 0 1.5-1.5V10" />
                   <path d="M9 2h5v5" />
                   <path d="M14 2L7 9" />

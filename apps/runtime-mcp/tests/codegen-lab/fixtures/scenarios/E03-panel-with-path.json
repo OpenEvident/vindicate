@@ -18,7 +18,14 @@
               "is_panel": true,
               "elements": [{ "ref": "save", "tag": "button", "role": "button", "name": "Save" }],
               "types": [],
-              "steps": [{ "name": "step_save", "jsdoc": "save", "params": [], "actions": [{ "do": "click", "ref": "save" }] }],
+              "steps": [
+                {
+                  "name": "step_save",
+                  "jsdoc": "save",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "save" }]
+                }
+              ],
               "verifies": []
             }
           ],
@@ -27,7 +34,14 @@
             "generates_storage_state": null,
             "storage_state": null,
             "before_each": null,
-            "cases": [{ "ac_id": "AC-1", "scenario": "bad panel", "title": "[AC-1] should fail", "body": [{ "fixture": "badPanel", "call": "step_save" }] }]
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "bad panel",
+                "title": "[AC-1] should fail",
+                "body": [{ "fixture": "badPanel", "call": "step_save" }]
+              }
+            ]
           }
         }
       }

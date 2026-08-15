@@ -40,7 +40,7 @@ export async function analyzeTraceabilityContract(
     const relFile = file.relFile;
     const header = content.match(SPEC_HEADER)?.[1]?.trim() ?? null;
     const featureSlug = extractFeatureSlug(header);
-    const feature = featureSlug ? featureBySlug.get(featureSlug) ?? null : null;
+    const feature = featureSlug ? (featureBySlug.get(featureSlug) ?? null) : null;
 
     if (!header) {
       warnings.push({
@@ -165,7 +165,9 @@ export async function analyzeTraceabilityContract(
       }
 
       // Scenario comments must match story testcase headings
-      const scenarioComments = [...content.matchAll(SCENARIO_COMMENT)].map((m) => (m[1] ?? "").trim());
+      const scenarioComments = [...content.matchAll(SCENARIO_COMMENT)].map((m) =>
+        (m[1] ?? "").trim()
+      );
       for (const scenarioName of scenarioComments) {
         if (scenarioName.length > 0 && !storyScenarioNames.has(scenarioName)) {
           warnings.push({
@@ -236,7 +238,8 @@ async function loadTestFileEntries(
   workspaceRoot: string
 ): Promise<Array<{ filePath: string; relFile: string; content: string; testCount: number }>> {
   const testFiles = await collectProjectTestFiles(workspaceRoot);
-  const entries: Array<{ filePath: string; relFile: string; content: string; testCount: number }> = [];
+  const entries: Array<{ filePath: string; relFile: string; content: string; testCount: number }> =
+    [];
 
   for (const filePath of testFiles) {
     let content: string;

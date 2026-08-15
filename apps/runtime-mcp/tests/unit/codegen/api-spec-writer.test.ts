@@ -6,7 +6,8 @@ import { apiCall, apiFullSchema, apiTestCase } from "../../shared/codegen-testki
 
 function assertSyntacticallyValid(source: string): void {
   const sourceFile = ts.createSourceFile("generated.ts", source, ts.ScriptTarget.ESNext, true);
-  const diagnostics = (sourceFile as unknown as { parseDiagnostics?: unknown[] }).parseDiagnostics ?? [];
+  const diagnostics =
+    (sourceFile as unknown as { parseDiagnostics?: unknown[] }).parseDiagnostics ?? [];
   expect(diagnostics).toEqual([]);
 }
 
@@ -64,7 +65,13 @@ describe("buildNewApiSpec", () => {
     ["status", "toBe", "200", undefined, "expect(response.status()).toBe(200);"],
     ["status_text", "toBe", "'OK'", undefined, "expect(response.statusText()).toBe('OK');"],
     ["body", "toContain", "'ok'", undefined, "expect(await response.text()).toContain('ok');"],
-    ["body_json", "toMatchObject", "{ id: 1 }", undefined, "expect(await response.json()).toMatchObject({ id: 1 });"],
+    [
+      "body_json",
+      "toMatchObject",
+      "{ id: 1 }",
+      undefined,
+      "expect(await response.json()).toMatchObject({ id: 1 });"
+    ],
     [
       "header",
       "toContain",
@@ -72,36 +79,39 @@ describe("buildNewApiSpec", () => {
       "content-type",
       "expect(response.headers()['content-type']).toContain('json');"
     ]
-  ] as const)("renders subject '%s' as the documented expression", (subject, matcher, arg, headerName, expectedLine) => {
-    const source = buildNewApiSpec(
-      apiFullSchema({
-        spec: {
-          suite: "App - Widgets",
-          auth_setup: null,
-          cases: [
-            apiTestCase("AC-1", {
-              calls: [
-                apiCall("widgetApi", "getAll", {
-                  args: [],
-                  assertions: [
-                    {
-                      subject,
-                      matcher,
-                      arg,
-                      ...(headerName !== undefined ? { header_name: headerName } : {})
-                    }
-                  ]
-                })
-              ]
-            })
-          ]
-        }
-      }),
-      "widgets"
-    );
-    expect(source).toContain(expectedLine);
-    assertSyntacticallyValid(source);
-  });
+  ] as const)(
+    "renders subject '%s' as the documented expression",
+    (subject, matcher, arg, headerName, expectedLine) => {
+      const source = buildNewApiSpec(
+        apiFullSchema({
+          spec: {
+            suite: "App - Widgets",
+            auth_setup: null,
+            cases: [
+              apiTestCase("AC-1", {
+                calls: [
+                  apiCall("widgetApi", "getAll", {
+                    args: [],
+                    assertions: [
+                      {
+                        subject,
+                        matcher,
+                        arg,
+                        ...(headerName !== undefined ? { header_name: headerName } : {})
+                      }
+                    ]
+                  })
+                ]
+              })
+            ]
+          }
+        }),
+        "widgets"
+      );
+      expect(source).toContain(expectedLine);
+      assertSyntacticallyValid(source);
+    }
+  );
 
   it("omits the arg for toBeDefined-class matchers", () => {
     const source = buildNewApiSpec(
@@ -141,25 +151,41 @@ describe("buildNewApiSpec", () => {
   it("imports a builder only when a call's args paste-reference 'new <BuilderClass>('", () => {
     const withBuilder = buildNewApiSpec(
       apiFullSchema({
-        builders: [{ builder_class: "WidgetPayloadBuilder", target_type: "Widget", fields: [{ name: "name", type: "string", default: "'x'" }] }],
+        builders: [
+          {
+            builder_class: "WidgetPayloadBuilder",
+            target_type: "Widget",
+            fields: [{ name: "name", type: "string", default: "'x'" }]
+          }
+        ],
         spec: {
           suite: "App - Widgets",
           auth_setup: null,
           cases: [
             apiTestCase("AC-1", {
-              calls: [apiCall("widgetApi", "create", { args: ["new WidgetPayloadBuilder().build()"] })]
+              calls: [
+                apiCall("widgetApi", "create", { args: ["new WidgetPayloadBuilder().build()"] })
+              ]
             })
           ]
         }
       }),
       "widgets"
     );
-    expect(withBuilder).toContain("import { WidgetPayloadBuilder } from '@builders/WidgetPayloadBuilder';");
+    expect(withBuilder).toContain(
+      "import { WidgetPayloadBuilder } from '@builders/WidgetPayloadBuilder';"
+    );
     assertSyntacticallyValid(withBuilder);
 
     const withoutUsage = buildNewApiSpec(
       apiFullSchema({
-        builders: [{ builder_class: "WidgetPayloadBuilder", target_type: "Widget", fields: [{ name: "name", type: "string", default: "'x'" }] }]
+        builders: [
+          {
+            builder_class: "WidgetPayloadBuilder",
+            target_type: "Widget",
+            fields: [{ name: "name", type: "string", default: "'x'" }]
+          }
+        ]
       }),
       "widgets"
     );
@@ -174,7 +200,9 @@ describe("buildNewApiSpec", () => {
           auth_setup: null,
           cases: [
             apiTestCase("AC-1", {
-              calls: [apiCall("widgetApi", "create", { args: ["{}"], capture: { as: "createdWidget" } })]
+              calls: [
+                apiCall("widgetApi", "create", { args: ["{}"], capture: { as: "createdWidget" } })
+              ]
             })
           ]
         }
@@ -195,7 +223,10 @@ describe("buildNewApiSpec", () => {
           cases: [
             apiTestCase("AC-1", {
               calls: [
-                apiCall("widgetApi", "create", { args: ["{}"], capture: { as: "createdWidgetId", field: "id" } }),
+                apiCall("widgetApi", "create", {
+                  args: ["{}"],
+                  capture: { as: "createdWidgetId", field: "id" }
+                }),
                 apiCall("widgetApi", "getById", { args: ["createdWidgetId"] })
               ]
             })
@@ -208,7 +239,9 @@ describe("buildNewApiSpec", () => {
     expect(source).toContain("const createdWidgetId = (await response.json()).id;");
     expect(source).toContain("const response2 = await widgetApi.getById(createdWidgetId);");
     // createdWidgetId is declared before it's referenced — genuinely in scope, not a dangling name.
-    expect(source.indexOf("const createdWidgetId =")).toBeLessThan(source.indexOf("getById(createdWidgetId)"));
+    expect(source.indexOf("const createdWidgetId =")).toBeLessThan(
+      source.indexOf("getById(createdWidgetId)")
+    );
     assertSyntacticallyValid(source);
   });
 
@@ -248,7 +281,10 @@ describe("appendApiTestCases", () => {
   it("inserts new test blocks before the closing describe", () => {
     const existing = buildNewApiSpec(apiFullSchema(), "widgets");
     const appended = appendApiTestCases(existing, [
-      apiTestCase("AC-2", { scenario: "Second Case", calls: [apiCall("widgetApi", "getAll", { args: [] })] })
+      apiTestCase("AC-2", {
+        scenario: "Second Case",
+        calls: [apiCall("widgetApi", "getAll", { args: [] })]
+      })
     ]);
     expect(appended).toContain("[AC-1] should complete the flow");
     expect(appended).toContain("[AC-2] should complete the flow");

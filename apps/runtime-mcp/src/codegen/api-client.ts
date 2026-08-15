@@ -24,7 +24,8 @@ function pathExpression(path: string, pathParamNames: readonly string[]): string
 
 function methodParams(method: ClientMethod): string {
   const pathParams = (method.path_params ?? []).map((p) => `${p.name}: ${p.type}`);
-  const bodyParam = method.body_param !== undefined ? [`${method.body_param.name}: ${method.body_param.type}`] : [];
+  const bodyParam =
+    method.body_param !== undefined ? [`${method.body_param.name}: ${method.body_param.type}`] : [];
   const headerParam = method.supports_header_override ? ["headers?: Record<string, string>"] : [];
   return [...pathParams, ...bodyParam, ...headerParam].join(", ");
 }
@@ -48,11 +49,17 @@ function buildClientMethod(method: ClientMethod): string {
   const pathParamNames = (method.path_params ?? []).map((p) => p.name);
   const call = `this.request.${method.http_method}(${pathExpression(method.path, pathParamNames)}${requestOptionsObject(method)})`;
   const jsdoc = method.jsdoc !== undefined ? [`  /**`, `   * ${method.jsdoc}`, `   */`] : [];
-  return [...jsdoc, `  ${method.name}(${methodParams(method)}) {`, `    return ${call};`, `  }`].join("\n");
+  return [
+    ...jsdoc,
+    `  ${method.name}(${methodParams(method)}) {`,
+    `    return ${call};`,
+    `  }`
+  ].join("\n");
 }
 
 export function buildApiClient(client: ClientDef): string {
-  const typeDeclarations = client.types.length > 0 ? `${client.types.map(buildTypeDeclaration).join("\n\n")}\n\n` : "";
+  const typeDeclarations =
+    client.types.length > 0 ? `${client.types.map(buildTypeDeclaration).join("\n\n")}\n\n` : "";
   const methods = client.methods.map(buildClientMethod).join("\n\n");
 
   const parts = [

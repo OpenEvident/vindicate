@@ -1,4 +1,9 @@
-import type { RecordingEventPayload, RecordingPageSnapshot, RecordingSessionState, RecordingStep } from "./recording.types.js";
+import type {
+  RecordingEventPayload,
+  RecordingPageSnapshot,
+  RecordingSessionState,
+  RecordingStep
+} from "./recording.types.js";
 import { sanitizeRecordingName } from "./recording-name.js";
 
 export class RecordingStore {
@@ -51,7 +56,11 @@ export class RecordingStore {
     }
   }
 
-  updateStepPageSnapshot(sessionId: string, seq: number, pageSnapshot: RecordingPageSnapshot): void {
+  updateStepPageSnapshot(
+    sessionId: string,
+    seq: number,
+    pageSnapshot: RecordingPageSnapshot
+  ): void {
     const state = this.sessions.get(sessionId);
     if (state === undefined) {
       return;

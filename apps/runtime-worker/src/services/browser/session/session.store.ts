@@ -36,7 +36,10 @@ export class BrowserSessionStore implements ISessionStore {
     try {
       ids = await this.disk.listAllIds();
     } catch (err: unknown) {
-      this.logger.error({ err }, "failed to list session blobs — starting with empty in-memory store");
+      this.logger.error(
+        { err },
+        "failed to list session blobs — starting with empty in-memory store"
+      );
       return;
     }
 

@@ -57,10 +57,7 @@ if (isRecordingSurface) {
   });
 
   createRoot(root).render(
-    <WebviewErrorBoundary
-      surface={surface}
-      onError={(payload) => reportClientError(payload)}
-    >
+    <WebviewErrorBoundary surface={surface} onError={(payload) => reportClientError(payload)}>
       <App surface={surface} />
     </WebviewErrorBoundary>
   );

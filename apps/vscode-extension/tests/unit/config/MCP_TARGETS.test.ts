@@ -51,12 +51,15 @@ describe("buildProjectMcpTargets", () => {
       expect(value.type).toBeUndefined();
     });
 
-    it("omits headers entirely — confirmed unfixed Antigravity bug (antigravity-cli#71) breaks every " +
-      "tool call when a headers block is present on a serverUrl entry; project_root already travels " +
-      "in the query string, so nothing is lost by leaving headers out", () => {
-      const value = target.serverValue as Record<string, unknown>;
-      expect(value).not.toHaveProperty("headers");
-    });
+    it(
+      "omits headers entirely — confirmed unfixed Antigravity bug (antigravity-cli#71) breaks every " +
+        "tool call when a headers block is present on a serverUrl entry; project_root already travels " +
+        "in the query string, so nothing is lost by leaving headers out",
+      () => {
+        const value = target.serverValue as Record<string, unknown>;
+        expect(value).not.toHaveProperty("headers");
+      }
+    );
   });
 });
 

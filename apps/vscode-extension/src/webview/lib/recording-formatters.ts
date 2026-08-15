@@ -1,4 +1,9 @@
-import type { LocatorCandidate, PreviewTarget, RecordingStep, PageSnapshot } from "@/lib/recording-ui-types";
+import type {
+  LocatorCandidate,
+  PreviewTarget,
+  RecordingStep,
+  PageSnapshot
+} from "@/lib/recording-ui-types";
 
 type StepWithSnapshotFields = RecordingStep & {
   readonly page_snapshot?: PageSnapshot;
@@ -98,7 +103,11 @@ export function getCandidateStrategyLabel(candidate: LocatorCandidate): string {
   if (candidate.strategy === "sibling_text") {
     return "sibling text";
   }
-  if (candidate.strategy === "testid" && candidate.attr !== undefined && candidate.attr.length > 0) {
+  if (
+    candidate.strategy === "testid" &&
+    candidate.attr !== undefined &&
+    candidate.attr.length > 0
+  ) {
     return candidate.attr;
   }
   return candidate.strategy;
@@ -117,13 +126,18 @@ export function getTargetLabel(step: RecordingStep): string {
     return `${source} → ${target}`;
   }
   if (step.action === "new_tab") {
-    return step.url !== undefined && step.url.length > 0 ? `Opened tab: ${step.url}` : "Opened a new tab";
+    return step.url !== undefined && step.url.length > 0
+      ? `Opened tab: ${step.url}`
+      : "Opened a new tab";
   }
   if (step.action === "switch_tab_by_url") {
-    return step.url !== undefined && step.url.length > 0 ? `Switched to tab: ${step.url}` : "Switched tab";
+    return step.url !== undefined && step.url.length > 0
+      ? `Switched to tab: ${step.url}`
+      : "Switched tab";
   }
   if (step.action === "switch_tab") {
-    const target = step.url !== undefined && step.url.length > 0 ? step.url : `#${step.index ?? "?"}`;
+    const target =
+      step.url !== undefined && step.url.length > 0 ? step.url : `#${step.index ?? "?"}`;
     return `Switched to tab: ${target}`;
   }
   if (step.action === "close_tab") {
@@ -133,7 +147,7 @@ export function getTargetLabel(step: RecordingStep): string {
     return step.files.join(", ");
   }
   const name = step.element?.name?.trim();
-  const tag  = step.element?.tag ?? "element";
+  const tag = step.element?.tag ?? "element";
   const role = step.element?.role;
   if (name !== undefined && name.length > 0) {
     const kind = role === "button" || tag === "button" ? "button" : tag;
@@ -194,7 +208,9 @@ export function formatNavigationStepSummary(
 
 export function formatSnapshotSummary(snapshot: PageSnapshot | undefined): string | null {
   if (snapshot === undefined) return null;
-  const parts: string[] = [`${snapshot.elements.length} element${snapshot.elements.length === 1 ? "" : "s"}`];
+  const parts: string[] = [
+    `${snapshot.elements.length} element${snapshot.elements.length === 1 ? "" : "s"}`
+  ];
   const alertCount = snapshot.alerts?.length ?? 0;
   if (alertCount > 0) parts.push(`${alertCount} alert${alertCount === 1 ? "" : "s"}`);
   if (snapshot.truncated === true) parts.push("truncated");
@@ -206,17 +222,17 @@ export function formatTimestamp(iso: string): string {
     month: "short",
     day: "numeric",
     hour: "2-digit",
-    minute: "2-digit",
+    minute: "2-digit"
   });
 }
 
 export function formatRelativeTime(iso: string): string {
-  const diffMs  = Date.now() - new Date(iso).getTime();
+  const diffMs = Date.now() - new Date(iso).getTime();
   const diffMin = Math.floor(diffMs / 60_000);
-  if (diffMin < 1)   return "Just now";
-  if (diffMin < 60)  return `${diffMin} min ago`;
+  if (diffMin < 1) return "Just now";
+  if (diffMin < 60) return `${diffMin} min ago`;
   const diffHr = Math.floor(diffMin / 60);
-  if (diffHr < 24)   return `${diffHr}h ago`;
+  if (diffHr < 24) return `${diffHr}h ago`;
   const diffDay = Math.floor(diffHr / 24);
   if (diffDay === 1) return "Yesterday";
   return `${diffDay} days ago`;

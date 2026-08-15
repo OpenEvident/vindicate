@@ -54,7 +54,11 @@ export function PanelView() {
         </div>
       </header>
 
-      <nav className="dash-tabs vindicate-utility-tabs-v2" role="tablist" aria-label="Vindicate panel">
+      <nav
+        className="dash-tabs vindicate-utility-tabs-v2"
+        role="tablist"
+        aria-label="Vindicate panel"
+      >
         {TABS.map((t) => (
           <button
             key={t}

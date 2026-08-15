@@ -18,7 +18,10 @@ interface CanvasHeaderProps {
 }
 
 const TAB_META: Record<DashboardTabId, { label: string; subtitle: string }> = {
-  overview: { label: "Project overview", subtitle: "health, traceability, and what needs attention." },
+  overview: {
+    label: "Project overview",
+    subtitle: "health, traceability, and what needs attention."
+  },
   features: { label: "Features", subtitle: "one row per feature spec, with linked tests." },
   specs: { label: "Stories", subtitle: "story quality and acceptance criteria coverage." }
 };
@@ -52,14 +55,18 @@ export function CanvasHeader({
             {meta.label}
             <MetricTip
               title="Where every number on this page comes from"
-              formula={"overall = 0.4*spec + 0.3*trace + 0.2*pass + 0.1*fresh\n\nNumbers update on every file save."}
+              formula={
+                "overall = 0.4*spec + 0.3*trace + 0.2*pass + 0.1*fresh\n\nNumbers update on every file save."
+              }
               source="Sources: .vindicate/stories/*.story.md, tests, and Playwright results"
             />
           </h2>
           <div className="mt-1 text-xs text-[var(--vs-text-dim)]">{meta.subtitle}</div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[11px] text-[var(--vs-text-dim)]">last run · {lastRunAt}</span>
+          <span className="font-mono text-[11px] text-[var(--vs-text-dim)]">
+            last run · {lastRunAt}
+          </span>
           <button
             type="button"
             className="vbtn"
@@ -113,9 +120,7 @@ export function CanvasHeader({
             className={`dash-tab ${activeTab === tab.id ? "on" : ""}`}
           >
             {tab.label}
-            {tab.count !== undefined && (
-              <span className="count">{tab.count}</span>
-            )}
+            {tab.count !== undefined && <span className="count">{tab.count}</span>}
           </button>
         ))}
       </div>

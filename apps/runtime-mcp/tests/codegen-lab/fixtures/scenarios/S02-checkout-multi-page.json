@@ -21,11 +21,26 @@
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open login", "params": [], "actions": [{ "do": "navigate" }] },
-                { "name": "step_continue", "jsdoc": "Continue to cart", "params": [], "actions": [{ "do": "click", "ref": "next" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open login",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
+                {
+                  "name": "step_continue",
+                  "jsdoc": "Continue to cart",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "next" }]
+                }
               ],
               "verifies": [
-                { "name": "verify_loaded", "jsdoc": "Loaded login", "params": [], "assertions": [{ "subject": "element", "ref": "email", "matcher": "toBeVisible" }] }
+                {
+                  "name": "verify_loaded",
+                  "jsdoc": "Loaded login",
+                  "params": [],
+                  "assertions": [{ "subject": "element", "ref": "email", "matcher": "toBeVisible" }]
+                }
               ]
             },
             {
@@ -38,11 +53,28 @@
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open cart", "params": [], "actions": [{ "do": "navigate" }] },
-                { "name": "step_checkout", "jsdoc": "Go to checkout", "params": [], "actions": [{ "do": "click", "ref": "checkout" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open cart",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
+                {
+                  "name": "step_checkout",
+                  "jsdoc": "Go to checkout",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "checkout" }]
+                }
               ],
               "verifies": [
-                { "name": "verify_cartReady", "jsdoc": "Cart ready", "params": [], "assertions": [{ "subject": "element", "ref": "checkout", "matcher": "toBeVisible" }] }
+                {
+                  "name": "verify_cartReady",
+                  "jsdoc": "Cart ready",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "element", "ref": "checkout", "matcher": "toBeVisible" }
+                  ]
+                }
               ]
             },
             {
@@ -55,11 +87,28 @@
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate", "jsdoc": "Open checkout", "params": [], "actions": [{ "do": "navigate" }] },
-                { "name": "step_placeOrder", "jsdoc": "Submit order", "params": [], "actions": [{ "do": "click", "ref": "placeOrder" }] }
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open checkout",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
+                {
+                  "name": "step_placeOrder",
+                  "jsdoc": "Submit order",
+                  "params": [],
+                  "actions": [{ "do": "click", "ref": "placeOrder" }]
+                }
               ],
               "verifies": [
-                { "name": "verify_checkoutReady", "jsdoc": "Checkout ready", "params": [], "assertions": [{ "subject": "element", "ref": "placeOrder", "matcher": "toBeVisible" }] }
+                {
+                  "name": "verify_checkoutReady",
+                  "jsdoc": "Checkout ready",
+                  "params": [],
+                  "assertions": [
+                    { "subject": "element", "ref": "placeOrder", "matcher": "toBeVisible" }
+                  ]
+                }
               ]
             }
           ],
@@ -104,7 +153,11 @@
         "cartPage: CartPage;",
         "checkoutPage: CheckoutPage;"
       ],
-      "tests/checkout.spec.ts": ["await loginPage.step_continue();", "await cartPage.step_checkout();", "await checkoutPage.step_placeOrder();"]
+      "tests/checkout.spec.ts": [
+        "await loginPage.step_continue();",
+        "await cartPage.step_checkout();",
+        "await checkoutPage.step_placeOrder();"
+      ]
     },
     "invariants": ["I1", "I2", "I3", "I5", "I6", "I9"],
     "compile": true,

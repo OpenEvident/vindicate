@@ -24,7 +24,9 @@ describe("BrowserSessionStore concurrency", () => {
     await mkdir(dir, { recursive: true });
     tempDirs.push(dir);
     const logger = createVindicateLogger({ service: "test", level: "silent" });
-    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+    const disk = new SessionDiskStore(dir, new PlaintextSessionCrypto(), {
+      encryptFilenames: false
+    });
     const store = new BrowserSessionStore(disk, logger, 24);
     const rec = await store.create({
       name: "t",

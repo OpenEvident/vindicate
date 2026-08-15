@@ -29,7 +29,7 @@ interface StepCardLocatorAreaProps {
 
 function StepCardLocatorArea({ step, mode, isLocatorOpen }: StepCardLocatorAreaProps) {
   const setOpenLocator = useRecordingStore((s) => s.setOpenLocator);
-  const chooseLocator  = useRecordingStore((s) => s.chooseLocator);
+  const chooseLocator = useRecordingStore((s) => s.chooseLocator);
 
   if (mode === "recording") {
     // Show the recommended (or first) locator read-only during live recording
@@ -87,11 +87,11 @@ interface StepCardProps {
 
 export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps) {
   const selectPreviewTarget = useRecordingStore((s) => s.selectPreviewTarget);
-  const removeStep          = useRecordingStore((s) => s.removeStep);
-  const updateStep          = useRecordingStore((s) => s.updateStep);
-  const steps               = useRecordingStore((s) => s.steps);
+  const removeStep = useRecordingStore((s) => s.removeStep);
+  const updateStep = useRecordingStore((s) => s.updateStep);
+  const steps = useRecordingStore((s) => s.steps);
 
-  const isReview   = mode === "review";
+  const isReview = mode === "review";
   const isSnapshot = step.action === "snapshot";
   const isNavigate = step.action === "navigate";
   // Tab/popup actions carry no element candidates by design (see agent-step-builder.ts's
@@ -102,12 +102,11 @@ export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps)
     step.action === "switch_tab" ||
     step.action === "switch_tab_by_url" ||
     step.action === "close_tab";
-  const hasValue   = step.action === "fill" || step.action === "select";
+  const hasValue = step.action === "fill" || step.action === "select";
   const envVarMarked = step.action === "fill" && isStepEnvVar(step);
   const snapshotSummary = formatSnapshotSummary(getStepPageSnapshot(step));
   const navigationTrigger = isNavigate ? getNavigationTrigger(step) : undefined;
-  const navigationSummary =
-    isNavigate ? formatNavigationStepSummary(step, steps) : null;
+  const navigationSummary = isNavigate ? formatNavigationStepSummary(step, steps) : null;
 
   return (
     // Elevate above neighbours when locator dropdown is open
@@ -117,14 +116,19 @@ export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps)
         tabIndex={0}
         aria-pressed={selected}
         onClick={() => selectPreviewTarget({ type: "step", seq: step.seq })}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectPreviewTarget({ type: "step", seq: step.seq }); } }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectPreviewTarget({ type: "step", seq: step.seq });
+          }
+        }}
         className={[
           "rounded-xl border cursor-pointer",
           "transition-all duration-150",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vs-accent",
           selected
             ? "border-vs-accent shadow-[0_8px_26px_-12px_color-mix(in_oklab,var(--color-vs-accent)_50%,transparent)]"
-            : "border-vs-border hover:border-vs-accent/30",
+            : "border-vs-border hover:border-vs-accent/30"
         ].join(" ")}
       >
         {/* Top row */}
@@ -133,11 +137,15 @@ export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps)
             action={step.action}
             {...(navigationTrigger !== undefined ? { navigationTrigger } : {})}
           />
-          <span className="min-w-0 flex-1 truncate text-[12.5px] text-vs-text" title={getTargetLabel(step)}>
-            {isSnapshot
-              ? <strong className="font-semibold">{getTargetLabel(step)}</strong>
-              : getTargetLabel(step)
-            }
+          <span
+            className="min-w-0 flex-1 truncate text-[12.5px] text-vs-text"
+            title={getTargetLabel(step)}
+          >
+            {isSnapshot ? (
+              <strong className="font-semibold">{getTargetLabel(step)}</strong>
+            ) : (
+              getTargetLabel(step)
+            )}
           </span>
           {isSnapshot && snapshotSummary !== null && (
             <span className="shrink-0 rounded-full border border-vs-border bg-vs-hover/50 px-1.5 py-0.5 font-mono text-[9.5px] text-vs-text-dim">
@@ -153,12 +161,15 @@ export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps)
             <button
               type="button"
               aria-label={`Remove step ${step.seq}`}
-              onClick={(e) => { e.stopPropagation(); removeStep(step.seq); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                removeStep(step.seq);
+              }}
               className={[
                 "inline-flex items-center gap-1 shrink-0 rounded-md border border-transparent",
                 "px-2 py-1 text-ui-sm text-vs-text-dim cursor-pointer",
                 "transition-all duration-120",
-                "hover:border-tone-red/30 hover:bg-tone-red/10 hover:text-tone-red",
+                "hover:border-tone-red/30 hover:bg-tone-red/10 hover:text-tone-red"
               ].join(" ")}
             >
               <Trash2 size={12} /> Remove
@@ -182,7 +193,7 @@ export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps)
                     "w-full rounded-md border border-vs-border px-2.5 py-1.5",
                     "font-mono text-[11.5px] text-vs-text bg-vs-input-bg outline-none",
                     "focus:border-vs-accent focus:shadow-[0_0_0_2px_color-mix(in_oklab,var(--color-vs-accent)_16%,transparent)]",
-                    "transition-all duration-150",
+                    "transition-all duration-150"
                   ].join(" ")}
                 />
                 {step.action === "fill" && (
@@ -201,11 +212,13 @@ export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps)
               </>
             ) : (
               <>
-                <div className={[
-                  "min-w-0 truncate rounded-md border border-vs-border px-2.5 py-1.5",
-                  "font-mono text-[11.5px] text-vs-text",
-                  "bg-[color-mix(in_oklab,var(--color-vs-accent)_5%,var(--color-vs-hover))]",
-                ].join(" ")}>
+                <div
+                  className={[
+                    "min-w-0 truncate rounded-md border border-vs-border px-2.5 py-1.5",
+                    "font-mono text-[11.5px] text-vs-text",
+                    "bg-[color-mix(in_oklab,var(--color-vs-accent)_5%,var(--color-vs-hover))]"
+                  ].join(" ")}
+                >
                   {envVarMarked ? "••••••••" : step.text}
                 </div>
               </>
@@ -230,7 +243,7 @@ export function StepCard({ step, mode, selected, isLocatorOpen }: StepCardProps)
                 ? "border-tone-amber/25 bg-tone-amber/5 text-vs-text-dim"
                 : navigationTrigger === "explicit"
                   ? "border-tone-blue/25 bg-tone-blue/5 text-vs-text-dim"
-                  : "border-vs-border bg-vs-hover/50 text-vs-text-dim",
+                  : "border-vs-border bg-vs-hover/50 text-vs-text-dim"
             ].join(" ")}
           >
             <span>{navigationSummary}</span>

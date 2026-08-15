@@ -135,7 +135,12 @@ export interface IStorageClient {
   setCookies(sessionId: string, cookies: unknown[]): Promise<void>;
   clearCookies(sessionId: string): Promise<void>;
   getStorage(sessionId: string, type: "local" | "session"): Promise<Record<string, string>>;
-  setStorage(sessionId: string, type: "local" | "session", key: string, value: string): Promise<void>;
+  setStorage(
+    sessionId: string,
+    type: "local" | "session",
+    key: string,
+    value: string
+  ): Promise<void>;
   clearStorage(sessionId: string, type: "local" | "session"): Promise<void>;
 }
 

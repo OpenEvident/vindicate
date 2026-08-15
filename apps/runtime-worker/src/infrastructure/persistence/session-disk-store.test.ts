@@ -45,7 +45,10 @@ describe("SessionDiskStore", () => {
       created_at: old,
       last_active_at: old
     });
-    await writeFile(path.join(dir, "22222222-2222-2222-2222-222222222222.json"), await crypto.encrypt(payload));
+    await writeFile(
+      path.join(dir, "22222222-2222-2222-2222-222222222222.json"),
+      await crypto.encrypt(payload)
+    );
     const expired = await disk.listExpiredDeadSessions(24, Date.now());
     expect(expired).toContain("22222222-2222-2222-2222-222222222222");
   });

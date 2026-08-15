@@ -77,10 +77,14 @@ async function assertI1(result: ScenarioRunResult): Promise<void> {
     const privates = content.match(/private \w+(?: =|\()/g) ?? [];
     const helpers = content.match(/\/\/ locator-helper:/g) ?? [];
     if (helpers.length !== privates.length) {
-      throw new Error(`I1 failed in ${file}: locator-helper comments do not match private locator fields`);
+      throw new Error(
+        `I1 failed in ${file}: locator-helper comments do not match private locator fields`
+      );
     }
     if (!/\/\/ locator-helper: [^\n]+\n {2}private \w+(?: =|\()/m.test(content)) {
-      throw new Error(`I1 failed in ${file}: locator-helper comment is not directly above private field`);
+      throw new Error(
+        `I1 failed in ${file}: locator-helper comment is not directly above private field`
+      );
     }
   }
 }
@@ -97,7 +101,9 @@ async function assertI2(result: ScenarioRunResult): Promise<void> {
     const content = await readFile(path.join(result.root, file), "utf8");
     for (const pattern of FORBIDDEN_LOCATOR_PATTERNS) {
       if (pattern.test(content)) {
-        throw new Error(`I2 failed in ${file}: forbidden CSS selector matched (/${pattern.source}/)`);
+        throw new Error(
+          `I2 failed in ${file}: forbidden CSS selector matched (/${pattern.source}/)`
+        );
       }
     }
   }
@@ -148,7 +154,7 @@ async function assertI5(result: ScenarioRunResult): Promise<void> {
       while (prev >= 0 && (lines[prev] ?? "").trim().length === 0) {
         prev -= 1;
       }
-      const prevLine = prev >= 0 ? lines[prev] ?? "" : "";
+      const prevLine = prev >= 0 ? (lines[prev] ?? "") : "";
       if (!prevLine.trim().endsWith("*/")) {
         throw new Error(`I5 failed in ${file}: method at line ${i + 1} is missing JSDoc`);
       }
@@ -241,7 +247,9 @@ async function assertI12(result: ScenarioRunResult): Promise<void> {
     const content = await readFile(path.join(result.root, file), "utf8");
     for (const pattern of FORBIDDEN_LOCATOR_PATTERNS) {
       if (pattern.test(content)) {
-        throw new Error(`I12 failed in ${file}: forbidden CSS selector matched (/${pattern.source}/)`);
+        throw new Error(
+          `I12 failed in ${file}: forbidden CSS selector matched (/${pattern.source}/)`
+        );
       }
     }
   }
@@ -262,12 +270,18 @@ const INVARIANT_CHECKS: Record<InvariantId, (result: ScenarioRunResult) => Promi
   I12: assertI12
 };
 
-export async function runInvariants(result: ScenarioRunResult, invariants: InvariantId[]): Promise<void> {
+export async function runInvariants(
+  result: ScenarioRunResult,
+  invariants: InvariantId[]
+): Promise<void> {
   for (const invariant of invariants) {
     await INVARIANT_CHECKS[invariant](result);
   }
 }
 
-export async function readScenarioFile(root: string, relativePath: string): Promise<string | undefined> {
+export async function readScenarioFile(
+  root: string,
+  relativePath: string
+): Promise<string | undefined> {
   return readIfExists(root, relativePath);
 }

@@ -142,7 +142,9 @@ export function collectApiStructuralErrors(
       }
       seenMethodNames.add(method.name);
 
-      errors.push(...collectLeadingSlashError(method, client.client_class, clientIndex, methodIndex));
+      errors.push(
+        ...collectLeadingSlashError(method, client.client_class, clientIndex, methodIndex)
+      );
       errors.push(...collectPathParamErrors(method, client.client_class, clientIndex, methodIndex));
     });
   });
@@ -157,7 +159,11 @@ const ENV_VAR_EXPRESSION_PATTERN = /^process\.env\./;
  * (test data) — neither is a "forgot the quotes" mistake, both are meant to stay bare. */
 function isRecognizedStringExpression(expression: string): boolean {
   const trimmed = expression.trim();
-  return /^['"`]/.test(trimmed) || ENV_VAR_EXPRESSION_PATTERN.test(trimmed) || expectedKeysInExpression(trimmed).length > 0;
+  return (
+    /^['"`]/.test(trimmed) ||
+    ENV_VAR_EXPRESSION_PATTERN.test(trimmed) ||
+    expectedKeysInExpression(trimmed).length > 0
+  );
 }
 
 /** `BuilderField.default` is pasted verbatim (same convention as ApiCall.args) — nothing validated
@@ -187,7 +193,15 @@ export function collectApiBuilderErrors(schema: ApiFullSchema): ValidationError[
 
       const exprErr = tryValidateTsExpression(field.default, fieldPath, context);
       if (exprErr !== undefined) {
-        errors.push(validationError("invalid_builder_default", fieldPath, exprErr.message, exprErr.fix, exprErr.example));
+        errors.push(
+          validationError(
+            "invalid_builder_default",
+            fieldPath,
+            exprErr.message,
+            exprErr.fix,
+            exprErr.example
+          )
+        );
       }
     });
   });
@@ -357,7 +371,15 @@ function collectApiCallErrors(
     }
     const exprErr = tryValidateTsExpression(arg, argPath, argContext);
     if (exprErr !== undefined) {
-      errors.push(validationError("invalid_api_call_arg", argPath, exprErr.message, exprErr.fix, exprErr.example));
+      errors.push(
+        validationError(
+          "invalid_api_call_arg",
+          argPath,
+          exprErr.message,
+          exprErr.fix,
+          exprErr.example
+        )
+      );
     }
   });
 
@@ -399,7 +421,9 @@ const CAPTURE_FIELD_MISTAKE_NAMES = new Set(["body_json", "status_text"]);
  * guaranteed `Cannot redeclare block-scoped variable` compile error. */
 function collectCaptureErrors(testCase: ApiTestCase, casePath: string): ValidationError[] {
   const errors: ValidationError[] = [];
-  const reservedResponseNames = new Set(testCase.calls.map((_, i) => (i === 0 ? "response" : `response${i + 1}`)));
+  const reservedResponseNames = new Set(
+    testCase.calls.map((_, i) => (i === 0 ? "response" : `response${i + 1}`))
+  );
   const seenCaptureNames = new Set<string>();
 
   testCase.calls.forEach((call, callIndex) => {

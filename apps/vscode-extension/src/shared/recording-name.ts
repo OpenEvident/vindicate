@@ -130,7 +130,10 @@ export function formatRecordingNameConflictMessage(conflict: RecordingNameConfli
         : conflict.status === "recording"
           ? "is currently recording"
           : "already exists";
-  if (conflict.existingName.trim().toLowerCase() === conflict.safeName.replace(/-/g, " ").toLowerCase()) {
+  if (
+    conflict.existingName.trim().toLowerCase() ===
+    conflict.safeName.replace(/-/g, " ").toLowerCase()
+  ) {
     return `A recording named "${conflict.existingName}" ${statusHint}. Choose a different name.`;
   }
   return `A recording with this name already exists as "${conflict.existingName}" (${statusHint}). Choose a different name.`;

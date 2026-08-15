@@ -52,16 +52,32 @@
 }
 
 @keyframes pop {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.25; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
 }
 @keyframes shimmer {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.9; }
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
 /* Vindicate Home panel palette (vindicate-vscode-mockup.html) */
@@ -1502,7 +1518,12 @@ body[data-surface="editor"],
   padding: 18px 20px 16px;
   border: 1px solid rgba(74, 222, 128, 0.18);
   border-radius: 10px;
-  background: linear-gradient(165deg, rgba(21, 128, 61, 0.12) 0%, rgba(21, 128, 61, 0.04) 55%, #1a1a1a 100%);
+  background: linear-gradient(
+    165deg,
+    rgba(21, 128, 61, 0.12) 0%,
+    rgba(21, 128, 61, 0.04) 55%,
+    #1a1a1a 100%
+  );
 }
 
 .vindicate-setup-complete-hero {
@@ -3031,7 +3052,9 @@ body[data-surface="editor"],
   border-radius: 4px;
   color: var(--vindicate-fg-muted);
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 
 .vindicate-sidebar-icon-btn:hover {
@@ -3084,7 +3107,9 @@ body[data-surface="editor"],
   border-radius: 4px;
   color: var(--vindicate-fg-muted);
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 
 .vindicate-identity-menu-btn:hover {
@@ -3148,7 +3173,9 @@ body[data-surface="editor"],
   font-size: 11.5px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
   text-align: left;
   flex-shrink: 0;
 }
@@ -3279,28 +3306,36 @@ body[data-surface="editor"],
   border: 1px solid var(--vindicate-border);
 }
 
-.vindicate-callout--neutral .vindicate-callout-title { color: var(--vindicate-fg); }
+.vindicate-callout--neutral .vindicate-callout-title {
+  color: var(--vindicate-fg);
+}
 
 .vindicate-callout--pairing {
   background: color-mix(in oklab, var(--vindicate-accent) 8%, transparent);
   border: 1px solid color-mix(in oklab, var(--vindicate-accent) 35%, transparent);
 }
 
-.vindicate-callout--pairing .vindicate-callout-title { color: var(--vindicate-accent); }
+.vindicate-callout--pairing .vindicate-callout-title {
+  color: var(--vindicate-accent);
+}
 
 .vindicate-callout--active {
   background: color-mix(in oklab, var(--vindicate-status-green) 8%, transparent);
   border: 1px solid color-mix(in oklab, var(--vindicate-status-green) 25%, transparent);
 }
 
-.vindicate-callout--active .vindicate-callout-title { color: var(--vindicate-status-green); }
+.vindicate-callout--active .vindicate-callout-title {
+  color: var(--vindicate-status-green);
+}
 
 .vindicate-callout--watching {
   background: color-mix(in oklab, #f97316 8%, transparent);
   border: 1px solid color-mix(in oklab, #f97316 25%, transparent);
 }
 
-.vindicate-callout--watching .vindicate-callout-title { color: #f97316; }
+.vindicate-callout--watching .vindicate-callout-title {
+  color: #f97316;
+}
 
 /* Callout dot */
 .vindicate-callout-dot {
@@ -3310,18 +3345,33 @@ body[data-surface="editor"],
   flex-shrink: 0;
 }
 
-.vindicate-callout-dot--neutral  { background: var(--vindicate-fg-muted); }
-.vindicate-callout-dot--pairing  { background: var(--vindicate-accent); }
-.vindicate-callout-dot--active   { background: var(--vindicate-status-green); }
-.vindicate-callout-dot--watching { background: #f97316; }
+.vindicate-callout-dot--neutral {
+  background: var(--vindicate-fg-muted);
+}
+.vindicate-callout-dot--pairing {
+  background: var(--vindicate-accent);
+}
+.vindicate-callout-dot--active {
+  background: var(--vindicate-status-green);
+}
+.vindicate-callout-dot--watching {
+  background: #f97316;
+}
 
 .vindicate-callout-dot--pulse {
   animation: vindicate-callout-pulse 1.8s ease-in-out infinite;
 }
 
 @keyframes vindicate-callout-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(0.7); }
-  50% { opacity: 1; transform: scale(1); }
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ── Step list ── */
@@ -3364,7 +3414,10 @@ body[data-surface="editor"],
   color: var(--vindicate-fg-muted);
   flex-shrink: 0;
   margin-top: 1px;
-  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 /* Done: emerald green */
@@ -3439,7 +3492,10 @@ body[data-surface="editor"],
   font-weight: 400;
   color: var(--vindicate-fg-muted);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
   text-decoration: none;
 }
 
@@ -3457,7 +3513,11 @@ body[data-surface="editor"],
   flex-shrink: 0;
   padding: 7px 12px 10px;
   border-top: 1px solid var(--vindicate-border);
-  background: color-mix(in oklab, var(--vscode-sideBar-background, #252526) 70%, var(--vindicate-panel-bg) 30%);
+  background: color-mix(
+    in oklab,
+    var(--vscode-sideBar-background, #252526) 70%,
+    var(--vindicate-panel-bg) 30%
+  );
 }
 
 .vindicate-service-status {
@@ -3493,9 +3553,15 @@ body[data-surface="editor"],
   border-radius: 50%;
 }
 
-.dot.emerald { background: var(--ord-emerald); }
-.dot.amber { background: var(--ord-amber); }
-.dot.red { background: var(--ord-red); }
+.dot.emerald {
+  background: var(--ord-emerald);
+}
+.dot.amber {
+  background: var(--ord-amber);
+}
+.dot.red {
+  background: var(--ord-red);
+}
 
 .sb-project-chip {
   display: flex;
@@ -3621,7 +3687,9 @@ body[data-surface="editor"],
   border-radius: 5px;
 }
 
-.sb-metric:hover { background: var(--vs-hover); }
+.sb-metric:hover {
+  background: var(--vs-hover);
+}
 
 .sb-metric .lbl {
   font-size: 11px;
@@ -3651,7 +3719,9 @@ body[data-surface="editor"],
   color: var(--vs-text);
 }
 
-.sb-feat-row:hover { background: var(--vs-hover); }
+.sb-feat-row:hover {
+  background: var(--vs-hover);
+}
 
 .sb-feat-row .name {
   flex: 1;
@@ -3683,7 +3753,9 @@ body[data-surface="editor"],
   cursor: pointer;
 }
 
-.vbtn:hover { background: var(--vs-hover); }
+.vbtn:hover {
+  background: var(--vs-hover);
+}
 
 .vbtn:disabled {
   opacity: 0.65;
@@ -3696,7 +3768,9 @@ body[data-surface="editor"],
   color: #fff;
 }
 
-.vbtn.full { width: 100%; }
+.vbtn.full {
+  width: 100%;
+}
 
 /* ── Dashboard canvas styles ─────────────────────────────────────────────── */
 .dash-tabs {
@@ -3725,7 +3799,9 @@ body[data-surface="editor"],
   gap: 7px;
 }
 
-.dash-tab:hover { color: var(--vs-text); }
+.dash-tab:hover {
+  color: var(--vs-text);
+}
 
 .dash-tab.on {
   color: var(--vs-text-bright);
@@ -3750,7 +3826,11 @@ body[data-surface="editor"],
   border: 1px solid var(--vs-border);
   border-radius: 12px;
   background:
-    radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--vs-accent) 6%, transparent), transparent 60%),
+    radial-gradient(
+      circle at 0% 0%,
+      color-mix(in oklab, var(--vs-accent) 6%, transparent),
+      transparent 60%
+    ),
     rgba(127, 127, 127, 0.02);
 }
 
@@ -3873,9 +3953,15 @@ body[data-surface="editor"],
   transition: width 0.5s;
 }
 
-.kpi-bar.green > span { background: var(--ord-emerald); }
-.kpi-bar.amber > span { background: var(--ord-amber); }
-.kpi-bar.red > span { background: var(--ord-red); }
+.kpi-bar.green > span {
+  background: var(--ord-emerald);
+}
+.kpi-bar.amber > span {
+  background: var(--ord-amber);
+}
+.kpi-bar.red > span {
+  background: var(--ord-red);
+}
 
 .spark {
   height: 26px;
@@ -3892,7 +3978,9 @@ body[data-surface="editor"],
   opacity: 0.55;
 }
 
-.spark > span.last { opacity: 1; }
+.spark > span.last {
+  opacity: 1;
+}
 
 .dash-section-h {
   display: flex;
@@ -3947,8 +4035,12 @@ body[data-surface="editor"],
   vertical-align: middle;
 }
 
-.feat-table tbody tr:hover { background: var(--vs-hover); }
-.feat-table tbody tr:last-child td { border-bottom: none; }
+.feat-table tbody tr:hover {
+  background: var(--vs-hover);
+}
+.feat-table tbody tr:last-child td {
+  border-bottom: none;
+}
 
 .feat-table .feat-name {
   font-weight: 500;
@@ -4092,13 +4184,7 @@ body[data-surface="editor"],
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    #ff6b3d 0%,
-    #ec4899 35%,
-    #8b5cf6 65%,
-    #3b82f6 100%
-  );
+  background: linear-gradient(90deg, #ff6b3d 0%, #ec4899 35%, #8b5cf6 65%, #3b82f6 100%);
 }
 
 /* Code + copy button row */
@@ -4181,8 +4267,15 @@ body[data-surface="editor"],
 }
 
 @keyframes vindicate-pulse-dot {
-  0%, 100% { opacity: 0.45; transform: scale(0.8); }
-  50%       { opacity: 1;    transform: scale(1.15); }
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
 }
 
 .vindicate-shimmer {
@@ -4200,8 +4293,12 @@ body[data-surface="editor"],
 }
 
 @keyframes vindicate-shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position:  600px 0; }
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
 }
 
 /* ── Ghost button (DeviceCodeScreen secondary actions) ── */
@@ -4218,7 +4315,10 @@ body[data-surface="editor"],
   font-weight: 400;
   color: var(--vindicate-fg-muted);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 
 .vindicate-ghost-btn:hover:not(:disabled) {
@@ -4284,8 +4384,12 @@ body[data-surface="editor"],
   color: var(--vindicate-fg-muted);
 }
 
-.vindicate-sh-lbl--done  { color: var(--vindicate-fg); }
-.vindicate-sh-lbl--active { color: var(--vindicate-fg); }
+.vindicate-sh-lbl--done {
+  color: var(--vindicate-fg);
+}
+.vindicate-sh-lbl--active {
+  color: var(--vindicate-fg);
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SHARED PILL VARIANTS (.vindicate-vpill)
@@ -4367,8 +4471,10 @@ body[data-surface="editor"],
 .vindicate-agent-card {
   border: 1px solid var(--vindicate-border);
   border-radius: 8px;
-  background: var(--vindicate-card-bg, rgba(255,255,255,0.02));
-  transition: border-color 0.15s, background 0.15s;
+  background: var(--vindicate-card-bg, rgba(255, 255, 255, 0.02));
+  transition:
+    border-color 0.15s,
+    background 0.15s;
   overflow: hidden;
 }
 
@@ -4521,7 +4627,9 @@ body[data-surface="editor"],
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   width: 100%;
 }
 
@@ -4561,13 +4669,16 @@ body[data-surface="editor"],
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .vindicate-mode-hero-card {
-  background: var(--vindicate-card-bg, rgba(255,255,255,0.02));
+  background: var(--vindicate-card-bg, rgba(255, 255, 255, 0.02));
   border-radius: 12px;
   padding: 22px;
   cursor: pointer;
   border: 1px solid var(--vindicate-border);
   margin-bottom: 18px;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
   outline: none;
 }
 
@@ -4850,7 +4961,10 @@ body[data-surface="editor"],
   border: 1px solid var(--vindicate-border);
   background: rgba(255, 255, 255, 0.02);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
   outline: none;
   min-height: 0;
 }
@@ -4922,7 +5036,9 @@ body[data-surface="editor"],
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .vindicate-mc-check--empty {
@@ -5060,7 +5176,9 @@ body[data-surface="editor"],
   font-size: 11px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.12s, border-color 0.12s;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
 }
 
 .vindicate-gs-send-btn:hover {
@@ -5362,12 +5480,11 @@ body[data-surface="editor"],
 
 .vindicate-prompts-v2-row {
   align-items: center;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--vscode-editorWidget-background) 96%, transparent),
-      color-mix(in srgb, var(--vscode-editorWidget-background) 89%, transparent)
-    );
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vscode-editorWidget-background) 96%, transparent),
+    color-mix(in srgb, var(--vscode-editorWidget-background) 89%, transparent)
+  );
   border: 1px solid color-mix(in srgb, var(--vscode-editorWidget-border) 78%, transparent);
   border-radius: 10px;
   box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 4%, transparent);
@@ -7401,7 +7518,11 @@ body[data-surface="editor"],
 }
 
 .opp-conn.red::after {
-  background: linear-gradient(180deg, color-mix(in oklab, var(--ord-red) 10%, transparent), transparent 50%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ord-red) 10%, transparent),
+    transparent 50%
+  );
   opacity: 1;
 }
 
@@ -7761,7 +7882,6 @@ body[data-surface="editor"],
   line-height: 1.5;
   color: var(--vscode-descriptionForeground);
 }
-
 
 /* ---------------------------------------------------------------------------
    SIGN-IN SUCCESS PANEL

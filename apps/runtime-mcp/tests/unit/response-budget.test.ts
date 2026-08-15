@@ -48,7 +48,10 @@ describe("applyResponseBudget", () => {
         title: `failing test ${i}`,
         file: `tests/${i}.spec.ts`,
         status: "failed",
-        error: `Error line one for test ${i}\nsome stack trace noise here that shouldn't appear`.repeat(3)
+        error:
+          `Error line one for test ${i}\nsome stack trace noise here that shouldn't appear`.repeat(
+            3
+          )
       }))
     };
 
@@ -73,7 +76,13 @@ describe("applyResponseBudget", () => {
   });
 
   it("does not add omitted_failures when nothing was cut", () => {
-    const payload = { view: "test-run", passed: 1, failed: 0, summary: "ok", tests: [{ title: "a", status: "passed" }] };
+    const payload = {
+      view: "test-run",
+      passed: 1,
+      failed: 0,
+      summary: "ok",
+      tests: [{ title: "a", status: "passed" }]
+    };
     const out = applyResponseBudget("run_tests", payload) as Record<string, unknown>;
     expect(out).not.toHaveProperty("omitted_failures");
   });
@@ -85,7 +94,13 @@ describe("applyResponseBudget", () => {
       // padding so the payload is large enough to actually trigger trimming
       pad: "x".repeat(80)
     }));
-    const payload = { view: "test-run", passed: 75, failed: 0, summary: "ok", tests: passesAndSkips };
+    const payload = {
+      view: "test-run",
+      passed: 75,
+      failed: 0,
+      summary: "ok",
+      tests: passesAndSkips
+    };
 
     const out = applyResponseBudget("run_tests", payload) as Record<string, unknown>;
     expect(out).not.toHaveProperty("omitted_failures");

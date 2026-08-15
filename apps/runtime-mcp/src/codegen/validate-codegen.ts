@@ -1,6 +1,11 @@
 import type { ZodError, ZodIssue } from "zod";
 
-import { deriveFieldName, deriveLocator, isDynamicElement, resolveStructuredLocator } from "./locator-derive.js";
+import {
+  deriveFieldName,
+  deriveLocator,
+  isDynamicElement,
+  resolveStructuredLocator
+} from "./locator-derive.js";
 import {
   duplicateExpectedStringValues,
   expectedKeysForStringValue,
@@ -374,7 +379,10 @@ function collectRefArgsErrors(
   return errors;
 }
 
-export function collectStructuralErrors(schema: FullSchema, options?: { feature?: string }): ValidationError[] {
+export function collectStructuralErrors(
+  schema: FullSchema,
+  options?: { feature?: string }
+): ValidationError[] {
   const errors: ValidationError[] = [];
 
   schema.pages.forEach((page, pageIndex) => {
@@ -814,12 +822,14 @@ function collectExpectedDataErrors(schema: FullSchema): ValidationError[] {
     });
   });
 
-  const collectBodyExpected = (bodyPath: string, args: string[] | undefined, context: string): void => {
+  const collectBodyExpected = (
+    bodyPath: string,
+    args: string[] | undefined,
+    context: string
+  ): void => {
     args?.forEach((arg, index) => {
       const argPath = `${bodyPath}.args[${index}]`;
-      errors.push(
-        ...collectExpectedReferenceErrors(arg, argPath, context, schema.expected)
-      );
+      errors.push(...collectExpectedReferenceErrors(arg, argPath, context, schema.expected));
       const inlineErr = tryDetectInlineTestData(
         arg,
         argPath,
@@ -1007,7 +1017,9 @@ function collectWaitForResponseErrors(schema: FullSchema): ValidationError[] {
     );
     errors.push(
       validationError(
-        isDocPlaceholder ? "waitforresponse_doc_placeholder" : "waitforresponse_unobserved_endpoint",
+        isDocPlaceholder
+          ? "waitforresponse_doc_placeholder"
+          : "waitforresponse_unobserved_endpoint",
         path,
         isDocPlaceholder
           ? `waitForResponse urlPattern '${urlPattern}' is a documentation example, not an endpoint observed in ground.`

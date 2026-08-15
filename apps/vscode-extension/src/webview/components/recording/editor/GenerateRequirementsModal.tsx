@@ -30,11 +30,15 @@ export function GenerateRequirementsModal({
       >
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
-            <h2 id="generate-requirements-title" className="m-0 text-ui-lg font-semibold text-vs-text">
+            <h2
+              id="generate-requirements-title"
+              className="m-0 text-ui-lg font-semibold text-vs-text"
+            >
               Generate requirements
             </h2>
             <p className="mt-1 text-ui-sm text-vs-text-dim">
-              Copy this prompt into your agent chat to draft a requirements/story doc from this recording (no tests).
+              Copy this prompt into your agent chat to draft a requirements/story doc from this
+              recording (no tests).
             </p>
           </div>
           <button

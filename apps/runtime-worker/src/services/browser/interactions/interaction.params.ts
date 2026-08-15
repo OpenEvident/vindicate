@@ -4,7 +4,10 @@ import { z } from "zod";
 
 import { SnapshotScopeSchema } from "../snapshot/snapshot.params.js";
 
-export const RefSchema = z.string().min(1).regex(/^ref-[0-9a-f]{8}$/);
+export const RefSchema = z
+  .string()
+  .min(1)
+  .regex(/^ref-[0-9a-f]{8}$/);
 
 export const NavigateStepSchema = z.object({
   action: z.literal("navigate"),

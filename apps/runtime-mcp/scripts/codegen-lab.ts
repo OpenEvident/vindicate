@@ -27,7 +27,9 @@ async function writeGoldenSnapshot(
   for (const rel of files) {
     const content = await readScenarioFile(root, rel);
     if (content === undefined) {
-      throw new Error(`Cannot write golden snapshot: missing generated file '${rel}' for ${scenarioId}`);
+      throw new Error(
+        `Cannot write golden snapshot: missing generated file '${rel}' for ${scenarioId}`
+      );
     }
     const target = path.join(goldenDir, rel);
     await mkdir(path.dirname(target), { recursive: true });
@@ -37,8 +39,11 @@ async function writeGoldenSnapshot(
 
 async function main(): Promise<void> {
   const { updateGolden, scenarioId } = parseArgs(process.argv.slice(2));
-  const scenarios = await loadScenarios(path.resolve(RUNTIME_MCP_ROOT, "tests/codegen-lab/fixtures/scenarios"));
-  const selected = scenarioId === undefined ? scenarios : scenarios.filter((s) => s.id === scenarioId);
+  const scenarios = await loadScenarios(
+    path.resolve(RUNTIME_MCP_ROOT, "tests/codegen-lab/fixtures/scenarios")
+  );
+  const selected =
+    scenarioId === undefined ? scenarios : scenarios.filter((s) => s.id === scenarioId);
 
   if (selected.length === 0) {
     throw new Error(`No scenario found for id '${scenarioId}'`);

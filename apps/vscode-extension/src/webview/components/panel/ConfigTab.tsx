@@ -40,10 +40,18 @@ export function ConfigTab() {
   };
 
   const agentItems = ITEMS;
-  const mcpPairedCount = [statuses.cursor, statuses.vscode, statuses.claudeCode, statuses.antigravity].filter(
-    Boolean
-  ).length;
-  const connectedClients = [statuses.cursor, statuses.vscode, statuses.claudeCode, statuses.antigravity]
+  const mcpPairedCount = [
+    statuses.cursor,
+    statuses.vscode,
+    statuses.claudeCode,
+    statuses.antigravity
+  ].filter(Boolean).length;
+  const connectedClients = [
+    statuses.cursor,
+    statuses.vscode,
+    statuses.claudeCode,
+    statuses.antigravity
+  ]
     .map((value, idx) => (value ? idx : -1))
     .filter((value) => value >= 0).length;
 
@@ -71,7 +79,11 @@ export function ConfigTab() {
             <h3>Connections</h3>
             <div className="hint">Status of the two pieces that make Vindicate work.</div>
           </div>
-          <button className="opp-mini-btn ghost" type="button" onClick={() => postToExtension({ type: "ready" })}>
+          <button
+            className="opp-mini-btn ghost"
+            type="button"
+            onClick={() => postToExtension({ type: "ready" })}
+          >
             <RefreshCw size={13} strokeWidth={2} />
             Re-check
           </button>
@@ -98,7 +110,9 @@ export function ConfigTab() {
             </div>
           </div>
 
-          <div className={`opp-conn ${connTone(mcp, { partialPaired: mcp === "up" && mcpPairedCount < 4 })}`}>
+          <div
+            className={`opp-conn ${connTone(mcp, { partialPaired: mcp === "up" && mcpPairedCount < 4 })}`}
+          >
             <div className="opp-conn-head">
               <span className="name">
                 <span className="dot" />
@@ -132,7 +146,9 @@ export function ConfigTab() {
           const connected = statuses[key];
           return (
             <article key={key} className="opp-agent">
-              <div className="gloss">{brand ? <ToolBrandIcon brand={brand} label={label} /> : null}</div>
+              <div className="gloss">
+                {brand ? <ToolBrandIcon brand={brand} label={label} /> : null}
+              </div>
               <div className="meta">
                 <div className="title">
                   {label}
@@ -153,10 +169,18 @@ export function ConfigTab() {
                   </span>
                 ) : connected ? (
                   <>
-                    <button className="opp-mini-btn ghost" type="button" onClick={() => handleResync(key)}>
+                    <button
+                      className="opp-mini-btn ghost"
+                      type="button"
+                      onClick={() => handleResync(key)}
+                    >
                       Re-sync
                     </button>
-                    <button className="opp-mini-btn ghost" type="button" onClick={() => handleDisconnect(key)}>
+                    <button
+                      className="opp-mini-btn ghost"
+                      type="button"
+                      onClick={() => handleDisconnect(key)}
+                    >
                       Disconnect
                     </button>
                   </>

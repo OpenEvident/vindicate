@@ -18,14 +18,20 @@ const suiteSchema = z.object({
         title: z
           .string()
           .min(1)
-          .describe("The full test() title, e.g. \"[AC-1] should log in with valid credentials\" — starts with the [AC-n] tag.")
+          .describe(
+            'The full test() title, e.g. "[AC-1] should log in with valid credentials" — starts with the [AC-n] tag.'
+          )
       })
     )
     .describe("One entry per agreed testcase/AC, in the order they'll appear in the spec.")
 });
 
 const previousSchema = z.object({
-  suites: z.array(suiteSchema).describe("The prior call's suites, unchanged, used only to diff against the new suites for add/modify/remove badges.")
+  suites: z
+    .array(suiteSchema)
+    .describe(
+      "The prior call's suites, unchanged, used only to diff against the new suites for add/modify/remove badges."
+    )
 });
 
 export function registerDesignTool(server: McpServer): void {
@@ -48,10 +54,14 @@ export function registerDesignTool(server: McpServer): void {
           .string()
           .max(512)
           .optional()
-          .describe("Optional one-paragraph summary of the write plan (target spec, write_new|edit_append, count) shown in the panel."),
+          .describe(
+            "Optional one-paragraph summary of the write plan (target spec, write_new|edit_append, count) shown in the panel."
+          ),
         previous: previousSchema
           .optional()
-          .describe("Optional. Pass the prior call's { suites } when re-submitting an edited design, so added/modified/removed badges are computed against it.")
+          .describe(
+            "Optional. Pass the prior call's { suites } when re-submitting an edited design, so added/modified/removed badges are computed against it."
+          )
       },
       _meta: { ui: { resourceUri: APP_RESOURCE_URI } }
     },

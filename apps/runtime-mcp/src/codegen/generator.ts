@@ -18,7 +18,10 @@ import { fixtureNameFromClass, validateFullSchema } from "./validate-codegen.js"
 import { runValidate } from "./validate-runner.js";
 import type { ValidationResult } from "./validation-errors.js";
 
-function pageObjectBuildOptions(schema: FullSchema, feature: string): BuildPageObjectOptions | undefined {
+function pageObjectBuildOptions(
+  schema: FullSchema,
+  feature: string
+): BuildPageObjectOptions | undefined {
   if (schema.expected === undefined) {
     return undefined;
   }
@@ -99,9 +102,12 @@ function isPageImportRegistered(content: string, pageClass: string): boolean {
 function applyPageConfigUpdates(content: string, ownedPages: PageDef[]): string {
   let current = content;
 
-  const importAnchor = "// grow_tests appends one import line per new page class above this comment.";
-  const typeAnchor = "// fixture-types: grow_tests appends one type entry per feature below this line";
-  const implAnchor = "// fixture-impls: grow_tests appends one fixture entry per feature below this line";
+  const importAnchor =
+    "// grow_tests appends one import line per new page class above this comment.";
+  const typeAnchor =
+    "// fixture-types: grow_tests appends one type entry per feature below this line";
+  const implAnchor =
+    "// fixture-impls: grow_tests appends one fixture entry per feature below this line";
 
   for (const page of ownedPages) {
     const fixtureName = fixtureNameFromPageClass(page.page_class);
@@ -194,7 +200,12 @@ async function runCreate(
   const pageLoaderContent = await fs.read("support/config/page-loader.ts");
   writes.push({
     path: "support/config/page-loader.ts",
-    content: applyPageLoaderUpdates(pageLoaderContent, ownedPages, feature, hasExpectedData(schema.expected))
+    content: applyPageLoaderUpdates(
+      pageLoaderContent,
+      ownedPages,
+      feature,
+      hasExpectedData(schema.expected)
+    )
   });
 
   const pageConfigContent = await fs.read("support/config/page.config.ts");

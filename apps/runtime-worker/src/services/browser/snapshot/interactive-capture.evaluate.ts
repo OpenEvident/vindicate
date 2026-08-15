@@ -38,7 +38,9 @@ export interface InteractiveCaptureBrowserResult {
 /**
  * Runs in the browser — do not import Node built-ins here.
  */
-export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): InteractiveCaptureBrowserResult {
+export function captureInteractiveSnapshot(
+  opts: InteractiveCaptureOpts
+): InteractiveCaptureBrowserResult {
   /* __VINDICATE_EVAL__:interactive_snapshot__ */
 
   const GENERATED_ID_RE: ReadonlyArray<RegExp> = [
@@ -132,7 +134,15 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
     return found;
   }
 
-  const SCOPED_TEXT_SKIP_TAGS = new Set(["script", "style", "noscript", "svg", "path", "img", "iframe"]);
+  const SCOPED_TEXT_SKIP_TAGS = new Set([
+    "script",
+    "style",
+    "noscript",
+    "svg",
+    "path",
+    "img",
+    "iframe"
+  ]);
   const SCOPED_TEXT_MIN_LEN = 1;
   const SCOPED_TEXT_MAX_LEN = 100;
 
@@ -365,7 +375,14 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
     const haspopup = el.getAttribute("aria-haspopup");
     if (haspopup !== null) {
       const v = haspopup.trim().toLowerCase();
-      if (v === "true" || v === "menu" || v === "listbox" || v === "tree" || v === "grid" || v === "dialog") {
+      if (
+        v === "true" ||
+        v === "menu" ||
+        v === "listbox" ||
+        v === "tree" ||
+        v === "grid" ||
+        v === "dialog"
+      ) {
         return true;
       }
     }
@@ -386,7 +403,8 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
     // walking childNodes here would miss slotted text entirely (e.g. a shadow-DOM button's visible
     // label, projected in from its host's light-DOM text).
     const children: Node[] =
-      el.tagName.toLowerCase() === "slot" && typeof (el as HTMLSlotElement).assignedNodes === "function"
+      el.tagName.toLowerCase() === "slot" &&
+      typeof (el as HTMLSlotElement).assignedNodes === "function"
         ? (el as HTMLSlotElement).assignedNodes({ flatten: true })
         : Array.from(el.childNodes);
     for (const node of children) {
@@ -454,7 +472,13 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
     return visibleTextSlice(el, 80);
   }
 
-  function scoreRow(isInteractiveEl: boolean, hasName: boolean, inVp: boolean, hasTestid: boolean, depth: number): number {
+  function scoreRow(
+    isInteractiveEl: boolean,
+    hasName: boolean,
+    inVp: boolean,
+    hasTestid: boolean,
+    depth: number
+  ): number {
     const depthPenalty = Math.min(depth * 2, 10);
     return (
       (isInteractiveEl ? 50 : 0) +
@@ -759,9 +783,24 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
   // a role name there yields a locator Playwright can never match (the OrangeHRM error-alert case).
   // Canonical home + drift guard: snapshot/name-from-content.ts (pinned by name-from-content.test.ts).
   const ROLE_NAME_FROM_CONTENT = [
-    "button", "link", "heading", "menuitem", "menuitemcheckbox", "menuitemradio",
-    "option", "radio", "checkbox", "switch", "tab", "treeitem", "cell", "gridcell",
-    "columnheader", "rowheader", "row", "tooltip"
+    "button",
+    "link",
+    "heading",
+    "menuitem",
+    "menuitemcheckbox",
+    "menuitemradio",
+    "option",
+    "radio",
+    "checkbox",
+    "switch",
+    "tab",
+    "treeitem",
+    "cell",
+    "gridcell",
+    "columnheader",
+    "rowheader",
+    "row",
+    "tooltip"
   ];
 
   // Whether the element carries an author-supplied accessible name (valid for getByRole on any role),
@@ -808,8 +847,18 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
 
     // T1 — test-id on the project attribute → getByTestId
     if (foundTestid !== null && foundTestid.attr === projectTestidAttr) {
-      if (uniqueByCss(`[${foundTestid.attr}="${escapeAttrValue(foundTestid.value)}"]`, testidSearchRoot)) {
-        return { strategy: "testid", confidence: "high", attr: foundTestid.attr, value: foundTestid.value };
+      if (
+        uniqueByCss(
+          `[${foundTestid.attr}="${escapeAttrValue(foundTestid.value)}"]`,
+          testidSearchRoot
+        )
+      ) {
+        return {
+          strategy: "testid",
+          confidence: "high",
+          attr: foundTestid.attr,
+          value: foundTestid.value
+        };
       }
     }
     if (!shadowed) {
@@ -880,11 +929,14 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
     if (!shadowed) {
       const attrParts: string[] = [];
       const typeAttr = el.getAttribute("type");
-      if (typeAttr !== null && typeAttr.length > 0) attrParts.push(`@type=${xpathLiteral(typeAttr)}`);
+      if (typeAttr !== null && typeAttr.length > 0)
+        attrParts.push(`@type=${xpathLiteral(typeAttr)}`);
       const nameAttr = el.getAttribute("name");
-      if (nameAttr !== null && nameAttr.length > 0) attrParts.push(`@name=${xpathLiteral(nameAttr)}`);
+      if (nameAttr !== null && nameAttr.length > 0)
+        attrParts.push(`@name=${xpathLiteral(nameAttr)}`);
       const phAttr = el.getAttribute("placeholder");
-      if (phAttr !== null && phAttr.length > 0) attrParts.push(`@placeholder=${xpathLiteral(phAttr)}`);
+      if (phAttr !== null && phAttr.length > 0)
+        attrParts.push(`@placeholder=${xpathLiteral(phAttr)}`);
       if (attrParts.length > 0) {
         const xp = `//${tag}[${attrParts.join(" and ")}]`;
         if (countByXpath(xp) === 1) {
@@ -901,7 +953,12 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
     if (!shadowed && locatorName.length === 0) {
       const siblingMatch = findSiblingTextMatch(el);
       if (siblingMatch !== undefined) {
-        return { strategy: "sibling_text", confidence: "high", value: siblingMatch.text, xpath: siblingMatch.xpath };
+        return {
+          strategy: "sibling_text",
+          confidence: "high",
+          value: siblingMatch.text,
+          xpath: siblingMatch.xpath
+        };
       }
     }
     if (shadowed) {
@@ -1041,7 +1098,9 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
         }
       }
       if (hit === null) {
-        for (const el of Array.from(document.querySelectorAll("button,a,input,select,textarea,details"))) {
+        for (const el of Array.from(
+          document.querySelectorAll("button,a,input,select,textarea,details")
+        )) {
           if (implicitRole(el) === sd.role && getAccessibleName(el, [sd.testidAttr]) === sd.name) {
             hit = el;
             break;
@@ -1060,15 +1119,19 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
       if (matches.length === 1) {
         hit = matches[0] ?? null;
       } else if (matches.length > 1 && sd.name !== undefined && sd.name.length > 0) {
-        hit =
-          matches.find((el) => getAccessibleName(el, [sd.testidAttr]) === sd.name) ??
-          null;
+        hit = matches.find((el) => getAccessibleName(el, [sd.testidAttr]) === sd.name) ?? null;
       } else if (matches.length > 1) {
         hit = matches[0] ?? null;
       }
     }
     if (hit === null) {
-      return { elements: [], truncated: false, collapsed_count: 0, alerts: [], error: "ref_not_found" };
+      return {
+        elements: [],
+        truncated: false,
+        collapsed_count: 0,
+        alerts: [],
+        error: "ref_not_found"
+      };
     }
     // An overlay/dialog ref (the flood-collapse summary row) scopes into its own contents — "scope into
     // it to read its items" is the documented contract for a folded overlay. Every other (ordinary leaf
@@ -1077,7 +1140,13 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
   } else if (opts.scopeCss !== undefined && opts.scopeCss.length > 0) {
     const hit = document.querySelector(opts.scopeCss);
     if (hit === null) {
-      return { elements: [], truncated: false, collapsed_count: 0, alerts: [], error: "css_not_found" };
+      return {
+        elements: [],
+        truncated: false,
+        collapsed_count: 0,
+        alerts: [],
+        error: "css_not_found"
+      };
     }
     root = hit;
   }
@@ -1218,7 +1287,9 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
       for (const [, g] of buckets) {
         const testidRatio = g.filter((r) => r.hasTestid).length / g.length;
         const threshold =
-          testidRatio >= 0.5 ? TESTID_INSTRUMENTED_COLLAPSE_THRESHOLD : UNINSTRUMENTED_COLLAPSE_THRESHOLD;
+          testidRatio >= 0.5
+            ? TESTID_INSTRUMENTED_COLLAPSE_THRESHOLD
+            : UNINSTRUMENTED_COLLAPSE_THRESHOLD;
         if (g.length >= threshold) {
           g.sort((a, b) => b.score - a.score);
           const head = g[0];
@@ -1244,7 +1315,12 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
   const OVERLAY_FLOOD_THRESHOLD = 12;
   const topOverlay = detectTopmostOverlay();
   const overlayForCollapse = opts.scopeDescriptor === undefined ? topOverlay : null;
-  if (overlayForCollapse !== null && overlayForCollapse !== root && root.contains(overlayForCollapse) && !overlayForCollapse.contains(root)) {
+  if (
+    overlayForCollapse !== null &&
+    overlayForCollapse !== root &&
+    root.contains(overlayForCollapse) &&
+    !overlayForCollapse.contains(root)
+  ) {
     const inside = working.filter((r) => overlayForCollapse.contains(r.el));
     if (inside.length >= OVERLAY_FLOOD_THRESHOLD) {
       const insideSet = new Set<Element>(inside.map((r) => r.el));
@@ -1313,7 +1389,8 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
   for (const r of slice) {
     const el = r.el;
     const foundTestid = findTestid(el, testidCandidates);
-    const inputType = el.tagName.toLowerCase() === "input" ? (el as HTMLInputElement).type : undefined;
+    const inputType =
+      el.tagName.toLowerCase() === "input" ? (el as HTMLInputElement).type : undefined;
     const value =
       "value" in el && typeof (el as HTMLInputElement).value === "string"
         ? (el as HTMLInputElement).value
@@ -1323,13 +1400,16 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
         ? (el as HTMLInputElement).placeholder
         : undefined;
     const disabled =
-      "disabled" in el ? Boolean((el as HTMLInputElement | HTMLButtonElement | HTMLSelectElement).disabled) : false;
+      "disabled" in el
+        ? Boolean((el as HTMLInputElement | HTMLButtonElement | HTMLSelectElement).disabled)
+        : false;
     const notVisible = isVisuallyHiddenAncestor(el);
     // A colliding ref inside a uniquely-named row gets a distinct, stable ref (re-digested with the
     // row anchor) so each row resolves to its own scoped locator instead of collapsing to one descriptor.
     const container =
       (refCounts.get(r.ref) ?? 0) > 1 && foundTestid === null ? repeatingContainerAnchor(el) : null;
-    const ref = container !== null ? digestRef(`${r.tag}${r.role}${r.name}|row:${container.name}`) : r.ref;
+    const ref =
+      container !== null ? digestRef(`${r.tag}${r.role}${r.name}|row:${container.name}`) : r.ref;
 
     // A pointer-events:none control can never itself receive a click, and a 1x1px control (the sr-only
     // visually-hidden-input pattern) can technically receive one but not reliably — any locator resolving
@@ -1365,7 +1445,8 @@ export function captureInteractiveSnapshot(opts: InteractiveCaptureOpts): Intera
         );
         // Stamped onto the locator itself (not just the wire row below) so it survives a codegen
         // schema built from a verbatim copy of this locator — see StructuredLocator.click_delegate.
-        locator = delegateLocator !== undefined ? { ...delegateLocator, click_delegate: true } : undefined;
+        locator =
+          delegateLocator !== undefined ? { ...delegateLocator, click_delegate: true } : undefined;
         clickDelegate = locator !== undefined;
       }
     } else {

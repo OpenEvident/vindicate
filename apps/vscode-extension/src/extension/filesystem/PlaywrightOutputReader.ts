@@ -104,7 +104,10 @@ function countResults(report: PlaywrightReport): {
   flaky: number;
   total: number;
   durationMs: number;
-  perFeature: Map<string, { passed: number; failed: number; skipped: number; flaky: number; total: number }>;
+  perFeature: Map<
+    string,
+    { passed: number; failed: number; skipped: number; flaky: number; total: number }
+  >;
   failures: Array<{
     id: string;
     feature: string;
@@ -121,7 +124,10 @@ function countResults(report: PlaywrightReport): {
   let failed = 0;
   let skipped = 0;
   let flaky = 0;
-  const perFeature = new Map<string, { passed: number; failed: number; skipped: number; flaky: number; total: number }>();
+  const perFeature = new Map<
+    string,
+    { passed: number; failed: number; skipped: number; flaky: number; total: number }
+  >();
   const failures: Array<{
     id: string;
     feature: string;
@@ -132,7 +138,12 @@ function countResults(report: PlaywrightReport): {
     duration: string;
     flaky: boolean;
   }> = [];
-  const slowestTests: Array<{ title: string; feature: string; duration: string; durationMs: number }> = [];
+  const slowestTests: Array<{
+    title: string;
+    feature: string;
+    duration: string;
+    durationMs: number;
+  }> = [];
 
   const walk = (suites: PlaywrightSuite[] | undefined, parentFeature: string): void => {
     if (!suites) return;
@@ -142,10 +153,19 @@ function countResults(report: PlaywrightReport): {
         const specFeature = slugFromTitle(spec.file ?? suite.file ?? suiteFeature);
         for (const test of spec.tests ?? []) {
           const key = specFeature || "general";
-          const existing = perFeature.get(key) ?? { passed: 0, failed: 0, skipped: 0, flaky: 0, total: 0 };
+          const existing = perFeature.get(key) ?? {
+            passed: 0,
+            failed: 0,
+            skipped: 0,
+            flaky: 0,
+            total: 0
+          };
           const displayTitle = test.title ?? spec.title ?? "Unnamed test";
           const displayFile =
-            formatFailureFile(test.location?.file, test.location?.line) ?? spec.file ?? suite.file ?? key;
+            formatFailureFile(test.location?.file, test.location?.line) ??
+            spec.file ??
+            suite.file ??
+            key;
           const ac = extractAcTag(displayTitle) ?? "AC-?";
           const hasRetryPass =
             (test.results ?? []).some((result) => result.status === "passed") &&
@@ -171,9 +191,11 @@ function countResults(report: PlaywrightReport): {
               failed += 1;
               existing.failed += 1;
               existing.total += 1;
-              const detail = result.error?.message ?? test.error?.message ?? `Playwright status: ${status}`;
+              const detail =
+                result.error?.message ?? test.error?.message ?? `Playwright status: ${status}`;
               const errorFile =
-                formatFailureFile(result.error?.location?.file, result.error?.location?.line) ?? displayFile;
+                formatFailureFile(result.error?.location?.file, result.error?.location?.line) ??
+                displayFile;
               failures.push({
                 id: `${key}-${failures.length + 1}`,
                 feature: key,

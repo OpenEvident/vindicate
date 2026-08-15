@@ -3,7 +3,11 @@ import {
   createProjectRoot,
   type CreateProjectRootOptions
 } from "../../shared/codegen-testkit/project-root.js";
-import type { ScenarioRunResult, ScenarioDefinition, ScenarioStepResult } from "./scenario-types.js";
+import type {
+  ScenarioRunResult,
+  ScenarioDefinition,
+  ScenarioStepResult
+} from "./scenario-types.js";
 
 function toProjectRootOptions(scenario: ScenarioDefinition): CreateProjectRootOptions {
   return {
@@ -51,7 +55,9 @@ export async function runScenario(scenario: ScenarioDefinition): Promise<Scenari
       }
     }
 
-    const lastValidation = [...stepResults].reverse().find((s) => s.validation !== undefined)?.validation;
+    const lastValidation = [...stepResults]
+      .reverse()
+      .find((s) => s.validation !== undefined)?.validation;
 
     return {
       scenario,

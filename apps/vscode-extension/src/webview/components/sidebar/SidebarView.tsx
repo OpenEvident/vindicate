@@ -48,7 +48,10 @@ function OverflowMenu() {
             type="button"
             role="menuitem"
             className="vindicate-overflow-item"
-            onClick={() => { setOpen(false); postToExtension({ type: "nav:openFullView" }); }}
+            onClick={() => {
+              setOpen(false);
+              postToExtension({ type: "nav:openFullView" });
+            }}
           >
             Open home page
           </button>
@@ -56,7 +59,10 @@ function OverflowMenu() {
             type="button"
             role="menuitem"
             className="vindicate-overflow-item"
-            onClick={() => { setOpen(false); postToExtension({ type: "nav:openRecordings" }); }}
+            onClick={() => {
+              setOpen(false);
+              postToExtension({ type: "nav:openRecordings" });
+            }}
           >
             Recordings
           </button>
@@ -64,7 +70,10 @@ function OverflowMenu() {
             type="button"
             role="menuitem"
             className="vindicate-overflow-item"
-            onClick={() => { setOpen(false); postToExtension({ type: "nav:showPanel" }); }}
+            onClick={() => {
+              setOpen(false);
+              postToExtension({ type: "nav:showPanel" });
+            }}
           >
             Prompts &amp; Config
           </button>
@@ -87,7 +96,9 @@ function SidebarHealthBadge() {
       <div>
         <div className="title inline-flex items-center">
           Project health
-          <span className="ml-1 font-mono text-[11px] text-[var(--vs-text-dim)]">· {metrics.health.grade}</span>
+          <span className="ml-1 font-mono text-[11px] text-[var(--vs-text-dim)]">
+            · {metrics.health.grade}
+          </span>
         </div>
         <div className="sub">
           {hasDelta ? (
@@ -105,13 +116,7 @@ function SidebarHealthBadge() {
   );
 }
 
-function SidebarSectionTitle({
-  children,
-  right
-}: {
-  children: string;
-  right?: string;
-}) {
+function SidebarSectionTitle({ children, right }: { children: string; right?: string }) {
   return (
     <div className="sb-section-title">
       <span>{children}</span>
@@ -182,7 +187,10 @@ function SidebarQuickKPIs() {
           <span className="lbl inline-flex items-center">
             <span className={`dot ${row.tone}`} />
             {row.label}
-            <MetricTip title={`${row.label} metric`} formula="Calculated from dashboard metrics data." />
+            <MetricTip
+              title={`${row.label} metric`}
+              formula="Calculated from dashboard metrics data."
+            />
           </span>
           <span className="val">{row.value}</span>
         </div>
@@ -195,12 +203,18 @@ function SidebarFeatureList() {
   const metrics = useDashboardStore((s) => s.metrics) ?? createEmptyDashboardMetrics();
   return (
     <div className="mt-3">
-      <SidebarSectionTitle right={`${metrics.features.length} features`}>Features</SidebarSectionTitle>
+      <SidebarSectionTitle right={`${metrics.features.length} features`}>
+        Features
+      </SidebarSectionTitle>
       {metrics.features.map((feature) => (
         <div key={feature.slug} className="sb-feat-row">
-          <span className={`dot ${feature.specStatus === "missing" ? "red" : feature.specStatus === "partial" ? "amber" : "emerald"}`} />
+          <span
+            className={`dot ${feature.specStatus === "missing" ? "red" : feature.specStatus === "partial" ? "amber" : "emerald"}`}
+          />
           <span className="name">{feature.slug}</span>
-          <span className="tcount">{feature.tests.total > 0 ? `${feature.tests.passed}/${feature.tests.total}` : "—"}</span>
+          <span className="tcount">
+            {feature.tests.total > 0 ? `${feature.tests.passed}/${feature.tests.total}` : "—"}
+          </span>
         </div>
       ))}
     </div>
@@ -264,18 +278,31 @@ function StatusFooter() {
   const mcp = useHealthStore((s) => s.mcp);
 
   const dotClass = (s: string) =>
-    s === "up" ? "vindicate-status-dot--green" : s === "down" ? "vindicate-status-dot--red" : "vindicate-status-dot--gray";
+    s === "up"
+      ? "vindicate-status-dot--green"
+      : s === "down"
+        ? "vindicate-status-dot--red"
+        : "vindicate-status-dot--gray";
 
   const mcpPulse = mcp === "down";
 
   return (
     <div className="vindicate-status-footer">
-      <span className="vindicate-service-status" title="Vindicate runtime – local service that orchestrates scaffolding">
+      <span
+        className="vindicate-service-status"
+        title="Vindicate runtime – local service that orchestrates scaffolding"
+      >
         <span className={`vindicate-status-dot ${dotClass(runtime)}`} aria-hidden />
         Runtime
       </span>
-      <span className="vindicate-service-status" title="Vindicate MCP server – exposes context to your AI agents">
-        <span className={`vindicate-status-dot ${dotClass(mcp)} ${mcpPulse ? "vindicate-status-dot--pulse" : ""}`} aria-hidden />
+      <span
+        className="vindicate-service-status"
+        title="Vindicate MCP server – exposes context to your AI agents"
+      >
+        <span
+          className={`vindicate-status-dot ${dotClass(mcp)} ${mcpPulse ? "vindicate-status-dot--pulse" : ""}`}
+          aria-hidden
+        />
         MCP
       </span>
       <span className="vindicate-status-footer-spacer" />

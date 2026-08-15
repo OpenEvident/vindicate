@@ -58,7 +58,9 @@ export function RecordingSurface() {
             ...(msg.safeName !== undefined ? { safeName: msg.safeName } : {}),
             ...(msg.artifactPath !== undefined ? { artifactPath: msg.artifactPath } : {}),
             ...(msg.started_by !== undefined ? { started_by: msg.started_by } : {}),
-            ...(msg.finalScreenshotUrl !== undefined ? { finalScreenshotUrl: msg.finalScreenshotUrl } : {}),
+            ...(msg.finalScreenshotUrl !== undefined
+              ? { finalScreenshotUrl: msg.finalScreenshotUrl }
+              : {}),
             ...(msg.preconditionRecordings !== undefined
               ? { preconditionRecordings: msg.preconditionRecordings }
               : {})

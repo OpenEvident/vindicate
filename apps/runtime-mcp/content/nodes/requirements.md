@@ -12,6 +12,7 @@ refs: [ref-requirements]
 # Requirements
 
 ## Goal
+
 Draft a **requirements/story** document from a **user-provided recording** — nothing else. Write
 `.vindicate/stories/<feature>.story.md` using the deliveroo-style top: **title + prose**, **Persona**,
 `# Feature` with `[FA-x-y]`, granular `# Acceptance Criteria`, BDD `## [AC-n]` testcases (no
@@ -19,12 +20,14 @@ Pre-conditions or Testcases wrapper). Leave `status: draft`. Do **not** explore 
 capture locators, approve the story, generate automation, or write any code.
 
 ## Inputs
+
 - The recording — name and/or artifact path from the user's request. Confirm via `browser_record_list`,
   then read with `browser_record_read`.
 - `.vindicate/domain.md` and `.vindicate/context.md` if present — use domain-id for FA tag assignment.
 - All existing `.vindicate/stories/*.story.md` — scan for FA tags already in use (project-wide uniqueness).
 
 ## Steps
+
 1. **Confirm the recording.** `browser_record_list` → `browser_record_read`. If missing or empty,
    escalate — do not invent a flow.
 2. **Reuse prior context.** Read domain/context memory and any existing story. Do not re-ask settled facts.
@@ -49,9 +52,11 @@ capture locators, approve the story, generate automation, or write any code.
    (AC count must equal testcase count).
 
 ## Tools
+
 - `browser_record_list`, `browser_record_read`, `vindicate_ask_user`
 
 ## Rules
+
 - **Recording is the evidence.** Never invent behaviour not in the recording (or explicitly confirmed).
 - **Deliveroo-style top** — title, prose, Persona, Feature `[FA-x-y]`, granular ACs, BDD `## [AC-n]`.
   No `# Pre-conditions`, no `# Testcases` wrapper, no AC checkboxes, no step-bullet testcases.
@@ -65,10 +70,12 @@ capture locators, approve the story, generate automation, or write any code.
 - **Propose, don't impose** — suggested edge cases are flagged in chat, not silently added.
 
 ## Output
+
 - A **drafted** `.vindicate/stories/<feature>.story.md` with deliveroo-style top + Out of Scope + Change Log.
 - **Report (chat):** one line — e.g. `📝 Requirements drafted: <feature> — FA-01-4..FA-01-N, AC-1..AC-M, M testcases (no automation).`
 
 ## Escalation
+
 - Recording missing / empty → stop; ask user to finalize or provide the correct name.
 - Ambiguous feature name → one `vindicate_ask_user` before writing.
 - Approved story conflicts with recording → ask before overwriting.

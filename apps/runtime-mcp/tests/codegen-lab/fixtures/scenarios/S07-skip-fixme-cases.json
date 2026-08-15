@@ -15,10 +15,26 @@
               "page_class": "ProfilePage",
               "path": "/profile",
               "owned_by": "profile",
-              "elements": [{ "ref": "name", "tag": "input", "testid": "name", "testid_attr": "data-testid" }],
+              "elements": [
+                { "ref": "name", "tag": "input", "testid": "name", "testid_attr": "data-testid" }
+              ],
               "types": [],
-              "steps": [{ "name": "step_navigate", "jsdoc": "Open profile", "params": [], "actions": [{ "do": "navigate" }] }],
-              "verifies": [{ "name": "verify_loaded", "jsdoc": "Loaded", "params": [], "assertions": [{ "subject": "element", "ref": "name", "matcher": "toBeVisible" }] }]
+              "steps": [
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open profile",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
+              ],
+              "verifies": [
+                {
+                  "name": "verify_loaded",
+                  "jsdoc": "Loaded",
+                  "params": [],
+                  "assertions": [{ "subject": "element", "ref": "name", "matcher": "toBeVisible" }]
+                }
+              ]
             }
           ],
           "spec": {

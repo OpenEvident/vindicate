@@ -4,7 +4,11 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
 import { WorkerValidationError } from "../../shared/errors.js";
-import type { ICommandRunner, ISessionManager, IStorageClient } from "../../worker/worker-client.interface.js";
+import type {
+  ICommandRunner,
+  ISessionManager,
+  IStorageClient
+} from "../../worker/worker-client.interface.js";
 import type { BrowserReadSessionState } from "./browser-read-session-state.js";
 import { toMcpToolError } from "./error-mapper.js";
 import { toolJson } from "./result.js";
@@ -43,7 +47,9 @@ export function registerBrowserSessionTool(server: McpServer, deps: BrowserSessi
         headless: z
           .boolean()
           .optional()
-          .describe("Optional. Default false (visible browser). Use true only for unattended/CI; explore nodes expect false or omit."),
+          .describe(
+            "Optional. Default false (visible browser). Use true only for unattended/CI; explore nodes expect false or omit."
+          ),
         testid_attr: z.string().optional(),
         max_nodes: z.number().int().positive().optional(),
         message: z.string().min(1).optional(),
@@ -89,7 +95,9 @@ export function registerBrowserSessionTool(server: McpServer, deps: BrowserSessi
           case "pause": {
             if (args.session_id === undefined || args.message === undefined) {
               return toMcpToolError(
-                new Error("browser_session pause requires session_id and message describing what the human should do")
+                new Error(
+                  "browser_session pause requires session_id and message describing what the human should do"
+                )
               );
             }
             const result = await deps.workerClient.runStep(args.session_id, {
@@ -100,7 +108,9 @@ export function registerBrowserSessionTool(server: McpServer, deps: BrowserSessi
           }
           case "resume_from_pause": {
             if (args.session_id === undefined) {
-              return toMcpToolError(new Error("browser_session resume_from_pause requires session_id"));
+              return toMcpToolError(
+                new Error("browser_session resume_from_pause requires session_id")
+              );
             }
             return toolJson(
               await deps.workerClient.resumeFromPause(args.session_id, {
@@ -133,7 +143,9 @@ export function registerBrowserSessionTool(server: McpServer, deps: BrowserSessi
           }
           default: {
             const _exhaustive: never = args.action;
-            return toMcpToolError(new Error(`Unsupported browser_session action: ${String(_exhaustive)}`));
+            return toMcpToolError(
+              new Error(`Unsupported browser_session action: ${String(_exhaustive)}`)
+            );
           }
         }
       } catch (err: unknown) {

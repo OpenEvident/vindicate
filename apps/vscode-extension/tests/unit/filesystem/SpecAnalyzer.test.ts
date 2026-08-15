@@ -72,7 +72,11 @@ describe("SpecAnalyzer", () => {
       `**Persona**\nusers.admin\n## Feature\n## Acceptance\n## Happy Path [AC-1]\n## Out of scope\n`,
       "utf8"
     );
-    await writeFile(path.join(featuresDir, "b.story.md"), `**Persona**\nusers.admin\n## Feature\n`, "utf8");
+    await writeFile(
+      path.join(featuresDir, "b.story.md"),
+      `**Persona**\nusers.admin\n## Feature\n`,
+      "utf8"
+    );
     await writeFile(path.join(featuresDir, "c.story.md"), `# No sections\n`, "utf8");
     const result = await analyzer.analyzeAll(featuresDir);
     expect(result.total).toBe(3);

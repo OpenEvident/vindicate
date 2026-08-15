@@ -32,12 +32,12 @@ entry → `create_api`. `validate_api` writes no files. **`create_api` refuses i
 exists** (its spec or any of its clients are present) unless you pass `overwrite: true`. Add a
 resource → `register_client`; add tests → `add_api_test_cases`; anything else → direct `.ts` edit.
 
-| Op | Input | Effect | Re-runnable? |
-|----|-------|--------|--------------|
-| `create_api` | inline `schema` (clients + spec + optional builders/expected) | Generates the whole feature fresh: resource client(s), `client-loader.ts` exports, `api.config.ts` fixtures, spec, `expected.json`, auth-setup fixture (if `auth_setup` present) | **No** — once per feature; re-running clobbers hand edits |
-| `add_api_test_cases` | `cases[]` | Appends new `test()` blocks before the describe close (does not regenerate) | Yes |
-| `register_client` | one `client` def | Generates that one resource client + wires **only** its `client-loader.ts` / `api.config.ts` lines (anchor-insertion); never rewrites existing files | Yes (additive) |
-| `validate_api` | `validateTarget:'create_api'` + the `create_api` schema | Dry-run for `create_api` only; returns `errors[]`, writes nothing | Yes |
+| Op                   | Input                                                         | Effect                                                                                                                                                                           | Re-runnable?                                              |
+| -------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `create_api`         | inline `schema` (clients + spec + optional builders/expected) | Generates the whole feature fresh: resource client(s), `client-loader.ts` exports, `api.config.ts` fixtures, spec, `expected.json`, auth-setup fixture (if `auth_setup` present) | **No** — once per feature; re-running clobbers hand edits |
+| `add_api_test_cases` | `cases[]`                                                     | Appends new `test()` blocks before the describe close (does not regenerate)                                                                                                      | Yes                                                       |
+| `register_client`    | one `client` def                                              | Generates that one resource client + wires **only** its `client-loader.ts` / `api.config.ts` lines (anchor-insertion); never rewrites existing files                             | Yes (additive)                                            |
+| `validate_api`       | `validateTarget:'create_api'` + the `create_api` schema       | Dry-run for `create_api` only; returns `errors[]`, writes nothing                                                                                                                | Yes                                                       |
 
 > Everything else (change a method/assertion, delete a test, refactor) is a **direct `.ts` edit** —
 > not a codegen op. `npm run audit` (`tsc --noEmit`) + the `audit` node are the backstop.
@@ -46,23 +46,23 @@ resource → `register_client`; add tests → `add_api_test_cases`; anything els
 
 - `clients[]`:
   - `feature`, `client_class`, `owned_by` (the feature slug that owns this client — must equal the
-    `create_api` `feature` for every client in this schema; a client belonging to a *different*
-    feature is `owned_by_mismatch` — see *Cross-cutting clients* below)
+    `create_api` `feature` for every client in this schema; a client belonging to a _different_
+    feature is `owned_by_mismatch` — see _Cross-cutting clients_ below)
   - `fixtures[]`: the fixture key(s) `ApiCall.fixture` resolves against — **explicit, not derived**.
     Usually one entry following the `<Resource>Api` convention (`PostClient` → `["postApi"]`,
     `UsersClient` → `["usersApi"]`). `create_api` wires **every** declared fixture on **every**
     client the same way — `async ({ apiRequest }, use) => use(new <ClientClass>(apiRequest))` —
     regardless of how many fixtures a client lists; there's no field saying which fixture should
-    bind to a *different* context, so codegen never guesses one. A client legitimately needing a
+    bind to a _different_ context, so codegen never guesses one. A client legitimately needing a
     second instance on a different context (the reference template's `AuthClient` — one instance on
-    the raw context, one on *Auth setup*'s token-attached `authenticatedRequest`) declares both
+    the raw context, one on _Auth setup_'s token-attached `authenticatedRequest`) declares both
     fixture names in `fixtures[]` so validation and `ApiCall.fixture` resolution both know about
     them, then a **direct edit** to `api.config.ts` repoints the specific fixture's implementation
     at `authenticatedRequest` — one line, same "files are truth after generation" model as
     everything else in this schema.
   - `types[]`: `{ name, fields[] }` — request/response shapes this client's methods use. A field is
     optional the same way UI's `TypeDef` fields are: suffix the **name** with `?` (`{ "name": "id?",
-    "type": "number" }` renders `id?: number`) — don't mark every field required just because the
+"type": "number" }` renders `id?: number`) — don't mark every field required just because the
     grounded response always includes it; grounded from a real OpenAPI doc, mark a field optional
     unless it's in that operation's own `required[]` (Swagger's Pet, for example, only requires
     `name`/`photoUrls` — `id`/`category`/`tags`/`status` are not required on create).
@@ -86,7 +86,7 @@ resource → `register_client`; add tests → `add_api_test_cases`; anything els
   `owning_client`: the `client_class` whose `types[]` declares `target_type` — set it whenever
   `target_type` names an interface (the common case: a builder for `PostClient`'s `Post`), so the
   generated builder can import it (client types render inline in the client's own file, per
-  *Client method mapping* below — there's nowhere else to import from). Omit only when
+  _Client method mapping_ below — there's nowhere else to import from). Omit only when
   `target_type` is a primitive or an inline object literal type, which needs no import.
 - `expected?`: object — **required** when any case uses fixed/negative-path values (a known-invalid
   id, an exact error message). Codegen writes `support/data/<feature>/expected.json` and imports
@@ -94,7 +94,7 @@ resource → `register_client`; add tests → `add_api_test_cases`; anything els
 - `spec`:
   - `suite` — describe title, `'<App> - <Area>'` convention, same as UI (worked example below:
     `"Acme - Posts"`) — not enforced, but the only convention this schema demonstrates.
-  - `auth_setup: AuthSetup | null` — see *Auth setup* below
+  - `auth_setup: AuthSetup | null` — see _Auth setup_ below
   - `cases[]`: `{ ac_id, scenario, title, annotation?, calls: ApiCall[] }` — `title` **must** start
     with `[<ac_id>]` (`missing_ac_prefix`), e.g. `ac_id: "AC-1"` requires `title` to start with
     `"[AC-1]"`.
@@ -131,7 +131,7 @@ Codegen appends the `test()` block(s) before the describe close. No dry-run — 
 - `assertions[].subject`: `status | status_text | body | body_json | header` — what part of the
   response to check. `header` requires `header_name`.
 - `assertions[].matcher`: `toBe | toEqual | toMatchObject | toContain | toContainEqual |
-  toBeGreaterThan | toBeLessThan | toBeDefined | toBeUndefined | toBeNull`.
+toBeGreaterThan | toBeLessThan | toBeDefined | toBeUndefined | toBeNull`.
 - `assertions[].arg` — a TS expression string, same pasted-verbatim convention as everywhere else in
   this schema. **Required** for every matcher except `toBeDefined`/`toBeUndefined`/`toBeNull`, which
   must **omit** it.
@@ -161,7 +161,7 @@ Codegen appends the `test()` block(s) before the describe close. No dry-run — 
 - `field` is a dot-path into the **already-parsed JSON body** — the actual property name on the
   response object (`"id"`, `"data.token"`), never one of `ApiAssertion`'s `subject` names
   (`status`/`status_text`/`body`/`body_json`/`header`). **`field: "body_json"` is a common mistake**
-  — `response.json()` already *is* the parsed body; there is no `.body_json` property on it, so
+  — `response.json()` already _is_ the parsed body; there is no `.body_json` property on it, so
   this renders `(await response.json()).body_json`, which is `undefined` at best. Enforced for the
   two subject names no real API would plausibly return as a literal field
   (`ambiguous_capture_field`) — **omit `field` entirely** to capture the whole body, don't reach for
@@ -193,8 +193,8 @@ client in one schema (`duplicate_client_fixture`).
 
 `owned_by_mismatch` requires every client in one `create_api` schema to be `owned_by` the same
 feature being created — one `create_api` call is scoped to one feature, same invariant as the UI
-schema's `create`. A resource whose *own* endpoints need a bearer token (the common case: the
-feature's backend requires auth) declares that as `spec.auth_setup` on the *same* schema — no
+schema's `create`. A resource whose _own_ endpoints need a bearer token (the common case: the
+feature's backend requires auth) declares that as `spec.auth_setup` on the _same_ schema — no
 separate client needed just to attach a header. Only declare a full `AuthClient`-style client
 (login/me methods, its own test coverage) when the auth API itself needs testing as a resource in
 its own right — do that via its **own** `create_api` call (`feature: "auth"`), then reference its
@@ -206,6 +206,7 @@ what `owned_by_mismatch` catches.
 ## Client method mapping
 
 From grounded evidence (`ground`'s `api-ingest` per-endpoint record) to a schema method:
+
 - `name`: the client method name (`create`, `getById`, …) — chosen to read like the resource's verb,
   not the raw HTTP method
 - `http_method` + `path`: straight from the grounded endpoint
@@ -222,7 +223,10 @@ equivalent here; an endpoint without a real, grounded path is not a method Vindi
 {
   "login_http_method": "post",
   "login_path": "auth/login",
-  "credential_params": [{ "name": "username", "type": "string" }, { "name": "password", "type": "string" }],
+  "credential_params": [
+    { "name": "username", "type": "string" },
+    { "name": "password", "type": "string" }
+  ],
   "token_field": "accessToken",
   "header_name": "Authorization",
   "header_value_template": "Bearer {token}"
@@ -250,6 +254,7 @@ corresponding CI secret (same as the Data rule in `generate.md`).
 ## Progressive build (large / multi-client features)
 
 Build incrementally when the feature is large (3+ resources or many methods):
+
 1. `create_api` a minimal shell — first client + one smoke case (`validate_api` with
    `validateTarget:'create_api'` first).
 2. Per additional resource → `register_client` (additive; `npm run audit` after).
@@ -257,7 +262,7 @@ Build incrementally when the feature is large (3+ resources or many methods):
 
 ## Worked example: Post resource with builder, no auth (matches the fixed `vindicate-api` template)
 
-Posts (jsonplaceholder) needs no auth, hence `auth_setup: null` — see *Auth setup* above for the
+Posts (jsonplaceholder) needs no auth, hence `auth_setup: null` — see _Auth setup_ above for the
 shape a feature whose own endpoints require a bearer token would use instead.
 
 ```json
@@ -269,17 +274,36 @@ shape a feature whose own endpoints require a bearer token would use instead.
       "owned_by": "posts",
       "fixtures": ["postApi"],
       "types": [
-        { "name": "Post", "fields": [
-          { "name": "id", "type": "number" },
-          { "name": "userId", "type": "number" },
-          { "name": "title", "type": "string" },
-          { "name": "body", "type": "string" }
-        ] }
+        {
+          "name": "Post",
+          "fields": [
+            { "name": "id", "type": "number" },
+            { "name": "userId", "type": "number" },
+            { "name": "title", "type": "string" },
+            { "name": "body", "type": "string" }
+          ]
+        }
       ],
       "methods": [
-        { "name": "create", "http_method": "post", "path": "posts", "body_param": { "name": "post", "type": "Post" }, "body_type": "json" },
-        { "name": "getById", "http_method": "get", "path": "posts/{postId}", "path_params": [{ "name": "postId", "type": "number" }] },
-        { "name": "delete", "http_method": "delete", "path": "posts/{postId}", "path_params": [{ "name": "postId", "type": "number" }] }
+        {
+          "name": "create",
+          "http_method": "post",
+          "path": "posts",
+          "body_param": { "name": "post", "type": "Post" },
+          "body_type": "json"
+        },
+        {
+          "name": "getById",
+          "http_method": "get",
+          "path": "posts/{postId}",
+          "path_params": [{ "name": "postId", "type": "number" }]
+        },
+        {
+          "name": "delete",
+          "http_method": "delete",
+          "path": "posts/{postId}",
+          "path_params": [{ "name": "postId", "type": "number" }]
+        }
       ]
     }
   ],
@@ -290,7 +314,11 @@ shape a feature whose own endpoints require a bearer token would use instead.
       "owning_client": "PostClient",
       "fields": [
         { "name": "title", "type": "string", "default": "'Playwright API test'" },
-        { "name": "body", "type": "string", "default": "'Automated with Playwright request context'" },
+        {
+          "name": "body",
+          "type": "string",
+          "default": "'Automated with Playwright request context'"
+        },
         { "name": "userId", "type": "number", "default": "1" }
       ]
     }
@@ -304,26 +332,34 @@ shape a feature whose own endpoints require a bearer token would use instead.
         "ac_id": "AC-1",
         "scenario": "Create Post",
         "title": "[AC-1] should create a new post",
-        "calls": [{
-          "fixture": "postApi",
-          "method": "create",
-          "args": ["{ title: 'hello', body: 'world', userId: 1 }"],
-          "assertions": [
-            { "subject": "status", "matcher": "toBe", "arg": "201" },
-            { "subject": "body_json", "matcher": "toMatchObject", "arg": "{ title: 'hello', body: 'world', userId: 1 }" }
-          ]
-        }]
+        "calls": [
+          {
+            "fixture": "postApi",
+            "method": "create",
+            "args": ["{ title: 'hello', body: 'world', userId: 1 }"],
+            "assertions": [
+              { "subject": "status", "matcher": "toBe", "arg": "201" },
+              {
+                "subject": "body_json",
+                "matcher": "toMatchObject",
+                "arg": "{ title: 'hello', body: 'world', userId: 1 }"
+              }
+            ]
+          }
+        ]
       },
       {
         "ac_id": "AC-6",
         "scenario": "Not Found",
         "title": "[AC-6] should return 404 for a post that does not exist",
-        "calls": [{
-          "fixture": "postApi",
-          "method": "getById",
-          "args": ["expected.nonExistentPostId"],
-          "assertions": [{ "subject": "status", "matcher": "toBe", "arg": "404" }]
-        }]
+        "calls": [
+          {
+            "fixture": "postApi",
+            "method": "getById",
+            "args": ["expected.nonExistentPostId"],
+            "assertions": [{ "subject": "status", "matcher": "toBe", "arg": "404" }]
+          }
+        ]
       }
     ]
   }
@@ -333,7 +369,7 @@ shape a feature whose own endpoints require a bearer token would use instead.
 ## Safety rules
 
 - Do **not** hand-write a brand-new client/spec that codegen should create — use `create_api` so the
-  barrel + config wiring is correct. (Surgical edits to *existing* generated files are expected and
+  barrel + config wiring is correct. (Surgical edits to _existing_ generated files are expected and
   fine — that's the files-as-truth model.)
 - `create_api` once per feature; `register_client` for new resources; `add_api_test_cases` for new
   cases; everything else is a direct `.ts` edit.

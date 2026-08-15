@@ -135,11 +135,18 @@ describe("formatChosenLocator", () => {
   it("renders every selector strategy", () => {
     const strategies = [
       { strategy: "testid" as const, value: "go", attr: "data-testid" },
-      { strategy: "scoped" as const, value: 'button[name="Delete"]', container: { role: "row", name: "Product ABC" } },
+      {
+        strategy: "scoped" as const,
+        value: 'button[name="Delete"]',
+        container: { role: "row", name: "Product ABC" }
+      },
       { strategy: "role+name" as const, value: 'button[name="Save"]' },
       { strategy: "css" as const, value: "#save" },
       { strategy: "xpath" as const, value: "//button" },
-      { strategy: "sibling_text" as const, value: '//input[preceding-sibling::*[normalize-space()="Delete"]]' }
+      {
+        strategy: "sibling_text" as const,
+        value: '//input[preceding-sibling::*[normalize-space()="Delete"]]'
+      }
     ];
     for (const candidate of strategies) {
       expect(formatChosenLocator(candidate).length).toBeGreaterThan(0);

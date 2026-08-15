@@ -31,14 +31,22 @@ describe("action-result", () => {
   });
 
   it("classifies as significant when settle timed out", () => {
-    const r = buildActionResult({ urlBefore: "https://x/", urlAfter: "https://x/", timedOut: true });
+    const r = buildActionResult({
+      urlBefore: "https://x/",
+      urlAfter: "https://x/",
+      timedOut: true
+    });
     expect(r.page_change).toBe("significant");
     expect(r.recommendation).toBe("snapshot");
     expect(r.settle_timed_out).toBe(true);
   });
 
   it("classifies as minor when settled cleanly with no navigation", () => {
-    const r = buildActionResult({ urlBefore: "https://x/", urlAfter: "https://x/", timedOut: false });
+    const r = buildActionResult({
+      urlBefore: "https://x/",
+      urlAfter: "https://x/",
+      timedOut: false
+    });
     expect(r.page_change).toBe("minor");
     expect(r.recommendation).toBe("diff");
     expect(r.settle_timed_out).toBeUndefined();

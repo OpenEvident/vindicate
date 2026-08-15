@@ -15,7 +15,9 @@ if (scenarioId === undefined) {
 }
 
 const runtimeRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const scenarios = await loadScenarios(path.join(runtimeRoot, "tests/codegen-lab/fixtures/scenarios"));
+const scenarios = await loadScenarios(
+  path.join(runtimeRoot, "tests/codegen-lab/fixtures/scenarios")
+);
 const scenario = scenarios.find((s) => s.id === scenarioId);
 
 if (scenario === undefined) {

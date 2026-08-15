@@ -53,7 +53,9 @@ export async function throwFromWorkerResponse(res: Response, sessionId?: string)
     case "session.unresumable":
       throw new SessionUnresumableError(sid, body.error ?? "session cannot be resumed");
     case "session.invalid_transition":
-      throw new WorkerValidationError(body.error ?? "Session is in an unexpected state for this operation");
+      throw new WorkerValidationError(
+        body.error ?? "Session is in an unexpected state for this operation"
+      );
     case "auth.key_invalid":
       throw new WorkerUnavailableError(
         "Worker rejected the internal key — restart the runtime worker and MCP with a matching VINDICATE_INTERNAL_KEY."
@@ -61,7 +63,9 @@ export async function throwFromWorkerResponse(res: Response, sessionId?: string)
     case "browser.element_not_found":
       throw new ElementNotFoundError(undefined, body.error);
     case "browser.not_implemented":
-      throw new WorkerValidationError(body.error ?? "This action is not supported by the current worker");
+      throw new WorkerValidationError(
+        body.error ?? "This action is not supported by the current worker"
+      );
     case "browser.element_stale":
     case "browser.state_drift":
       throw new StateDriftError(body.error);

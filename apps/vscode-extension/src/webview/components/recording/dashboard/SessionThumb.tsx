@@ -4,7 +4,13 @@ interface SessionThumbProps {
 
 export function SessionThumb({ thumbnailUrl }: SessionThumbProps) {
   if (thumbnailUrl !== undefined) {
-    return <img src={thumbnailUrl} alt="" className="absolute inset-0 h-full w-full object-cover object-top" />;
+    return (
+      <img
+        src={thumbnailUrl}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-top"
+      />
+    );
   }
 
   return (

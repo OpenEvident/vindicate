@@ -4,9 +4,11 @@ import { normalizeWorkerStep } from "../../src/mcp/tools/normalize-worker-step.j
 
 describe("normalizeWorkerStep", () => {
   it("maps fill to type with value", () => {
-    expect(
-      normalizeWorkerStep({ action: "fill", ref: "ref-a3f9c2b1", value: "hello" })
-    ).toEqual({ action: "type", ref: "ref-a3f9c2b1", value: "hello" });
+    expect(normalizeWorkerStep({ action: "fill", ref: "ref-a3f9c2b1", value: "hello" })).toEqual({
+      action: "type",
+      ref: "ref-a3f9c2b1",
+      value: "hello"
+    });
   });
 
   it("maps text and clear to worker type fields", () => {

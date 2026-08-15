@@ -59,11 +59,7 @@ export function diffDesign(
         matchedNext.add(i);
       } else if (prevTitle !== undefined && nextTitle === undefined) {
         badges[prevTitle] = "removed";
-      } else if (
-        prevTitle !== undefined &&
-        nextTitle !== undefined &&
-        prevTitle !== nextTitle
-      ) {
+      } else if (prevTitle !== undefined && nextTitle !== undefined && prevTitle !== nextTitle) {
         badges[prevTitle] = "removed";
         badges[nextTitle] = "modified";
         matchedNext.add(i);

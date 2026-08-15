@@ -33,9 +33,20 @@ describe("api-schema", () => {
             }
           ],
           methods: [
-            { name: "create", http_method: "post", path: "posts", body_param: { name: "post", type: "Post" }, body_type: "json" },
+            {
+              name: "create",
+              http_method: "post",
+              path: "posts",
+              body_param: { name: "post", type: "Post" },
+              body_type: "json"
+            },
             { name: "getAll", http_method: "get", path: "posts" },
-            { name: "getById", http_method: "get", path: "posts/{postId}", path_params: [{ name: "postId", type: "number" }] },
+            {
+              name: "getById",
+              http_method: "get",
+              path: "posts/{postId}",
+              path_params: [{ name: "postId", type: "number" }]
+            },
             {
               name: "update",
               http_method: "put",
@@ -44,7 +55,12 @@ describe("api-schema", () => {
               body_param: { name: "post", type: "Partial<Post>" },
               body_type: "json"
             },
-            { name: "delete", http_method: "delete", path: "posts/{postId}", path_params: [{ name: "postId", type: "number" }] }
+            {
+              name: "delete",
+              http_method: "delete",
+              path: "posts/{postId}",
+              path_params: [{ name: "postId", type: "number" }]
+            }
           ]
         },
         {
@@ -72,7 +88,11 @@ describe("api-schema", () => {
           owning_client: "PostClient",
           fields: [
             { name: "title", type: "string", default: "'Playwright API test'" },
-            { name: "body", type: "string", default: "'Automated with Playwright request context'" },
+            {
+              name: "body",
+              type: "string",
+              default: "'Automated with Playwright request context'"
+            },
             { name: "userId", type: "number", default: "1" }
           ]
         }
@@ -107,7 +127,11 @@ describe("api-schema", () => {
                 args: ["{ title: 'hello', body: 'world', userId: 1 }"],
                 assertions: [
                   { subject: "status", matcher: "toBe", arg: "201" },
-                  { subject: "body_json", matcher: "toMatchObject", arg: "{ title: 'hello', body: 'world', userId: 1 }" }
+                  {
+                    subject: "body_json",
+                    matcher: "toMatchObject",
+                    arg: "{ title: 'hello', body: 'world', userId: 1 }"
+                  }
                 ]
               }
             ]
@@ -135,14 +159,20 @@ describe("api-schema", () => {
     });
 
     it("round-trips through the create_api operation envelope", () => {
-      const result = CreateApiSchema.safeParse({ mode: "create_api", feature: "posts", schema: fullSchema });
+      const result = CreateApiSchema.safeParse({
+        mode: "create_api",
+        feature: "posts",
+        schema: fullSchema
+      });
       expect(result.success).toBe(true);
     });
   });
 
   describe("ClientMethodSchema — body_param/body_type must be paired", () => {
     it("accepts a method with neither body_param nor body_type", () => {
-      expect(ClientMethodSchema.safeParse({ name: "getAll", http_method: "get", path: "posts" }).success).toBe(true);
+      expect(
+        ClientMethodSchema.safeParse({ name: "getAll", http_method: "get", path: "posts" }).success
+      ).toBe(true);
     });
 
     it("accepts a method with both body_param and body_type", () => {
@@ -207,7 +237,11 @@ describe("api-schema", () => {
 
   describe("ApiAssertionSchema", () => {
     it("requires header_name when subject is 'header'", () => {
-      const result = ApiAssertionSchema.safeParse({ subject: "header", matcher: "toBe", arg: "'application/json'" });
+      const result = ApiAssertionSchema.safeParse({
+        subject: "header",
+        matcher: "toBe",
+        arg: "'application/json'"
+      });
       expect(result.success).toBe(false);
     });
 
@@ -222,7 +256,11 @@ describe("api-schema", () => {
     });
 
     it("rejects toBeDefined with an arg (arg makes no sense for it)", () => {
-      const result = ApiAssertionSchema.safeParse({ subject: "body_json", matcher: "toBeDefined", arg: "1" });
+      const result = ApiAssertionSchema.safeParse({
+        subject: "body_json",
+        matcher: "toBeDefined",
+        arg: "1"
+      });
       expect(result.success).toBe(false);
     });
 
@@ -245,9 +283,20 @@ describe("api-schema", () => {
         owned_by: "users",
         fixtures: ["usersApi"],
         types: [],
-        methods: [{ name: "getById", http_method: "get", path: "users/{userId}", path_params: [{ name: "userId", type: "number" }] }]
+        methods: [
+          {
+            name: "getById",
+            http_method: "get",
+            path: "users/{userId}",
+            path_params: [{ name: "userId", type: "number" }]
+          }
+        ]
       });
-      const result = GenerateApiCodeInputSchema.safeParse({ mode: "register_client", feature: "users", client: clientDef });
+      const result = GenerateApiCodeInputSchema.safeParse({
+        mode: "register_client",
+        feature: "users",
+        client: clientDef
+      });
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.mode).toBe("register_client");
@@ -255,7 +304,11 @@ describe("api-schema", () => {
     });
 
     it("rejects an unknown mode", () => {
-      const result = GenerateApiCodeInputSchema.safeParse({ mode: "create", feature: "posts", schema: {} });
+      const result = GenerateApiCodeInputSchema.safeParse({
+        mode: "create",
+        feature: "posts",
+        schema: {}
+      });
       expect(result.success).toBe(false);
     });
 

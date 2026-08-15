@@ -4,18 +4,7 @@ import { GenerateCodeInputSchema, type GenerateCodeInput } from "../../../src/co
 import type { ValidationResult } from "../../../src/codegen/validation-errors.js";
 
 export type InvariantId =
-  | "I1"
-  | "I2"
-  | "I3"
-  | "I4"
-  | "I5"
-  | "I6"
-  | "I7"
-  | "I8"
-  | "I9"
-  | "I10"
-  | "I11"
-  | "I12";
+  "I1" | "I2" | "I3" | "I4" | "I5" | "I6" | "I7" | "I8" | "I9" | "I10" | "I11" | "I12";
 
 export interface ScenarioStepResult {
   readonly mode: GenerateCodeInput["mode"] | "validate";

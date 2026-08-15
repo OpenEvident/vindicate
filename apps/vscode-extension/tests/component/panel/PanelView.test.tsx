@@ -6,7 +6,9 @@ describe("PanelView", () => {
   it("renders utility tabs and defaults to Prompts", () => {
     render(<PanelView />);
     expect(screen.getByRole("tab", { name: /Prompts/i })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByPlaceholderText("Search templates, variables, content...")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Search templates, variables, content...")
+    ).toBeInTheDocument();
   });
 
   it("switches to Config tab", () => {

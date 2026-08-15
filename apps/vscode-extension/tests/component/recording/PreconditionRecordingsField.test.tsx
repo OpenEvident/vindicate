@@ -33,9 +33,7 @@ const finalized: RecordingSession[] = [
 describe("PreconditionRecordingsField", () => {
   it("opens modal and adds selected recordings", () => {
     const onChange = vi.fn();
-    render(
-      <PreconditionRecordingsField sessions={finalized} value={[]} onChange={onChange} />
-    );
+    render(<PreconditionRecordingsField sessions={finalized} value={[]} onChange={onChange} />);
 
     fireEvent.click(screen.getByRole("button", { name: /add recording/i }));
     fireEvent.click(screen.getByRole("option", { name: /login flow/i }));

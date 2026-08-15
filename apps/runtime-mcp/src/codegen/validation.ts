@@ -64,11 +64,7 @@ function formatUnknown(value: unknown): string {
   if (typeof value === "string") {
     return value;
   }
-  if (
-    typeof value === "number" ||
-    typeof value === "boolean" ||
-    typeof value === "bigint"
-  ) {
+  if (typeof value === "number" || typeof value === "boolean" || typeof value === "bigint") {
     return String(value);
   }
   if (value === null || value === undefined) {
@@ -118,11 +114,7 @@ export function zodErrorToCodegenError(err: ZodError): CodegenValidationError {
   const message = issue.message;
 
   if (field.endsWith(".do") && message.toLowerCase().includes("invalid discriminator")) {
-    return new CodegenValidationError(
-      field,
-      message,
-      `Valid actions: ${VALID_ACTIONS.join(", ")}`
-    );
+    return new CodegenValidationError(field, message, `Valid actions: ${VALID_ACTIONS.join(", ")}`);
   }
   if (field.endsWith(".matcher") && message.toLowerCase().includes("invalid option")) {
     return new CodegenValidationError(

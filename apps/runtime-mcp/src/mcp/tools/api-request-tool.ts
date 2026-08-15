@@ -4,7 +4,10 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
-import { API_REQUEST_BODY_TYPES, API_REQUEST_METHODS } from "../../worker/worker-client.interface.js";
+import {
+  API_REQUEST_BODY_TYPES,
+  API_REQUEST_METHODS
+} from "../../worker/worker-client.interface.js";
 import type { ApiRequestParams, IApiRequestClient } from "../../worker/worker-client.interface.js";
 import { toMcpToolError } from "./error-mapper.js";
 import { toolJson } from "./result.js";
@@ -21,7 +24,9 @@ const ApiRequestArgsSchema = z.object({
   body_type: z
     .enum(API_REQUEST_BODY_TYPES)
     .optional()
-    .describe("Required when body is provided. 'json' for a JSON body, 'form' for x-www-form-urlencoded."),
+    .describe(
+      "Required when body is provided. 'json' for a JSON body, 'form' for x-www-form-urlencoded."
+    ),
   params: z.record(z.string(), z.string()).optional().describe("Query string parameters."),
   timeout_ms: z.number().int().positive().optional()
 });

@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { RecordingsIndexSchema, type RecordingsIndex, type RecordingsIndexEntry } from "@vindicate/protocol";
+import {
+  RecordingsIndexSchema,
+  type RecordingsIndex,
+  type RecordingsIndexEntry
+} from "@vindicate/protocol";
 
 import { recordingSlugKey } from "./recording-name.js";
 
@@ -37,7 +41,10 @@ export class RecordingsIndexService {
     }
   }
 
-  static async get(projectRoot: string, safeName: string): Promise<RecordingsIndexEntry | undefined> {
+  static async get(
+    projectRoot: string,
+    safeName: string
+  ): Promise<RecordingsIndexEntry | undefined> {
     const index = await RecordingsIndexService.getAll(projectRoot);
     const key = recordingSlugKey(safeName);
     return index.entries.find((entry) => recordingSlugKey(entry.safe_name) === key);

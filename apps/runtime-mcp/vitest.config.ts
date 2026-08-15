@@ -16,6 +16,11 @@ export default defineConfig({
     environment: "node",
     setupFiles: ["./tests/setup.ts"],
     testTimeout: 30_000,
-    exclude: ["**/node_modules/**", "**/dist/**", "**/content/**", "**/tests/codegen-lab/fixtures/golden/**"]
+    exclude: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/content/**",
+      "**/tests/codegen-lab/fixtures/golden/**"
+    ]
   }
 });

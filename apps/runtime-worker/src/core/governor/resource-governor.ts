@@ -11,7 +11,10 @@ import type { GovernorState, IResourceGovernor } from "./resource-governor.inter
 
 export type GovernorThresholds = Pick<
   Config,
-  "VINDICATE_MAX_CPU_PCT" | "VINDICATE_MAX_MEMORY_PCT" | "VINDICATE_REJECT_CPU_PCT" | "VINDICATE_REJECT_MEMORY_PCT"
+  | "VINDICATE_MAX_CPU_PCT"
+  | "VINDICATE_MAX_MEMORY_PCT"
+  | "VINDICATE_REJECT_CPU_PCT"
+  | "VINDICATE_REJECT_MEMORY_PCT"
 >;
 
 /** Samples instantaneous CPU% (process) and system memory utilisation %. */
@@ -35,8 +38,7 @@ export function computeGovernorState(
     cpuPct < thresholds.VINDICATE_REJECT_CPU_PCT - REJECT_CLEAR_MARGIN_PCT &&
     memUsedPct < thresholds.VINDICATE_REJECT_MEMORY_PCT - REJECT_CLEAR_MARGIN_PCT;
   const warnEnter =
-    cpuPct >= thresholds.VINDICATE_MAX_CPU_PCT ||
-    memUsedPct >= thresholds.VINDICATE_MAX_MEMORY_PCT;
+    cpuPct >= thresholds.VINDICATE_MAX_CPU_PCT || memUsedPct >= thresholds.VINDICATE_MAX_MEMORY_PCT;
   const warnExit =
     cpuPct < thresholds.VINDICATE_MAX_CPU_PCT - WARN_CLEAR_MARGIN_PCT &&
     memUsedPct < thresholds.VINDICATE_MAX_MEMORY_PCT - WARN_CLEAR_MARGIN_PCT;

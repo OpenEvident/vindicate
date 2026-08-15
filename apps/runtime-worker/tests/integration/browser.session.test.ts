@@ -52,14 +52,23 @@ describe("Browser sessions HTTP", () => {
       url: `/browser/sessions/${sessionId}/commands`,
       payload: { steps: [{ action: "navigate", url: "https://example.com/about" }] }
     });
-    const navigateEvents = parseSseDataLines(navigateOnly.body).map((e) => (e as { event?: string }).event);
+    const navigateEvents = parseSseDataLines(navigateOnly.body).map(
+      (e) => (e as { event?: string }).event
+    );
     expect(navigateEvents).not.toContain("action_result");
 
-    const actions = await authInject(ctx.app, { method: "GET", url: `/browser/sessions/${sessionId}/actions` });
-    const actionEntries = (JSON.parse(actions.body) as { entries: Array<{ action: string }> }).entries;
+    const actions = await authInject(ctx.app, {
+      method: "GET",
+      url: `/browser/sessions/${sessionId}/actions`
+    });
+    const actionEntries = (JSON.parse(actions.body) as { entries: Array<{ action: string }> })
+      .entries;
     expect(actionEntries.some((e) => e.action === "navigate")).toBe(true);
 
-    const del = await authInject(ctx.app, { method: "DELETE", url: `/browser/sessions/${sessionId}` });
+    const del = await authInject(ctx.app, {
+      method: "DELETE",
+      url: `/browser/sessions/${sessionId}`
+    });
     expect(del.statusCode).toBe(200);
   });
 
@@ -141,7 +150,9 @@ describe("Browser sessions HTTP", () => {
     expect(paused.statusCode).toBe(200);
     expect(ctx.store.get(sessionId)?.status).toBe("paused");
 
-    const eventsBefore = ctx.eventBus.getBuffered(0).map((e) => e.payload) as Array<{ event?: string }>;
+    const eventsBefore = ctx.eventBus.getBuffered(0).map((e) => e.payload) as Array<{
+      event?: string;
+    }>;
     expect(eventsBefore.some((e) => e.event === "session_paused")).toBe(true);
 
     const resumed = await authInject(ctx.app, {
@@ -153,7 +164,9 @@ describe("Browser sessions HTTP", () => {
     expect(body.status).toBe("active");
     expect(body.snapshot).toBeUndefined();
 
-    const eventsAfter = ctx.eventBus.getBuffered(0).map((e) => e.payload) as Array<{ event?: string }>;
+    const eventsAfter = ctx.eventBus.getBuffered(0).map((e) => e.payload) as Array<{
+      event?: string;
+    }>;
     expect(eventsAfter.some((e) => e.event === "session_resumed_from_pause")).toBe(true);
   });
 
@@ -174,7 +187,10 @@ describe("Browser sessions HTTP", () => {
     const sessionId = await createSession(ctx);
     await ctx.store.applyTrigger(sessionId, "crash");
 
-    const del = await authInject(ctx.app, { method: "DELETE", url: `/browser/sessions/${sessionId}` });
+    const del = await authInject(ctx.app, {
+      method: "DELETE",
+      url: `/browser/sessions/${sessionId}`
+    });
     expect(del.statusCode).toBe(200);
     expect(ctx.store.get(sessionId)).toBeUndefined();
   });
@@ -215,7 +231,9 @@ describe("Browser sessions HTTP", () => {
         event?: string;
         session_id?: string;
       }>;
-      expect(events.some((e) => e.event === "session_dead" && e.session_id === sessionId)).toBe(true);
+      expect(events.some((e) => e.event === "session_dead" && e.session_id === sessionId)).toBe(
+        true
+      );
       expect(ctx.store.get(sessionId)?.status).toBe("dead");
     });
   });
@@ -272,8 +290,9 @@ describe("Browser sessions HTTP", () => {
       method: "GET",
       url: `/browser/sessions/${sessionId}/console_logs?level=error`
     });
-    const consoleEntries = (JSON.parse(consoleRes.body) as { entries: Array<{ level: string; message: string }> })
-      .entries;
+    const consoleEntries = (
+      JSON.parse(consoleRes.body) as { entries: Array<{ level: string; message: string }> }
+    ).entries;
     expect(consoleEntries.some((e) => e.message === "boom")).toBe(true);
     expect(consoleEntries.every((e) => e.level === "error")).toBe(true);
 
@@ -281,8 +300,9 @@ describe("Browser sessions HTTP", () => {
       method: "GET",
       url: `/browser/sessions/${sessionId}/network_logs?status_min=400&url_contains=api`
     });
-    const networkEntries = (JSON.parse(networkRes.body) as { entries: Array<{ status: number; url: string }> })
-      .entries;
+    const networkEntries = (
+      JSON.parse(networkRes.body) as { entries: Array<{ status: number; url: string }> }
+    ).entries;
     expect(networkEntries.length).toBeGreaterThan(0);
     expect(networkEntries.every((e) => e.status >= 400 && e.url.includes("api"))).toBe(true);
   });

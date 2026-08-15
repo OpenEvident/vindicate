@@ -5,7 +5,10 @@ export function WaitingRow() {
       {/* Dashed circle node */}
       <div
         className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full"
-        style={{ border: "1.5px dashed color-mix(in oklab, var(--color-tone-red) 50%, var(--color-vs-border))" }}
+        style={{
+          border:
+            "1.5px dashed color-mix(in oklab, var(--color-tone-red) 50%, var(--color-vs-border))"
+        }}
       >
         <span className="w-2 h-2 rounded-full bg-tone-red animate-pulse-dot" />
       </div>

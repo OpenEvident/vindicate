@@ -63,9 +63,14 @@ async function loadSnapshotsFromDisk(workspaceRoot: string): Promise<TestFileSna
   return Promise.all(testFiles.map((filePath) => loadTestSnapshot(workspaceRoot, filePath)));
 }
 
-async function loadTestSnapshot(workspaceRoot: string, filePath: string): Promise<TestFileSnapshot> {
+async function loadTestSnapshot(
+  workspaceRoot: string,
+  filePath: string
+): Promise<TestFileSnapshot> {
   const [content, info] = await Promise.all([readFile(filePath, "utf8"), stat(filePath)]);
-  const describeBlocks = [...content.matchAll(DESCRIBE_PATTERN)].map((m) => (m[1] ?? "").toLowerCase());
+  const describeBlocks = [...content.matchAll(DESCRIBE_PATTERN)].map((m) =>
+    (m[1] ?? "").toLowerCase()
+  );
   const acIds = new Set(
     [...content.matchAll(AC_TAG_PATTERN)]
       .map((m) => Number(m[1]))

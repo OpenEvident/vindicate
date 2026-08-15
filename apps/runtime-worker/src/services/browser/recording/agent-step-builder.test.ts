@@ -25,7 +25,9 @@ describe("buildAgentStepPayload", () => {
   });
 
   it("returns undefined for non-recordable actions", () => {
-    expect(buildAgentStepPayload({ action: "wait_for_load_state" }, () => descriptor)).toBeUndefined();
+    expect(
+      buildAgentStepPayload({ action: "wait_for_load_state" }, () => descriptor)
+    ).toBeUndefined();
   });
 
   it("forwards frame_path from the verified descriptor locator onto the recorded candidate", () => {
@@ -39,7 +41,10 @@ describe("buildAgentStepPayload", () => {
         frame_path: [{ strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }]
       }
     };
-    const payload = buildAgentStepPayload({ action: "click", ref: "ref-1" }, () => iframeDescriptor);
+    const payload = buildAgentStepPayload(
+      { action: "click", ref: "ref-1" },
+      () => iframeDescriptor
+    );
     expect(payload?.candidates[0]?.frame_path).toEqual([
       { strategy: "dom_id", confidence: "high", value: "klarna-checkout-iframe" }
     ]);
@@ -60,7 +65,10 @@ describe("buildAgentStepPayload", () => {
         click_delegate: true
       }
     };
-    const payload = buildAgentStepPayload({ action: "click", ref: "ref-1" }, () => delegateDescriptor);
+    const payload = buildAgentStepPayload(
+      { action: "click", ref: "ref-1" },
+      () => delegateDescriptor
+    );
     expect(payload?.candidates[0]?.click_delegate).toBe(true);
   });
 
@@ -76,17 +84,20 @@ describe("buildAgentStepPayload", () => {
         () => descriptor,
         { tabIndex: 1, url: "https://example.com/" }
       );
-      expect(payload).toMatchObject({ action: "new_tab", actor: "agent", url: "https://example.com/" });
+      expect(payload).toMatchObject({
+        action: "new_tab",
+        actor: "agent",
+        url: "https://example.com/"
+      });
       expect(payload?.candidates).toEqual([]);
       expect(payload?.chosen).toBeNull();
     });
 
     it("records switch_tab with the index from the step input", () => {
-      const payload = buildAgentStepPayload(
-        { action: "switch_tab", index: 2 },
-        () => descriptor,
-        { title: "Popup", url: "https://payments.example.com/" }
-      );
+      const payload = buildAgentStepPayload({ action: "switch_tab", index: 2 }, () => descriptor, {
+        title: "Popup",
+        url: "https://payments.example.com/"
+      });
       expect(payload).toMatchObject({
         action: "switch_tab",
         index: 2,
@@ -104,12 +115,17 @@ describe("buildAgentStepPayload", () => {
     });
 
     it("falls back to the input url_pattern when no result is available", () => {
-      const payload = buildAgentStepPayload({ action: "switch_tab_by_url", url_pattern: "klarna.com" }, () => descriptor);
+      const payload = buildAgentStepPayload(
+        { action: "switch_tab_by_url", url_pattern: "klarna.com" },
+        () => descriptor
+      );
       expect(payload?.url).toBe("klarna.com");
     });
 
     it("records close_tab even with no url in the result", () => {
-      const payload = buildAgentStepPayload({ action: "close_tab" }, () => descriptor, { closed: true });
+      const payload = buildAgentStepPayload({ action: "close_tab" }, () => descriptor, {
+        closed: true
+      });
       expect(payload).toMatchObject({ action: "close_tab", actor: "agent" });
       expect(payload?.url).toBeUndefined();
     });

@@ -194,11 +194,7 @@
   ],
   "expect": {
     "ok": true,
-    "filesExist": [
-      "pages/LoginPage.ts",
-      "pages/HomePage.ts",
-      "tests/auth.spec.ts"
-    ],
+    "filesExist": ["pages/LoginPage.ts", "pages/HomePage.ts", "tests/auth.spec.ts"],
     "filesWrittenIncludes": ["pages/LoginPage.ts", "pages/HomePage.ts"],
     "mustContain": {
       "support/config/page.config.ts": ["loginPage: LoginPage", "homePage: HomePage"],

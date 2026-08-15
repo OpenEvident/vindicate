@@ -178,7 +178,10 @@ export const AssertionSchema = z.discriminatedUnion("subject", [
 export type Assertion = z.infer<typeof AssertionSchema>;
 
 export const StepDefSchema = z.object({
-  name: z.string().min(1).regex(/^step_/, "Step names must start with 'step_'"),
+  name: z
+    .string()
+    .min(1)
+    .regex(/^step_/, "Step names must start with 'step_'"),
   jsdoc: z.string().min(1),
   params: z.array(ParamSchema),
   actions: z.array(ActionSchema).min(1)
@@ -186,7 +189,10 @@ export const StepDefSchema = z.object({
 export type StepDef = z.infer<typeof StepDefSchema>;
 
 export const VerifyDefSchema = z.object({
-  name: z.string().min(1).regex(/^verify_/, "Verify names must start with 'verify_'"),
+  name: z
+    .string()
+    .min(1)
+    .regex(/^verify_/, "Verify names must start with 'verify_'"),
   jsdoc: z.string().min(1),
   params: z.array(ParamSchema),
   assertions: z.array(AssertionSchema).min(1)

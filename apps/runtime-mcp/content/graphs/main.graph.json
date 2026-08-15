@@ -19,7 +19,10 @@
       "terminal": false,
       "modes": [],
       "edges": [
-        { "to": "ground", "when": "requirement drafted (story status: draft); elements not yet captured" }
+        {
+          "to": "ground",
+          "when": "requirement drafted (story status: draft); elements not yet captured"
+        }
       ]
     },
     "ground": {
@@ -27,7 +30,10 @@
       "terminal": false,
       "modes": ["ai-explore", "human-record", "source-scan", "recording-ingest", "api-ingest"],
       "edges": [
-        { "to": "design", "when": "path == write — required elements captured/validated (or ingested from a recording)" },
+        {
+          "to": "design",
+          "when": "path == write — required elements captured/validated (or ingested from a recording)"
+        },
         { "to": "generate", "when": "path == fix — the failing element has been re-captured" },
         { "to": "coverage", "when": "path == gaps — screens mapped against the test inventory" }
       ]
@@ -38,16 +44,25 @@
       "modes": ["write-plan", "refactor-plan"],
       "edges": [
         { "to": "generate", "when": "the story + test plan were approved by the user" },
-        { "to": "ground", "when": "an approved scenario has no captured locator evidence — capture it, then return to design" }
+        {
+          "to": "ground",
+          "when": "an approved scenario has no captured locator evidence — capture it, then return to design"
+        }
       ]
     },
     "generate": {
       "label": "Generate",
       "terminal": false,
-      "modes": ["create", "add_test_cases", "register_page", "direct-edit", "create_api", "add_api_test_cases", "register_client"],
-      "edges": [
-        { "to": "execute", "when": "files written/edited and `npm run audit` is clean" }
-      ]
+      "modes": [
+        "create",
+        "add_test_cases",
+        "register_page",
+        "direct-edit",
+        "create_api",
+        "add_api_test_cases",
+        "register_client"
+      ],
+      "edges": [{ "to": "execute", "when": "files written/edited and `npm run audit` is clean" }]
     },
     "execute": {
       "label": "Execute",
@@ -65,7 +80,10 @@
       "modes": ["failure-triage", "flaky-triage"],
       "edges": [
         { "to": "ground", "when": "root cause == locator drift — the element must be re-captured" },
-        { "to": "generate", "when": "root cause == test/spec bug or flakiness (waits/races) — fix via direct edit or codegen" },
+        {
+          "to": "generate",
+          "when": "root cause == test/spec bug or flakiness (waits/races) — fix via direct edit or codegen"
+        },
         { "to": "escalate", "when": "root cause == app bug or environment — stop and report" }
       ]
     },

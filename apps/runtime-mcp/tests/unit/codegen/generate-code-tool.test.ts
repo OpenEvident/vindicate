@@ -12,8 +12,9 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<{
 }>;
 
 function getToolHandler(server: McpServer, name: string): ToolHandler {
-  const tools = (server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> })
-    ._registeredTools;
+  const tools = (
+    server as unknown as { _registeredTools: Record<string, { handler: ToolHandler }> }
+  )._registeredTools;
   const tool = tools[name];
   if (tool === undefined) {
     throw new Error(`tool not registered: ${name}`);
@@ -80,7 +81,14 @@ describe("generate-code-tool", () => {
             owned_by: "login",
             elements: [{ ref: "submit", tag: "button", role: "button", name: "Submit" }],
             types: [],
-            steps: [{ name: "step_submit", jsdoc: "Submit", params: [], actions: [{ do: "clck", ref: "submit" }] }],
+            steps: [
+              {
+                name: "step_submit",
+                jsdoc: "Submit",
+                params: [],
+                actions: [{ do: "clck", ref: "submit" }]
+              }
+            ],
             verifies: []
           }
         ],
@@ -89,7 +97,14 @@ describe("generate-code-tool", () => {
           generates_storage_state: null,
           storage_state: null,
           before_each: null,
-          cases: [{ ac_id: "AC-1", scenario: "Submit", title: "[AC-1] submit", body: [{ fixture: "loginPage", call: "step_submit" }] }]
+          cases: [
+            {
+              ac_id: "AC-1",
+              scenario: "Submit",
+              title: "[AC-1] submit",
+              body: [{ fixture: "loginPage", call: "step_submit" }]
+            }
+          ]
         }
       }
     });
@@ -170,7 +185,9 @@ describe("generate-code-tool", () => {
             owned_by: "loginPage",
             elements: [{ ref: "email", tag: "input", testid: "email", testid_attr: "data-testid" }],
             types: [],
-            steps: [{ name: "step_navigate", jsdoc: "Go", params: [], actions: [{ do: "navigate" }] }],
+            steps: [
+              { name: "step_navigate", jsdoc: "Go", params: [], actions: [{ do: "navigate" }] }
+            ],
             verifies: []
           }
         ],
@@ -206,7 +223,11 @@ describe("generate-code-tool", () => {
     const handler = getToolHandler(server, "vindicate_generate_code");
     const result = await handler({ mode: "create_api", feature: "widgets" });
     expect(result.isError).toBe(true);
-    const payload = JSON.parse(textFromResult(result)) as { error: string; field: string; fix: string };
+    const payload = JSON.parse(textFromResult(result)) as {
+      error: string;
+      field: string;
+      fix: string;
+    };
     expect(payload.error).toBe("schema_validation");
     expect(payload.field.length).toBeGreaterThan(0);
     expect(payload.fix.length).toBeGreaterThan(0);
@@ -262,7 +283,13 @@ describe("generate-code-tool", () => {
           ac_id: "AC-2",
           scenario: "Second Case",
           title: "[AC-2] should also work",
-          calls: [{ fixture: "widgetApi", method: "getAll", assertions: [{ subject: "status", matcher: "toBe", arg: "200" }] }]
+          calls: [
+            {
+              fixture: "widgetApi",
+              method: "getAll",
+              assertions: [{ subject: "status", matcher: "toBe", arg: "200" }]
+            }
+          ]
         }
       ]
     });
@@ -278,7 +305,9 @@ describe("generate-code-tool", () => {
       mode: "validate_api",
       validateTarget: "create_api",
       feature: "widgets",
-      schema: apiFullSchema({ clients: [clientDef({ client_class: "WidgetClient", owned_by: "other-feature" })] })
+      schema: apiFullSchema({
+        clients: [clientDef({ client_class: "WidgetClient", owned_by: "other-feature" })]
+      })
     });
     const payload = JSON.parse(textFromResult(result)) as {
       ok: boolean;

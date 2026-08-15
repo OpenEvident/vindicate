@@ -252,12 +252,16 @@ describe("validate-codegen", () => {
             el("passwordInput", { tag: "input", testid: "password", testid_attr: "data-testid" })
           ],
           steps: [
-            step("step_login_with_credentials", [
-              { do: "fill", ref: "emailInput", value: "user@example.com" },
-              { do: "fill", ref: "passwordInput", param: "password" }
-            ], {
-              params: [{ name: "password", type: "string" }]
-            })
+            step(
+              "step_login_with_credentials",
+              [
+                { do: "fill", ref: "emailInput", value: "user@example.com" },
+                { do: "fill", ref: "passwordInput", param: "password" }
+              ],
+              {
+                params: [{ name: "password", type: "string" }]
+              }
+            )
           ],
           verifies: []
         })
@@ -279,12 +283,16 @@ describe("validate-codegen", () => {
             el("passwordInput", { tag: "input", testid: "password", testid_attr: "data-testid" })
           ],
           steps: [
-            step("step_login_with_credentials", [
-              { do: "type", ref: "emailInput", value: "user@example.com" },
-              { do: "type", ref: "passwordInput", param: "password" }
-            ], {
-              params: [{ name: "password", type: "string" }]
-            })
+            step(
+              "step_login_with_credentials",
+              [
+                { do: "type", ref: "emailInput", value: "user@example.com" },
+                { do: "type", ref: "passwordInput", param: "password" }
+              ],
+              {
+                params: [{ name: "password", type: "string" }]
+              }
+            )
           ],
           verifies: []
         })
@@ -301,7 +309,9 @@ describe("validate-codegen", () => {
           feature: "login",
           page_class: "LoginPage",
           owned_by: "login",
-          elements: [el("emailInput", { tag: "input", testid: "email", testid_attr: "data-testid" })],
+          elements: [
+            el("emailInput", { tag: "input", testid: "email", testid_attr: "data-testid" })
+          ],
           steps: [step("step_type_email", [{ do: "type", ref: "emailInput" }])],
           verifies: []
         })
@@ -671,11 +681,7 @@ describe("validate-codegen", () => {
           feature: "auth",
           page_class: "AuthPage",
           elements: [el("email", { tag: "input", testid: "email", testid_attr: "data-testid" })],
-          steps: [
-            step("step_fill", [
-              { do: "fill", ref: "email", param: "email" }
-            ])
-          ],
+          steps: [step("step_fill", [{ do: "fill", ref: "email", param: "email" }])],
           verifies: []
         })
       ],
@@ -728,10 +734,7 @@ describe("validate-codegen", () => {
   });
 
   describe("dynamic locators + conditional", () => {
-    function productsSchema(opts: {
-      del: ReturnType<typeof el>;
-      action: Action;
-    }) {
+    function productsSchema(opts: { del: ReturnType<typeof el>; action: Action }) {
       return fullSchema({
         expected: { pid: "p-1" },
         pages: [
@@ -858,10 +861,7 @@ describe("validate-codegen", () => {
   });
 
   describe("waitForResponse provenance", () => {
-    function authSchemaWithWait(
-      urlPattern: string,
-      observedEndpoints?: string[]
-    ) {
+    function authSchemaWithWait(urlPattern: string, observedEndpoints?: string[]) {
       return fullSchema({
         ...(observedEndpoints !== undefined ? { observed_endpoints: observedEndpoints } : {}),
         pages: [
@@ -870,9 +870,7 @@ describe("validate-codegen", () => {
             page_class: "AuthPage",
             owned_by: "auth",
             path: "/auth/login",
-            elements: [
-              el("loginButton", { tag: "button", role: "button", name: "Sign in" })
-            ],
+            elements: [el("loginButton", { tag: "button", role: "button", name: "Sign in" })],
             steps: [
               step("step_submit", [
                 { do: "click", ref: "loginButton" },
@@ -1016,7 +1014,9 @@ describe("validate-codegen", () => {
     it("flags a wildcard toHaveURL string arg as unsafe with a configured baseURL", () => {
       const errors = validateFullSchema(
         dashboardSchema([
-          verify("verify_dashboard", [{ subject: "page", matcher: "toHaveURL", arg: "'**/checkout/'" }])
+          verify("verify_dashboard", [
+            { subject: "page", matcher: "toHaveURL", arg: "'**/checkout/'" }
+          ])
         ]),
         "auth"
       );
@@ -1026,7 +1026,9 @@ describe("validate-codegen", () => {
     it("does not flag a plain relative toHaveURL path with no wildcard (the correct, confirmed-working use of baseURL)", () => {
       const errors = validateFullSchema(
         dashboardSchema([
-          verify("verify_dashboard", [{ subject: "page", matcher: "toHaveURL", arg: "'/checkout/'" }])
+          verify("verify_dashboard", [
+            { subject: "page", matcher: "toHaveURL", arg: "'/checkout/'" }
+          ])
         ]),
         "auth"
       );
@@ -1036,7 +1038,9 @@ describe("validate-codegen", () => {
     it("does not flag a regex toHaveURL arg (confirmed unaffected by baseURL)", () => {
       const errors = validateFullSchema(
         dashboardSchema([
-          verify("verify_dashboard", [{ subject: "page", matcher: "toHaveURL", arg: "/\\/checkout\\/?$/" }])
+          verify("verify_dashboard", [
+            { subject: "page", matcher: "toHaveURL", arg: "/\\/checkout\\/?$/" }
+          ])
         ]),
         "auth"
       );

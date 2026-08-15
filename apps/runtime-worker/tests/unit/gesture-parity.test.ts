@@ -37,7 +37,9 @@ describe("worker gesture parity", () => {
   const executorSource = readWorkerSource("src/services/browser/commands/command-executor.ts");
   const capabilitiesSource = readWorkerSource("src/health/capabilities.routes.ts");
   const agentSource = readWorkerSource("src/services/browser/recording/agent-step-builder.ts");
-  const playbackSource = readWorkerSource("src/services/browser/recording/recording-playback.service.ts");
+  const playbackSource = readWorkerSource(
+    "src/services/browser/recording/recording-playback.service.ts"
+  );
 
   const schemaActions = new Set(schemaActionLiterals(paramsSource));
   const recordedActions = new Set(RecordedStepSchema.shape.action.options);
@@ -54,7 +56,9 @@ describe("worker gesture parity", () => {
     expect(recordableMatch).not.toBeNull();
     const recordable = [...(recordableMatch?.[1] ?? "").matchAll(/"([^"]+)"/g)].map((m) => m[1]!);
     for (const action of recordable) {
-      expect(recordedActions.has(action as (typeof RecordedStepSchema.shape.action.options)[number])).toBe(true);
+      expect(
+        recordedActions.has(action as (typeof RecordedStepSchema.shape.action.options)[number])
+      ).toBe(true);
       if (action !== "upload_file") {
         expect(playbackSource).toContain(`case "${action}"`);
       }

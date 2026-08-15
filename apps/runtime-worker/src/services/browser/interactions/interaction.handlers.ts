@@ -51,7 +51,9 @@ export async function handleNavigate(
     await page.goto(step.url, { waitUntil, timeout: timeoutMs });
   } catch (err: unknown) {
     const { message, status } = formatNavigationFailure(err);
-    throw status !== undefined ? new NavigationFailedError(message, status) : new NavigationFailedError(message);
+    throw status !== undefined
+      ? new NavigationFailedError(message, status)
+      : new NavigationFailedError(message);
   }
   // Only for our own default (never for an explicit wait_for): best-effort extra wait for
   // network-idle, same budget as the post-action settle, and never fatal. Real sites routinely never
@@ -64,7 +66,11 @@ export async function handleNavigate(
   return { ok: true as const };
 }
 
-export async function handleClick(page: Page, step: ClickStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handleClick(
+  page: Page,
+  step: ClickStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   const locator = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
   const button = step.button ?? "left";
   const clickCount = step.click_count ?? 1;
@@ -99,7 +105,11 @@ async function resolveFillTarget(locator: Locator, timeoutMs: number): Promise<L
   return innerCount === 1 ? inner.first() : locator;
 }
 
-export async function handleType(page: Page, step: TypeStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handleType(
+  page: Page,
+  step: TypeStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   const locator = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
   const target = await resolveFillTarget(locator, ctx.actionTimeoutMs);
   if (step.clear_first === true) {
@@ -155,13 +165,21 @@ export async function handleFill(
   return { ok: true as const };
 }
 
-export async function handleDblclick(page: Page, step: DblclickStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handleDblclick(
+  page: Page,
+  step: DblclickStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   const locator = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
   await locator.dblclick({ timeout: ctx.actionTimeoutMs });
   return { ok: true as const };
 }
 
-export async function handleDrag(page: Page, step: DragStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handleDrag(
+  page: Page,
+  step: DragStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   const source = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
   const target = await resolveRef(page, step.to_ref, ctx.getDescriptor(step.to_ref));
   await dragLocatorTo(page, source, target, {
@@ -194,25 +212,41 @@ export async function handleSelectOption(
   return { ok: true as const, selected };
 }
 
-export async function handleHover(page: Page, step: HoverStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handleHover(
+  page: Page,
+  step: HoverStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   const locator = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
   await locator.hover({ timeout: ctx.actionTimeoutMs });
   return { ok: true as const };
 }
 
-export async function handleCheck(page: Page, step: CheckStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handleCheck(
+  page: Page,
+  step: CheckStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   const locator = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
   await locator.check({ timeout: ctx.actionTimeoutMs });
   return { ok: true as const };
 }
 
-export async function handleUncheck(page: Page, step: UncheckStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handleUncheck(
+  page: Page,
+  step: UncheckStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   const locator = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
   await locator.uncheck({ timeout: ctx.actionTimeoutMs });
   return { ok: true as const };
 }
 
-export async function handlePressKey(page: Page, step: PressKeyStep, ctx: HandlerContext): Promise<{ ok: true }> {
+export async function handlePressKey(
+  page: Page,
+  step: PressKeyStep,
+  ctx: HandlerContext
+): Promise<{ ok: true }> {
   if (step.ref !== undefined) {
     const locator = await resolveRef(page, step.ref, ctx.getDescriptor(step.ref));
     await locator.press(step.key, { timeout: ctx.actionTimeoutMs });
@@ -323,9 +357,8 @@ export async function handleWaitForResponse(
   timeoutMs: number
 ): Promise<{ ok: true; status: number; url: string }> {
   const timeout = step.timeout_ms ?? timeoutMs;
-  const response = await page.waitForResponse(
-    (r) => r.url().includes(step.url_pattern),
-    { timeout }
-  );
+  const response = await page.waitForResponse((r) => r.url().includes(step.url_pattern), {
+    timeout
+  });
   return { ok: true as const, status: response.status(), url: response.url() };
 }

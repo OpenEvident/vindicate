@@ -20,7 +20,14 @@
                 { "ref": "saveB", "tag": "button", "testid": "save", "testid_attr": "data-testid" }
               ],
               "types": [],
-              "steps": [{ "name": "step_navigate", "jsdoc": "Open edge", "params": [], "actions": [{ "do": "navigate" }] }],
+              "steps": [
+                {
+                  "name": "step_navigate",
+                  "jsdoc": "Open edge",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                }
+              ],
               "verifies": []
             }
           ],
@@ -29,7 +36,14 @@
             "generates_storage_state": null,
             "storage_state": null,
             "before_each": null,
-            "cases": [{ "ac_id": "AC-1", "scenario": "collision", "title": "[AC-1] should fail", "body": [{ "fixture": "edgePage", "call": "step_navigate" }] }]
+            "cases": [
+              {
+                "ac_id": "AC-1",
+                "scenario": "collision",
+                "title": "[AC-1] should fail",
+                "body": [{ "fixture": "edgePage", "call": "step_navigate" }]
+              }
+            ]
           }
         }
       }

@@ -11,7 +11,7 @@ const DEFAULT_STRENGTH: LocatorStrength = "medium";
 const STRENGTH_DESCRIPTIONS: Record<LocatorStrength, string> = {
   strong: "Stable. Won't break when the UI changes.",
   medium: "Might break if the element moves.",
-  weak:   "Likely to break. Try a different locator.",
+  weak: "Likely to break. Try a different locator."
 };
 
 // Three bars of increasing height — lit bars colored by strength tone.
@@ -32,7 +32,7 @@ export function StrengthMeter({ strength = DEFAULT_STRENGTH }: StrengthMeterProp
             className={[
               "w-0.5 rounded-sm",
               i < meta.bars ? meta.colorClass : "bg-vs-border",
-              h,
+              h
             ].join(" ")}
           />
         ))}

@@ -16,14 +16,14 @@ export function StatusBadge({ status, pulse = false }: StatusBadgeProps) {
         "px-2 py-1 rounded-full border",
         meta.textClass,
         meta.bgClass,
-        meta.borderClass,
+        meta.borderClass
       ].join(" ")}
     >
       <span
         className={[
           "w-1.5 h-1.5 rounded-full shrink-0",
           meta.dotClass,
-          pulse ? "animate-pulse-dot" : "",
+          pulse ? "animate-pulse-dot" : ""
         ].join(" ")}
       />
       {meta.label}

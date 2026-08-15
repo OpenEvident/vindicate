@@ -11,12 +11,12 @@ note: The .vindicate/ memory layout + locator-reuse sequence. Locators are no lo
 All persistent state lives under `.vindicate/` at project root — flat files, committed to git. The MCP
 server is stateless (D-005); the generated `.ts` files and recordings are the source of truth.
 
-| File | Shape | Purpose |
-|------|-------|---------|
-| `.vindicate/stories/<feature>.story.md` | markdown | Feature intent, acceptance criteria, scenarios |
-| `.vindicate/recordings/<safe-name>.json` | `RecordingArtifact` | A finalized flow: ordered steps + per-element identity + ranked candidates |
-| `.vindicate/recordings-index.json` | `{ version, entries[] }` | Compact index of finalized recordings — read with `browser_record_list` |
-| `.vindicate/config.json` | `{ testIdAttribute }` | Project test-id attribute name |
+| File                                     | Shape                    | Purpose                                                                    |
+| ---------------------------------------- | ------------------------ | -------------------------------------------------------------------------- |
+| `.vindicate/stories/<feature>.story.md`  | markdown                 | Feature intent, acceptance criteria, scenarios                             |
+| `.vindicate/recordings/<safe-name>.json` | `RecordingArtifact`      | A finalized flow: ordered steps + per-element identity + ranked candidates |
+| `.vindicate/recordings-index.json`       | `{ version, entries[] }` | Compact index of finalized recordings — read with `browser_record_list`    |
+| `.vindicate/config.json`                 | `{ testIdAttribute }`    | Project test-id attribute name                                             |
 
 There is **no locator cache** and no codegen schema persisted under `.vindicate/`. Captured locators are
 carried in-context to `design`/`generate`; the durable, reusable record of a flow is its **recording**.

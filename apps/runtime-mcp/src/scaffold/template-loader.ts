@@ -48,7 +48,9 @@ function subtreesFor(target: ScaffoldTarget): readonly string[] {
  * not silently lose one to whichever subtree happens to be walked last. */
 const MERGEABLE_OUTPUT_PATHS = new Set(["README.md"]);
 
-export async function loadScaffoldTemplates(target: ScaffoldTarget = "both"): Promise<Record<string, string>> {
+export async function loadScaffoldTemplates(
+  target: ScaffoldTarget = "both"
+): Promise<Record<string, string>> {
   const out: Record<string, string> = {};
   for (const subtree of subtreesFor(target)) {
     const dir = path.join(TEMPLATES_DIR, subtree);

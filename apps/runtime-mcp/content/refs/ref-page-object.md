@@ -27,8 +27,7 @@ within the locator block.
 - Must resolve to exactly 1 element (verified via snapshot ref count)
 - **Dynamic exception:** a runtime-parameterized locator is a `private` **method** returning `Locator`
   (not a field), e.g. `private dayCell(date: string): Locator { return this.page.locator(\`//td[@data-date="${date}"]\`); }`.
-  It still carries a `// locator-helper: dyn_param` comment and follows the locator protocol. Call it as
-  `this.dayCell(date).click()`. Use only when the value is genuinely runtime-driven.
+It still carries a `// locator-helper: dyn_param`comment and follows the locator protocol. Call it as`this.dayCell(date).click()`. Use only when the value is genuinely runtime-driven.
 - **Live-region exception:** `alert`, `status`, `log` take their accessible name from author markup, not
   content — never bind their visible text as a `getByRole` name (`getByRole('alert', { name: '<msg>' })`
   matches nothing). Locate by role only (`getByRole('alert')`, helper `role_name`) and assert the message
@@ -55,18 +54,19 @@ The derivation walks this ladder and picks the highest tier that resolves to exa
 9. **positional** (last resort, low confidence) → `(…)[n]`
 
 **Strategy codes for `// locator-helper:` comments** (mirror the structured locator's `strategy`):
-| Code | Rendered as |
-|------|-------------|
-| `testid` | `getByTestId(value)` |
-| `testid_xpath` | `//*[@attr="value"]` (non-project test-id attribute) |
-| `dom_id` | `//*[@id="value"]` |
-| `role_name` | `getByRole(role, { name, exact: true })` |
-| `label` / `placeholder` / `text` | `getByLabel` / `getByPlaceholder` / `getByText` |
-| `attr_combo` | `//tag[@a="x"][@b="y"]` |
-| `scoped` | container-scoped `getByRole(...).getByRole(...)` |
-| `sibling_text` | `//tag[preceding-sibling::*[…] or following-sibling::*[…]]` (no accessible name exists at all — comment includes the matched sibling text) |
-| `nth` | positional XPath `(…)[n]` (low confidence — surfaced for review) |
-| `dyn_param` | runtime-parameterized locator method (see Dynamic locators) |
+
+| Code                             | Rendered as                                                                                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `testid`                         | `getByTestId(value)`                                                                                                                       |
+| `testid_xpath`                   | `//*[@attr="value"]` (non-project test-id attribute)                                                                                       |
+| `dom_id`                         | `//*[@id="value"]`                                                                                                                         |
+| `role_name`                      | `getByRole(role, { name, exact: true })`                                                                                                   |
+| `label` / `placeholder` / `text` | `getByLabel` / `getByPlaceholder` / `getByText`                                                                                            |
+| `attr_combo`                     | `//tag[@a="x"][@b="y"]`                                                                                                                    |
+| `scoped`                         | container-scoped `getByRole(...).getByRole(...)`                                                                                           |
+| `sibling_text`                   | `//tag[preceding-sibling::*[…] or following-sibling::*[…]]` (no accessible name exists at all — comment includes the matched sibling text) |
+| `nth`                            | positional XPath `(…)[n]` (low confidence — surfaced for review)                                                                           |
+| `dyn_param`                      | runtime-parameterized locator method (see Dynamic locators)                                                                                |
 
 **Forbidden [CRITICAL]:** CSS selectors of any form (`[attr=…]`, `.class`, `#id`), `.or(...)` chains,
 `.filter()`, `.first()`, `.nth()`, `.last()` as uniqueness workarounds. Semantic `getBy*` and XPath are
@@ -89,7 +89,7 @@ For UI that appears only sometimes (cookie banners, promos, onboarding tips), ne
 unconditionally — that flakes. `BasePage`/`BasePanel` expose `clickIfVisible(locator, timeout = 2000)`
 which waits briefly and clicks only if the element shows (returns `true`/`false`). In codegen use the
 `click_if_visible` action; in direct edits call `await this.clickIfVisible(this.cookieClose);`. For an
-optional element you only need to *assert presence conditionally*, branch inside a `step_*`/`verify_*`
+optional element you only need to _assert presence conditionally_, branch inside a `step_*`/`verify_*`
 method (logic is allowed in page objects) — **never** in the spec body.
 
 ## Panel rules
@@ -119,24 +119,26 @@ method (logic is allowed in page objects) — **never** in the spec body.
 ## Template (canonical — mirror this shape)
 
 ```ts
-import { Page, expect } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { Page, expect } from "@playwright/test";
+import { BasePage } from "./BasePage";
 
 export type LoginCredentials = { username: string; password: string };
 
 export class LoginPage extends BasePage {
-  readonly path = '/auth/login';
+  readonly path = "/auth/login";
 
   // locator-helper: testid
-  private usernameInput = this.page.getByTestId('username');
+  private usernameInput = this.page.getByTestId("username");
   // locator-helper: testid
-  private passwordInput = this.page.getByTestId('password');
+  private passwordInput = this.page.getByTestId("password");
   // locator-helper: role_name
-  private loginButton   = this.page.getByRole('button', { name: 'Sign in', exact: true });
+  private loginButton = this.page.getByRole("button", { name: "Sign in", exact: true });
   // locator-helper: role_name
-  private errorMessage  = this.page.getByRole('alert');
+  private errorMessage = this.page.getByRole("alert");
 
-  constructor(page: Page) { super(page); }
+  constructor(page: Page) {
+    super(page);
+  }
 
   /**
    * Navigates to the login page and waits for it to load.
@@ -158,7 +160,7 @@ export class LoginPage extends BasePage {
     await this.passwordInput.fill(credentials.password);
     await this.loginButton.click();
     // Only when ground observed a submit XHR — redirect-only logins use waitForURL instead (see ref-codegen-schema Submit timing).
-    await this.page.waitForResponse(r => r.url().includes('/web/index.php/auth/validate'));
+    await this.page.waitForResponse((r) => r.url().includes("/web/index.php/auth/validate"));
     return this;
   }
 
@@ -168,7 +170,7 @@ export class LoginPage extends BasePage {
    * @returns this for chaining
    */
   async verify_errorMessage(expectedText: string): Promise<this> {
-    await this.errorMessage.waitFor({ state: 'visible' });
+    await this.errorMessage.waitFor({ state: "visible" });
     expect((await this.errorMessage.innerText()).trim()).toContain(expectedText);
     return this;
   }

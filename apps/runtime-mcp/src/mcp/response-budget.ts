@@ -36,7 +36,9 @@ function serialise(value: unknown): string {
 /** A cut test entry, shaped compactly for the omitted-failures index — never the full entry (that
  * defeats the point of trimming), just enough to judge "same root cause as what I can already see, or
  * worth a scoped re-run" without another round trip. */
-function toOmittedFailureEntry(test: unknown): { title: unknown; file: unknown; error?: string } | undefined {
+function toOmittedFailureEntry(
+  test: unknown
+): { title: unknown; file: unknown; error?: string } | undefined {
   if (typeof test !== "object" || test === null) {
     return undefined;
   }
@@ -66,7 +68,10 @@ function buildTrimResult(
   return {
     ...payload,
     tests: shown,
-    truncation_summary: summary(serialise({ ...base, tests: shown }).length, serialise(payload).length),
+    truncation_summary: summary(
+      serialise({ ...base, tests: shown }).length,
+      serialise(payload).length
+    ),
     tests_total: tests.length,
     tests_shown: kept
   };
@@ -93,7 +98,8 @@ function trimRunTestsPayload(
   let kept = tests.length;
   let result = payload;
   while (kept >= 0) {
-    const candidate = kept === tests.length ? payload : buildTrimResult(payload, base, tests, kept, summary);
+    const candidate =
+      kept === tests.length ? payload : buildTrimResult(payload, base, tests, kept, summary);
     if (serialise(candidate).length <= cap) {
       result = candidate;
       break;

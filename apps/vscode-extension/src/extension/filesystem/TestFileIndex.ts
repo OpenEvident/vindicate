@@ -78,7 +78,9 @@ function buildSnapshot(
   content: string,
   mtimeMs: number
 ): TestFileSnapshot {
-  const describeBlocks = [...content.matchAll(DESCRIBE_PATTERN)].map((m) => (m[1] ?? "").toLowerCase());
+  const describeBlocks = [...content.matchAll(DESCRIBE_PATTERN)].map((m) =>
+    (m[1] ?? "").toLowerCase()
+  );
   const acIds = new Set(
     [...content.matchAll(AC_TAG_PATTERN)]
       .map((m) => Number(m[1]))

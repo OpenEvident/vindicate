@@ -2,7 +2,10 @@ import { readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ClaudeMdWriter } from "../../../src/extension/config/ClaudeMdWriter";
-import { buildClaudeMdBlock, VINDICATE_CLAUDE_MARKERS } from "../../../src/extension/config/vindicateRuleContent";
+import {
+  buildClaudeMdBlock,
+  VINDICATE_CLAUDE_MARKERS
+} from "../../../src/extension/config/vindicateRuleContent";
 
 describe("ClaudeMdWriter", () => {
   const root = path.join(process.cwd(), "tests", "tmp-claude-md");

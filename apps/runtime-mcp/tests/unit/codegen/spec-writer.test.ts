@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  appendTestCases,
-  buildAuthSetup,
-  buildNewSpec
-} from "../../../src/codegen/spec-writer.js";
+import { appendTestCases, buildAuthSetup, buildNewSpec } from "../../../src/codegen/spec-writer.js";
 import { persistedSchema, testCase } from "./helpers/fixtures.js";
 
 describe("spec-writer", () => {
@@ -134,4 +130,3 @@ describe("spec-writer", () => {
     });
   });
 });
-

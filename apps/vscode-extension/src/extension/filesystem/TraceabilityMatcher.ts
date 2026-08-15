@@ -4,7 +4,11 @@ import type { TestFileSnapshot } from "./TestFileIndex";
 import { collectProjectTestFiles } from "./projectTestFiles.js";
 
 export interface ITraceabilityMatcher {
-  match(featureName: string, workspaceRoot: string, snapshots?: TestFileSnapshot[]): Promise<boolean>;
+  match(
+    featureName: string,
+    workspaceRoot: string,
+    snapshots?: TestFileSnapshot[]
+  ): Promise<boolean>;
   matchAll(
     featureNames: string[],
     workspaceRoot: string,
@@ -15,7 +19,11 @@ export interface ITraceabilityMatcher {
 const DESCRIBE_PATTERN = /describe\s*\(\s*['"`]([^'"`]+)['"`]/g;
 
 export class TraceabilityMatcher implements ITraceabilityMatcher {
-  async match(featureName: string, workspaceRoot: string, snapshots?: TestFileSnapshot[]): Promise<boolean> {
+  async match(
+    featureName: string,
+    workspaceRoot: string,
+    snapshots?: TestFileSnapshot[]
+  ): Promise<boolean> {
     const map = await this.matchAll([featureName], workspaceRoot, snapshots);
     return map.get(featureName) ?? false;
   }
@@ -25,7 +33,9 @@ export class TraceabilityMatcher implements ITraceabilityMatcher {
     workspaceRoot: string,
     snapshots?: TestFileSnapshot[]
   ): Promise<Map<string, boolean>> {
-    const testFiles = snapshots?.map((snapshot) => snapshot.filePath) ?? (await collectProjectTestFiles(workspaceRoot));
+    const testFiles =
+      snapshots?.map((snapshot) => snapshot.filePath) ??
+      (await collectProjectTestFiles(workspaceRoot));
     const result = new Map<string, boolean>(featureNames.map((n) => [n, false]));
 
     const unmatched = featureNames.filter((n) => !filenameMatchesAny(testFiles, n));

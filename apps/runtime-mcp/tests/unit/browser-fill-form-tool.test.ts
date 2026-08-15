@@ -71,11 +71,15 @@ describe("buildFillFormSteps", () => {
   });
 
   it("throws when type is missing value", () => {
-    expect(() => buildFillFormSteps([{ ref: "ref-00000001", action: "type" }])).toThrow(/requires 'value'/);
+    expect(() => buildFillFormSteps([{ ref: "ref-00000001", action: "type" }])).toThrow(
+      /requires 'value'/
+    );
   });
 
   it("throws when select is missing value", () => {
-    expect(() => buildFillFormSteps([{ ref: "ref-00000001", action: "select" }])).toThrow(/requires 'value'/);
+    expect(() => buildFillFormSteps([{ ref: "ref-00000001", action: "select" }])).toThrow(
+      /requires 'value'/
+    );
   });
 
   it("throws a field-specific message for the second field, not the first", () => {
@@ -144,7 +148,9 @@ describe("formatFillFormSuccess", () => {
       { result: { ok: true, hint: "fill() reported success but the field reads back empty..." } }
     ];
     const response = formatFillFormSuccess(fields, stepResults);
-    expect(response.fields[0]?.hint).toBe("fill() reported success but the field reads back empty...");
+    expect(response.fields[0]?.hint).toBe(
+      "fill() reported success but the field reads back empty..."
+    );
   });
 
   it("does not attach a hint field when the step result has none", () => {
@@ -180,7 +186,9 @@ describe("formatFillFormSuccess", () => {
 
   it("ignores a malformed selected value (not a string array) rather than surfacing garbage", () => {
     const fields: FillFormField[] = [{ ref: "ref-00000001", action: "select", value: "se" }];
-    const response = formatFillFormSuccess(fields, [{ result: { ok: true, selected: "not-an-array" } }]);
+    const response = formatFillFormSuccess(fields, [
+      { result: { ok: true, selected: "not-an-array" } }
+    ]);
     expect(response.fields[0]).not.toHaveProperty("selected");
   });
 });
@@ -215,7 +223,11 @@ describe("formatFillFormFailure", () => {
   });
 
   it("handles failure on the very last field — everything before it completed", () => {
-    const response = formatFillFormFailure(fields, { step: 2, action: "select_option", error: "ambiguous" });
+    const response = formatFillFormFailure(fields, {
+      step: 2,
+      action: "select_option",
+      error: "ambiguous"
+    });
     expect(response.completed).toHaveLength(2);
     expect(response.remaining).toEqual([{ ref: "ref-00000003", action: "select" }]);
   });
@@ -243,7 +255,11 @@ describe("registerBrowserFillFormTool — full handler wiring", () => {
       throw new Error("not used by browser_fill_form");
     }
 
-    async runSteps(_sessionId: string, steps: WorkerStep[], options?: CommandStreamOptions): Promise<StepsResult> {
+    async runSteps(
+      _sessionId: string,
+      steps: WorkerStep[],
+      options?: CommandStreamOptions
+    ): Promise<StepsResult> {
       this.runStepsCalls.push({ steps, options });
       return this.behavior(steps, options);
     }
@@ -273,7 +289,10 @@ describe("registerBrowserFillFormTool — full handler wiring", () => {
     const runner = new FakeCommandRunner();
     runner.behavior = () =>
       Promise.resolve({
-        steps: [{ step: 0, result: { ok: true } }, { step: 1, result: { ok: true, hint: "check readback" } }]
+        steps: [
+          { step: 0, result: { ok: true } },
+          { step: 1, result: { ok: true, hint: "check readback" } }
+        ]
       });
     const handler = captureHandler(runner);
 
@@ -297,7 +316,14 @@ describe("registerBrowserFillFormTool — full handler wiring", () => {
 
   it("sizes the batch timeout from field count (default 30s/field + 10s margin), not a single-step timeout", async () => {
     const runner = new FakeCommandRunner();
-    runner.behavior = () => Promise.resolve({ steps: [{ step: 0, result: { ok: true } }, { step: 1, result: { ok: true } }, { step: 2, result: { ok: true } }] });
+    runner.behavior = () =>
+      Promise.resolve({
+        steps: [
+          { step: 0, result: { ok: true } },
+          { step: 1, result: { ok: true } },
+          { step: 2, result: { ok: true } }
+        ]
+      });
     const handler = captureHandler(runner);
 
     await handler({
@@ -331,7 +357,13 @@ describe("registerBrowserFillFormTool — full handler wiring", () => {
     const runner = new FakeCommandRunner();
     runner.behavior = (_steps, options) => {
       options?.onEvent?.({ event: "step_completed", step: 0 });
-      options?.onEvent?.({ event: "failed", step: 1, action: "fill", error: "Timeout 30000ms exceeded", code: "browser.action_timeout" });
+      options?.onEvent?.({
+        event: "failed",
+        step: 1,
+        action: "fill",
+        error: "Timeout 30000ms exceeded",
+        code: "browser.action_timeout"
+      });
       return Promise.reject(new Error("Timeout 30000ms exceeded"));
     };
     const handler = captureHandler(runner);
@@ -346,7 +378,12 @@ describe("registerBrowserFillFormTool — full handler wiring", () => {
     });
 
     expect(result.isError).toBeUndefined();
-    const body = jsonOf(result) as { ok: boolean; failed_at: unknown; completed: unknown[]; remaining: unknown[] };
+    const body = jsonOf(result) as {
+      ok: boolean;
+      failed_at: unknown;
+      completed: unknown[];
+      remaining: unknown[];
+    };
     expect(body.ok).toBe(false);
     expect(body.failed_at).toEqual({ index: 1, ref: "ref-00000002", action: "fill" });
     expect(body.completed).toEqual([{ ref: "ref-00000001", action: "fill" }]);

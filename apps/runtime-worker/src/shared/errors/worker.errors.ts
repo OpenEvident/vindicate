@@ -40,7 +40,10 @@ export class SessionUnresumableError extends WorkerError {
   readonly code = "session.unresumable";
   readonly httpStatus = 410;
 
-  constructor(readonly sessionId: string, reason: string) {
+  constructor(
+    readonly sessionId: string,
+    reason: string
+  ) {
     super(`Session ${sessionId} cannot be resumed: ${reason}`);
   }
 }
@@ -165,7 +168,10 @@ export class WorkerThrottledError extends WorkerError {
   readonly code = "worker.throttled";
   readonly httpStatus = 429;
 
-  constructor(reason: string, readonly retryAfterMs?: number) {
+  constructor(
+    reason: string,
+    readonly retryAfterMs?: number
+  ) {
     super(`Worker throttled: ${reason}`);
   }
 }

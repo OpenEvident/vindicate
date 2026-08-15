@@ -64,7 +64,9 @@ export async function createBrowserSessionTestContext(): Promise<BrowserSessionT
   const dataDir = path.join(os.tmpdir(), `vindicate-browser-int-${Date.now()}-${randomUUID()}`);
   await mkdir(dataDir, { recursive: true });
   const eventBus = new EventBus(50);
-  const disk = new SessionDiskStore(dataDir, new PlaintextSessionCrypto(), { encryptFilenames: false });
+  const disk = new SessionDiskStore(dataDir, new PlaintextSessionCrypto(), {
+    encryptFilenames: false
+  });
   const store = new BrowserSessionStore(disk, logger, 24);
   await store.initializeFromDisk();
   const governor = new FakeResourceGovernor();
@@ -124,7 +126,9 @@ export async function createBrowserSessionTestContext(): Promise<BrowserSessionT
   return { app, store, bridge, governor, queues, eventBus, sessionLogs, snapshotEngine, dataDir };
 }
 
-export async function destroyBrowserSessionTestContext(ctx: BrowserSessionTestContext): Promise<void> {
+export async function destroyBrowserSessionTestContext(
+  ctx: BrowserSessionTestContext
+): Promise<void> {
   await ctx.app.close();
   await rm(ctx.dataDir, { recursive: true, force: true });
 }

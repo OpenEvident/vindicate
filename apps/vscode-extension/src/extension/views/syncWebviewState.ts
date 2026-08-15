@@ -27,7 +27,10 @@ export async function syncWebviewState(deps: {
     folderPath
   });
   broadcaster.broadcast({ type: "onboarding:stateSync", state: workspaceState.getState() });
-  broadcaster.broadcast({ type: "prompts:templates", templates: workspaceState.getPromptTemplates() });
+  broadcaster.broadcast({
+    type: "prompts:templates",
+    templates: workspaceState.getPromptTemplates()
+  });
 
   const statuses = await configStatus.getStatuses(folderPath);
   broadcaster.broadcast({ type: "config:status", statuses });

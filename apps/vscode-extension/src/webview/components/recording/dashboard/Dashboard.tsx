@@ -91,7 +91,11 @@ export function Dashboard() {
       <StatsRow sessions={sessions as RecordingSession[]} />
 
       {resumeSession !== undefined && filter === "all" && query.length === 0 && (
-        <ResumeBar session={resumeSession} onResume={() => openSession(resumeSession)} onPreview={() => openSession(resumeSession)} />
+        <ResumeBar
+          session={resumeSession}
+          onResume={() => openSession(resumeSession)}
+          onPreview={() => openSession(resumeSession)}
+        />
       )}
 
       <div className="mb-4 flex flex-wrap items-center gap-2.5">
@@ -122,12 +126,18 @@ export function Dashboard() {
             >
               {f.dot !== undefined && <span className={`w-1.5 h-1.5 rounded-full ${f.dot}`} />}
               {f.label}
-              <span className="rounded-full bg-vs-hover/50 px-1.5 font-mono text-[9.5px]">{counts[f.id]}</span>
+              <span className="rounded-full bg-vs-hover/50 px-1.5 font-mono text-[9.5px]">
+                {counts[f.id]}
+              </span>
             </button>
           ))}
         </div>
 
-        <button type="button" onClick={() => loadDashboard()} className="text-ui-sm text-vs-text-dim hover:text-vs-text bg-transparent border-0 cursor-pointer">
+        <button
+          type="button"
+          onClick={() => loadDashboard()}
+          className="text-ui-sm text-vs-text-dim hover:text-vs-text bg-transparent border-0 cursor-pointer"
+        >
           Refresh
         </button>
 
@@ -139,7 +149,9 @@ export function Dashboard() {
               onClick={() => setViewMode(vm)}
               className={[
                 "flex h-[26px] w-[30px] items-center justify-center rounded-md border-0 cursor-pointer",
-                viewMode === vm ? "bg-vs-bg text-vs-text shadow-sm" : "bg-transparent text-vs-text-dim"
+                viewMode === vm
+                  ? "bg-vs-bg text-vs-text shadow-sm"
+                  : "bg-transparent text-vs-text-dim"
               ].join(" ")}
             >
               {vm === "grid" ? <LayoutGrid size={14} /> : <List size={14} />}
@@ -153,7 +165,9 @@ export function Dashboard() {
       ) : sessions.length === 0 ? (
         <EmptyState onNewRecording={() => setView("new")} />
       ) : (
-        <div className={["grid gap-3", viewMode === "grid" ? "grid-cols-2" : "grid-cols-1"].join(" ")}>
+        <div
+          className={["grid gap-3", viewMode === "grid" ? "grid-cols-2" : "grid-cols-1"].join(" ")}
+        >
           {filtered.map((s) => (
             <SessionCard
               key={s.id}

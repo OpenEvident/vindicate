@@ -18,12 +18,22 @@
               "owned_by": "auth",
               "elements": [
                 { "ref": "emailInput", "tag": "input", "testid": "email", "testid_attr": "e2e" },
-                { "ref": "passwordInput", "tag": "input", "testid": "password", "testid_attr": "e2e" },
+                {
+                  "ref": "passwordInput",
+                  "tag": "input",
+                  "testid": "password",
+                  "testid_attr": "e2e"
+                },
                 { "ref": "loginButton", "tag": "button", "testid": "login", "testid_attr": "e2e" }
               ],
               "types": [],
               "steps": [
-                { "name": "step_navigate_to_login", "jsdoc": "Navigate", "params": [], "actions": [{ "do": "navigate" }] },
+                {
+                  "name": "step_navigate_to_login",
+                  "jsdoc": "Navigate",
+                  "params": [],
+                  "actions": [{ "do": "navigate" }]
+                },
                 {
                   "name": "step_login_with_credentials",
                   "jsdoc": "Sign in",

@@ -20,14 +20,15 @@ Every story uses this order for the **top part** (Out of Scope and Change Log st
 
 ## Traceability chain
 
-| Layer | Tag | Lives in | Maps to |
-|-------|-----|----------|---------|
-| Feature requirement | `[FA-x-y]` | `# Feature` bullets | Future overall requirement coverage |
-| Acceptance criterion | `AC-n:` | `# Acceptance Criteria` | One atomic observable outcome |
-| Testcase | `[AC-n]` on `##` heading | After AC section | Exactly one AC |
-| Automation script | `[AC-n]` at start of `test()` title | `tests/<feature>.spec.ts` | Same AC as its testcase |
+| Layer                | Tag                                 | Lives in                  | Maps to                             |
+| -------------------- | ----------------------------------- | ------------------------- | ----------------------------------- |
+| Feature requirement  | `[FA-x-y]`                          | `# Feature` bullets       | Future overall requirement coverage |
+| Acceptance criterion | `AC-n:`                             | `# Acceptance Criteria`   | One atomic observable outcome       |
+| Testcase             | `[AC-n]` on `##` heading            | After AC section          | Exactly one AC                      |
+| Automation script    | `[AC-n]` at start of `test()` title | `tests/<feature>.spec.ts` | Same AC as its testcase             |
 
 Rules:
+
 - **One AC per testcase** — each `## … [AC-n]` maps to exactly one AC line above.
 - **One test() per testcase** — automation titles start with the same `[AC-n]`.
 - **Split ACs by phase** — page transitions, wizard steps, and major state changes each get their own AC. Never collapse a multi-page recording into AC-1.
@@ -50,13 +51,13 @@ Rules:
 
 When `tests/<feature>.spec.ts` changes, update the linked story to stay in sync:
 
-| Spec change | Story update required |
-|-------------|----------------------|
-| Add a `test()` | Add `AC-n:` line, matching `## … [AC-n]` testcase, and `[FA-x-y]` Feature bullet |
-| Remove a `test()` | Remove the matching AC, testcase, and Feature bullet (or deprecate the story) |
-| Rename `// scenario:` comment | Rename the matching `##` testcase heading |
-| Change `[AC-n]` in test title | Renumber AC lines and `## … [AC-n]` headings together; keep FA tags stable |
-| Extra test without story AC | **Invalid** — story drives test count (C16) |
+| Spec change                   | Story update required                                                            |
+| ----------------------------- | -------------------------------------------------------------------------------- |
+| Add a `test()`                | Add `AC-n:` line, matching `## … [AC-n]` testcase, and `[FA-x-y]` Feature bullet |
+| Remove a `test()`             | Remove the matching AC, testcase, and Feature bullet (or deprecate the story)    |
+| Rename `// scenario:` comment | Rename the matching `##` testcase heading                                        |
+| Change `[AC-n]` in test title | Renumber AC lines and `## … [AC-n]` headings together; keep FA tags stable       |
+| Extra test without story AC   | **Invalid** — story drives test count (C16)                                      |
 
 **Story is source of truth for count.** Spec test count must equal story AC count. FA tags stay stable across renumbering — only AC-n and testcase headings change.
 
@@ -143,11 +144,13 @@ AC-1: <atomic outcome for phase 1>
 AC-2: <atomic outcome for phase 2>
 
 ## <Phase Name> [AC-1]
+
 Given <starting context>
 When <action>
 Then <observable outcome>
 
 ## <Phase Name> [AC-2]
+
 Given <context carried from prior phase>
 When <action>
 Then <observable outcome>

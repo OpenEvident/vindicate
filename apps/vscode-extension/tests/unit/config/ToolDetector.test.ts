@@ -45,7 +45,7 @@ describe("ToolDetector", () => {
     expect(detected.claudeCode).toBe(true);
   });
 
-  it("detects antigravity when appName includes antigravity — live-confirmed appName is \"Antigravity IDE\"", async () => {
+  it('detects antigravity when appName includes antigravity — live-confirmed appName is "Antigravity IDE"', async () => {
     vi.spyOn(vscode.env, "appName", "get").mockReturnValue("Antigravity IDE");
     const detected = await new ToolDetector().detect();
     expect(detected.antigravity).toBe(true);

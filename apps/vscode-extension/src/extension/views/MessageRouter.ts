@@ -154,9 +154,9 @@ export class MessageRouter {
 
   private async broadcastRecentFolders(): Promise<void> {
     try {
-      const result = await vscode.commands.executeCommand<{ workspaces?: Array<{ folderUri?: { fsPath: string }; workspace?: unknown }> }>(
-        "_workbench.recentlyOpenedWorkspaces"
-      );
+      const result = await vscode.commands.executeCommand<{
+        workspaces?: Array<{ folderUri?: { fsPath: string }; workspace?: unknown }>;
+      }>("_workbench.recentlyOpenedWorkspaces");
       const folders: string[] = [];
       for (const entry of result?.workspaces ?? []) {
         if (entry.folderUri?.fsPath) {
@@ -259,7 +259,9 @@ export class MessageRouter {
         if (selected) {
           const skillResult = await this.skillWriter.write(folderPath, toolName);
           if (!skillResult.ok) {
-            void vscode.window.showWarningMessage(`Failed to write agent skill: ${skillResult.error}`);
+            void vscode.window.showWarningMessage(
+              `Failed to write agent skill: ${skillResult.error}`
+            );
           }
         }
       }
@@ -342,7 +344,12 @@ export class MessageRouter {
     if (!removeResult.ok) {
       void vscode.window.showWarningMessage(`Failed to re-sync MCP config: ${removeResult.error}`);
       await this.broadcastConfigStatus(folderPath);
-      this.broadcastConfigOperationResult(tool, "resync", false, `Failed to re-sync ${target.name}.`);
+      this.broadcastConfigOperationResult(
+        tool,
+        "resync",
+        false,
+        `Failed to re-sync ${target.name}.`
+      );
       return;
     }
 
@@ -350,7 +357,12 @@ export class MessageRouter {
     if (!writeResult.ok) {
       void vscode.window.showWarningMessage(`Failed to re-sync MCP config: ${writeResult.error}`);
       await this.broadcastConfigStatus(folderPath);
-      this.broadcastConfigOperationResult(tool, "resync", false, `Failed to re-sync ${target.name}.`);
+      this.broadcastConfigOperationResult(
+        tool,
+        "resync",
+        false,
+        `Failed to re-sync ${target.name}.`
+      );
       return;
     }
 
@@ -380,7 +392,12 @@ export class MessageRouter {
     if (!result.ok) {
       void vscode.window.showWarningMessage(`Failed to disconnect MCP target: ${result.error}`);
       await this.broadcastConfigStatus(folderPath);
-      this.broadcastConfigOperationResult(tool, "disconnect", false, `Failed to disconnect ${target.name}.`);
+      this.broadcastConfigOperationResult(
+        tool,
+        "disconnect",
+        false,
+        `Failed to disconnect ${target.name}.`
+      );
       return;
     } else {
       this.telemetry.track("config_written", { target: `${tool}:disconnect` });
@@ -461,7 +478,7 @@ export class MessageRouter {
       tool,
       operation,
       ok,
-      ...(message !== undefined ? { message } : {}),
+      ...(message !== undefined ? { message } : {})
     });
   }
 

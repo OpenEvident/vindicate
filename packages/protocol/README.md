@@ -17,11 +17,7 @@ This package does **not** own service business logic, persistence, or transport 
 ## Usage
 
 ```ts
-import {
-  JobCreateRequestSchema,
-  parseProtocol,
-  PROTOCOL_VERSION
-} from "@vindicate/protocol";
+import { JobCreateRequestSchema, parseProtocol, PROTOCOL_VERSION } from "@vindicate/protocol";
 
 const payload = parseProtocol(JobCreateRequestSchema, input, "job create request");
 ```

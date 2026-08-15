@@ -1,10 +1,7 @@
 /**
  * @file Controllable fake worker client for tests.
  */
-import {
-  WorkerShuttingDownError,
-  WorkerUnavailableError
-} from "../../src/shared/errors.js";
+import { WorkerShuttingDownError, WorkerUnavailableError } from "../../src/shared/errors.js";
 import type {
   ApiRequestParams,
   ApiRequestResponse,

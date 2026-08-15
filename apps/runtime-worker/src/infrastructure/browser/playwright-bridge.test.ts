@@ -40,7 +40,9 @@ describe("PlaywrightBridge", () => {
   });
 
   it("creates an isolated context per session and reuses the browser pool", async () => {
-    const bridge = new PlaywrightBridge(createVindicateLogger({ service: "test", level: "silent" }));
+    const bridge = new PlaywrightBridge(
+      createVindicateLogger({ service: "test", level: "silent" })
+    );
 
     const first = await bridge.createContext("sess-a", { headless: true });
     const second = await bridge.createContext("sess-b", { headless: true });
@@ -54,7 +56,9 @@ describe("PlaywrightBridge", () => {
   });
 
   it("returns created:false when createContext is called for an existing session", async () => {
-    const bridge = new PlaywrightBridge(createVindicateLogger({ service: "test", level: "silent" }));
+    const bridge = new PlaywrightBridge(
+      createVindicateLogger({ service: "test", level: "silent" })
+    );
     await bridge.createContext("sess-a", { headless: false });
     const again = await bridge.createContext("sess-a", { headless: false });
     expect(again.created).toBe(false);
@@ -62,21 +66,25 @@ describe("PlaywrightBridge", () => {
   });
 
   it("throws BrowserCrashError when getContext is called without a session", () => {
-    const bridge = new PlaywrightBridge(createVindicateLogger({ service: "test", level: "silent" }));
+    const bridge = new PlaywrightBridge(
+      createVindicateLogger({ service: "test", level: "silent" })
+    );
     expect(() => bridge.getContext("missing")).toThrow(BrowserCrashError);
   });
 
   it("emits onContextDead when the browser disconnects unexpectedly", async () => {
-    const bridge = new PlaywrightBridge(createVindicateLogger({ service: "test", level: "silent" }));
+    const bridge = new PlaywrightBridge(
+      createVindicateLogger({ service: "test", level: "silent" })
+    );
     const dead: Array<{ sessionId: string; reason: string }> = [];
     bridge.onContextDead((sessionId, reason) => {
       dead.push({ sessionId, reason });
     });
 
     await bridge.createContext("sess-a", { headless: true });
-    const disconnected = mockBrowser.on.mock.calls.find(([event]) => event === "disconnected")?.[1] as
-      | (() => void)
-      | undefined;
+    const disconnected = mockBrowser.on.mock.calls.find(
+      ([event]) => event === "disconnected"
+    )?.[1] as (() => void) | undefined;
     expect(typeof disconnected).toBe("function");
     disconnected?.();
 
@@ -86,12 +94,16 @@ describe("PlaywrightBridge", () => {
 
   it("throws BrowserUnavailableError when Chrome launch fails", async () => {
     launch.mockRejectedValueOnce(new Error("chromium missing"));
-    const bridge = new PlaywrightBridge(createVindicateLogger({ service: "test", level: "silent" }));
+    const bridge = new PlaywrightBridge(
+      createVindicateLogger({ service: "test", level: "silent" })
+    );
     await expect(bridge.createContext("sess-a")).rejects.toBeInstanceOf(BrowserUnavailableError);
   });
 
   it("destroyContext removes the session", async () => {
-    const bridge = new PlaywrightBridge(createVindicateLogger({ service: "test", level: "silent" }));
+    const bridge = new PlaywrightBridge(
+      createVindicateLogger({ service: "test", level: "silent" })
+    );
     await bridge.createContext("sess-a", { headless: true });
     await bridge.destroyContext("sess-a");
     expect(bridge.hasContext("sess-a")).toBe(false);

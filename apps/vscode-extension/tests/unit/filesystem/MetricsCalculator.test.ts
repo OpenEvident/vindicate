@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { MetricsCalculator } from "../../../src/extension/filesystem/MetricsCalculator";
-import type { MetricsInput, PlaywrightResults } from "../../../src/extension/filesystem/MetricsCalculator";
+import type {
+  MetricsInput,
+  PlaywrightResults
+} from "../../../src/extension/filesystem/MetricsCalculator";
 import type { SpecFeatureAnalysis } from "../../../src/extension/filesystem/SpecAnalyzer";
 
 function baseInput(overrides: Partial<MetricsInput> = {}): MetricsInput {
@@ -17,7 +20,8 @@ function baseInput(overrides: Partial<MetricsInput> = {}): MetricsInput {
 }
 
 function playwrightResults(
-  overrides: Partial<PlaywrightResults> & Pick<PlaywrightResults, "passed" | "failed" | "total" | "lastRunAt">
+  overrides: Partial<PlaywrightResults> &
+    Pick<PlaywrightResults, "passed" | "failed" | "total" | "lastRunAt">
 ): PlaywrightResults {
   return {
     skipped: 0,
@@ -62,10 +66,7 @@ describe("MetricsCalculator", () => {
           complete: 0,
           partial: 0,
           missing: 2,
-          features: [
-            feature("a", "missing"),
-            feature("b", "missing")
-          ]
+          features: [feature("a", "missing"), feature("b", "missing")]
         },
         traceability: new Map([
           ["a", false],
@@ -108,10 +109,7 @@ describe("MetricsCalculator", () => {
           complete: 0,
           partial: 2,
           missing: 0,
-          features: [
-            feature("a", "partial"),
-            feature("b", "partial")
-          ]
+          features: [feature("a", "partial"), feature("b", "partial")]
         },
         traceability: new Map([
           ["a", true],
@@ -181,10 +179,7 @@ describe("MetricsCalculator", () => {
           complete: 2,
           partial: 0,
           missing: 0,
-          features: [
-            feature("a", "complete"),
-            feature("b", "complete")
-          ]
+          features: [feature("a", "complete"), feature("b", "complete")]
         },
         traceability: new Map([
           ["a", true],

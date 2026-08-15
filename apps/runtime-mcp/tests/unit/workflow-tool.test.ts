@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { GraphDoc } from "../../src/content/graph-types.js";
-import type { IContentService, NodeView, WorkflowMap } from "../../src/content/content-service.interface.js";
+import type {
+  IContentService,
+  NodeView,
+  WorkflowMap
+} from "../../src/content/content-service.interface.js";
 import { registerWorkflowTool } from "../../src/mcp/tools/workflow-tool.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
@@ -11,8 +15,18 @@ const mainGraph: GraphDoc = {
   loop: ["understand", "ground", "design", "generate", "execute", "heal", "audit"],
   entryPoints: { write: "understand" },
   nodes: {
-    understand: { label: "Understand", terminal: false, modes: [], edges: [{ to: "ground", when: "story approved" }] },
-    ground: { label: "Ground", terminal: false, modes: [], edges: [{ to: "design", when: "elements captured" }] },
+    understand: {
+      label: "Understand",
+      terminal: false,
+      modes: [],
+      edges: [{ to: "ground", when: "story approved" }]
+    },
+    ground: {
+      label: "Ground",
+      terminal: false,
+      modes: [],
+      edges: [{ to: "design", when: "elements captured" }]
+    },
     design: { label: "Design", terminal: false, modes: [], edges: [] },
     generate: { label: "Generate", terminal: false, modes: [], edges: [] },
     execute: { label: "Execute", terminal: false, modes: [], edges: [] },
@@ -84,9 +98,7 @@ describe("workflow-tool", () => {
     expect(body.view).toBe("workflow-progress");
     expect(body.status).toBe("orient");
     expect(body.phase_instructions).toContain("flowchart");
-    expect(body.progress_display).toEqual(
-      expect.objectContaining({ mode: "markdown_in_chat" })
-    );
+    expect(body.progress_display).toEqual(expect.objectContaining({ mode: "markdown_in_chat" }));
     expect(body.markdown_panel).toContain("Vindicate");
   });
 
@@ -103,7 +115,9 @@ describe("workflow-tool", () => {
     };
 
     const orient = parseResult(await internal._registeredTools["vindicate_workflow"]!.handler({}));
-    const firstPath = parseResult(await internal._registeredTools["vindicate_workflow"]!.handler({ path: "write" }));
+    const firstPath = parseResult(
+      await internal._registeredTools["vindicate_workflow"]!.handler({ path: "write" })
+    );
     const laterPhase = parseResult(
       await internal._registeredTools["vindicate_workflow"]!.handler({
         path: "write",
@@ -133,9 +147,7 @@ describe("workflow-tool", () => {
         completed: ["understand"]
       })
     );
-    expect(body.progress_display).toEqual(
-      expect.objectContaining({ mode: "mcp_app" })
-    );
+    expect(body.progress_display).toEqual(expect.objectContaining({ mode: "mcp_app" }));
     expect(body.markdown_panel).toBeUndefined();
     expect(body.phases).toBeDefined();
   });
@@ -264,7 +276,11 @@ describe("workflow-tool", () => {
     expect(body.view).toBe("workflow-progress");
     expect(body.phase).toBe("ground");
     expect(body.phase_instructions).toContain("Capture elements");
-    expect(body.progress_echo).toEqual({ path: "write", node: "ground", completed: ["understand"] });
+    expect(body.progress_echo).toEqual({
+      path: "write",
+      node: "ground",
+      completed: ["understand"]
+    });
     expect(body.agent_directives).toEqual(
       expect.objectContaining({ done_before_leave: ["elements captured"] })
     );
@@ -360,9 +376,7 @@ describe("workflow-tool", () => {
       node: "requirements",
       completed: []
     });
-    expect(body.phases).toEqual([
-      { id: "requirements", label: "Requirements", status: "active" }
-    ]);
+    expect(body.phases).toEqual([{ id: "requirements", label: "Requirements", status: "active" }]);
     // Terminal node: no next-phase suggestion into ground/design/generate.
     expect(
       (body.agent_directives as { next_when_ready?: string } | undefined)?.next_when_ready

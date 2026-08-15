@@ -11,7 +11,10 @@ export interface NodeFrontmatter {
   modeRefs: Record<string, string[]>;
 }
 
-export function parseFrontmatter(raw: string): { frontmatter: NodeFrontmatter | null; body: string } {
+export function parseFrontmatter(raw: string): {
+  frontmatter: NodeFrontmatter | null;
+  body: string;
+} {
   // Normalize CRLF up front — content files are hand-edited across OSes (this repo
   // has no .gitattributes forcing LF), and every boundary check below is a bare
   // "\n" match that silently returns frontmatter: null on CRLF input, dropping
@@ -161,7 +164,9 @@ export function sliceSetupByMode(body: string, mode: "bootstrap" | "ci"): string
 
 function headingMatchesMode(heading: string, mode: string): boolean {
   const slug = heading.trim().split(/\s+/)[0] ?? "";
-  return slug === mode || heading.trim().startsWith(`${mode} `) || heading.trim().startsWith(`${mode}(`);
+  return (
+    slug === mode || heading.trim().startsWith(`${mode} `) || heading.trim().startsWith(`${mode}(`)
+  );
 }
 
 export function buildSoftWarning(

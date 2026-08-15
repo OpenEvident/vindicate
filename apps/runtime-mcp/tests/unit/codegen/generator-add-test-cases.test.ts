@@ -19,18 +19,20 @@ describe("generator add_test_cases", () => {
 
   it("ATC1 — appends new test to spec", async () => {
     const { fs } = await seedLoginProject();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "add_test_cases",
-      feature: "login",
-      cases: [
-        {
-          ac_id: "AC-9",
-          scenario: "Extra",
-          title: "[AC-9] should do more",
-          body: [{ fixture: "loginPage", call: "step_navigate" }]
-        }
-      ]
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "add_test_cases",
+        feature: "login",
+        cases: [
+          {
+            ac_id: "AC-9",
+            scenario: "Extra",
+            title: "[AC-9] should do more",
+            body: [{ fixture: "loginPage", call: "step_navigate" }]
+          }
+        ]
+      })
+    );
     const spec = await fs.read("tests/login.spec.ts");
     expect(spec).toContain("[AC-9]");
     expect(result.filesWritten).toEqual(["tests/login.spec.ts"]);
@@ -38,18 +40,20 @@ describe("generator add_test_cases", () => {
 
   it("ATC2 — does not write schema file", async () => {
     const { fs } = await seedLoginProject();
-    const result = expectWritten(await runGenerator(fs, {
-      mode: "add_test_cases",
-      feature: "login",
-      cases: [
-        {
-          ac_id: "AC-9",
-          scenario: "Extra",
-          title: "[AC-9] should do more",
-          body: [{ fixture: "loginPage", call: "step_navigate" }]
-        }
-      ]
-    }));
+    const result = expectWritten(
+      await runGenerator(fs, {
+        mode: "add_test_cases",
+        feature: "login",
+        cases: [
+          {
+            ac_id: "AC-9",
+            scenario: "Extra",
+            title: "[AC-9] should do more",
+            body: [{ fixture: "loginPage", call: "step_navigate" }]
+          }
+        ]
+      })
+    );
     expect(result.filesWritten).not.toContain(".vindicate/schemas/login.json");
   });
 

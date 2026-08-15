@@ -53,7 +53,10 @@ export function deriveIframeHostLocator(
     return GENERATED_TRAILING_DIGITS_RE.test(value);
   }
 
-  function findTestid(target: Element, candidates: string[]): { value: string; attr: string } | null {
+  function findTestid(
+    target: Element,
+    candidates: string[]
+  ): { value: string; attr: string } | null {
     for (const attr of candidates) {
       const val = target.getAttribute(attr);
       if (val !== null && val.length > 0) {
@@ -107,15 +110,29 @@ export function deriveIframeHostLocator(
 
   // T1 — test-id on the project attribute → getByTestId
   if (foundTestid !== null && foundTestid.attr === opts.projectTestidAttr) {
-    if (document.querySelectorAll(`[${foundTestid.attr}="${escapeAttrValue(foundTestid.value)}"]`).length === 1) {
-      return { strategy: "testid", confidence: "high", attr: foundTestid.attr, value: foundTestid.value };
+    if (
+      document.querySelectorAll(`[${foundTestid.attr}="${escapeAttrValue(foundTestid.value)}"]`)
+        .length === 1
+    ) {
+      return {
+        strategy: "testid",
+        confidence: "high",
+        attr: foundTestid.attr,
+        value: foundTestid.value
+      };
     }
   }
   // T2 — test-id on another recognised attribute → XPath
   if (foundTestid !== null && foundTestid.attr !== opts.projectTestidAttr) {
     const xp = `//*[@${foundTestid.attr}=${xpathLiteral(foundTestid.value)}]`;
     if (countByXpath(xp) === 1) {
-      return { strategy: "testid_xpath", confidence: "high", attr: foundTestid.attr, value: foundTestid.value, xpath: xp };
+      return {
+        strategy: "testid_xpath",
+        confidence: "high",
+        attr: foundTestid.attr,
+        value: foundTestid.value,
+        xpath: xp
+      };
     }
   }
   // T3 — stable, non-generated id → XPath

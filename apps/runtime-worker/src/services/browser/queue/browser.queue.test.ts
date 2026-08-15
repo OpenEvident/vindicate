@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import type { GovernorState, IResourceGovernor } from "../../../core/governor/resource-governor.interface.js";
+import type {
+  GovernorState,
+  IResourceGovernor
+} from "../../../core/governor/resource-governor.interface.js";
 import { SessionBusyError, WorkerThrottledError } from "../../../shared/errors/worker.errors.js";
 import { BrowserQueue } from "./browser.queue.js";
 

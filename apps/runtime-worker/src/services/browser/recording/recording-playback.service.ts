@@ -73,7 +73,9 @@ function resolveCandidateLocator(page: Page, candidate: SelectorCandidatePayload
   });
   switch (candidate.strategy) {
     case "testid":
-      return scope.locator(`xpath=//*[@${candidate.attr ?? "data-testid"}=${xpathLiteral(candidate.value)}]`);
+      return scope.locator(
+        `xpath=//*[@${candidate.attr ?? "data-testid"}=${xpathLiteral(candidate.value)}]`
+      );
     case "testid_xpath":
     case "attr_combo":
     case "sibling_text":
@@ -147,7 +149,12 @@ async function executeRecordedStep(
     case "snapshot":
       return page;
     case "new_tab": {
-      await handleNewTab(context, tabState, { action: "new_tab", ...(step.url !== undefined ? { url: step.url } : {}) }, timeoutMs);
+      await handleNewTab(
+        context,
+        tabState,
+        { action: "new_tab", ...(step.url !== undefined ? { url: step.url } : {}) },
+        timeoutMs
+      );
       return openPages(context)[tabState.activePageIndex] ?? page;
     }
     case "switch_tab": {
@@ -165,7 +172,10 @@ async function executeRecordedStep(
       return openPages(context)[tabState.activePageIndex] ?? page;
     }
     case "close_tab": {
-      await handleCloseTab(context, tabState, { action: "close_tab", ...(step.index !== undefined ? { index: step.index } : {}) });
+      await handleCloseTab(context, tabState, {
+        action: "close_tab",
+        ...(step.index !== undefined ? { index: step.index } : {})
+      });
       return openPages(context)[tabState.activePageIndex] ?? page;
     }
     case "click":
@@ -228,7 +238,12 @@ async function executeRecordedStep(
     case "drag": {
       const sourceChosen = step.chosen ?? step.candidates?.[0];
       const targetChosen = step.target?.chosen ?? step.target?.candidates?.[0];
-      if (sourceChosen === undefined || sourceChosen === null || targetChosen === undefined || targetChosen === null) {
+      if (
+        sourceChosen === undefined ||
+        sourceChosen === null ||
+        targetChosen === undefined ||
+        targetChosen === null
+      ) {
         throw new Error("drag step missing source or target locator");
       }
       const source = resolveCandidateLocator(page, toCandidatePayload(sourceChosen));
@@ -275,10 +290,7 @@ const RETRY_BACKOFF_MS = 500;
  * The browser session is already on the target page before playback runs — skip page-setup
  * steps (entry navigate, implicit navigates, snapshots) rather than full test replay.
  */
-function shouldSkipPlaybackStep(
-  step: RecordedStep,
-  index: number
-): boolean {
+function shouldSkipPlaybackStep(step: RecordedStep, index: number): boolean {
   if (step.action === "snapshot") {
     return true;
   }
@@ -289,7 +301,10 @@ function shouldSkipPlaybackStep(
     return true;
   }
   // Precondition replay starts from the current session page; skip artifact entry navigate.
-  if (index === 0 && (step.navigation_trigger === "explicit" || step.navigation_trigger === undefined)) {
+  if (
+    index === 0 &&
+    (step.navigation_trigger === "explicit" || step.navigation_trigger === undefined)
+  ) {
     return true;
   }
   return false;
@@ -302,7 +317,9 @@ export async function playbackRecordingSteps(
   actionTimeoutMs: number
 ): Promise<PlaybackResult> {
   const context = page.context();
-  const tabState: TabSessionState = { activePageIndex: Math.max(0, openPages(context).indexOf(page)) };
+  const tabState: TabSessionState = {
+    activePageIndex: Math.max(0, openPages(context).indexOf(page))
+  };
   // Reassigned by new_tab/switch_tab/switch_tab_by_url/close_tab steps — every action after a recorded
   // tab switch (e.g. filling a card field inside a payment popup) must run against the page the
   // recording was actually attributed to at that point, not the page playback started on.
@@ -318,7 +335,13 @@ export async function playbackRecordingSteps(
     let lastError: Error | undefined;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
-        currentPage = await executeRecordedStep(currentPage, context, tabState, step, actionTimeoutMs);
+        currentPage = await executeRecordedStep(
+          currentPage,
+          context,
+          tabState,
+          step,
+          actionTimeoutMs
+        );
         if (SETTLE_ACTIONS.has(step.action)) {
           await runSettle(currentPage, settleCfg);
         }

@@ -26,13 +26,18 @@ describe("worker events subscriber", () => {
   });
 
   it("marks sessions dead from worker events", async () => {
-    vi.stubGlobal("fetch", vi.fn<typeof fetch>(async () => sseResponse([{ event: "session_dead", session_id: "s-1" }])));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>(async () => sseResponse([{ event: "session_dead", session_id: "s-1" }]))
+    );
     const client = new WorkerClient({
       baseUrl: "http://worker",
       internalKey: "0123456789abcdef0123456789abcdef",
       retryTimeoutMs: 100,
       healthProbeMs: 10,
-      fetchFn: vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ steps: [] }), { status: 200 }))
+      fetchFn: vi.fn<typeof fetch>(
+        async () => new Response(JSON.stringify({ steps: [] }), { status: 200 })
+      )
     });
     const stop = startWorkerEventsSubscriber(client);
     await vi.waitFor(async () => {
@@ -44,13 +49,20 @@ describe("worker events subscriber", () => {
   });
 
   it("marks worker throttled from worker events", async () => {
-    vi.stubGlobal("fetch", vi.fn<typeof fetch>(async () => sseResponse([{ event: "worker_throttled", retry_after_ms: 5000 }])));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>(async () =>
+        sseResponse([{ event: "worker_throttled", retry_after_ms: 5000 }])
+      )
+    );
     const client = new WorkerClient({
       baseUrl: "http://worker",
       internalKey: "0123456789abcdef0123456789abcdef",
       retryTimeoutMs: 100,
       healthProbeMs: 10,
-      fetchFn: vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ steps: [] }), { status: 200 }))
+      fetchFn: vi.fn<typeof fetch>(
+        async () => new Response(JSON.stringify({ steps: [] }), { status: 200 })
+      )
     });
     const stop = startWorkerEventsSubscriber(client);
     await vi.waitFor(async () => {

@@ -3,10 +3,21 @@ import type { ConfigStatuses, McpToolName } from "../lib/types";
 
 interface ConfigStore {
   statuses: ConfigStatuses;
-  pending: Partial<Record<McpToolName | "cursorRule" | "agentMd" | "copilotInstructions" | "antigravityRule", boolean>>;
-  setStatus: (tool: McpToolName | "cursorRule" | "agentMd" | "copilotInstructions" | "antigravityRule", configured: boolean) => void;
+  pending: Partial<
+    Record<
+      McpToolName | "cursorRule" | "agentMd" | "copilotInstructions" | "antigravityRule",
+      boolean
+    >
+  >;
+  setStatus: (
+    tool: McpToolName | "cursorRule" | "agentMd" | "copilotInstructions" | "antigravityRule",
+    configured: boolean
+  ) => void;
   setStatuses: (statuses: ConfigStatuses) => void;
-  setPending: (tool: McpToolName | "cursorRule" | "agentMd" | "copilotInstructions" | "antigravityRule", value: boolean) => void;
+  setPending: (
+    tool: McpToolName | "cursorRule" | "agentMd" | "copilotInstructions" | "antigravityRule",
+    value: boolean
+  ) => void;
 }
 
 const defaultStatuses: ConfigStatuses = {

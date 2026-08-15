@@ -8,7 +8,7 @@ describe("sanitizeRecordingName", () => {
   });
 
   it("strips invalid Windows filename characters", () => {
-    expect(sanitizeRecordingName('Checkout: Happy / Path')).toBe("Checkout-Happy-Path");
+    expect(sanitizeRecordingName("Checkout: Happy / Path")).toBe("Checkout-Happy-Path");
   });
 
   it("collapses multiple dashes", () => {

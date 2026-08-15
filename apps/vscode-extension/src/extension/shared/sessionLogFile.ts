@@ -31,7 +31,10 @@ export function createSessionLogFile(): string {
   }
 
   // Use hyphens in time part so the name is valid on Windows (no colons)
-  const stamp = new Date().toISOString().replace(/:/g, "-").replace(/\.\d+Z$/, "Z");
+  const stamp = new Date()
+    .toISOString()
+    .replace(/:/g, "-")
+    .replace(/\.\d+Z$/, "Z");
   return path.join(LOG_DIR, `vindicate-${stamp}.log`);
 }
 

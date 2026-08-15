@@ -14,7 +14,10 @@ export function reorderItems<T>(items: readonly T[], fromIndex: number, toIndex:
   return next;
 }
 
-export function appendUniqueNames(existing: readonly string[], incoming: readonly string[]): string[] {
+export function appendUniqueNames(
+  existing: readonly string[],
+  incoming: readonly string[]
+): string[] {
   const seen = new Set(existing);
   const next = [...existing];
   for (const name of incoming) {
