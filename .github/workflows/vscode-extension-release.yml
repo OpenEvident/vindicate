@@ -121,20 +121,6 @@ jobs:
             apps/vscode-extension/vindicate-${{ needs.prepare.outputs.version }}.vsix.sha256
           if-no-files-found: error
 
-      - name: Publish to VS Code Marketplace
-        if: ${{ secrets.VSCE_PAT != '' }}
-        working-directory: apps/vscode-extension
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: pnpm exec vsce publish --packagePath "vindicate-${{ needs.prepare.outputs.version }}.vsix" --pat "$VSCE_PAT"
-
-      - name: Publish to Open VSX
-        if: ${{ secrets.OVSX_PAT != '' }}
-        working-directory: apps/vscode-extension
-        env:
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
-        run: pnpm dlx ovsx publish "vindicate-${{ needs.prepare.outputs.version }}.vsix" --pat "$OVSX_PAT"
-
   release:
     name: Publish GitHub Release
     needs:
