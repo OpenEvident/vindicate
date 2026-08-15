@@ -3,7 +3,7 @@ import { validationError } from "./validation-errors.js";
 
 const TS_SINGLE_QUOTED_STRING = /^'([^'\\]|\\.)*'$/;
 const TS_DOUBLE_QUOTED_STRING = /^"([^"\\]|\\.)*"$/;
-const TS_REGEX_LITERAL = /^\/(\\.|[^/])+\/[gimsuy]*$/;
+const TS_REGEX_LITERAL = /^\/(\\.|[^\\/])+\/[gimsuy]*$/;
 const EXPECTED_REF = /^expected\.[A-Za-z0-9_]+$/;
 
 function unquoteTsString(literal: string): string {

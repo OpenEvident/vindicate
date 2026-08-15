@@ -651,7 +651,7 @@ export function collectStructuralErrors(
 }
 
 /** TS regex literal in schema arg expressions. */
-const REGEX_LITERAL = /^\/(\\.|[^/])+\/[gimsuy]*$/;
+const REGEX_LITERAL = /^\/(\\.|[^\\/])+\/[gimsuy]*$/;
 
 function isInlineStringLiteral(expression: string): boolean {
   return stringLiteralFromAssertionArg(expression.trim()) !== undefined;

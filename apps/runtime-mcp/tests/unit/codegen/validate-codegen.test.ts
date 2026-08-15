@@ -514,6 +514,55 @@ describe("validate-codegen", () => {
     expect(errors.some((e) => e.code === "use_expected_for_test_data")).toBe(true);
   });
 
+  // Regression coverage for the ReDoS fix in REGEX_LITERAL: [^/] was widened to [^\\/] so it can
+  // no longer overlap with the \\. branch of the alternation. Same behavior, no ambiguity.
+  it("still detects an inline regex arg containing escaped slashes and backslashes", () => {
+    const schema = fullSchema({
+      pages: [
+        pageDef({
+          feature: "auth",
+          page_class: "AuthPage",
+          elements: [el("authError", { tag: "generic", role: "alert", name: "auth error" })],
+          steps: [step("step_open_login", [{ do: "navigate" }])],
+          verifies: [
+            verify("verify_auth_error_visible", [
+              {
+                subject: "element",
+                ref: "authError",
+                matcher: "toContainText",
+                arg: "/back\\\\slash\\/path/i"
+              }
+            ])
+          ]
+        })
+      ]
+    });
+    const errors = validateFullSchema(schema, "auth");
+    expect(errors.some((e) => e.code === "use_expected_for_test_data")).toBe(true);
+  });
+
+  it("validates quickly for a long run of backslashes that used to risk catastrophic backtracking", () => {
+    const pathological = "/" + "\\".repeat(2000) + "/Z";
+    const schema = fullSchema({
+      pages: [
+        pageDef({
+          feature: "auth",
+          page_class: "AuthPage",
+          elements: [el("authError", { tag: "generic", role: "alert", name: "auth error" })],
+          steps: [step("step_open_login", [{ do: "navigate" }])],
+          verifies: [
+            verify("verify_auth_error_visible", [
+              { subject: "element", ref: "authError", matcher: "toContainText", arg: pathological }
+            ])
+          ]
+        })
+      ]
+    });
+    const start = Date.now();
+    validateFullSchema(schema, "auth");
+    expect(Date.now() - start).toBeLessThan(500);
+  });
+
   it("allows expected.* references when expected block is present", () => {
     const schema = fullSchema({
       expected: {
