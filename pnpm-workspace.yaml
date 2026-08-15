@@ -2,6 +2,9 @@ packages:
   - "apps/*"
   - "!apps/vscode-extension-old"
   - "packages/*"
+overrides:
+  serialize-javascript: ">=7.0.5"
+  diff: ">=8.0.3"
 allowBuilds:
   "@vscode/vsce-sign": false
   keytar: false
