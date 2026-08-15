@@ -1,17 +1,18 @@
 // AUTO-GENERATED — edit this file directly; use vindicate_generate_code create/register_page for structural changes
-import { BasePage } from "./BasePage";
-import { expect } from "@playwright/test";
+import { BasePage } from './BasePage';
+import { expect } from '@playwright/test';
+
 
 export class LoginPage extends BasePage {
-  readonly path = "/login";
+  readonly path = '/login';
 
   // ── Locators ──────────────────────────────────────────────────────────
   // locator-helper: testid
-  private emailInput = this.page.getByTestId("email");
+  private emailInput = this.page.getByTestId('email');
   // locator-helper: testid
-  private passwordInput = this.page.getByTestId("password");
+  private passwordInput = this.page.getByTestId('password');
   // locator-helper: role_name
-  private signInButton = this.page.getByRole("button", { name: "Sign in", exact: true });
+  private signInButton = this.page.getByRole('button', { name: 'Sign in', exact: true });
 
   // ── Steps ──────────────────────────────────────────────────────────────
   /**
@@ -43,7 +44,7 @@ export class LoginPage extends BasePage {
    */
   async verify_loginVisible(): Promise<this> {
     await expect(this.emailInput).toBeVisible();
-    await expect(this.page).toHaveTitle("Login");
+    await expect(this.page).toHaveTitle('Login');
     return this;
   }
 }

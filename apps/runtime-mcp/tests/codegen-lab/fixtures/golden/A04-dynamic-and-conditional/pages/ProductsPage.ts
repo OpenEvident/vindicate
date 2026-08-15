@@ -1,13 +1,14 @@
 // AUTO-GENERATED — edit this file directly; use vindicate_generate_code create/register_page for structural changes
-import { BasePage } from "./BasePage";
-import { expect, Locator } from "@playwright/test";
+import { BasePage } from './BasePage';
+import { expect, Locator } from '@playwright/test';
+
 
 export class ProductsPage extends BasePage {
-  readonly path = "/products";
+  readonly path = '/products';
 
   // ── Locators ──────────────────────────────────────────────────────────
   // locator-helper: testid
-  private promoCloseButton = this.page.getByTestId("promo-close");
+  private promoCloseButton = this.page.getByTestId('promo-close');
   // locator-helper: dyn_param
   private deleteProductButton(id: string): Locator {
     return this.page.getByTestId(`delete-product-${id}`);
@@ -54,7 +55,7 @@ export class ProductsPage extends BasePage {
    * @returns this for chaining
    */
   async verify_row_removed(id: string): Promise<this> {
-    await this.rowStatusSpan(id).waitFor({ state: "hidden" });
+    await this.rowStatusSpan(id).waitFor({ state: 'hidden' });
     await expect(this.rowStatusSpan(id)).toBeHidden();
     return this;
   }
