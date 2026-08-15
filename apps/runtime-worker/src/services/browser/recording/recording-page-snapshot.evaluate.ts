@@ -180,7 +180,7 @@ export function captureRecordingPageSnapshot(
 
   function getXPath(el: Element, foundTestid: { value: string; attr: string } | null): string {
     if (foundTestid !== null) {
-      return `//*[@${foundTestid.attr}="${foundTestid.value.replace(/"/g, '\\"')}"]`;
+      return `//*[@${foundTestid.attr}=${xpathLiteral(foundTestid.value)}]`;
     }
     const tag = el.tagName.toLowerCase();
     const id = el.id;

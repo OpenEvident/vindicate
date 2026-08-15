@@ -246,4 +246,44 @@ describe("captureRecordingPageSnapshot", () => {
 
     expect(scopedCandidate?.container?.role).toBe("listitem");
   });
+
+  describe("nth (XPath) candidate for a testid containing a double quote", () => {
+    // Regression coverage for the incomplete-sanitization fix: getXPath used to build
+    // `//*[@${attr}="${value.replace(/"/g, '\\"')}"]` by hand — XPath 1.0 string literals have no
+    // escape mechanism at all, so that backslash-quote sequence isn't actually meaningful XPath
+    // syntax; it just closes the string early on any value containing a quote. The fix reuses this
+    // file's own xpathLiteral() helper, which switches to single-quote delimiters (or falls back
+    // to concat() when a value has both quote types) instead of trying to escape.
+    it("switches to single-quote delimiters instead of producing invalid XPath", () => {
+      document.body.innerHTML = "";
+      const el = document.createElement("button");
+      el.setAttribute("data-testid", 'foo"bar');
+      el.textContent = "Click me";
+      document.body.appendChild(el);
+
+      const result = captureRecordingPageSnapshot({ testidCandidates: ["data-testid"] });
+      const nthCandidate = result.elements
+        .flatMap((e) => e.candidates)
+        .find((c) => c.strategy === "nth");
+
+      expect(nthCandidate?.value).toBe(`//*[@data-testid='foo"bar']`);
+      // The old escaping would have produced this instead — assert we've actually moved off it.
+      expect(nthCandidate?.value).not.toBe(`//*[@data-testid="foo\\"bar"]`);
+    });
+
+    it("falls back to concat() when the value contains both quote types", () => {
+      document.body.innerHTML = "";
+      const el = document.createElement("button");
+      el.setAttribute("data-testid", `foo"bar'baz`);
+      el.textContent = "Click me";
+      document.body.appendChild(el);
+
+      const result = captureRecordingPageSnapshot({ testidCandidates: ["data-testid"] });
+      const nthCandidate = result.elements
+        .flatMap((e) => e.candidates)
+        .find((c) => c.strategy === "nth");
+
+      expect(nthCandidate?.value).toBe(`//*[@data-testid=concat("foo", '"', "bar'baz")]`);
+    });
+  });
 });

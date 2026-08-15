@@ -449,7 +449,7 @@ export function captureInteractiveSnapshot(
     }
     const inputId = (el as HTMLInputElement).id;
     if (typeof inputId === "string" && inputId.length > 0) {
-      const label = document.querySelector(`label[for="${inputId.replace(/"/g, '\\"')}"]`);
+      const label = document.querySelector(`label[for="${escapeAttrValue(inputId)}"]`);
       if (label !== null) {
         const text = (label.textContent ?? "").replace(/\s+/g, " ").trim();
         if (text.length > 0) {
@@ -730,7 +730,7 @@ export function captureInteractiveSnapshot(
     if (al !== null && al.trim().length > 0) return al.trim();
     const inputId = (el as HTMLInputElement).id;
     if (typeof inputId === "string" && inputId.length > 0) {
-      const label = document.querySelector(`label[for="${inputId.replace(/"/g, '\\"')}"]`);
+      const label = document.querySelector(`label[for="${escapeAttrValue(inputId)}"]`);
       if (label !== null) {
         const text = textExtractor(label);
         if (text.length > 0) return text;
@@ -813,7 +813,7 @@ export function captureInteractiveSnapshot(
     if (
       typeof id === "string" &&
       id.length > 0 &&
-      document.querySelector(`label[for="${id.replace(/"/g, '\\"')}"]`) !== null
+      document.querySelector(`label[for="${escapeAttrValue(id)}"]`) !== null
     ) {
       return true;
     }
@@ -1082,7 +1082,7 @@ export function captureInteractiveSnapshot(
     const sd = opts.scopeDescriptor;
     let hit: Element | null = null;
     if (sd.testid !== undefined && sd.testid.length > 0) {
-      hit = document.querySelector(`[${sd.testidAttr}="${sd.testid.replace(/"/g, '\\"')}"]`);
+      hit = document.querySelector(`[${sd.testidAttr}="${escapeAttrValue(sd.testid)}"]`);
     } else if (sd.domId !== undefined && sd.domId.length > 0) {
       hit = document.getElementById(sd.domId);
     } else if (
