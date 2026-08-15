@@ -1,8 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { EventBus } from "./event-bus.js";
 
 describe("EventBus", () => {
+  // EventBus derives seq from Date.now() - epochMs (see event-bus.ts doc comment), so tests
+  // that assert exact seq values need a frozen clock. Without this, elapsed wall-clock time
+  // between construction and the first publish() call under CI load pushes seq above 1,
+  // failing assertions like `expect(s1).toBe(1)` nondeterministically.
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("assigns monotonic sequence numbers", () => {
     const bus = new EventBus(10);
     expect(bus.getNextSeq()).toBe(1);
