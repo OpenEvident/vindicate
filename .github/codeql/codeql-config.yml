@@ -1,0 +1,8 @@
+name: Vindicate CodeQL config
+
+# apps/runtime-mcp/content/templates/** is scaffold text shipped to end-user projects, not this
+# repo's own source. Some files contain unquoted {{PLACEHOLDER}} tokens (e.g. shared/playwright.config.ts,
+# api/support/config/api.config.ts) meant for string substitution before being written out — they
+# are not valid standalone TypeScript and trip the JS/TS extractor's parser.
+paths-ignore:
+  - apps/runtime-mcp/content/templates/**
