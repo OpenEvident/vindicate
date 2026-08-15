@@ -9,8 +9,8 @@ import {
   Loader2,
   ClipboardList
 } from "lucide-react";
-import { useState, useRef } from "react";
-import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
+import { useState } from "react";
+import { Group, Panel, Separator, useDefaultLayout } from "react-resizable-panels";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/recording/ui/Button";
 import { CopyButton } from "@/components/recording/ui/CopyButton";
@@ -30,26 +30,12 @@ import {
 
 const LAYOUT_KEY = "vindicate-editor-layout";
 
-const DEFAULT_LAYOUT = { steps: 35, preview: 65 };
-
-function loadLayout(): Record<string, number> {
-  try {
-    const raw = localStorage.getItem(LAYOUT_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Record<string, number>;
-      if (typeof parsed.steps === "number" && typeof parsed.preview === "number") {
-        return parsed;
-      }
-    }
-  } catch {
-    /* ignore */
-  }
-  return DEFAULT_LAYOUT;
-}
-
 export function RecordingEditor() {
-  const [savedLayout] = useState<Record<string, number>>(loadLayout);
-  const userResized = useRef(false);
+  const { defaultLayout, onLayoutChanged } = useDefaultLayout({
+    id: LAYOUT_KEY,
+    storage: localStorage,
+    onlySaveAfterUserInteractions: true
+  });
 
   // Batch state subscriptions
   const {
@@ -315,18 +301,17 @@ export function RecordingEditor() {
       )}
 
       {/* ── Two-column body ── */}
-      <PanelGroup
-        direction="horizontal"
-        onLayout={(layout) => {
-          if (userResized.current) localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout));
-        }}
+      <Group
+        orientation="horizontal"
+        defaultLayout={defaultLayout}
+        onLayoutChanged={onLayoutChanged}
         className="min-h-0 flex-1 overflow-hidden"
       >
         <Panel
           id="steps"
-          defaultSize={savedLayout.steps ?? 35}
-          minSize={22}
-          maxSize={55}
+          defaultSize="35"
+          minSize="22"
+          maxSize="55"
           className="flex flex-col min-h-0 overflow-hidden"
         >
           <div className="shrink-0 px-5 pt-4 pb-3 border-b border-vs-border">
@@ -387,11 +372,8 @@ export function RecordingEditor() {
         </Panel>
 
         {/* Drag handle */}
-        <PanelResizeHandle
+        <Separator
           aria-label="Resize panels"
-          onPointerDown={() => {
-            userResized.current = true;
-          }}
           className="group relative w-px shrink-0 cursor-col-resize bg-vs-border hover:bg-vs-accent/40 active:bg-vs-accent transition-colors duration-150"
         >
           <div className="absolute inset-y-0 -left-1.5 -right-1.5" />
@@ -403,18 +385,18 @@ export function RecordingEditor() {
             <div className="h-1 w-1 rounded-full bg-vs-text-dim" />
             <div className="h-1 w-1 rounded-full bg-vs-text-dim" />
           </div>
-        </PanelResizeHandle>
+        </Separator>
 
         {/* RIGHT — preview */}
         <Panel
           id="preview"
-          defaultSize={savedLayout.preview ?? 65}
-          minSize={35}
+          defaultSize="65"
+          minSize="35"
           className="flex flex-col min-h-0 overflow-hidden"
         >
           <PreviewPane mode={mode} />
         </Panel>
-      </PanelGroup>
+      </Group>
 
       {/* ── Sticky footer ── */}
       <footer className="sticky bottom-0 z-10 flex items-center gap-3 px-6 py-2.5 border-t border-vs-border bg-vs-surface backdrop-blur-sm text-ui-sm font-mono text-vs-text-dim">
