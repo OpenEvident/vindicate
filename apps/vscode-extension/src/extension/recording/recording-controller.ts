@@ -1080,8 +1080,7 @@ export class RecordingController {
 
       case "annotate": {
         const safeName = asString(msg["safeName"]);
-        const projectRoot =
-          asString(msg["projectRoot"]) ?? vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        const projectRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
         if (safeName === undefined || projectRoot === undefined) {
           return;
         }
@@ -1165,8 +1164,7 @@ export class RecordingController {
 
       case "delete_recording": {
         const safeName = asString(msg["safeName"]);
-        const projectRoot =
-          asString(msg["projectRoot"]) ?? vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        const projectRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
         if (safeName === undefined || projectRoot === undefined) {
           this.postDiscardFailed("", "Cannot delete recording — workspace not available.");
           return;
