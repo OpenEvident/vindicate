@@ -88,8 +88,8 @@ importers:
         specifier: ^11.0.0
         version: 11.5.2
       ts-morph:
-        specifier: ^25.0.1
-        version: 25.0.1
+        specifier: ^28.0.0
+        version: 28.0.0
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -1361,8 +1361,8 @@ packages:
   '@textlint/types@15.8.0':
     resolution: {integrity: sha512-Anhc6y5736YIsvqae0U6k0YmB2M/QVHkEeOv2aydAn/WIkdI69dCOiDbe3/+RagS3qstFTSFWJzNRA2lUjv19w==}
 
-  '@ts-morph/common@0.26.1':
-    resolution: {integrity: sha512-Sn28TGl/4cFpcM+jwsH1wLncYq3FtN/BIpem+HOygfBWPT5pAeS5dB4VFVzV8FbnOKHpDLZmvAl4AjPEev5idA==}
+  '@ts-morph/common@0.29.0':
+    resolution: {integrity: sha512-35oUmphHbJvQ/+UTwFNme/t2p3FoKiGJ5auTjjpNTop2dyREspirjMy82PLSC1pnDJ8ah1GU98hwpVt64YXQsg==}
 
   '@turbo/darwin-64@2.10.9':
     resolution: {integrity: sha512-Jh+pTGXLNz8+1tkUU13TI/f+ZOI+OvC4YbHi1H+57iSpLt5DR3xgptd+4sA07RdjdRR/RX/01uQQu2OkbzIefA==}
@@ -4130,8 +4130,8 @@ packages:
       typescript:
         optional: true
 
-  ts-morph@25.0.1:
-    resolution: {integrity: sha512-QJEiTdnz1YjrB3JFhd626gX4rKHDLSjSVMvGGG4v7ONc3RBwa0Eei98G9AT9uNFDMtV54JyuXsFeC+OH0n6bXQ==}
+  ts-morph@28.0.0:
+    resolution: {integrity: sha512-Wp3tnZ2bzwxyTZMtgWVzXDfm7lB1Drz+y9DmmYH/L702PQhPyVrp3pkou3yIz4qjS14GY9kcpmLiOOMvl8oG1g==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -5491,11 +5491,11 @@ snapshots:
     dependencies:
       '@textlint/ast-node-types': 15.8.0
 
-  '@ts-morph/common@0.26.1':
+  '@ts-morph/common@0.29.0':
     dependencies:
-      fast-glob: 3.3.3
-      minimatch: 9.0.9
+      minimatch: 10.2.6
       path-browserify: 1.0.1
+      tinyglobby: 0.2.17
 
   '@turbo/darwin-64@2.10.9':
     optional: true
@@ -8611,9 +8611,9 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  ts-morph@25.0.1:
+  ts-morph@28.0.0:
     dependencies:
-      '@ts-morph/common': 0.26.1
+      '@ts-morph/common': 0.29.0
       code-block-writer: 13.0.3
 
   tslib@2.8.1: {}

@@ -35,7 +35,7 @@
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "lru-cache": "^11.0.0",
-    "ts-morph": "^25.0.1",
+    "ts-morph": "^28.0.0",
     "typescript": "^6.0.3",
     "zod": "^4.4.3"
   },
