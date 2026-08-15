@@ -27,7 +27,7 @@
     "@vindicate/observability": "workspace:*",
     "@vindicate/protocol": "workspace:*",
     "@t3-oss/env-core": "^0.13.11",
-    "chromium-bidi": "^16.0.1",
+    "chromium-bidi": "^17.0.2",
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "pidusage": "^4.0.1",
