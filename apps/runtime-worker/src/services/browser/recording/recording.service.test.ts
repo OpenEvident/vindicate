@@ -505,12 +505,7 @@ describe("RecordingService artifact path safety (path-injection guard)", () => {
         const sessionId = "00000000-0000-4000-8000-000000000001";
         await writeArtifact(safeName, sessionId);
         await expect(service.deleteArtifact(projectRoot, safeName)).resolves.toBeUndefined();
-        const artifactPath = path.join(
-          projectRoot,
-          ".vindicate",
-          "recordings",
-          `${safeName}.json`
-        );
+        const artifactPath = path.join(projectRoot, ".vindicate", "recordings", `${safeName}.json`);
         await expect(readFile(artifactPath, "utf-8")).rejects.toThrow();
       });
     }
@@ -565,12 +560,7 @@ describe("RecordingService artifact path safety (path-injection guard)", () => {
         await expect(
           service.annotateArtifact(projectRoot, safeName, fields)
         ).resolves.toBeUndefined();
-        const artifactPath = path.join(
-          projectRoot,
-          ".vindicate",
-          "recordings",
-          `${safeName}.json`
-        );
+        const artifactPath = path.join(projectRoot, ".vindicate", "recordings", `${safeName}.json`);
         const updated = JSON.parse(await readFile(artifactPath, "utf-8")) as RecordingArtifact;
         expect(updated.summary).toBe("updated");
       });
