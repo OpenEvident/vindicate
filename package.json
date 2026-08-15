@@ -2,7 +2,7 @@
   "name": "vindicate-platform",
   "version": "0.0.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"

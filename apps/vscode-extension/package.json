@@ -5,7 +5,7 @@
   "description": "Vindicate — AI-native quality orchestrator for your project",
   "publisher": "Vindicate",
   "icon": "resources/vindicate-logo.png",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "type": "commonjs",
   "engines": {
