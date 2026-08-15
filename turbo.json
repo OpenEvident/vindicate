@@ -12,11 +12,11 @@
       "outputs": ["dist/**", "build/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"],
+      "dependsOn": ["^lint", "^build"],
       "outputs": []
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"],
+      "dependsOn": ["^typecheck", "^build"],
       "outputs": []
     },
     "test": {
