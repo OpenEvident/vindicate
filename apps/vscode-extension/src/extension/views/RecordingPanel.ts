@@ -1,6 +1,6 @@
 import path from "node:path";
 import * as vscode from "vscode";
-import { buildWebviewHtml } from "./WebviewHtmlBuilder";
+import { buildWebviewHtml, panelIconPath } from "./WebviewHtmlBuilder";
 
 export type RecordingWebviewMessage = Record<string, unknown>;
 
@@ -66,6 +66,7 @@ export class RecordingPanel {
         localResourceRoots: resourceRoots
       }
     );
+    panel.iconPath = panelIconPath(extensionUri);
     panel.webview.html = buildWebviewHtml(panel.webview, extensionUri, "recording");
     const instance = new RecordingPanel(sessionId, panel);
     RecordingPanel.panels.set(sessionId, instance);

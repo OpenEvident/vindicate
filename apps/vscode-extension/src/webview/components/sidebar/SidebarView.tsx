@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { postToExtension } from "../../lib/bridge";
-import { getExtensionVersion, getLogoTextUri } from "../../lib/webviewAssets";
+import { getExtensionVersion, getFaviconUri, getLogoTextUri } from "../../lib/webviewAssets";
 import { createEmptyDashboardMetrics } from "../../../shared/metricAvailability";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import { useHealthStore } from "../../stores/healthStore";
@@ -130,11 +130,12 @@ function ProjectChip() {
   const mode = (useOnboardingStore((s) => s.mode) ?? "build").toUpperCase();
   const metrics = useDashboardStore((s) => s.metrics) ?? createEmptyDashboardMetrics();
   const branch = metrics.branch || "main";
+  const faviconUri = getFaviconUri();
 
   return (
     <div className="sb-project-chip">
       <div className="sb-project-logo" aria-hidden>
-        O
+        {faviconUri && <img src={faviconUri} alt="" className="sb-project-logo-img" />}
       </div>
       <div className="min-w-0 flex-1">
         <div className="sb-project-name">{folderName}</div>

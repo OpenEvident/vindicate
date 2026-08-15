@@ -32,7 +32,7 @@ function renderNeedsClarification(root: HTMLElement, data: Record<string, unknow
   header.className = "panel-header";
   const logo = document.createElement("div");
   logo.className = "panel-logo";
-  logo.textContent = "";
+  logo.textContent = "V";
   const title = document.createElement("span");
   title.className = "panel-title";
   title.textContent = "Vindicate";
@@ -84,7 +84,7 @@ export function renderWorkflowProgress(root: HTMLElement, data: Record<string, u
   header.className = "panel-header";
   const logo = document.createElement("div");
   logo.className = "panel-logo";
-  logo.textContent = "";
+  logo.textContent = "V";
   const title = document.createElement("span");
   title.className = "panel-title";
   title.textContent = "Vindicate";

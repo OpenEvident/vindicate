@@ -25,6 +25,10 @@ function readExtensionVersion(extensionUri: vscode.Uri): string {
   }
 }
 
+export function panelIconPath(extensionUri: vscode.Uri): vscode.Uri {
+  return vscode.Uri.joinPath(extensionUri, "resources", "favicon.png");
+}
+
 /**
  * VS Code webview HTML shell.
  *
@@ -53,6 +57,9 @@ export function buildWebviewHtml(
   const logoTextUri = webview
     .asWebviewUri(vscode.Uri.joinPath(extensionUri, "resources", "vindicate-logo-text.png"))
     .toString();
+  const faviconUri = webview
+    .asWebviewUri(vscode.Uri.joinPath(extensionUri, "resources", "favicon.png"))
+    .toString();
   const brandCursorUri = webview
     .asWebviewUri(vscode.Uri.joinPath(extensionUri, "resources", "cusrsor.png"))
     .toString();
@@ -77,7 +84,7 @@ export function buildWebviewHtml(
   <link href="${escapeHtml(styleUri)}" rel="stylesheet" />
 </head>
 <body data-surface="${surface}">
-  <div id="root" data-surface="${surface}" data-logo-uri="${escapeHtml(logoUri)}" data-logo-text-uri="${escapeHtml(logoTextUri)}" data-brand-cursor-uri="${escapeHtml(brandCursorUri)}" data-brand-claude-uri="${escapeHtml(brandClaudeUri)}" data-brand-copilot-uri="${escapeHtml(brandCopilotUri)}" data-brand-antigravity-uri="${escapeHtml(brandAntigravityUri)}" data-extension-version="${escapeHtml(resolvedVersion)}"></div>
+  <div id="root" data-surface="${surface}" data-logo-uri="${escapeHtml(logoUri)}" data-logo-text-uri="${escapeHtml(logoTextUri)}" data-favicon-uri="${escapeHtml(faviconUri)}" data-brand-cursor-uri="${escapeHtml(brandCursorUri)}" data-brand-claude-uri="${escapeHtml(brandClaudeUri)}" data-brand-copilot-uri="${escapeHtml(brandCopilotUri)}" data-brand-antigravity-uri="${escapeHtml(brandAntigravityUri)}" data-extension-version="${escapeHtml(resolvedVersion)}"></div>
   <script nonce="${nonce}" src="${escapeHtml(scriptUri)}"></script>
 </body>
 </html>`;

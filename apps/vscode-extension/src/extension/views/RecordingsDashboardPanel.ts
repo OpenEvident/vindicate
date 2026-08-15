@@ -1,6 +1,6 @@
 import path from "node:path";
 import * as vscode from "vscode";
-import { buildWebviewHtml } from "./WebviewHtmlBuilder";
+import { buildWebviewHtml, panelIconPath } from "./WebviewHtmlBuilder";
 
 export type RecordingsDashboardWebviewMessage = Record<string, unknown>;
 
@@ -41,6 +41,7 @@ export class RecordingsDashboardPanel {
       vscode.ViewColumn.One,
       { enableScripts: true, retainContextWhenHidden: true, localResourceRoots: resourceRoots }
     );
+    panel.iconPath = panelIconPath(extensionUri);
     panel.webview.html = buildWebviewHtml(panel.webview, extensionUri, "recording");
     const instance = new RecordingsDashboardPanel(panel);
     RecordingsDashboardPanel.current = instance;

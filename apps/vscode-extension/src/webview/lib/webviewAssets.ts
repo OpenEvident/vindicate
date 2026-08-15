@@ -11,6 +11,10 @@ export function getLogoTextUri(): string | undefined {
   return getRootDataset()["logoTextUri"];
 }
 
+export function getFaviconUri(): string | undefined {
+  return getRootDataset()["faviconUri"];
+}
+
 export function getExtensionVersion(): string {
   return getRootDataset()["extensionVersion"] ?? "0.0.0";
 }

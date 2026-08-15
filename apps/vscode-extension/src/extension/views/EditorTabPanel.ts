@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import type { ExtensionMessage, WebviewMessage } from "../shared/messages";
-import { buildWebviewHtml } from "./WebviewHtmlBuilder";
+import { buildWebviewHtml, panelIconPath } from "./WebviewHtmlBuilder";
 
 export class EditorTabPanel implements vscode.Disposable {
   private static current: EditorTabPanel | undefined;
@@ -47,6 +47,7 @@ export class EditorTabPanel implements vscode.Disposable {
       vscode.ViewColumn.One,
       { enableScripts: true, retainContextWhenHidden: true, localResourceRoots: [extensionUri] }
     );
+    panel.iconPath = panelIconPath(extensionUri);
     panel.webview.html = buildWebviewHtml(panel.webview, extensionUri, "editor");
     EditorTabPanel.current = new EditorTabPanel(panel, messageHandler, onVisibilityChange);
   }

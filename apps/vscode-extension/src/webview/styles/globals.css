@@ -154,13 +154,13 @@ body[data-surface="editor"],
   flex-shrink: 0;
   padding: 0 20px;
   background: var(--vindicate-header-bg);
-  border-bottom: 1px solid var(--vindicate-border);
 }
 
-.vindicate-header-logo {
-  height: 24px;
-  width: auto;
+.vindicate-header-favicon {
+  height: 20px;
+  width: 20px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .vindicate-user-card {
@@ -3586,6 +3586,12 @@ body[data-surface="editor"],
   color: #fff;
   background: color-mix(in oklab, var(--vs-accent) 50%, transparent);
   flex-shrink: 0;
+}
+
+.sb-project-logo-img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
 
 .sb-project-name {
