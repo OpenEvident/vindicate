@@ -886,11 +886,21 @@ export class RecordingController {
         }
 
         if (!sessionRes.ok) {
+          let detail: { error?: unknown; command?: unknown } = {};
+          try {
+            detail = (await sessionRes.json()) as typeof detail;
+          } catch {
+            /* body wasn't JSON — fall back to the generic message below */
+          }
           panel.postMessage({
             type: "playback_failed",
-            error: `Session creation failed: ${sessionRes.status}`,
+            error:
+              typeof detail.error === "string"
+                ? detail.error
+                : `Session creation failed: ${sessionRes.status}`,
             failedStep: 0,
-            recordingName: ""
+            recordingName: "",
+            ...(typeof detail.command === "string" ? { command: detail.command } : {})
           });
           return;
         }

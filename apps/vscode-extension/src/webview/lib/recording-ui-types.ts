@@ -156,5 +156,5 @@ export type PreviewTarget = { type: "none" } | { type: "step"; seq: number } | {
 export type PlaybackState =
   | { status: "idle" }
   | { status: "running"; total: number; current?: number; recordingName?: string }
-  | { status: "failed"; error: string; failedStep: number; recordingName: string }
+  | { status: "failed"; error: string; failedStep: number; recordingName: string; command?: string }
   | { status: "done" };

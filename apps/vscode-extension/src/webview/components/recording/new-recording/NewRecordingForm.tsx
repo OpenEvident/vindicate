@@ -1,6 +1,7 @@
 import { ArrowLeft, Sparkles, MousePointerClick, Keyboard, Navigation, Camera } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/recording/ui/Button";
+import { CopyButton } from "@/components/recording/ui/CopyButton";
 import { Tooltip } from "@/components/recording/ui/Tooltip";
 import { HintPopover } from "@/components/recording/ui/HintPopover";
 import { useRecordingStore } from "@/stores/recordingStore";
@@ -257,6 +258,22 @@ export function NewRecordingForm() {
         >
           {statusLabel}
         </p>
+      )}
+
+      {playback.status === "failed" && playback.command !== undefined && (
+        <div className="mb-3 rounded-lg border border-vs-border bg-vs-bg overflow-hidden">
+          <div className="px-3 py-2 border-b border-vs-border">
+            <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-vs-text-dim">
+              Run this command
+            </p>
+          </div>
+          <div className="flex items-center justify-between gap-3 px-3 py-2.5">
+            <code className="min-w-0 flex-1 truncate font-mono text-ui-sm text-vs-text">
+              {playback.command}
+            </code>
+            <CopyButton text={playback.command} label="Copy" />
+          </div>
+        </div>
       )}
 
       <Button

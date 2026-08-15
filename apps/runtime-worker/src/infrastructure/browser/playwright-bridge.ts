@@ -87,6 +87,17 @@ export class PlaywrightBridge implements IBrowserBridge {
       browser = await chromium.launch({ headless });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
+      this.logger.error({ err, headless }, "chromium launch failed");
+
+      // Playwright's own "browser not installed" error is a multi-line ASCII banner meant for
+      // a terminal, not a webview — detect it and surface a short, human message plus the
+      // install command structurally instead of dumping the raw banner into the UI.
+      if (msg.includes("npx playwright install")) {
+        throw new BrowserUnavailableError(
+          "Chromium isn't installed yet. Playwright needs to download it once before recording can start.",
+          "npx playwright install"
+        );
+      }
       throw new BrowserUnavailableError(
         `Failed to launch ${headless ? "headless" : "headed"} Chromium: ${msg}. ` +
           "Run the bootstrap script to install Playwright browsers."

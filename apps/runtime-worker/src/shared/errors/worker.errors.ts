@@ -128,7 +128,10 @@ export class BrowserUnavailableError extends WorkerError {
   readonly code = "browser.unavailable";
   readonly httpStatus = 503;
 
-  constructor(reason: string) {
+  constructor(
+    reason: string,
+    readonly command?: string
+  ) {
     super(reason);
   }
 }

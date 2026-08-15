@@ -72,7 +72,13 @@ export type ExtensionMessage =
   | { type: "recordings_list"; entries: unknown[]; error?: string }
   | { type: "playback_started"; total: number }
   | { type: "playback_progress"; current: number; total: number; recordingName: string }
-  | { type: "playback_failed"; error: string; failedStep: number; recordingName: string }
+  | {
+      type: "playback_failed";
+      error: string;
+      failedStep: number;
+      recordingName: string;
+      command?: string;
+    }
   | { type: "playback_complete" }
   | { type: "worker_status"; online: boolean }
   | { type: "annotate_succeeded"; safeName: string }

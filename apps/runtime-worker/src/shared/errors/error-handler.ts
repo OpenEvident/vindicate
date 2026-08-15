@@ -5,7 +5,12 @@ import type { FastifyBaseLogger, FastifyInstance, RawServerDefault } from "fasti
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Logger } from "@vindicate/observability";
 
-import { NavigationFailedError, WorkerError, WorkerThrottledError } from "./worker.errors.js";
+import {
+  BrowserUnavailableError,
+  NavigationFailedError,
+  WorkerError,
+  WorkerThrottledError
+} from "./worker.errors.js";
 
 export function registerErrorHandler<L extends FastifyBaseLogger>(
   fastify: FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse, L>,
@@ -24,6 +29,9 @@ export function registerErrorHandler<L extends FastifyBaseLogger>(
       if (error instanceof WorkerThrottledError && error.retryAfterMs !== undefined) {
         body.retry_after_ms = error.retryAfterMs;
         void reply.header("Retry-After", String(Math.ceil(error.retryAfterMs / 1000)));
+      }
+      if (error instanceof BrowserUnavailableError && error.command !== undefined) {
+        body.command = error.command;
       }
       return reply.status(error.httpStatus).send(body);
     }

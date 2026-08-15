@@ -630,7 +630,8 @@ export const useRecordingStore = create<RecordingState & RecordingActions>((set,
           status: "failed",
           error: detail?.error ?? "Playback failed",
           failedStep: detail?.failedStep ?? 0,
-          recordingName: detail?.recordingName ?? ""
+          recordingName: detail?.recordingName ?? "",
+          ...(detail?.command !== undefined ? { command: detail.command } : {})
         }
       });
       return;
