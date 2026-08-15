@@ -29,9 +29,8 @@ function missingCiPlatformError(): WorkerValidationError {
 function missingTargetError(): WorkerValidationError {
   return new WorkerValidationError(
     `scaffold_project requires target. Allowed values: ${SCAFFOLD_TARGETS.join(", ")}. ` +
-      "Resolve before retrying: use the user's explicit choice ('API tests'/'UI tests'/'both'), " +
-      "infer confidently from an unambiguous request (e.g. 'test this REST API' => api), " +
-      "or ask once via vindicate_ask_user — never guess between api-only and both."
+      "Use an explicit choice the user already made in the current conversation, or ask once via " +
+      "vindicate_ask_user with UI, API, and both as options. Do not infer a target; there is no default."
   );
 }
 
@@ -43,7 +42,7 @@ export function registerScaffoldTools(server: McpServer, projectFs: ProjectFs): 
         "Scaffolds the Vindicate Playwright project structure — page objects and/or API clients, feature files, config, " +
         "and CI workflow. Requires base_url, ci_platform (github or bitbucket), and target. " +
         "target selects the layer(s): 'ui' (page objects), 'api' (resource clients, no browser config), " +
-        "or 'both' (both layers, one project). " +
+        "or 'both' (both layers, one project). There is no default: use the user's explicit choice or ask them. " +
         "For 'api'/'both', if the API lives on a different host than base_url, pass 'API_BASE_URL' in env_vars " +
         "to wire it into CI — it's optional; api.config.ts already falls back to BASE_URL when unset. " +
         "Returns the list of created files and structure validation result.",
@@ -53,8 +52,9 @@ export function registerScaffoldTools(server: McpServer, projectFs: ProjectFs): 
           "Required. CI platform for the workflow file. Allowed: github, bitbucket."
         ),
         target: ScaffoldTargetSchema.describe(
-          "Required. Which layer(s) to scaffold: 'ui', 'api', or 'both'. Ask the user once via " +
-            "vindicate_ask_user if genuinely ambiguous — don't guess between api-only and both."
+          "Required. Which layer(s) to scaffold: 'ui', 'api', or 'both'. Use an explicit choice the " +
+            "user already made in the current conversation; otherwise ask once via vindicate_ask_user. " +
+            "Do not infer from the repository, framework, URL, source files, or 'end-to-end'; there is no default."
         ),
         project_dir: z
           .string()

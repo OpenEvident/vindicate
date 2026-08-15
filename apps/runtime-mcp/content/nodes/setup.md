@@ -19,7 +19,7 @@ satisfied before any test work. Straightforward and quick — gather a couple of
 ## Inputs (gather up front, ask only if missing)
 
 - **`BASE_URL`** — the app under test. From the user message, `.env`, or `playwright.config.ts`; ask once via `vindicate_ask_user` only if unknown.
-- **`target`** — `ui`, `api`, or `both`. This is a one-time infrastructure decision (what gets scaffolded), separate from the per-feature `layer` choice made later in `understand` for each individual feature. **Decision order:** (1) explicit user choice in chat ("API tests" / "UI tests" / "both" / "end-to-end"), else (2) infer confidently from an unambiguous request (e.g. "test this REST API" → `api`; "test this webpage" → `ui`), else (3) ask once via `vindicate_ask_user` — don't guess between `api` and `both` when the request is genuinely ambiguous, since that decides real infrastructure (browser config, clients vs. page objects) that's awkward to bolt on later. Re-running `scaffold_project` with a broader `target` on an existing project is safe (additive — never clobbers what's already there) if the user wants to add the other layer afterward.
+- **`target`** — `ui`, `api`, or `both`. This is a one-time infrastructure decision (what gets scaffolded), separate from the per-feature `layer` choice made later in `understand` for each individual feature. Use a target without asking only when the user has already explicitly requested **UI/browser tests**, **API tests**, or **both UI and API tests** in the current conversation. Otherwise call `vindicate_ask_user` with exactly those three options and wait for the answer. **Never infer the target from the repository, framework, URL, existing source files, or the general phrase "end-to-end". There is no default target.** Re-running `scaffold_project` with a broader `target` on an existing project is safe (additive — never clobbers what's already there) if the user wants to add the other layer afterward.
 - **`ci_platform`** — required for `scaffold_project`. Allowed: `github`, `bitbucket`. **Decision order:** (1) explicit user choice in chat, else (2) detect from CI files in the **project root only** (`.github/workflows/*.yml` => `github`, `bitbucket-pipelines.yml` => `bitbucket`), else (3) ask once via `vindicate_ask_user`. Never infer CI platform from template/example/docs paths. Do not call `scaffold_project` without a resolved value. CI is required in setup (do not offer "skip CI").
 - **`project_dir`** — an **optional relative subdirectory _inside the opened project folder_** (never a parent, sibling, or absolute path). `scaffold_project` always writes relative to the opened folder; omit `project_dir` to scaffold directly into it. Determined by source-code detection (see Step 1) — ask only if the user's intent is unclear.
 - **`testIdAttribute`** — scan `src/`/`app/`/`components/` for the dominant test-id attr (`data-testid`/`data-test`/`data-cy`/`data-qa`/`data-automation-id`). Then:
@@ -39,7 +39,7 @@ satisfied before any test work. Straightforward and quick — gather a couple of
      Use the chosen value as `project_dir` in the scaffold call. When no source code is found **in the opened folder**, default to it (omit `project_dir`). Either way the project lands inside the opened folder — never beside it.
      **CI choice guardrail.** If root-level signals are missing or conflicting (for example both `.github/workflows/` and `bitbucket-pipelines.yml`, or neither), ask the user which CI they want before calling `scaffold_project`.
 2. **Scaffold** — call `scaffold_project` with required `base_url`, `ci_platform`, and `target` (+ optional `project_dir` when a subdir was chosen). It always creates the shared layout (`package.json`, `tsconfig.json`, `playwright.config.ts`, `.env` + `.env.example`, `.gitignore`), plus per `target`:
-   - `ui` (default) — `support/config/page-loader.ts`, `support/config/page.config.ts`, `pages/BasePage.ts`, `panels/BasePanel.ts`, and the `pages/ panels/ support/ tests/` directories.
+   - `ui` — `support/config/page-loader.ts`, `support/config/page.config.ts`, `pages/BasePage.ts`, `panels/BasePanel.ts`, and the `pages/ panels/ support/ tests/` directories.
    - `api` — `support/config/client-loader.ts`, `support/config/api.config.ts`, `clients/BaseApiClient.ts`, and the `clients/ builders/ support/ tests/` directories. `playwright.config.ts` omits browser-only config (no `projects`/`devices`) since no browser is ever launched.
    - `both` — everything from both, in one project, sharing `package.json`/`playwright.config.ts`/CI.
 
@@ -56,7 +56,7 @@ satisfied before any test work. Straightforward and quick — gather a couple of
 
 - `scaffold_project` — creates the layout (the only way; no hand-creation).
 - `run_tests` — the smoke run.
-- `vindicate_ask_user` — only for a genuinely missing `BASE_URL` or unresolved `ci_platform`.
+- `vindicate_ask_user` — for a missing `BASE_URL`, unresolved `ci_platform`, or any `target` not already chosen explicitly by the user.
 
 ## Rules
 
@@ -79,5 +79,6 @@ satisfied before any test work. Straightforward and quick — gather a couple of
 
 - Missing `BASE_URL` after one ask → stop; can't smoke without it.
 - Missing `ci_platform` after one ask → stop; `scaffold_project` requires `github` or `bitbucket`.
+- Missing `target` after one ask → stop; `scaffold_project` requires an explicit user choice of `ui`, `api`, or `both`.
 - `scaffold_project` failure → report the tool error verbatim; do not hand-create files.
 - Smoke fails on connection → report the `BASE_URL` tried; likely env/URL, not a test bug.

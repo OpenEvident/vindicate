@@ -18,11 +18,15 @@ describe("elicitation schemas", () => {
     expect(ids).not.toContain("design-approval");
   });
 
-  it("all enum fields except CI platform include an other option", () => {
+  it("uses closed choices for scaffold target and CI platform", () => {
     for (const entry of ELICITATION_SCHEMAS) {
       for (const { key, enums } of enumFields(entry.schema)) {
         if (entry.id === "ci-setup-intake" && key === "ciPlatform") {
           expect(enums).toEqual(["github", "bitbucket"]);
+          continue;
+        }
+        if (entry.id === "bootstrap-intake" && key === "target") {
+          expect(enums).toEqual(["ui", "api", "both"]);
           continue;
         }
         expect(enums, `${entry.id}.${key}`).toContain("other");

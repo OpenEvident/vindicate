@@ -96,5 +96,7 @@ describe("scaffold-tools", () => {
     expect(textFromResult(result)).toContain("scaffold_project requires target");
     expect(textFromResult(result)).toContain("ui, api, both");
     expect(textFromResult(result)).toContain("vindicate_ask_user");
+    expect(textFromResult(result)).toContain("Do not infer");
+    expect(textFromResult(result)).toContain("no default");
   });
 });

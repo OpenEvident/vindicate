@@ -17,6 +17,11 @@ export const ELICITATION_SCHEMAS: readonly ElicitationSchema[] = [
       type: "object",
       properties: {
         baseUrl: { type: "string", title: "App URL (e.g. http://localhost:3000)" },
+        target: {
+          type: "string",
+          enum: ["ui", "api", "both"],
+          title: "What should Vindicate scaffold?"
+        },
         authRequired: { type: "boolean", title: "Does the app require login?" },
         authStrategy: {
           type: "string",
@@ -26,7 +31,7 @@ export const ELICITATION_SCHEMAS: readonly ElicitationSchema[] = [
         authStrategyCustom: { type: "string", title: "Describe your approach:" },
         loginUrl: { type: "string", title: "Login page URL", default: "/login" }
       },
-      required: ["baseUrl", "authRequired", "authStrategy"]
+      required: ["baseUrl", "target", "authRequired", "authStrategy"]
     }
   },
   {
