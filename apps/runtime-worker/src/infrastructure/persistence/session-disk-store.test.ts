@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { PlaintextSessionCrypto } from "../crypto/session-crypto.js";
 import { SessionDiskStore } from "./session-disk-store.js";
+import { FilesOutsideRootError } from "../../shared/errors/worker.errors.js";
 
 describe("SessionDiskStore", () => {
   const tempDirs: string[] = [];
@@ -51,5 +52,29 @@ describe("SessionDiskStore", () => {
     );
     const expired = await disk.listExpiredDeadSessions(24, Date.now());
     expect(expired).toContain("22222222-2222-2222-2222-222222222222");
+  });
+
+  describe("path-injection guard", () => {
+    it("rejects write/read/delete for a sessionId that would escape sessionsDir", async () => {
+      const dir = path.join(os.tmpdir(), `vindicate-disk-guard-${Date.now()}`);
+      await mkdir(dir, { recursive: true });
+      tempDirs.push(dir);
+      const sentinel = path.join(path.dirname(dir), "sentinel.json");
+      await writeFile(sentinel, "untouched");
+      tempDirs.push(sentinel);
+
+      const crypto = new PlaintextSessionCrypto();
+      const disk = new SessionDiskStore(dir, crypto, { encryptFilenames: false });
+      const maliciousId = "../sentinel";
+
+      await expect(disk.write(maliciousId, '{"x":1}')).rejects.toBeInstanceOf(
+        FilesOutsideRootError
+      );
+      await expect(disk.read(maliciousId)).rejects.toBeInstanceOf(FilesOutsideRootError);
+      await expect(disk.delete(maliciousId)).rejects.toBeInstanceOf(FilesOutsideRootError);
+
+      const { readFile } = await import("node:fs/promises");
+      expect(await readFile(sentinel, "utf-8")).toBe("untouched");
+    });
   });
 });

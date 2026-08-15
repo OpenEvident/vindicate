@@ -19,6 +19,7 @@ import type { IEventBus } from "../../../core/events/event-bus.interface.js";
 import type { IResourceGovernor } from "../../../core/governor/resource-governor.interface.js";
 import { isShuttingDown } from "../../../core/shutdown.js";
 import type { IBrowserBridge } from "../../../infrastructure/browser/browser-bridge.interface.js";
+import { resolveProjectPath } from "../../files/path-guard.js";
 import {
   BrowserUnavailableError,
   SessionDeadError,
@@ -381,12 +382,8 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
     if (!parsed.success) {
       throw new ValidationError("Invalid query — project_root is required");
     }
-    const artifactPath = path.join(
-      parsed.data.project_root,
-      ".vindicate",
-      "recordings",
-      `${request.params.safeName}.json`
-    );
+    const recordingsDir = path.join(parsed.data.project_root, ".vindicate", "recordings");
+    const artifactPath = resolveProjectPath(recordingsDir, `${request.params.safeName}.json`);
     try {
       const raw = await fs.readFile(artifactPath, "utf-8");
       const artifact = RecordingArtifactSchema.parse(JSON.parse(raw));
@@ -403,12 +400,8 @@ export function registerBrowserSessionRoutes<L extends FastifyBaseLogger>(
       if (!parsed.success) {
         throw new ValidationError("Invalid query — project_root is required");
       }
-      const artifactPath = path.join(
-        parsed.data.project_root,
-        ".vindicate",
-        "recordings",
-        `${request.params.safeName}.json`
-      );
+      const recordingsDir = path.join(parsed.data.project_root, ".vindicate", "recordings");
+      const artifactPath = resolveProjectPath(recordingsDir, `${request.params.safeName}.json`);
       try {
         await fs.access(artifactPath);
       } catch {

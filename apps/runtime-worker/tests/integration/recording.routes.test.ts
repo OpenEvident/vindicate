@@ -180,6 +180,51 @@ describe("Recording routes", () => {
     expect(missing.statusCode).toBe(404);
   });
 
+  it("rejects a path-traversal safeName on GET /recordings/:safeName", async () => {
+    const res = await authInject(ctx.app, {
+      method: "GET",
+      url: `/browser/recordings/${encodeURIComponent("../../escape")}?project_root=${encodeURIComponent(ctx.dataDir)}`
+    });
+    expect(res.statusCode).toBe(403);
+    const body = JSON.parse(res.body) as { code: string };
+    expect(body.code).toBe("files.outside_root");
+  });
+
+  it("rejects a path-traversal safeName on DELETE /recordings/:safeName", async () => {
+    const res = await authInject(ctx.app, {
+      method: "DELETE",
+      url: `/browser/recordings/${encodeURIComponent("../../escape")}?project_root=${encodeURIComponent(ctx.dataDir)}`
+    });
+    expect(res.statusCode).toBe(403);
+    const body = JSON.parse(res.body) as { code: string };
+    expect(body.code).toBe("files.outside_root");
+  });
+
+  it("rejects a path-traversal safeName on POST /recordings/:safeName/refinalize", async () => {
+    const res = await authInject(ctx.app, {
+      method: "POST",
+      url: `/browser/recordings/${encodeURIComponent("../../escape")}/refinalize?project_root=${encodeURIComponent(ctx.dataDir)}`,
+      payload: { steps: [] }
+    });
+    // Fastify's router itself refuses to match a decoded-slash payload against the
+    // :safeName/refinalize two-segment pattern, 404ing before the handler (and its
+    // resolveProjectPath check) is ever reached — still a safe outcome, just an earlier
+    // rejection point than the single-segment routes below. The handler's own guard is
+    // covered directly by recording.service.test.ts's refinalizeArtifact traversal tests.
+    expect(res.statusCode).toBe(404);
+  });
+
+  it("rejects a path-traversal safeName on PATCH /recordings/:safeName", async () => {
+    const res = await authInject(ctx.app, {
+      method: "PATCH",
+      url: `/browser/recordings/${encodeURIComponent("../../escape")}?project_root=${encodeURIComponent(ctx.dataDir)}`,
+      payload: { pre_conditions: [], post_conditions: [], depends_on: [], summary: "x" }
+    });
+    expect(res.statusCode).toBe(403);
+    const body = JSON.parse(res.body) as { code: string };
+    expect(body.code).toBe("files.outside_root");
+  });
+
   it("returns 404 when session is missing", async () => {
     const missing = "00000000-0000-4000-8000-000000000099";
     const res = await authInject(ctx.app, {

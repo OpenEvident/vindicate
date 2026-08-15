@@ -6,6 +6,7 @@ import type { Frame, Page } from "playwright-core";
 import type { IEventBus } from "../../../core/events/event-bus.interface.js";
 import type { IBrowserBridge } from "../../../infrastructure/browser/browser-bridge.interface.js";
 import type { ISessionStore } from "../session/session.store.interface.js";
+import { resolveProjectPath } from "../../files/path-guard.js";
 import {
   toVindicateRelativePath,
   type RecordingArtifact,
@@ -894,8 +895,8 @@ export class RecordingService {
 
   async deleteArtifact(projectRoot: string, safeName: string): Promise<void> {
     const recordingsDir = path.join(projectRoot, ".vindicate", "recordings");
-    const screenshotDir = path.join(recordingsDir, safeName);
-    const artifactPath = path.join(recordingsDir, `${safeName}.json`);
+    const screenshotDir = resolveProjectPath(recordingsDir, safeName);
+    const artifactPath = resolveProjectPath(recordingsDir, `${safeName}.json`);
     await fs.rm(screenshotDir, { recursive: true, force: true }).catch(() => {});
     await fs.rm(artifactPath, { force: true }).catch(() => {});
     await RecordingsIndexService.remove(projectRoot, safeName).catch(() => {});
@@ -1028,7 +1029,8 @@ export class RecordingService {
     safeName: string,
     finalizedData?: FinalizeRecordingData
   ): Promise<{ path: string; name: string; safe_name: string }> {
-    const artifactPath = path.join(projectRoot, ".vindicate", "recordings", `${safeName}.json`);
+    const recordingsDir = path.join(projectRoot, ".vindicate", "recordings");
+    const artifactPath = resolveProjectPath(recordingsDir, `${safeName}.json`);
     const raw = await fs.readFile(artifactPath, "utf-8");
     const existing = JSON.parse(raw) as RecordingArtifact;
 
@@ -1074,7 +1076,7 @@ export class RecordingService {
 
     await fs.writeFile(artifactPath, JSON.stringify(artifact, null, 2), "utf-8");
 
-    const screenshotDir = path.join(projectRoot, ".vindicate", "recordings", safeName);
+    const screenshotDir = resolveProjectPath(recordingsDir, safeName);
     const thumbCandidatePath = path.join(screenshotDir, "step-001.png");
     let thumbnail_path: string | undefined;
     try {
@@ -1124,7 +1126,8 @@ export class RecordingService {
       summary: string;
     }
   ): Promise<void> {
-    const artifactPath = path.join(projectRoot, ".vindicate", "recordings", `${safeName}.json`);
+    const recordingsDir = path.join(projectRoot, ".vindicate", "recordings");
+    const artifactPath = resolveProjectPath(recordingsDir, `${safeName}.json`);
     const raw = await fs.readFile(artifactPath, "utf-8");
     const existing = JSON.parse(raw) as RecordingArtifact;
     const updated: RecordingArtifact = {
@@ -1150,7 +1153,7 @@ export class RecordingService {
         { projectRoot, safeName },
         "[recording] index entry missing during annotate — reconstructing"
       );
-      const screenshotDir = path.join(projectRoot, ".vindicate", "recordings", safeName);
+      const screenshotDir = resolveProjectPath(recordingsDir, safeName);
       const thumbCandidatePath = path.join(screenshotDir, "step-001.png");
       let thumbnail_path: string | undefined;
       try {

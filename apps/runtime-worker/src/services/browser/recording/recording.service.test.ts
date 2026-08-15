@@ -1,13 +1,17 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import type { Logger } from "pino";
 import type { BrowserContext, Frame, Page } from "playwright-core";
-import type { StructuredLocator } from "@vindicate/protocol";
+import type { RecordingArtifact, StructuredLocator } from "@vindicate/protocol";
 
 import { RecordingService } from "./recording.service.js";
 import type { IBrowserBridge } from "../../../infrastructure/browser/browser-bridge.interface.js";
 import type { RecordingEventSource } from "../../../infrastructure/browser/browser-bridge.types.js";
 import type { IEventBus } from "../../../core/events/event-bus.interface.js";
 import type { ISessionStore } from "../session/session.store.interface.js";
+import { FilesOutsideRootError } from "../../../shared/errors/worker.errors.js";
 
 type OnEvent = (
   payload: Record<string, unknown>,
@@ -440,5 +444,144 @@ describe("RecordingService pause-state broadcast", () => {
         typeof call[0] === "function" && String(call[0]).includes("__vindicateSetRecorderPaused")
     );
     expect(usesSetter).toBe(false);
+  });
+});
+
+describe("RecordingService artifact path safety (path-injection guard)", () => {
+  let projectRoot: string;
+  let service: RecordingService;
+
+  // Real recording names run through sanitizeRecordingName, which only strips the 9
+  // Windows-invalid filename characters (< > : " / \ | ? *) and control chars — unicode
+  // letters, dots, parens, and apostrophes all survive untouched and are in active use.
+  const LEGIT_SAFE_NAMES = ["café-login", "v1.2-(smoke)", "user's-flow", "a-&-b-test"];
+  const TRAVERSAL_SAFE_NAMES = [
+    "../escape",
+    "..\\escape",
+    "../../../escape",
+    "a/../../escape",
+    ".."
+  ];
+
+  function makeArtifact(sessionId: string): RecordingArtifact {
+    return {
+      name: "flow",
+      recorded_at: "2026-06-20T00:00:00.000Z",
+      session_id: sessionId,
+      project_root: projectRoot,
+      status: "finalized",
+      steps: []
+    };
+  }
+
+  async function writeArtifact(safeName: string, sessionId: string): Promise<void> {
+    const dir = path.join(projectRoot, ".vindicate", "recordings");
+    await mkdir(dir, { recursive: true });
+    await writeFile(
+      path.join(dir, `${safeName}.json`),
+      JSON.stringify(makeArtifact(sessionId)),
+      "utf-8"
+    );
+  }
+
+  beforeEach(async () => {
+    projectRoot = await mkdtemp(path.join(os.tmpdir(), "vindicate-artifact-safety-"));
+    service = new RecordingService(
+      makeHarness().bridge,
+      fakeSessionStore(),
+      fakeEventBus(),
+      fakeLogger(),
+      settleCfg
+    );
+  });
+
+  afterEach(async () => {
+    await rm(projectRoot, { recursive: true, force: true });
+  });
+
+  describe("deleteArtifact", () => {
+    for (const safeName of LEGIT_SAFE_NAMES) {
+      it(`deletes a legitimate artifact named "${safeName}" without throwing`, async () => {
+        const sessionId = "00000000-0000-4000-8000-000000000001";
+        await writeArtifact(safeName, sessionId);
+        await expect(service.deleteArtifact(projectRoot, safeName)).resolves.toBeUndefined();
+        const artifactPath = path.join(
+          projectRoot,
+          ".vindicate",
+          "recordings",
+          `${safeName}.json`
+        );
+        await expect(readFile(artifactPath, "utf-8")).rejects.toThrow();
+      });
+    }
+
+    for (const safeName of TRAVERSAL_SAFE_NAMES) {
+      it(`rejects a traversal attempt via safeName="${safeName}"`, async () => {
+        // A sentinel file placed just outside recordingsDir — proves nothing outside the
+        // recordings directory is ever touched, not just that the call throws.
+        const sentinel = path.join(projectRoot, ".vindicate", "sentinel.json");
+        await mkdir(path.dirname(sentinel), { recursive: true });
+        await writeFile(sentinel, "untouched", "utf-8");
+
+        await expect(service.deleteArtifact(projectRoot, safeName)).rejects.toBeInstanceOf(
+          FilesOutsideRootError
+        );
+        await expect(readFile(sentinel, "utf-8")).resolves.toBe("untouched");
+      });
+    }
+  });
+
+  describe("refinalizeArtifact", () => {
+    for (const safeName of LEGIT_SAFE_NAMES) {
+      it(`refinalizes a legitimate artifact named "${safeName}"`, async () => {
+        const sessionId = "00000000-0000-4000-8000-000000000002";
+        await writeArtifact(safeName, sessionId);
+        const result = await service.refinalizeArtifact(projectRoot, safeName);
+        expect(result.safe_name).toBe(safeName);
+      });
+    }
+
+    for (const safeName of TRAVERSAL_SAFE_NAMES) {
+      it(`rejects a traversal attempt via safeName="${safeName}"`, async () => {
+        await expect(service.refinalizeArtifact(projectRoot, safeName)).rejects.toBeInstanceOf(
+          FilesOutsideRootError
+        );
+      });
+    }
+  });
+
+  describe("annotateArtifact", () => {
+    const fields = {
+      pre_conditions: [],
+      post_conditions: [],
+      depends_on: [],
+      summary: "updated"
+    };
+
+    for (const safeName of LEGIT_SAFE_NAMES) {
+      it(`annotates a legitimate artifact named "${safeName}"`, async () => {
+        const sessionId = "00000000-0000-4000-8000-000000000003";
+        await writeArtifact(safeName, sessionId);
+        await expect(
+          service.annotateArtifact(projectRoot, safeName, fields)
+        ).resolves.toBeUndefined();
+        const artifactPath = path.join(
+          projectRoot,
+          ".vindicate",
+          "recordings",
+          `${safeName}.json`
+        );
+        const updated = JSON.parse(await readFile(artifactPath, "utf-8")) as RecordingArtifact;
+        expect(updated.summary).toBe("updated");
+      });
+    }
+
+    for (const safeName of TRAVERSAL_SAFE_NAMES) {
+      it(`rejects a traversal attempt via safeName="${safeName}"`, async () => {
+        await expect(
+          service.annotateArtifact(projectRoot, safeName, fields)
+        ).rejects.toBeInstanceOf(FilesOutsideRootError);
+      });
+    }
   });
 });

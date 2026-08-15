@@ -7,6 +7,7 @@ import path from "node:path";
 
 import type { ISessionCrypto } from "../crypto/session-crypto.interface.js";
 import type { ISessionDiskStore } from "./session-disk-store.interface.js";
+import { resolveProjectPath } from "../../services/files/path-guard.js";
 
 export interface SessionDiskStoreOptions {
   readonly encryptFilenames: boolean;
@@ -29,12 +30,12 @@ export class SessionDiskStore implements ISessionDiskStore {
 
   private pathFor(sessionId: string): string {
     const ext = this.options.encryptFilenames ? ".enc" : ".json";
-    return path.join(this.sessionsDir, `${sessionId}${ext}`);
+    return resolveProjectPath(this.sessionsDir, `${sessionId}${ext}`);
   }
 
   private alternatePath(sessionId: string): string {
     const ext = this.options.encryptFilenames ? ".json" : ".enc";
-    return path.join(this.sessionsDir, `${sessionId}${ext}`);
+    return resolveProjectPath(this.sessionsDir, `${sessionId}${ext}`);
   }
 
   async write(sessionId: string, plaintextJson: string): Promise<void> {
