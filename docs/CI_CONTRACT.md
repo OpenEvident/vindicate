@@ -1,6 +1,6 @@
 # CI Contract
 
-This document defines required CI behavior for the root monorepo beginning in Phase 0.
+This document defines required CI behavior for the root monorepo.
 
 ## Required status checks
 
@@ -21,7 +21,7 @@ All pull requests affecting monorepo source and root workspace config files must
 ## Caching strategy
 
 - Enable pnpm store caching in CI.
-- Enable Turborepo local/remote cache in later phases.
+- Enable pnpm store and Turborepo caching where supported.
 - Cache keys should include:
   - lockfile hash
   - `turbo.json`
@@ -31,9 +31,9 @@ All pull requests affecting monorepo source and root workspace config files must
 
 - `main` must require all status checks.
 - No direct pushes to protected branches.
-- At least one code-owner review for control-plane and security-sensitive areas.
+- At least one code-owner review for runtime, packaging, and security-sensitive areas.
 
-## Future enhancements (Phase 1+)
+## Future enhancements
 
 - Add SCA/vulnerability scans and license checks.
 - Add provenance attestation for release artifacts.

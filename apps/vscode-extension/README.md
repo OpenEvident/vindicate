@@ -12,13 +12,13 @@ Vindicate is an AI-native quality orchestrator for VS Code and Cursor. It connec
 
 ## What's in the extension
 
-- **Guided onboarding** for sign-in, agent selection, MCP setup, and project-mode selection
-- **Agent pairing** for Cursor, GitHub Copilot, and Claude Code
+- **Guided onboarding** for workspace setup, agent selection, MCP setup, and project-mode selection
+- **Agent pairing** for Cursor, GitHub Copilot, Claude Code, and Antigravity
 - **Project health dashboard** with overall score, spec completeness, traceability, pass rate, freshness, failing tests, and acceptance-criteria coverage
 - **Prompt library** with built-in onboarding/domain/spec/test prompts plus private custom templates
 - **Config center** to add, re-sync, or disconnect MCP-enabled agents and re-check runtime and MCP health
 - **Sidebar quick actions** to run all tests, sync metrics from disk, and monitor onboarding progress
-- **Command access** for opening home, opening the panel, signing in/out, and quick actions from the status bar
+- **Command access** for opening home, recordings, the prompts/config panel, and quick actions from the status bar
 
 ## Vindicate MCP integration
 
@@ -27,33 +27,32 @@ When you connect an agent (Cursor, Claude Code, or Copilot), the extension insta
 - **L0 rules** — always-on guidance to call `vindicate_workflow` first
 - **L1 skill** — `.cursor/skills/vindicate/`, `.claude/skills/vindicate/`, or `.github/skills/vindicate/` with `SKILL.md` + `communication.md`
 
-The extension spawns the local **runtime-mcp** and **runtime-worker** processes. Health checks cover runtime + MCP only (no cloud dimension).
+The extension runs entirely on the developer's machine. It spawns the local **runtime-mcp** and
+**runtime-worker** processes and checks their health over loopback.
 
 ## Get started
 
 1. Install the extension.
 2. Open a workspace folder.
 3. Open the **Vindicate** activity bar.
-4. Sign in with your Vindicate account.
-5. Choose the agents you use on this project.
-6. Complete onboarding to scaffold domain, specs, and test foundations.
+4. Choose the agents you use on this project.
+5. Complete onboarding to scaffold domain, specs, and test foundations.
 
 ## Supported agents
 
 - Cursor
 - GitHub Copilot
 - Claude Code
+- Antigravity
 
 ## Commands
 
 - `Vindicate: Open Home`
 - `Vindicate: Show Panel`
-- `Vindicate: Sign In`
-- `Vindicate: Sign Out`
+- `Vindicate: Open Recordings`
 - `Vindicate: Quick Actions`
 
 ## Requirements
 
 - VS Code or Cursor **1.105** or newer
-- An Vindicate account
 - A workspace folder open for full onboarding, MCP, and project health features

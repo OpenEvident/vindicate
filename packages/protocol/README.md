@@ -1,25 +1,31 @@
 # @vindicate/protocol
 
-Shared contract package for the Vindicate v2 platform.
+Shared Zod contracts for Vindicate's local runtime and MCP boundaries.
 
 ## Scope
 
 This package owns cross-service contracts only:
 
-- control API payloads (auth, jobs, runs)
-- skills service payloads (workflow sessions, packs, search)
 - runtime/worker command envelopes
+- browser sessions, structured locators, and recording artifacts
 - MCP tool request/response envelopes
 - shared error model and protocol versioning
 
 This package does **not** own service business logic, persistence, or transport implementation.
 
+The `control-api/` and `skills-service/` exports are legacy compatibility schemas. They are not
+used by the current local runtime.
+
 ## Usage
 
 ```ts
-import { JobCreateRequestSchema, parseProtocol, PROTOCOL_VERSION } from "@vindicate/protocol";
+import {
+  BrowserCreateSessionBodySchema,
+  parseProtocol,
+  PROTOCOL_VERSION
+} from "@vindicate/protocol";
 
-const payload = parseProtocol(JobCreateRequestSchema, input, "job create request");
+const payload = parseProtocol(BrowserCreateSessionBodySchema, input, "browser session request");
 ```
 
 ## Validation strategy

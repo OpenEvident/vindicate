@@ -15,7 +15,8 @@ logger.error({ err }, "request failed");
 
 ## Behavior
 
-- **JSON** to **stderr** by default (keeps **stdout** clean for MCP stdio and subprocess tooling). Suitable for CloudWatch Logs Insights and other aggregators.
+- **JSON** to **stderr** by default (keeps **stdout** clean for MCP stdio and subprocess tooling).
+  Logs can also be written to a local file with `VINDICATE_LOG_FILE`.
 - **`LOG_LEVEL`**: `trace` | `debug` | `info` | `warn` | `error` | `fatal` | `silent`. Invalid values default to `info`.
 - **Redaction** of common secret field paths (`password`, `authorization`, `token`, `accessToken`, etc.) from merged log objects.
 - **ISO timestamps** via Pino’s `isoTime` formatter.
