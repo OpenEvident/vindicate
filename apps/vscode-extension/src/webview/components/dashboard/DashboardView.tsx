@@ -37,7 +37,6 @@ export function DashboardView() {
 
   return (
     <section className="vindicate-screen-dashboard">
-      <div className="vindicate-ph-divider" />
       <CanvasHeader
         project={project}
         mode={(mode ?? metrics.mode).toUpperCase()}

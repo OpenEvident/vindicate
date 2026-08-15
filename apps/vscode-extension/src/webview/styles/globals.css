@@ -2102,13 +2102,7 @@ body[data-surface="editor"],
 
 /* ── Project health dashboard ── */
 .vindicate-screen-dashboard {
-  padding: 0 20px 28px;
-}
-
-.vindicate-screen-dashboard .vindicate-ph-divider {
-  height: 1px;
-  margin: 24px 0 24px;
-  background: var(--vindicate-border);
+  padding: 16px 20px 28px;
 }
 
 .vindicate-ph-header {
