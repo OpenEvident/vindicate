@@ -2,7 +2,7 @@
   "name": "@vindicate/observability",
   "version": "0.0.0",
   "private": true,
-  "license": "AGPL-3.0-or-later",
+  "license": "Apache-2.0",
   "type": "module",
   "description": "Shared structured logging (Pino) for Vindicate platform apps",
   "main": "./dist/index.js",

@@ -2,7 +2,7 @@
   "name": "@vindicate/runtime-worker",
   "version": "0.0.0",
   "private": true,
-  "license": "AGPL-3.0-or-later",
+  "license": "Apache-2.0",
   "type": "module",
   "description": "Local HTTP execution server for browser automation and project file I/O",
   "scripts": {
