@@ -64,13 +64,13 @@ jobs:
             const fs = require("node:fs");
             const path = "CHANGELOG.md";
             const date = new Date().toISOString().slice(0, 10);
-            const version = process.env.VERSION;
+            const tag = "vscode-v" + process.env.VERSION;
             let text = fs.readFileSync(path, "utf8");
             const marker = "## [Unreleased]";
             if (!text.includes(marker)) {
               throw new Error("CHANGELOG.md has no [Unreleased] section to release");
             }
-            text = text.replace(marker, marker + "\n\n## [" + version + "] - " + date);
+            text = text.replace(marker, marker + "\n\n## [" + tag + "] - " + date);
             fs.writeFileSync(path, text);
           '
 
