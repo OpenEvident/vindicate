@@ -60,6 +60,10 @@ pnpm turbo build --filter=vindicate
 - `docs/SUPPLY_CHAIN_BASELINE.md`
 - `docs/CONTRIBUTING.md`
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
 ## License
 
 Licensed under the [Apache License, Version 2.0](LICENSE).
