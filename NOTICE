@@ -1,0 +1,18 @@
+Vindicate
+Copyright 2026 OpenEvident
+
+This project is licensed under the Apache License, Version 2.0. See LICENSE
+for the full license text.
+
+This project bundles the following third-party software, licensed under the
+Apache License, Version 2.0, whose own NOTICE file is reproduced verbatim
+below as required by Section 4(d) of that license.
+
+--------------------------------------------------------------------------------
+
+Playwright
+Copyright (c) Microsoft Corporation
+
+This software contains code derived from the Puppeteer project
+(https://github.com/puppeteer/puppeteer), available under the Apache 2.0
+license (https://github.com/puppeteer/puppeteer/blob/master/LICENSE).
