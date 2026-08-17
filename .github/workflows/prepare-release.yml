@@ -1,0 +1,107 @@
+name: Prepare VS Code Extension Release
+
+# Manual dispatch only. Bumps apps/vscode-extension/package.json, moves the
+# CHANGELOG's [Unreleased] section into a dated release section, and opens a
+# PR against main — it never pushes to main directly. main is protected
+# (PR + 1 review + 3 required status checks); merging this PR through the
+# normal flow is what actually lands the version bump. Merging it is also
+# what triggers the tag + build (see tag-release.yml).
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version bump for apps/vscode-extension/package.json
+        type: choice
+        required: true
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: prepare-release-vscode-extension
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Bump version and open release PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Bump extension version
+        id: bump
+        working-directory: apps/vscode-extension
+        run: |
+          set -euo pipefail
+          npm version "${{ inputs.bump }}" --no-git-tag-version
+          VERSION="$(node -p "require('./package.json').version")"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "branch=release/vscode-v${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Bumped vscode-extension to v${VERSION}"
+
+      - name: Move CHANGELOG Unreleased section
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          set -euo pipefail
+          node -e '
+            const fs = require("node:fs");
+            const path = "CHANGELOG.md";
+            const date = new Date().toISOString().slice(0, 10);
+            const tag = "vscode-v" + process.env.VERSION;
+            let text = fs.readFileSync(path, "utf8");
+            const marker = "## [Unreleased]";
+            if (!text.includes(marker)) {
+              throw new Error("CHANGELOG.md has no [Unreleased] section to release");
+            }
+            text = text.replace(marker, marker + "\n\n## [" + tag + "] - " + date);
+            fs.writeFileSync(path, text);
+          '
+
+      - name: Commit release branch
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+          BRANCH: ${{ steps.bump.outputs.branch }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "${BRANCH}"
+          git add apps/vscode-extension/package.json CHANGELOG.md
+          git commit -s -m "chore(release): vscode-extension v${VERSION}"
+          git push origin "${BRANCH}" --force
+
+      - name: Open release PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.bump.outputs.version }}
+          BRANCH: ${{ steps.bump.outputs.branch }}
+        run: |
+          set -euo pipefail
+          EXISTING="$(gh pr list --head "${BRANCH}" --base main --state open --json number --jq '.[0].number')"
+          if [ -n "${EXISTING}" ]; then
+            echo "PR #${EXISTING} already open for ${BRANCH}"
+            exit 0
+          fi
+          gh pr create \
+            --base main \
+            --head "${BRANCH}" \
+            --title "chore(release): vscode-extension v${VERSION}" \
+            --body "Bumps \`apps/vscode-extension\` to v${VERSION} and closes out the CHANGELOG's \`[Unreleased]\` section.
+
+          Merging this PR does not publish anything by itself. Merging triggers tagging \`vscode-v${VERSION}\` and the build + GitHub Release (see \`tag-release.yml\`)."

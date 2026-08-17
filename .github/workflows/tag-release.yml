@@ -1,0 +1,58 @@
+name: Tag Release
+
+# Fires when a "release/vscode-v*" PR (opened by prepare-release.yml) is
+# merged to main. Creates the vscode-v* tag from main's post-merge state,
+# then directly invokes vscode-extension-release.yml as a job. It calls the
+# build workflow directly rather than relying on the tag push to trigger it,
+# because a push made with the default GITHUB_TOKEN does not fire other
+# workflows (GitHub's anti-recursion protection) — a direct job call isn't
+# an event, so that restriction doesn't apply to it.
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Tag merged release PR
+    if: >
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release/vscode-v')
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Derive version from released package.json
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./apps/vscode-extension/package.json').version")"
+          echo "value=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        env:
+          TAG: vscode-v${{ steps.version.outputs.value }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${TAG}"
+          git push origin "${TAG}"
+
+  release:
+    name: Build and publish VSIX
+    needs: tag
+    uses: ./.github/workflows/vscode-extension-release.yml
+    with:
+      version: ${{ needs.tag.outputs.version }}
+    permissions:
+      contents: write
