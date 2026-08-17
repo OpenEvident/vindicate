@@ -1,0 +1,44 @@
+name: Tag Release
+
+# Fires when a "release/vscode-v*" PR (opened by prepare-release.yml) is
+# merged to main. Creates and pushes the vscode-v* tag from main's own
+# post-merge state — this is a tag push, not a push to main, so it needs no
+# ruleset bypass. The tag push then triggers vscode-extension-release.yml.
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Tag merged release PR
+    if: >
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release/vscode-v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Derive tag from released version
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./apps/vscode-extension/package.json').version")"
+          echo "tag=vscode-v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${TAG}"
+          git push origin "${TAG}"

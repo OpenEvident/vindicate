@@ -1,18 +1,13 @@
 name: Release VS Code Extension
 
-# Manual release only — builds a universal VSIX on Linux (all keyring platforms bundled).
+# Triggered by a vscode-v* tag push — created by tag-release.yml after a
+# "chore(release): vscode-extension vX.Y.Z" PR is merged to main. Builds a
+# universal VSIX on Linux (all keyring platforms bundled) and publishes it
+# as a GitHub Release.
 on:
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: Version bump for apps/vscode-extension/package.json
-        type: choice
-        required: true
-        default: patch
-        options:
-          - patch
-          - minor
-          - major
+  push:
+    tags:
+      - "vscode-v*"
 
 permissions:
   contents: write
@@ -22,65 +17,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  prepare:
-    name: Bump version and tag
-    runs-on: ubuntu-latest
-    outputs:
-      release_ref: ${{ steps.ref.outputs.value }}
-      version: ${{ steps.bump.outputs.version }}
-      tag: ${{ steps.bump.outputs.tag }}
-    steps:
-      - name: Resolve release branch
-        id: ref
-        run: echo "value=${GITHUB_REF#refs/heads/}" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout release branch
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ steps.ref.outputs.value }}
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: "22"
-
-      - name: Bump extension version
-        id: bump
-        working-directory: apps/vscode-extension
-        run: |
-          set -euo pipefail
-          npm version "${{ inputs.bump }}" --no-git-tag-version
-          VERSION="$(node -p "require('./package.json').version")"
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "tag=vscode-v${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "Bumped vscode-extension to v${VERSION}"
-
-      - name: Commit version bump and create tag
-        env:
-          RELEASE_REF: ${{ steps.ref.outputs.value }}
-          VERSION: ${{ steps.bump.outputs.version }}
-          TAG: ${{ steps.bump.outputs.tag }}
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add apps/vscode-extension/package.json
-          git commit -s -m "chore(release): vscode-extension v${VERSION}"
-          git tag "${TAG}"
-          git fetch origin "${RELEASE_REF}"
-          git push origin HEAD:"${RELEASE_REF}" --force-with-lease="${RELEASE_REF}:origin/${RELEASE_REF}"
-          git push origin "${TAG}"
-
   build:
     name: Build VSIX
-    needs: prepare
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.value }}
     steps:
       - name: Checkout release tag
         uses: actions/checkout@v7
         with:
-          ref: ${{ needs.prepare.outputs.tag }}
+          ref: ${{ github.ref }}
+
+      - name: Derive version from tag
+        id: version
+        run: |
+          set -euo pipefail
+          echo "value=${GITHUB_REF_NAME#vscode-v}" >> "$GITHUB_OUTPUT"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -108,44 +60,42 @@ jobs:
         working-directory: apps/vscode-extension
         run: |
           set -euo pipefail
-          VSIX="vindicate-${{ needs.prepare.outputs.version }}.vsix"
+          VSIX="vindicate-${{ steps.version.outputs.value }}.vsix"
           test -f "$VSIX"
           sha256sum "$VSIX" > "${VSIX}.sha256"
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v7
         with:
-          name: vindicate-vscode-v${{ needs.prepare.outputs.version }}
+          name: vindicate-vscode-v${{ steps.version.outputs.value }}
           path: |
-            apps/vscode-extension/vindicate-${{ needs.prepare.outputs.version }}.vsix
-            apps/vscode-extension/vindicate-${{ needs.prepare.outputs.version }}.vsix.sha256
+            apps/vscode-extension/vindicate-${{ steps.version.outputs.value }}.vsix
+            apps/vscode-extension/vindicate-${{ steps.version.outputs.value }}.vsix.sha256
           if-no-files-found: error
 
   release:
     name: Publish GitHub Release
-    needs:
-      - prepare
-      - build
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download VSIX artifact
         uses: actions/download-artifact@v8
         with:
-          name: vindicate-vscode-v${{ needs.prepare.outputs.version }}
+          name: vindicate-vscode-v${{ needs.build.outputs.version }}
           path: release
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ needs.prepare.outputs.tag }}
-          name: VS Code Extension v${{ needs.prepare.outputs.version }}
+          tag_name: ${{ github.ref_name }}
+          name: VS Code Extension v${{ needs.build.outputs.version }}
           generate_release_notes: true
           body: |
-            ## Vindicate VS Code Extension v${{ needs.prepare.outputs.version }}
+            ## Vindicate VS Code Extension v${{ needs.build.outputs.version }}
 
             Universal VSIX (Windows, macOS, Linux). Built on `ubuntu-latest`.
 
-            Install: download `vindicate-${{ needs.prepare.outputs.version }}.vsix` and use
+            Install: download `vindicate-${{ needs.build.outputs.version }}.vsix` and use
             **Install from VSIX…** in VS Code, Cursor, Antigravity, or any other VS Code-compatible
             editor.
 
