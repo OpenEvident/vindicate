@@ -2,6 +2,17 @@
 
 Monorepo for Vindicate — AI-native Playwright test automation for VS Code, Cursor, and Claude Code.
 
+![GitHub top language](https://img.shields.io/github/languages/top/OpenEvident/vindicate)
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=OpenEvident.vindicate.visitor-badge&left_text=visitors&right_color=%23123fc4&format=true&logo=github)
+![GitHub forks](https://img.shields.io/github/forks/OpenEvident/vindicate?style=social)
+![GitHub contributors](https://img.shields.io/github/contributors/OpenEvident/vindicate)
+![GitHub Repo stars](https://img.shields.io/github/stars/OpenEvident/vindicate?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/OpenEvident/vindicate)
+![GitHub watchers](https://img.shields.io/github/watchers/OpenEvident/vindicate?style=social)
+![GitHub issues](https://img.shields.io/github/issues/OpenEvident/vindicate)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/OpenEvident/vindicate)
+![GitHub](https://img.shields.io/github/license/OpenEvident/vindicate)
+
 ## Architecture
 
 Vindicate is a **stateless local stack**: the VS Code extension installs rules + skills, then agents call a local MCP server that serves workflow guidance and browser/codegen tools. No cloud job machine, no MongoDB, no remote orchestration on the runtime path.
@@ -67,3 +78,9 @@ See [CHANGELOG.md](CHANGELOG.md).
 ## License
 
 Licensed under the [Apache License, Version 2.0](LICENSE).
+
+## Contributors
+
+<a href="https://github.com/OpenEvident/vindicate/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=OpenEvident/vindicate" />
+</a>
