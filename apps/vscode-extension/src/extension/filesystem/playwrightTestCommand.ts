@@ -51,9 +51,18 @@ export function allowlistSuitePaths(
   return allowed;
 }
 
+/**
+ * Quote a Playwright CLI path for VS Code's integrated terminal.
+ * Escape backslashes before quotes so `\"` cannot leave an unescaped `"`.
+ */
 export function quotePlaywrightArg(arg: string): string {
   if (!/[\s"'`$&|;<>()!]/.test(arg)) return arg;
-  return `"${arg.replace(/"/g, '\\"')}"`;
+  const escaped = arg
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\$/g, "\\$")
+    .replace(/`/g, "\\`");
+  return `"${escaped}"`;
 }
 
 export function buildPlaywrightTestCommand(

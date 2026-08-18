@@ -61,6 +61,13 @@ describe("playwrightTestCommand", () => {
     );
   });
 
+  it("escapes backslashes before quotes inside quoted args", () => {
+    // Without escaping `\`, a trailing `\"` would leave an unescaped quote.
+    expect(quotePlaywrightArg('tests\\file".spec.ts')).toBe('"tests\\\\file\\".spec.ts"');
+    expect(quotePlaywrightArg("tests/$secret.spec.ts")).toBe('"tests/\\$secret.spec.ts"');
+    expect(quotePlaywrightArg("tests/`x`.spec.ts")).toBe('"tests/\\`x\\`.spec.ts"');
+  });
+
   it("derives labels and sorts suite options", () => {
     expect(suiteLabelFromRelativePath("tests/checkout/cart.spec.ts")).toBe("cart");
     expect(toTestSuiteOptions(["tests/login.spec.ts", "tests/smoke.spec.ts"])).toEqual([
