@@ -22,6 +22,11 @@ import type { DashboardMetricsCache } from "./DashboardMetricsCache";
 import type { VindicateStatusBarItem } from "./StatusBarItem";
 import type { RuntimeLifecycle } from "../processes/RuntimeLifecycle";
 import { syncWebviewState } from "./syncWebviewState";
+import { collectProjectTestFiles } from "../filesystem/projectTestFiles.js";
+import {
+  buildPlaywrightTestCommand,
+  toPosixRelative
+} from "../filesystem/playwrightTestCommand.js";
 
 type CompanionWriteResult = {
   ok: boolean;
@@ -75,7 +80,7 @@ export class MessageRouter {
       case "metrics:refresh":
         return this.handleMetricsRefresh(folderPath);
       case "tests:runAll":
-        return this.handleRunAllTests(folderPath);
+        return this.handleRunAllTests(folderPath, msg.suites);
       case "nav:openFolder":
         return void vscode.commands.executeCommand("vscode.openFolder");
       case "nav:openFile":
@@ -492,14 +497,20 @@ export class MessageRouter {
     this.telemetry.track("metrics_refreshed");
   }
 
-  private async handleRunAllTests(folderPath: string | null): Promise<void> {
+  private async handleRunAllTests(
+    folderPath: string | null,
+    suites?: string[]
+  ): Promise<void> {
     if (!folderPath) return;
+    const knownAbs = await collectProjectTestFiles(folderPath);
+    const knownRel = knownAbs.map((abs) => toPosixRelative(folderPath, abs));
+    const command = buildPlaywrightTestCommand(suites, knownRel);
     const terminal = vscode.window.createTerminal({
       name: "Vindicate Tests",
       cwd: folderPath
     });
     terminal.show(true);
-    terminal.sendText("npx playwright test");
+    terminal.sendText(command);
     this.telemetry.track("metrics_refreshed");
   }
 

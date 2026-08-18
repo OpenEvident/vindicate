@@ -3772,6 +3772,94 @@ body[data-surface="editor"],
   width: 100%;
 }
 
+.vindicate-run-tests {
+  display: inline-flex;
+  align-items: stretch;
+  position: relative;
+}
+
+.vindicate-run-tests.full {
+  width: 100%;
+}
+
+.vindicate-run-tests.split .vbtn.primary:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.vindicate-run-tests.full.split .vbtn.primary:first-child {
+  flex: 1;
+}
+
+.vindicate-run-tests-chevron {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid color-mix(in oklab, #fff 28%, transparent);
+  padding-left: 7px;
+  padding-right: 7px;
+  min-width: 28px;
+}
+
+.vindicate-run-tests-menu {
+  z-index: 40;
+  max-height: min(320px, calc(100vh - 16px));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--vs-border);
+  border-radius: 8px;
+  background: var(--vs-sidebar, var(--vscode-sideBar-background, #1e1e1e));
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+}
+
+.vindicate-run-tests-list {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.vindicate-run-tests-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  color: var(--vs-text);
+  cursor: pointer;
+}
+
+.vindicate-run-tests-row.all {
+  border-bottom: 1px solid var(--vs-border);
+  font-weight: 600;
+}
+
+.vindicate-run-tests-row:hover {
+  background: var(--vs-hover);
+}
+
+.vindicate-run-tests-row input {
+  margin-top: 2px;
+}
+
+.vindicate-run-tests-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.vindicate-run-tests-copy .name {
+  font-weight: 500;
+}
+
+.vindicate-run-tests-copy .path {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--vs-text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ── Dashboard canvas styles ─────────────────────────────────────────────── */
 .dash-tabs {
   display: flex;

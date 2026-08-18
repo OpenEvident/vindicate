@@ -11,6 +11,7 @@ describe("metricAvailability", () => {
     expect(m.availability.spec.ready).toBe(false);
     expect(m.availability.testHealth.ready).toBe(false);
     expect(m.healthScore).toBe(0);
+    expect(m.testSuites).toEqual([]);
   });
 
   it("buildMetricAvailability lists spec blocker when no features dir", () => {

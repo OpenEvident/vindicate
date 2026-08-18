@@ -95,7 +95,7 @@ export type WebviewMessage =
   | { type: "config:disconnectMcp"; tool: McpToolName }
   | { type: "prompts:saveTemplates"; templates: PromptTemplate[] }
   | { type: "metrics:refresh" }
-  | { type: "tests:runAll" }
+  | { type: "tests:runAll"; suites?: string[] }
   | { type: "nav:openFullView" }
   | { type: "nav:showPanel" }
   | { type: "nav:openRecordings" }

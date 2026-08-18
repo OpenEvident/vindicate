@@ -4,6 +4,7 @@ export type {
   VindicateWorkspaceState,
   ServiceHealth,
   DashboardMetrics,
+  TestSuiteOption,
   AcceptanceCriteriaCoverage,
   DashboardAlert,
   TestHealthData,

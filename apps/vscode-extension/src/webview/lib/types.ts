@@ -3,6 +3,7 @@ export type {
   StepId,
   VindicateWorkspaceState,
   DashboardMetrics,
+  TestSuiteOption,
   MetricAvailability,
   MetricId,
   MetricState,

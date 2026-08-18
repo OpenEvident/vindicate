@@ -15,6 +15,7 @@ import { calculateAcceptanceCoverage } from "./AcceptanceCoverageAnalyzer";
 import { analyzeTraceabilityContract } from "./TraceabilityContractAnalyzer";
 import { analyzeFaTagUniqueness } from "./FaTagUniquenessAnalyzer";
 import { TestFileIndex } from "./TestFileIndex";
+import { toTestSuiteOptions } from "./playwrightTestCommand";
 
 export interface IFileWatcherService extends vscode.Disposable {
   getLastPresentSteps(): ReadonlySet<StepId>;
@@ -211,7 +212,8 @@ export class FileWatcherService implements IFileWatcherService {
         {
           ...core,
           project: path.basename(this.folderPath),
-          branch
+          branch,
+          testSuites: toTestSuiteOptions(testSnapshots.map((snapshot) => snapshot.relativePath))
         },
         {
           featuresDirExists,

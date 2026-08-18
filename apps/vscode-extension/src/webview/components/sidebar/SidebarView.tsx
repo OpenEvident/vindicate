@@ -2,13 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { postToExtension } from "../../lib/bridge";
 import { getExtensionVersion, getFaviconUri, getLogoTextUri } from "../../lib/webviewAssets";
 import { createEmptyDashboardMetrics } from "../../../shared/metricAvailability";
+import type { TestSuiteOption } from "../../../shared/types";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import { useHealthStore } from "../../stores/healthStore";
 import { useOnboardingStore } from "../../stores/onboardingStore";
 import { HealthRing } from "../shared/HealthRing";
 import { MetricTip } from "../shared/MetricTip";
+import { RunTestsControl } from "../shared/RunTestsControl";
 
 const EXT_VERSION = `v${getExtensionVersion()}`;
+
+// Store selectors must return a stable reference, otherwise zustand re-renders forever.
+const NO_TEST_SUITES: TestSuiteOption[] = [];
 
 // ── Overflow ··· menu ───────────────────────────────────────────────────────
 function OverflowMenu() {
@@ -224,19 +229,11 @@ function SidebarFeatureList() {
 
 function SidebarQuickActions() {
   const isSyncing = useDashboardStore((s) => s.isLoading);
+  const testSuites = useDashboardStore((s) => s.metrics?.testSuites) ?? NO_TEST_SUITES;
   return (
     <div className="mt-3 flex flex-col gap-1.5">
       <SidebarSectionTitle>Quick actions</SidebarSectionTitle>
-      <button
-        type="button"
-        className="vbtn primary full"
-        onClick={() => postToExtension({ type: "tests:runAll" })}
-      >
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden>
-          <path d="M3 2.5v9l8-4.5z" />
-        </svg>
-        Run all tests
-      </button>
+      <RunTestsControl suites={testSuites} fullWidth />
       <button
         type="button"
         className="vbtn full"
