@@ -1,6 +1,12 @@
+<div align="center">
+
+<img src="apps/vscode-extension/resources/vindicate-logo-1024.png" alt="Vindicate" width="128" />
+
 # Vindicate Platform
 
-Monorepo for Vindicate — AI-native Playwright test automation for VS Code, Cursor, and Claude Code.
+**Autonomous quality for AI-native development teams.**
+
+AI-native Playwright test automation for VS Code, Cursor, GitHub Copilot, Claude Code, and Antigravity.
 
 ![GitHub top language](https://img.shields.io/github/languages/top/OpenEvident/vindicate)
 ![visitors](https://visitor-badge.laobi.icu/badge?page_id=OpenEvident.vindicate.visitor-badge&left_text=visitors&right_color=%23123fc4&format=true&logo=github)
@@ -13,30 +19,53 @@ Monorepo for Vindicate — AI-native Playwright test automation for VS Code, Cur
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/OpenEvident/vindicate)
 ![GitHub](https://img.shields.io/github/license/OpenEvident/vindicate)
 
+</div>
+
 ## Architecture
 
-Vindicate is a **stateless local stack**: the VS Code extension installs rules + skills, then agents call a local MCP server that serves workflow guidance and browser/codegen tools. No cloud job machine, no MongoDB, no remote orchestration on the runtime path.
+Vindicate is a **stateless local stack**. The extension installs rules and skills, then your agent (Cursor, GitHub Copilot, Claude Code, or Antigravity) calls a local MCP server for workflow guidance, codegen, and browser tools. No cloud job machine, no MongoDB, no remote orchestration.
 
+```mermaid
+flowchart TB
+    subgraph ide["Your editor"]
+        Agent["AI agent"]
+        Ext["Vindicate extension"]
+    end
+
+    subgraph local["This machine, 127.0.0.1 only"]
+        MCP["runtime-mcp"]
+        Worker["runtime-worker"]
+        Chromium["Chromium"]
+    end
+
+    Agent -->|MCP tools| MCP
+    Ext -->|spawns + supervises| MCP
+    Ext -->|spawns + supervises| Worker
+    MCP -->|browser / record / API| Worker
+    Worker --> Chromium
 ```
-Agent (Cursor / Claude Code / Copilot)
-  ├─ L0 rules + L1 skill (installed by extension)
-  └─ runtime-mcp @ 127.0.0.1 (stateless)
-       ├─ vindicate_workflow → bundled graphs + nodes + refs
-       ├─ browser_* / browser_record_* → runtime-worker @ 127.0.0.1
-       ├─ vindicate_generate_code (4 ops) · run_tests · scaffold_project
-       └─ vindicate_ask_user · vindicate_design · vindicate_show_panel
-```
+
+| Component                      | Role                                                      |
+| ------------------------------ | --------------------------------------------------------- |
+| **VS Code / Cursor extension** | Onboarding, dashboard, agent pairing, process supervisor  |
+| **runtime-mcp**                | MCP server the agent talks to: workflow, codegen, tools   |
+| **runtime-worker**             | Playwright browser sessions, recordings, and API requests |
+
+`runtime-mcp` and `runtime-worker` are machine-wide singletons. Isolation between projects is per session, not per process. Full detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Workspace layout
 
 ```text
 apps/
-  runtime-mcp/      Local MCP server (workflow + codegen + tools)
-  runtime-worker/   Playwright browser + recording worker
-  vscode-extension/ VS Code / Cursor extension
-  vindicate-ui/        Bundled MCP Apps panel UI
+  runtime-mcp/       Local MCP server (workflow + codegen + tools)
+  runtime-worker/    Playwright browser + recording worker
+  vscode-extension/  VS Code / Cursor extension
+  vindicate-ui/      Bundled MCP Apps panel UI
 packages/
-  protocol/         Shared Zod contracts
+  protocol/          Shared Zod contracts
+  config/            Shared configuration presets
+  security/          Security policy and auth types
+  observability/     Structured logging (Pino)
 ```
 
 ## Tooling
@@ -64,12 +93,12 @@ pnpm turbo build --filter=@vindicate/runtime-worker
 pnpm turbo build --filter=vindicate
 ```
 
-## Governance docs
+## Docs
 
-- `docs/ARCHITECTURE.md`
-- `docs/SECURITY_BASELINE.md`
-- `docs/SUPPLY_CHAIN_BASELINE.md`
-- `docs/CONTRIBUTING.md`
+- [Architecture](docs/ARCHITECTURE.md)
+- [Contributing](docs/CONTRIBUTING.md)
+- [Security baseline](docs/SECURITY_BASELINE.md)
+- [Supply-chain baseline](docs/SUPPLY_CHAIN_BASELINE.md)
 
 ## Changelog
 
@@ -82,5 +111,5 @@ Licensed under the [Apache License, Version 2.0](LICENSE).
 ## Contributors
 
 <a href="https://github.com/OpenEvident/vindicate/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=OpenEvident/vindicate" />
+  <img src="https://contrib.rocks/image?repo=OpenEvident/vindicate" alt="Contributors to OpenEvident/vindicate" />
 </a>
