@@ -497,10 +497,7 @@ export class MessageRouter {
     this.telemetry.track("metrics_refreshed");
   }
 
-  private async handleRunAllTests(
-    folderPath: string | null,
-    suites?: string[]
-  ): Promise<void> {
+  private async handleRunAllTests(folderPath: string | null, suites?: string[]): Promise<void> {
     if (!folderPath) return;
     const knownAbs = await collectProjectTestFiles(folderPath);
     const knownRel = knownAbs.map((abs) => toPosixRelative(folderPath, abs));

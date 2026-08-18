@@ -23,9 +23,9 @@ describe("playwrightTestCommand", () => {
     expect(buildPlaywrightTestCommand(["tests/smoke.spec.ts"], known)).toBe(
       "npx playwright test tests/smoke.spec.ts"
     );
-    expect(
-      buildPlaywrightTestCommand(["tests/smoke.spec.ts", "tests/login.spec.ts"], known)
-    ).toBe("npx playwright test tests/smoke.spec.ts tests/login.spec.ts");
+    expect(buildPlaywrightTestCommand(["tests/smoke.spec.ts", "tests/login.spec.ts"], known)).toBe(
+      "npx playwright test tests/smoke.spec.ts tests/login.spec.ts"
+    );
   });
 
   it("drops traversal, unknown, and non-test paths then falls back to run-all", () => {

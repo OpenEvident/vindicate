@@ -110,7 +110,12 @@ export function RunTestsControl({ suites, fullWidth = false }: RunTestsControlPr
       ref={wrapRef}
       className={`vindicate-run-tests${fullWidth ? " full" : ""}${suites.length > 0 ? " split" : ""}`}
     >
-      <button type="button" className="vbtn primary" onClick={run} disabled={!runningAll && selectedCount === 0}>
+      <button
+        type="button"
+        className="vbtn primary"
+        onClick={run}
+        disabled={!runningAll && selectedCount === 0}
+      >
         <PlayIcon />
         {label}
       </button>
