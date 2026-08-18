@@ -45,11 +45,11 @@ flowchart TB
     Worker --> Chromium
 ```
 
-| Component | Role |
-| --- | --- |
-| **VS Code / Cursor extension** | Onboarding, dashboard, agent pairing, process supervisor |
-| **runtime-mcp** | MCP server the agent talks to: workflow, codegen, tools |
-| **runtime-worker** | Playwright browser sessions, recordings, and API requests |
+| Component                      | Role                                                      |
+| ------------------------------ | --------------------------------------------------------- |
+| **VS Code / Cursor extension** | Onboarding, dashboard, agent pairing, process supervisor  |
+| **runtime-mcp**                | MCP server the agent talks to: workflow, codegen, tools   |
+| **runtime-worker**             | Playwright browser sessions, recordings, and API requests |
 
 `runtime-mcp` and `runtime-worker` are machine-wide singletons. Isolation between projects is per session, not per process. Full detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
