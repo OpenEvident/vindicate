@@ -64,7 +64,7 @@ capture locators, approve the story, generate automation, or write any code.
 - **1:1 AC ↔ testcase** — every `AC-n:` has exactly one `## … [AC-n]` block; counts must match.
 - **Split ACs by phase** — multi-page / multi-step recordings need multiple ACs, not a single AC-1.
 - **Spec sync** — if tests exist for this feature, story AC count must match spec test count (see `ref-requirements`).
-- **Draft only.** Leave `status: draft`. Do not call `vindicate_validate_story` to approve.
+- **Draft only.** Leave `status: draft`. Do not call `vindicate_approve_story` — approval happens later, on the `write` path in `design`.
 - **No automation.** Never call `vindicate_generate_code`. Never touch `tests/`, `pages/`, or `panels/`.
   Never run `npm run audit`.
 - **Propose, don't impose** — suggested edge cases are flagged in chat, not silently added.

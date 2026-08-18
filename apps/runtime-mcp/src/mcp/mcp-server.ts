@@ -12,6 +12,7 @@ import { registerElicitationResources } from "./resources/elicitation-resources.
 import { registerVindicateAppResource } from "./resources/vindicate-app-resource.js";
 import { registerSlashPrompts } from "./prompts/slash-prompts.js";
 import { registerApiRequestTool } from "./tools/api-request-tool.js";
+import { registerApproveStoryTool } from "./tools/approve-story-tool.js";
 import { registerAskUserTool } from "./tools/ask-user-tool.js";
 import { registerBrowserActTool } from "./tools/browser-act-tool.js";
 import { registerBrowserAssertTool } from "./tools/browser-assert-tool.js";
@@ -108,6 +109,7 @@ export function createVindicateMcpServer(deps: McpServerDeps): {
   registerApiRequestTool(mcp, { workerClient: deps.workerClient });
   registerGenerateCodeTool(mcp, projectFs);
   registerValidateStoryTool(mcp, projectFs);
+  registerApproveStoryTool(mcp, projectFs);
   registerScaffoldTools(mcp, projectFs);
   registerTestTool(mcp, projectRoot);
   registerRecordingTools(mcp, { workerClient: deps.workerClient, projectRoot });

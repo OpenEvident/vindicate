@@ -33,13 +33,13 @@ this gate only confirms the restructure plan.)
 3. **Reconcile with the user via the panel.** Map each scenario to a test title `[AC-n] should <present-tense verb> <observable outcome>` (≤60 chars). The user adds/removes freely; treat chat feedback as panel edits and re-call **`vindicate_design`** with the updated `suites` and the prior design as `previous` (add/modify/remove badges) until the set is settled.
 4. **Coverage check (groundable plan).** A scenario is groundable when it has **a finalized recording or live-captured locator evidence from `ground`**. Any agreed scenario with neither → return to **`ground`** to capture it (`design → ground`), then come back here to delta-confirm. Never approve a plan you can't ground.
 5. Resolve the layer per scenario (default **UI**; **hybrid** for ≥4-step flows or ≥3 seeded backend records; **API-only** when no UI element is in the verification). For hybrid, note the API seed → UI verify boundary.
-6. **Finalize the story:** assign sequential `[AC-n]` to the agreed scenarios, **lock the feature slug** (the 7-token noun used everywhere downstream), `vindicate_validate_story`, and set `status: approved`. Fix any validation error and re-validate; never approve a failing story. **If the locked slug differs from the one `understand` proposed**, rename the draft to `.vindicate/stories/<slug>.story.md` so the 7-token naming is consistent before any code is generated.
+6. **Finalize the story:** assign sequential `[AC-n]` to the agreed scenarios, **lock the feature slug** (the 7-token noun used everywhere downstream), then `vindicate_approve_story` — it validates the story as-if-approved and only writes `status: approved` if that passes; nothing is written on failure. Fix any returned error and call it again. **If the locked slug differs from the one `understand` proposed**, rename the draft to `.vindicate/stories/<slug>.story.md` so the 7-token naming is consistent before any code is generated.
 7. **Build the write plan + confirm once.** Target spec (`tests/<feature>.spec.ts`), operation (`write_new` for a new feature, `edit_append` for adding to an existing spec), estimated test count, fixtures/page objects involved → render via `vindicate_design`, then ask **once** via `vindicate_ask_user`: "Does this look right?"
 
 ## Tools
 
 - `vindicate_design` — render/update the design-approval panel (the merged set/update design tool); pass `previous` to show edit badges.
-- `vindicate_validate_story` — validate story frontmatter + structure before setting `status: approved`.
+- `vindicate_approve_story` — validates the story (frontmatter, FA tags, sequential `[AC-n]`, every testcase tagged) and writes `status: approved` only if it passes.
 - `vindicate_ask_user` — the single approval question.
 
 ## Rules
@@ -61,7 +61,7 @@ this gate only confirms the restructure plan.)
 
 ### write-plan (write path)
 
-Reconcile the drafted candidates against `ground`'s findings → propose bounded additions → settle the set with the user via the panel → check every scenario is groundable (`design → ground` for gaps) → assign `[AC-n]`, lock the slug, `vindicate_validate_story`, approve the story → build the write plan (target spec, `write_new`|`edit_append`, count) → single panel confirmation.
+Reconcile the drafted candidates against `ground`'s findings → propose bounded additions → settle the set with the user via the panel → check every scenario is groundable (`design → ground` for gaps) → assign `[AC-n]`, lock the slug, `vindicate_approve_story` → build the write plan (target spec, `write_new`|`edit_append`, count) → single panel confirmation.
 
 ### refactor-plan (refactor path)
 
@@ -80,6 +80,6 @@ Reconcile the drafted candidates against `ground`'s findings → propose bounded
 ## Escalation
 
 - `vindicate_design` failure → report the error; do not advance.
-- `vindicate_validate_story` errors → fix the story and re-validate; never approve a failing story.
+- `vindicate_approve_story` returns `approved: false` → fix the listed field errors and call it again; nothing is written until it passes.
 - All scenarios already covered (nothing to plan) → ask whether to stop or pick a different area.
 - User rejects the plan repeatedly → capture what they want changed; revise, don't proceed on an unapproved plan.

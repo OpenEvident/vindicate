@@ -281,7 +281,7 @@ Registered in `mcp-server.ts` (`apps/runtime-mcp/src/mcp/tools/`):
 
 | Category          | Tools                                                                                                                                                                      |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Workflow          | `vindicate_workflow`, `vindicate_validate_story`, `vindicate_ask_user`, `vindicate_design`, `vindicate_show_panel`                                                         |
+| Workflow          | `vindicate_workflow`, `vindicate_validate_story`, `vindicate_approve_story`, `vindicate_ask_user`, `vindicate_design`, `vindicate_show_panel`                              |
 | Codegen / project | `vindicate_generate_code` (UI + API modes), `scaffold_project`, `run_tests`                                                                                                |
 | Browser           | `browser_session`, `browser_navigate`, `browser_read`, `browser_act`, `browser_assert`, `browser_diagnose` (optional, flag-gated)                                          |
 | API               | `api_request` — stateless single-request fallback/gap-filler, mirrors `browser_diagnose`'s role for UI                                                                     |

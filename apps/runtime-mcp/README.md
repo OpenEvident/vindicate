@@ -6,9 +6,9 @@ Stateless local MCP server for Vindicate Playwright automation.
 
 Serves bundled workflow content (`vindicate_workflow`), browser/recording proxies to the runtime worker, files-as-truth codegen (`vindicate_generate_code`), test execution, scaffold templates, and inline panels. Holds **no job state** between tool calls.
 
-## Tool surface (20)
+## Tool surface (21)
 
-Workflow: `vindicate_workflow` · `vindicate_validate_story` · `vindicate_ask_user` · `vindicate_design` · `vindicate_show_panel`
+Workflow: `vindicate_workflow` · `vindicate_validate_story` · `vindicate_approve_story` · `vindicate_ask_user` · `vindicate_design` · `vindicate_show_panel`
 
 Codegen / project: `vindicate_generate_code` · `scaffold_project` · `run_tests`
 

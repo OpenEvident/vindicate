@@ -5,34 +5,10 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
 import type { ProjectFs } from "../../fs/project-fs.js";
+import { loadOtherStories } from "../../story/load-other-stories.js";
 import { validateStoryContent } from "../../story/validate-story.js";
 import { toMcpToolError } from "./error-mapper.js";
 import { toolJson } from "./result.js";
-
-async function loadOtherStories(
-  projectFs: ProjectFs,
-  filePath: string
-): Promise<Array<{ path: string; content: string }>> {
-  const stories: Array<{ path: string; content: string }> = [];
-  try {
-    const entries = await projectFs.list(".vindicate/stories");
-    for (const entry of entries) {
-      if (entry.type !== "file" || !entry.name.endsWith(".story.md")) {
-        continue;
-      }
-      const relPath = `.vindicate/stories/${entry.name}`;
-      try {
-        const content = await projectFs.read(relPath);
-        stories.push({ path: relPath, content });
-      } catch {
-        continue;
-      }
-    }
-  } catch {
-    return stories;
-  }
-  return stories.filter((story) => story.path !== filePath.replace(/\\/g, "/"));
-}
 
 export function registerValidateStoryTool(server: McpServer, projectFs: ProjectFs): void {
   server.registerTool(

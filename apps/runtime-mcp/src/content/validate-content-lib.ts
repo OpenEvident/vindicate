@@ -1,6 +1,7 @@
 export const CANONICAL_TOOLS = [
   "vindicate_workflow",
   "vindicate_validate_story",
+  "vindicate_approve_story",
   "vindicate_generate_code",
   "scaffold_project",
   "run_tests",

@@ -33,6 +33,9 @@ vi.mock("../../src/mcp/tools/generate-code-tool.js", () => ({
 vi.mock("../../src/mcp/tools/validate-story-tool.js", () => ({
   registerValidateStoryTool: vi.fn()
 }));
+vi.mock("../../src/mcp/tools/approve-story-tool.js", () => ({
+  registerApproveStoryTool: vi.fn()
+}));
 vi.mock("../../src/mcp/tools/test-tool.js", () => ({
   registerTestTool: vi.fn()
 }));
@@ -73,6 +76,7 @@ import { registerBrowserReadTool } from "../../src/mcp/tools/browser-read-tool.j
 import { registerBrowserSessionTool } from "../../src/mcp/tools/browser-session-tool.js";
 import { registerGenerateCodeTool } from "../../src/mcp/tools/generate-code-tool.js";
 import { registerValidateStoryTool } from "../../src/mcp/tools/validate-story-tool.js";
+import { registerApproveStoryTool } from "../../src/mcp/tools/approve-story-tool.js";
 import { registerScaffoldTools } from "../../src/mcp/tools/scaffold-tools.js";
 import { registerRecordingTools } from "../../src/mcp/tools/recording-tools.js";
 import { registerAskUserTool } from "../../src/mcp/tools/ask-user-tool.js";
@@ -108,6 +112,7 @@ describe("createVindicateMcpServer", () => {
     expect(registerBrowserAssertTool).toHaveBeenCalledOnce();
     expect(registerGenerateCodeTool).toHaveBeenCalledOnce();
     expect(registerValidateStoryTool).toHaveBeenCalledOnce();
+    expect(registerApproveStoryTool).toHaveBeenCalledOnce();
     expect(registerScaffoldTools).toHaveBeenCalledOnce();
     expect(registerTestTool).toHaveBeenCalledOnce();
     expect(registerRecordingTools).toHaveBeenCalledOnce();
