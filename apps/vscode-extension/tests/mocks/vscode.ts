@@ -58,6 +58,14 @@ let statHandler: StatHandler = async () => {
 };
 let folderPickResult: WorkspaceFolder | undefined;
 
+export interface TerminalCall {
+  name?: string;
+  cwd?: string;
+  texts: string[];
+}
+
+let terminalCalls: TerminalCall[] = [];
+
 const watcherListeners: {
   onDidCreate: Array<() => void>;
   onDidChange: Array<() => void>;
@@ -71,9 +79,14 @@ export function __resetVscodeMock(): void {
     throw Object.assign(new Error("ENOENT"), { code: "FileNotFound" });
   };
   folderPickResult = undefined;
+  terminalCalls = [];
   watcherListeners.onDidCreate = [];
   watcherListeners.onDidChange = [];
   watcherListeners.onDidDelete = [];
+}
+
+export function __getTerminalCalls(): TerminalCall[] {
+  return terminalCalls;
 }
 
 export function __setWorkspaceFolders(folders: WorkspaceFolder[] | undefined): void {
@@ -116,7 +129,21 @@ export const window = {
     backgroundColor: undefined,
     show: () => {},
     dispose: () => {}
-  })
+  }),
+  createTerminal: (options?: { name?: string; cwd?: string }) => {
+    const call: TerminalCall = {
+      name: options?.name,
+      cwd: options?.cwd,
+      texts: []
+    };
+    terminalCalls.push(call);
+    return {
+      show: () => {},
+      sendText: (text: string) => {
+        call.texts.push(text);
+      }
+    };
+  }
 };
 
 export const env = {

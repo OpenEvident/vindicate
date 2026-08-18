@@ -54,6 +54,13 @@ export interface DashboardMetrics {
   healthDelta: number;
   lastUpdated: string;
   availability: MetricAvailability;
+  /** Playwright spec files under `tests/`. Optional so health formulas stay unchanged. */
+  testSuites?: TestSuiteOption[];
+}
+
+export interface TestSuiteOption {
+  relativePath: string;
+  label: string;
 }
 
 export type PromptCategory = "onboarding" | "domain" | "specs" | "tests" | "custom";

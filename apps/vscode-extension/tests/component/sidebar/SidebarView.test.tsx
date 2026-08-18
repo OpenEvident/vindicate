@@ -2,8 +2,24 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { SidebarView } from "../../../src/webview/components/sidebar/SidebarView";
 import { useOnboardingStore } from "../../../src/webview/stores/onboardingStore";
+import { useDashboardStore } from "../../../src/webview/stores/dashboardStore";
 import { useHealthStore } from "../../../src/webview/stores/healthStore";
+import { createEmptyDashboardMetrics } from "../../../src/shared/metricAvailability";
 import * as bridge from "../../../src/webview/lib/bridge";
+
+function activateWorkspace(): void {
+  useOnboardingStore.setState({
+    hasFolder: true,
+    folderName: "demo",
+    folderPath: "/demo",
+    mode: "build",
+    completedSteps: [1, 2, 3, 4],
+    screen: "dashboard",
+    onboardingDone: true,
+    detectedTools: { cursor: false, vscode: false, claudeCode: false, antigravity: false }
+  });
+  useHealthStore.setState({ runtime: "up", mcp: "up" });
+}
 
 describe("SidebarView", () => {
   it("renders no-folder card with open folder action", () => {
@@ -54,6 +70,30 @@ describe("SidebarView", () => {
     expect(post).toHaveBeenCalledWith({ type: "nav:openFullView" });
 
     post.mockRestore();
+  });
+
+  it("renders quick actions when metrics predate testSuites", () => {
+    const legacyMetrics = createEmptyDashboardMetrics();
+    delete legacyMetrics.testSuites;
+    useDashboardStore.setState({ metrics: legacyMetrics, isLoading: false, error: null });
+    activateWorkspace();
+
+    render(<SidebarView />);
+
+    expect(screen.getByRole("button", { name: "Run all tests" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Choose test suites" })).not.toBeInTheDocument();
+  });
+
+  it("renders the suite picker when metrics include testSuites", () => {
+    const metrics = createEmptyDashboardMetrics();
+    metrics.testSuites = [{ relativePath: "tests/smoke.spec.ts", label: "smoke" }];
+    useDashboardStore.setState({ metrics, isLoading: false, error: null });
+    activateWorkspace();
+
+    render(<SidebarView />);
+
+    expect(screen.getByRole("button", { name: "Run all tests" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Choose test suites" })).toBeInTheDocument();
   });
 
   it("shows status footer with Runtime, MCP and version", () => {

@@ -1,3 +1,4 @@
+import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MessageRouter } from "../../../src/extension/views/MessageRouter";
 import type { IWorkspaceStateService } from "../../../src/extension/shared/WorkspaceStateService";
@@ -8,6 +9,17 @@ import type { IConfigStatusService } from "../../../src/extension/config/ConfigS
 import type { IToolDetector } from "../../../src/extension/config/ToolDetector";
 import type { IFileWatcherService } from "../../../src/extension/filesystem/FileWatcherService";
 import { DashboardMetricsCache } from "../../../src/extension/views/DashboardMetricsCache";
+import { collectProjectTestFiles } from "../../../src/extension/filesystem/projectTestFiles.js";
+import { __getTerminalCalls, __resetVscodeMock } from "../../mocks/vscode";
+
+vi.mock("../../../src/extension/filesystem/projectTestFiles.js", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../src/extension/filesystem/projectTestFiles.js")>();
+  return {
+    ...actual,
+    collectProjectTestFiles: vi.fn()
+  };
+});
 
 describe("MessageRouter", () => {
   // Complex vscode-dependent interfaces are cast via `as unknown as Interface`.
@@ -137,6 +149,8 @@ describe("MessageRouter", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    __resetVscodeMock();
+    vi.mocked(collectProjectTestFiles).mockResolvedValue([]);
     router = new MessageRouter(
       workspaceState,
       stateFile,
@@ -189,6 +203,26 @@ describe("MessageRouter", () => {
     expect(stateFile.write).toHaveBeenCalled();
     expect(telemetry.track).toHaveBeenCalledWith("step_completed", { step: "2" });
     expect(broadcaster.broadcast).toHaveBeenCalledWith({ type: "onboarding:stepDone", step: 2 });
+  });
+
+  it("handle tests:runAll without suites runs the full suite", async () => {
+    await router.handle({ type: "tests:runAll" }, "/project");
+    const calls = __getTerminalCalls();
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.name).toBe("Vindicate Tests");
+    expect(calls[0]?.cwd).toBe("/project");
+    expect(calls[0]?.texts).toEqual(["npx playwright test"]);
+    expect(telemetry.track).toHaveBeenCalledWith("metrics_refreshed");
+  });
+
+  it("handle tests:runAll with a subset sends allowlisted file args", async () => {
+    const folder = path.resolve("/project");
+    vi.mocked(collectProjectTestFiles).mockResolvedValue([
+      path.join(folder, "tests", "smoke.spec.ts"),
+      path.join(folder, "tests", "login.spec.ts")
+    ]);
+    await router.handle({ type: "tests:runAll", suites: ["tests/smoke.spec.ts"] }, folder);
+    expect(__getTerminalCalls()[0]?.texts).toEqual(["npx playwright test tests/smoke.spec.ts"]);
   });
 
   it("handle metrics:refresh delegates to fileWatcher and tracks telemetry", async () => {

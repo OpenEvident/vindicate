@@ -1,5 +1,7 @@
 import { postToExtension } from "../../lib/bridge";
+import type { TestSuiteOption } from "../../../shared/types";
 import { MetricTip } from "../shared/MetricTip";
+import { RunTestsControl } from "../shared/RunTestsControl";
 
 export type DashboardTabId = "overview" | "features" | "specs";
 
@@ -15,6 +17,7 @@ interface CanvasHeaderProps {
     specs: number;
   };
   isSyncing: boolean;
+  testSuites: TestSuiteOption[];
 }
 
 const TAB_META: Record<DashboardTabId, { label: string; subtitle: string }> = {
@@ -34,7 +37,8 @@ export function CanvasHeader({
   activeTab,
   onTabChange,
   counts,
-  isSyncing
+  isSyncing,
+  testSuites
 }: CanvasHeaderProps) {
   const meta = TAB_META[activeTab];
   const tabs: Array<{ id: DashboardTabId; label: string; count?: number }> = [
@@ -99,16 +103,7 @@ export function CanvasHeader({
             </svg>
             Recordings
           </button>
-          <button
-            type="button"
-            className="vbtn primary"
-            onClick={() => postToExtension({ type: "tests:runAll" })}
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden>
-              <path d="M3 2.5v9l8-4.5z" />
-            </svg>
-            Run all tests
-          </button>
+          <RunTestsControl suites={testSuites} />
         </div>
       </div>
       <div className="dash-tabs">

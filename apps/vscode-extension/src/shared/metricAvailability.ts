@@ -181,7 +181,8 @@ export function createEmptyDashboardMetrics(): DashboardMetrics {
     healthScore: 0,
     healthGrade: "D",
     healthDelta: 0,
-    lastUpdated: new Date().toISOString()
+    lastUpdated: new Date().toISOString(),
+    testSuites: []
   };
   return attachMetricAvailability(core, {
     featuresDirExists: false,

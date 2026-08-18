@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { createEmptyDashboardMetrics } from "../../../shared/metricAvailability";
+import type { TestSuiteOption } from "../../../shared/types";
 import { McpEnableCallout } from "../shared/McpEnableCallout";
 import { isDashboardMcpBannerHidden, setDashboardMcpBannerHidden } from "../../lib/mcpBannerPrefs";
 import { useDashboardStore } from "../../stores/dashboardStore";
@@ -8,6 +9,8 @@ import { CanvasHeader, type DashboardTabId } from "./CanvasHeader";
 import { FeaturesTab } from "./tabs/FeaturesTab";
 import { OverviewTab } from "./tabs/OverviewTab";
 import { SpecsTab } from "./tabs/SpecsTab";
+
+const NO_TEST_SUITES: TestSuiteOption[] = [];
 
 export function DashboardView() {
   const [activeTab, setActiveTab] = useState<DashboardTabId>("overview");
@@ -49,6 +52,7 @@ export function DashboardView() {
           specs: metrics.features.filter((feature) => feature.specStatus !== "missing").length
         }}
         isSyncing={isLoading}
+        testSuites={metrics.testSuites ?? NO_TEST_SUITES}
       />
       {!mcpBannerHidden && (
         <McpEnableCallout

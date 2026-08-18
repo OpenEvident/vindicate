@@ -172,13 +172,18 @@ describe("FileWatcherService", () => {
       metricsCalculator,
       logger
     );
-    const metrics: Array<{ healthScore: number; availability: { spec: { ready: boolean } } }> = [];
+    const metrics: Array<{
+      healthScore: number;
+      availability: { spec: { ready: boolean } };
+      testSuites?: Array<{ relativePath: string; label: string }>;
+    }> = [];
     service.onDidMetricsChange((m) => metrics.push(m));
     service.start("/project");
     await service.refresh();
     expect(metrics).toHaveLength(1);
     expect(metrics[0]?.healthScore).toBe(40);
     expect(metrics[0]?.availability.spec.ready).toBe(true);
+    expect(metrics[0]?.testSuites).toEqual([]);
     service.dispose();
   });
 
