@@ -1,6 +1,6 @@
 # {{projectName}}
 
-End-to-end tests built with [Playwright](https://playwright.dev/) and TypeScript, generated and maintained by [Vindicate](https://vindicate.io).
+End-to-end tests built with [Playwright](https://playwright.dev/) and TypeScript, generated and maintained by [Vindicate](https://github.com/OpenEvident/vindicate).
 
 ---
 

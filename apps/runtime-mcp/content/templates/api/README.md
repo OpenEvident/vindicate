@@ -1,6 +1,6 @@
 # {{projectName}}
 
-API tests built with [Playwright](https://playwright.dev/) and TypeScript, generated and maintained by [Vindicate](https://vindicate.io).
+API tests built with [Playwright](https://playwright.dev/) and TypeScript, generated and maintained by [Vindicate](https://github.com/OpenEvident/vindicate).
 
 ---
 
