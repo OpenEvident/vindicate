@@ -219,19 +219,29 @@ connection-level property the extension wires into the MCP URL when it writes th
 Written on demand as the user pairs an agent in onboarding (`vindicate.confirmTools`) or via the
 Config tab. All are additive/idempotent — re-running does not clobber existing entries.
 
-| Tool                     | File                              | Format                                                          |
-| ------------------------ | --------------------------------- | --------------------------------------------------------------- |
-| Cursor                   | `.cursor/mcp.json`                | `{ mcpServers: { Vindicate: { url, headers } } }`               |
-| Cursor                   | `.cursor/rules/vindicate.mdc`     | Cursor project rule                                             |
-| Cursor                   | `.cursor/skills/<skill>/SKILL.md` | Agent skill                                                     |
-| VS Code / GitHub Copilot | `.vscode/mcp.json`                | `{ servers: { Vindicate: { type: "http", url, headers } } }`    |
-| VS Code / GitHub Copilot | `.github/copilot-instructions.md` | Marker-delimited Vindicate block                                |
-| Claude Code              | `.mcp.json`                       | `{ mcpServers: { Vindicate: { type: "http", url, headers } } }` |
-| Claude Code              | `CLAUDE.md`                       | Vindicate project instructions                                  |
-| Claude Code              | `.claude/skills/<skill>/SKILL.md` | Agent skill                                                     |
+| Tool                     | File                                | Format                                                                            |
+| ------------------------ | ----------------------------------- | --------------------------------------------------------------------------------- |
+| Cursor                   | `.cursor/mcp.json`                  | `{ mcpServers: { Vindicate: { url, headers } } }`                                 |
+| Cursor                   | `.cursor/rules/vindicate.mdc`       | Cursor project rule                                                               |
+| Cursor                   | `.agents/skills/vindicate/SKILL.md` | Agent skill (shared path — see note below)                                        |
+| VS Code / GitHub Copilot | `.vscode/mcp.json`                  | `{ servers: { Vindicate: { type: "http", url, headers } } }`                      |
+| VS Code / GitHub Copilot | `.github/copilot-instructions.md`   | Marker-delimited Vindicate block                                                  |
+| VS Code / GitHub Copilot | `.agents/skills/vindicate/SKILL.md` | Agent skill (shared path — see note below)                                        |
+| Claude Code              | `.mcp.json`                         | `{ mcpServers: { Vindicate: { type: "http", url, headers } } }`                   |
+| Claude Code              | `CLAUDE.md`                         | Vindicate project instructions                                                    |
+| Claude Code              | `.claude/skills/vindicate/SKILL.md` | Agent skill (own path — Claude Code doesn't read `.agents/skills/`)               |
+| Antigravity              | `.agents/mcp_config.json`           | `{ mcpServers: { Vindicate: { serverUrl: url } } }` (no headers — see note below) |
+| Antigravity              | `.agents/AGENTS.md`                 | Vindicate project instructions                                                    |
+| Antigravity              | `.agents/skills/vindicate/SKILL.md` | Agent skill (shared path — see note below)                                        |
 
 `url` is always `http://127.0.0.1:9223/mcp?project_root=<workspace folder>`; `headers` carries
-`x-vindicate-project-root` as a fallback channel.
+`x-vindicate-project-root` as a fallback channel. Antigravity's MCP config omits `headers` entirely —
+a confirmed live bug (google-antigravity/antigravity-cli#71) makes every tool call fail if it's present.
+
+Cursor, Copilot, and Antigravity all discover skills from the shared `.agents/skills/` convention (the
+open `agentskills.io` standard's common path), so `AgentSkillWriter` writes one shared copy there
+regardless of which of those three are selected — re-selecting more than one just re-writes the
+identical file. Claude Code is the outlier (`.claude/skills/` only), so it gets its own copy.
 
 ## 8. The workflow content system (`vindicate_workflow`)
 

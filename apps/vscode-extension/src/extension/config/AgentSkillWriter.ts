@@ -82,19 +82,22 @@ export class AgentSkillWriter implements IAgentSkillWriter {
     tool: McpToolName
   ): Array<{ skillPath: string; communicationPath?: string }> {
     switch (tool) {
+      // Cursor, Copilot, and Antigravity all read .agents/skills/; Claude Code doesn't, hence its own case below.
       case "cursor":
+      case "vscode":
+      case "antigravity":
         return [
           {
             skillPath: path.join(
               workspaceFolderPath,
-              ".cursor",
+              ".agents",
               "skills",
               SKILL_DIR,
               SKILL_FILENAME
             ),
             communicationPath: path.join(
               workspaceFolderPath,
-              ".cursor",
+              ".agents",
               "skills",
               SKILL_DIR,
               COMMUNICATION_FILENAME
@@ -114,47 +117,6 @@ export class AgentSkillWriter implements IAgentSkillWriter {
             communicationPath: path.join(
               workspaceFolderPath,
               ".claude",
-              "skills",
-              SKILL_DIR,
-              COMMUNICATION_FILENAME
-            )
-          }
-        ];
-      case "vscode":
-        return [
-          {
-            skillPath: path.join(
-              workspaceFolderPath,
-              ".github",
-              "skills",
-              SKILL_DIR,
-              SKILL_FILENAME
-            ),
-            communicationPath: path.join(
-              workspaceFolderPath,
-              ".github",
-              "skills",
-              SKILL_DIR,
-              COMMUNICATION_FILENAME
-            )
-          }
-        ];
-      case "antigravity":
-        // Confirmed against Antigravity's own skills docs: workspace-scoped skills live at
-        // .agents/skills/<skill-folder>/, git-committable — same file content as every other tool,
-        // frontmatter (name + description) already matches what Antigravity's format requires.
-        return [
-          {
-            skillPath: path.join(
-              workspaceFolderPath,
-              ".agents",
-              "skills",
-              SKILL_DIR,
-              SKILL_FILENAME
-            ),
-            communicationPath: path.join(
-              workspaceFolderPath,
-              ".agents",
               "skills",
               SKILL_DIR,
               COMMUNICATION_FILENAME

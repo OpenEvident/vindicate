@@ -1,7 +1,11 @@
-import { access, mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { ILogger } from "../shared/logger";
-import { VINDICATE_RULE_MDC } from "./vindicateRuleContent.js";
+import {
+  buildCursorMdcBlock,
+  buildCursorMdcFile,
+  VINDICATE_CURSOR_MARKERS
+} from "./vindicateRuleContent.js";
 
 export interface ICursorRuleWriter {
   write(workspaceFolderPath: string): Promise<RuleWriteResult>;
@@ -17,8 +21,8 @@ export class CursorRuleWriter implements ICursorRuleWriter {
 
   async isConfigured(workspaceFolderPath: string): Promise<boolean> {
     try {
-      await access(rulePath(workspaceFolderPath));
-      return true;
+      const content = await readFile(rulePath(workspaceFolderPath), "utf8");
+      return content.includes(VINDICATE_CURSOR_MARKERS.start);
     } catch {
       return false;
     }
@@ -27,16 +31,28 @@ export class CursorRuleWriter implements ICursorRuleWriter {
   async write(workspaceFolderPath: string): Promise<RuleWriteResult> {
     try {
       const filePath = rulePath(workspaceFolderPath);
-      let alreadyPresent = false;
+      const block = buildCursorMdcBlock();
+
+      let content = "";
       try {
-        await access(filePath);
-        alreadyPresent = true;
+        content = await readFile(filePath, "utf8");
       } catch {
-        /* create */
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, `${buildCursorMdcFile()}\n`, "utf8");
+        return { ok: true, alreadyPresent: false };
       }
-      await mkdir(path.dirname(filePath), { recursive: true });
-      await writeFile(filePath, VINDICATE_RULE_MDC, "utf8");
-      return { ok: true, alreadyPresent };
+
+      if (content.includes(VINDICATE_CURSOR_MARKERS.start)) {
+        const updated = replaceVindicateBlock(content, block);
+        if (updated === content) {
+          return { ok: true, alreadyPresent: true };
+        }
+        await writeFile(filePath, updated, "utf8");
+        return { ok: true, alreadyPresent: false };
+      }
+
+      await writeFile(filePath, `${content.trimEnd()}\n\n${block}\n`, "utf8");
+      return { ok: true, alreadyPresent: false };
     } catch (err) {
       this.logger.error("Cursor rule write failed", err);
       return { ok: false, error: String(err) };
@@ -46,4 +62,14 @@ export class CursorRuleWriter implements ICursorRuleWriter {
 
 function rulePath(workspaceFolderPath: string): string {
   return path.join(workspaceFolderPath, ".cursor", "rules", RULE_FILENAME);
+}
+
+function replaceVindicateBlock(content: string, block: string): string {
+  const start = content.indexOf(VINDICATE_CURSOR_MARKERS.start);
+  const end = content.indexOf(VINDICATE_CURSOR_MARKERS.end);
+  if (start === -1 || end === -1 || end < start) {
+    return content;
+  }
+  const afterEnd = end + VINDICATE_CURSOR_MARKERS.end.length;
+  return `${content.slice(0, start)}${block}${content.slice(afterEnd)}`;
 }

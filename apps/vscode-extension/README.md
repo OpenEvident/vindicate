@@ -24,8 +24,8 @@ Vindicate is an AI-native quality orchestrator for VS Code and Cursor. It connec
 
 When you connect an agent (Cursor, Claude Code, or Copilot), the extension installs:
 
-- **L0 rules** — always-on guidance to call `vindicate_workflow` first
-- **L1 skill** — `.cursor/skills/vindicate/`, `.claude/skills/vindicate/`, or `.github/skills/vindicate/` with `SKILL.md` + `communication.md`
+- **L0 rules** — always-on guidance pointing at the Vindicate skill for any test-automation task
+- **L1 skill** — `.agents/skills/vindicate/` (Cursor, Copilot, Antigravity) or `.claude/skills/vindicate/` (Claude Code) with `SKILL.md` + `communication.md`
 
 The extension runs entirely on the developer's machine. It spawns the local **runtime-mcp** and
 **runtime-worker** processes and checks their health over loopback.
