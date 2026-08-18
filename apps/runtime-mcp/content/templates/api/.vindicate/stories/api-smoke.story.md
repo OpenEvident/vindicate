@@ -9,19 +9,25 @@ source:
   - template
 ---
 
-# Intent
+# Smoke Check — API reachability
 
-Verifies the API is reachable at the configured base URL.
+Verify that the API responds at the configured base URL without authentication.
+
+**Persona**
+unauthenticated client — no credentials required
+
+# Feature
+
+- [FA-00-2] API is reachable at the configured base URL
 
 # Acceptance Criteria
 
-- [ ] AC-1: API is reachable at the configured base URL
-
-# Scenarios
+AC-1: API is reachable at the configured base URL
 
 ## Happy Path [AC-1]
-
-- A request to the API's base URL receives a response, proving the host is reachable
+Given the API server is running
+When a client requests the API at the base URL
+Then a response is returned proving the host is reachable
 
 # Out of Scope
 
