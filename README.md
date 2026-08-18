@@ -81,6 +81,6 @@ Licensed under the [Apache License, Version 2.0](LICENSE).
 
 ## Contributors
 
-<a href="https://github.com">
-  <img src="https://contrib.rocks" />
+<a href="https://github.com/OpenEvident/vindicate/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=OpenEvident/vindicate" />
 </a>
