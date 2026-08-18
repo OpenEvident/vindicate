@@ -3,7 +3,7 @@
 Monorepo for Vindicate — AI-native Playwright test automation for VS Code, Cursor, and Claude Code.
 
 ![GitHub top language](https://img.shields.io/github/languages/top/OpenEvident/vindicate)
-![visitor badge](https://visitor-badge.glitch.me/badge?page_id=ThusharaX.C-programming)
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=OpenEvident.vindicate.visitor-badge&left_text=visitors&right_color=%23123fc4&format=true&logo=github)
 ![GitHub forks](https://img.shields.io/github/forks/OpenEvident/vindicate?style=social)
 ![GitHub contributors](https://img.shields.io/github/contributors/OpenEvident/vindicate)
 ![GitHub Repo stars](https://img.shields.io/github/stars/OpenEvident/vindicate?style=social)
@@ -13,8 +13,6 @@ Monorepo for Vindicate — AI-native Playwright test automation for VS Code, Cur
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/OpenEvident/vindicate)
 ![GitHub labels](https://img.shields.io/github/labels/OpenEvident/vindicate/help%20wanted)
 ![GitHub](https://img.shields.io/github/license/OpenEvident/vindicate)
-
-![C-programming](https://socialify.git.ci/OpenEvident/vindicate/image?description=1&forks=1&language=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2FBinaryMatter%2FBinaryMatter.github.io%2Fgh-pages%2FlogoRoundwithBorder.png&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Dark)
 
 ## Architecture
 
