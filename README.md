@@ -11,7 +11,6 @@ Monorepo for Vindicate — AI-native Playwright test automation for VS Code, Cur
 ![GitHub watchers](https://img.shields.io/github/watchers/OpenEvident/vindicate?style=social)
 ![GitHub issues](https://img.shields.io/github/issues/OpenEvident/vindicate)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/OpenEvident/vindicate)
-![GitHub labels](https://img.shields.io/github/labels/OpenEvident/vindicate/help%20wanted)
 ![GitHub](https://img.shields.io/github/license/OpenEvident/vindicate)
 
 ## Architecture
@@ -79,3 +78,9 @@ See [CHANGELOG.md](CHANGELOG.md).
 ## License
 
 Licensed under the [Apache License, Version 2.0](LICENSE).
+
+## Contributors
+
+<a href="https://github.com">
+  <img src="https://contrib.rocks" />
+</a>
