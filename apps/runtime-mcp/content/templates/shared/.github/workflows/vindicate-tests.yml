@@ -8,8 +8,6 @@ on:
 
 permissions:
   contents: read
-  actions: write
-  checks: write
 
 jobs:
   run-tests:
@@ -25,8 +23,8 @@ jobs:
       WORKERS: ${{ vars.WORKERS || '1' }}
       RETRIES: ${{ vars.RETRIES || '1' }}
     steps:
-    - uses: VINDICATE-AI-LLC/github-action/setup@v1
-    - uses: VINDICATE-AI-LLC/github-action/run-shard@v1
+    - uses: OpenEvident/vindicate-actions/setup@v1
+    - uses: OpenEvident/vindicate-actions/run-shard@v1
       with:
         shard-index: ${{ matrix.shardIndex }}
         total-shards: 2
@@ -38,5 +36,5 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-    - uses: VINDICATE-AI-LLC/github-action/setup@v1
-    - uses: VINDICATE-AI-LLC/github-action/merge-reports@v1
+    - uses: OpenEvident/vindicate-actions/setup@v1
+    - uses: OpenEvident/vindicate-actions/merge-reports@v1
