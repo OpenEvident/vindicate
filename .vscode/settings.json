@@ -7,7 +7,6 @@
     { "directory": "packages/protocol", "changeProcessCWD": true },
     { "directory": "packages/observability", "changeProcessCWD": true },
     { "directory": "packages/config", "changeProcessCWD": true },
-    { "directory": "packages/security", "changeProcessCWD": true },
     { "directory": "apps/vscode-extension", "changeProcessCWD": true }
   ]
 }
