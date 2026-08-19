@@ -1,23 +1,15 @@
-# Required Bitbucket repository variables: VINDICATE_API_URL, VINDICATE_API_KEY
-# Optional: BASE_URL, WORKERS (default 1), RETRIES (default 1), BITBUCKET_API_USERNAME, BITBUCKET_API_APP_PASSWORD
+# Optional overrides via Repository settings > Pipelines > Repository variables:
+# BASE_URL, WORKERS, RETRIES (read by playwright.config.ts). No other variables needed.
+#
+# Results: the "Tests" tab on each pipeline run, plus downloadable playwright-report/test-results
+# artifacts below.
 
-image: node:20
+image: node:22
 options: { max-time: 40 }
 
 pipelines:
   branches:
     main: &pipeline_steps
-      - step:
-          name: Init Vindicate Run
-          script:
-          - pipe: docker://vindicateaillc/vindicate-init-run:latest
-            variables:
-              VINDICATE_API_URL: $VINDICATE_API_URL
-              VINDICATE_API_KEY: $VINDICATE_API_KEY
-              BITBUCKET_API_USERNAME: $BITBUCKET_API_USERNAME
-              BITBUCKET_API_APP_PASSWORD: $BITBUCKET_API_APP_PASSWORD
-          artifacts: [ .vindicate/** ]
-
       - parallel:
           fail-fast: false
           steps:
@@ -36,17 +28,10 @@ pipelines:
               artifacts: [ artifacts/** ]
 
       - step:
-          name: Merge & Publish Reports
+          name: Merge Reports
           caches: [ node ]
           script:
-          - 'set +e; FAILED=0; npm ci || FAILED=1; mkdir -p all-blob-reports test-results artifacts/status; for d in artifacts/blob-report-*; do [ -d "$d" ] && cp -R "$d"/. all-blob-reports/; done; export PLAYWRIGHT_JSON_OUTPUT_NAME=test-results/results.json PLAYWRIGHT_JUNIT_OUTPUT_NAME=test-results/results.xml; npx playwright merge-reports --reporter=html,json,junit ./all-blob-reports; [ $? -ne 0 ] && FAILED=1; for f in artifacts/status/*.exit; do [ -f "$f" ] || continue; code="$(cat "$f" 2>/dev/null || echo 1)"; [ "$code" -ne 0 ] && { FAILED=1; echo "Detected failed shard from $f: $code"; }; done; TESTS_FAILED=$([ "$FAILED" -ne 0 ] && echo true || echo false); VINDICATE_RUN_ID="$(cat .vindicate/run_id 2>/dev/null)"'
-          - pipe: docker://vindicateaillc/vindicate-publish-report:latest
-            variables:
-              VINDICATE_API_URL: $VINDICATE_API_URL
-              VINDICATE_API_KEY: $VINDICATE_API_KEY
-              VINDICATE_RUN_ID: $VINDICATE_RUN_ID
-              TESTS_FAILED: $TESTS_FAILED
-          - '[ $? -ne 0 ] && FAILED=1; if [ "$FAILED" -ne 0 ]; then echo "Pipeline marked failed (tests/merge/report errors)."; exit 1; fi; exit 0'
+          - 'set +e; FAILED=0; npm ci || FAILED=1; mkdir -p all-blob-reports test-results; for d in artifacts/blob-report-*; do [ -d "$d" ] && cp -R "$d"/. all-blob-reports/; done; export PLAYWRIGHT_JUNIT_OUTPUT_NAME=test-results/results.xml; npx playwright merge-reports --reporter=html,junit ./all-blob-reports; [ $? -ne 0 ] && FAILED=1; for f in artifacts/status/*.exit; do [ -f "$f" ] || continue; code="$(cat "$f" 2>/dev/null || echo 1)"; [ "$code" -ne 0 ] && { FAILED=1; echo "Detected failed shard from $f: $code"; }; done; if [ "$FAILED" -ne 0 ]; then echo "Pipeline marked failed - see the Tests tab, or download the test-results/playwright-report artifacts."; exit 1; fi; exit 0'
           artifacts: [ test-results/**, playwright-report/** ]
 
   pull-requests:
