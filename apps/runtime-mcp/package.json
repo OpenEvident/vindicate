@@ -33,7 +33,7 @@
     "@vindicate/protocol": "workspace:*",
     "@t3-oss/env-core": "^0.13.11",
     "dotenv": "^17.4.2",
-    "fastify": "^5.8.5",
+    "fastify": "^5.12.1",
     "lru-cache": "^11.0.0",
     "ts-morph": "^28.0.0",
     "typescript": "^6.0.3",
