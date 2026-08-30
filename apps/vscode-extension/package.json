@@ -125,7 +125,7 @@
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^3.9.1",
-    "concurrently": "^10.0.4",
+    "concurrently": "^10.0.5",
     "esbuild": "^0.28.0",
     "esbuild-register": "^3.6.0",
     "eslint": "^10.3.0",
